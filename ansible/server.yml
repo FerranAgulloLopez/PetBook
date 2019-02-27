@@ -1,0 +1,16 @@
+####################################
+# Server configuration #
+####################################
+
+# Ferran Agulló
+# Created: 2019-2-26
+
+---
+
+- name: "Install docker"
+  hosts: 10.4.41.146
+
+  roles:
+    #- docker
+    - push_repo
+
