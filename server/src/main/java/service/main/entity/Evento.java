@@ -1,8 +1,7 @@
-package testing.service.entity;
+package service.main.entity;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import testing.service.entity.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -12,9 +11,8 @@ public class Evento implements Serializable {
 
     @Id
     private User creador;
-    @Id
+
     private Localizacion localizacion;
-    @Id
     private Fecha fecha;
 
     private String descripcion;

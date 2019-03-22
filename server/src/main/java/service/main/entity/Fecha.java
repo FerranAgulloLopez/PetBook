@@ -1,4 +1,4 @@
-package testing.service.entity;
+package service.main.entity;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

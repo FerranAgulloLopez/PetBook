@@ -1,4 +1,4 @@
-package testing.service.config;
+package service.main.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -13,7 +13,7 @@ import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-import testing.service.RestApiController;
+import service.main.RestApiController;
 
 @Configuration
 @PropertySource("classpath:swagger.properties")
@@ -37,7 +37,7 @@ public class SwaggerConfig {
                 .pathMapping("/")
                 .select()
                 .paths(PathSelectors.any())
-                .apis(RequestHandlerSelectors.basePackage("testing.service")).paths(PathSelectors.any())
+                .apis(RequestHandlerSelectors.basePackage("service.main")).paths(PathSelectors.any())
                 .build().tags(new Tag("Rest API Controller", "API related to something"));
     }
     /**

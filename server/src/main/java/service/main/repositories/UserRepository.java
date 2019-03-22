@@ -1,12 +1,13 @@
-package testing.service;
+package service.main.repositories;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import testing.service.entity.Mascota;
+import service.main.entity.User;
 
 
 @Document(collection = "domain")
-public interface MascotaRepository extends MongoRepository<Mascota, String> {
+public interface UserRepository extends MongoRepository<User, String> {
+
 
 
 }
