@@ -25,16 +25,16 @@ public class LogInSignUp extends AppCompatActivity {
         String pass = password.getText().toString();
 
 
-        if (user.equals("admin") && pass.equals("admin")) {
+        if (user.equals("Admin") && pass.equals("admin")) {
             passWrong.setVisibility(View.INVISIBLE);
             userWrong.setVisibility(View.INVISIBLE);
-            Intent intent = new Intent(this, PantallaProva.class);
+            Intent intent = new Intent(this, PantallaHome.class);
             startActivity(intent);
-        } else if(user != "admin" && pass.equals("admin")) {
+        } else if(user != "Admin" && pass.equals("admin")) {
             userWrong.setVisibility(View.VISIBLE);
             passWrong.setVisibility(View.INVISIBLE);
         }
-        else if(pass != "admin" && user.equals("admin")){
+        else if(pass != "admin" && user.equals("Admin")){
 
             passWrong.setVisibility(View.VISIBLE);
             userWrong.setVisibility(View.INVISIBLE);

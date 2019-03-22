@@ -7,27 +7,27 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/icono_home"
-            android:title="Home" />
+            android:title="@string/home" />
         <item
             android:id="@+id/nav_chats"
             android:icon="@drawable/icono_chat2"
-            android:title="Chats" />
+            android:title="@string/chats" />
         <item
             android:id="@+id/nav_eventos"
             android:icon="@drawable/icono_eventos"
-            android:title="Eventos" />
+            android:title="@string/eventos" />
         <item
             android:id="@+id/nav_map"
             android:icon="@drawable/icono_mapa"
-            android:title="Map" />
+            android:title="@string/map" />
         <item
             android:id="@+id/nav_configuracion"
             android:icon="@drawable/icono_configuracion"
-            android:title="Configuración" />
+            android:title="@string/configuraci_n" />
         <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/icono_cerrar_sesion"
-            android:title="Cerrar sesión" />
+            android:title="@string/cerrar_sesi_n" />
     </group>
 
 
