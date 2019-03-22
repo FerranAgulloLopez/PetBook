@@ -1,71 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="b73bcee6-38ab-485f-96d4-294747a3e96e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../../../PetBook1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/.idea/codeStyles/Project.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/.idea/runConfigurations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/proguard-rules.pro" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/androidTest/java/com/example/petbook/ExampleInstrumentedTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/AndroidManifest.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/java/com/example/petbook/LogInSignUp.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/java/com/example/petbook/PantallaFirstView.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/java/com/example/petbook/PantallaHome.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/java/com/example/petbook/PantallaProva.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable-v24/petbook_text.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/background_cabecera_menu.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/icono_cerrar_sesion.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/icono_chat.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/icono_chat2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/icono_configuracion.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/icono_eventos.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/icono_home.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/icono_mapa.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/logo.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/logo_portada_petbook.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/drawable/petbook_text.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/layout/activity_first_view.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/layout/activity_log_in_sign_up.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/layout/activity_pantalla_prova.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/layout/cabecera.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/layout/cabecera_menu.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/layout/menu.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/layout/pantalla_home.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/menu/contenido_menu.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/menu/main.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/values/colors.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/values/dimens.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/values/drawables.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/values/strings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/main/res/values/styles.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/app/src/test/java/com/example/petbook/ExampleUnitTest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/gradle.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/gradlew" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/gradlew.bat" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../../Petbook2/Petbook/settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/gradle_models.ser" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../PetBook1" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/.idea/codeStyles/Project.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/.idea/runConfigurations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/proguard-rules.pro" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/androidTest/java/com/example/petbook/ExampleInstrumentedTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/AndroidManifest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/java/com/example/petbook/LogInSignUp.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/java/com/example/petbook/PantallaFirstView.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/java/com/example/petbook/PantallaHome.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/java/com/example/petbook/PantallaProva.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable-v24/petbook_text.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/background_cabecera_menu.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/ic_launcher_background.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/icono_cerrar_sesion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/icono_chat.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/icono_chat2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/icono_configuracion.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/icono_eventos.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/icono_home.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/icono_mapa.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/logo_portada_petbook.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/drawable/petbook_text.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/layout/activity_first_view.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/layout/activity_log_in_sign_up.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/layout/activity_pantalla_prova.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/layout/cabecera.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/layout/cabecera_menu.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/layout/menu.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/layout/pantalla_home.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/menu/contenido_menu.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/menu/main.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-hdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-hdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-mdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-mdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-xhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-xhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/values/colors.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/values/dimens.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/values/drawables.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/values/strings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/main/res/values/styles.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/app/src/test/java/com/example/petbook/ExampleUnitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/gradle/wrapper/gradle-wrapper.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/gradlew.bat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../../../Petbook2/Petbook/settings.gradle" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -104,9 +112,65 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="-1053484815">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.0" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="java" value="2" />
+          <entry key="xml" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JAVA" value="2" />
+          <entry key="XML" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="dummy" value="60" />
+          <entry key="java" value="22" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="22" />
+          <entry key="PLAIN_TEXT" value="60" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/../../../../Petbook/Petbook/app/src/main/java/com/example/petbook/PantallaHome.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="238">
+              <caret line="14" column="23" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#386#387#0" expanded="true" />
+                <element signature="e#407#408#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../../../../Petbook/Petbook/app/src/main/res/layout/activity_pantalla_prova.xml">
+          <provider selected="true" editor-type-id="android-designer2" />
+          <provider editor-type-id="text-editor" />
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../.." />
   </component>
   <component name="GradleLocalSettings">
     <option name="myGradleHomes">
@@ -2369,6 +2433,14 @@
       </map>
     </option>
   </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/../../../../Petbook/Petbook/app/src/main/java/com/example/petbook/Home.java" />
+        <option value="$PROJECT_DIR$/../../../../Petbook/Petbook/app/src/main/java/com/example/petbook/PantallaHome.java" />
+      </list>
+    </option>
+  </component>
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
@@ -2381,24 +2453,41 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
             <path>
-              <item name="app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Petbook" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
             </path>
             <path>
-              <item name="app" type="1abcf292:AndroidViewProjectNode" />
+              <item name="Petbook" type="1abcf292:AndroidViewProjectNode" />
               <item name="app" type="feadf853:AndroidModuleNode" />
               <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+            </path>
+            <path>
+              <item name="Petbook" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="java" type="edd41e36:AndroidSourceTypeNode" />
+              <item name="petbook" type="cbb59c9e:AndroidPsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Petbook" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+            </path>
+            <path>
+              <item name="Petbook" type="1abcf292:AndroidViewProjectNode" />
+              <item name="app" type="feadf853:AndroidModuleNode" />
+              <item name="res" type="d4f16f75:AndroidResFolderNode" />
+              <item name="layout" type="ddeffd01:AndroidResFolderTypeNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="ProjectPane" />
-      <pane id="PackagesPane" />
       <pane id="Scope" />
     </panes>
   </component>
@@ -2408,6 +2497,14 @@
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
     <property name="device.picker.selection" value="67f332540205" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="android.template.packageName">
+      <recent name="com.example.petbook" />
+    </key>
+    <key name="android.template.parentActivityClass">
+      <recent name="" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -2497,32 +2594,55 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1874" height="1096" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" visible="true" weight="0.3296582" />
-      <window_info id="Structure" side_tool="true" />
-      <window_info id="Build Variants" side_tool="true" />
-      <window_info id="Image Layers" />
-      <window_info id="Designer" />
-      <window_info id="Capture Tool" />
-      <window_info id="Favorites" side_tool="true" />
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Run" sideWeight="0.49944875" visible="true" weight="0.32952183" />
-      <window_info anchor="bottom" id="Logcat" />
-      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
-      <window_info anchor="bottom" id="TODO" />
-      <window_info anchor="bottom" id="Android Profiler" />
-      <window_info anchor="bottom" id="Debug" />
-      <window_info anchor="bottom" id="Terminal" sideWeight="0.49944875" weight="0.32952183" />
-      <window_info anchor="bottom" id="Event Log" sideWeight="0.5005513" side_tool="true" visible="true" weight="0.32952183" />
-      <window_info anchor="bottom" id="Build" sideWeight="0.49944875" weight="0.32952183" />
-      <window_info anchor="right" id="Device File Explorer" side_tool="true" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="right" id="Gradle" visible="true" weight="0.3296582" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="right" id="Palette&#9;" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.3296582" />
+      <window_info id="Structure" order="2" side_tool="true" />
+      <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info id="Build Variants" order="4" side_tool="true" />
+      <window_info id="Image Layers" order="5" />
+      <window_info id="Designer" order="6" />
+      <window_info id="Capture Tool" order="7" />
+      <window_info anchor="bottom" id="Find" sideWeight="0.49779493" weight="0.32952183" />
+      <window_info anchor="bottom" id="Run" order="0" sideWeight="0.49944875" weight="0.32952183" />
+      <window_info anchor="bottom" id="Logcat" order="1" />
+      <window_info anchor="bottom" id="TODO" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" />
+      <window_info anchor="bottom" id="Terminal" order="4" sideWeight="0.49944875" weight="0.32952183" />
+      <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.50385886" side_tool="true" visible="true" weight="0.32952183" />
+      <window_info anchor="bottom" id="Version Control" order="6" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Build" order="7" sideWeight="0.49614114" visible="true" weight="0.32952183" />
+      <window_info anchor="bottom" id="Android Profiler" order="8" />
+      <window_info anchor="right" id="Device File Explorer" order="0" side_tool="true" />
+      <window_info anchor="right" id="Capture Analysis" order="1" />
+      <window_info anchor="right" id="Gradle" order="2" weight="0.3296582" />
+      <window_info anchor="right" id="Theme Preview" order="3" />
+      <window_info anchor="right" id="Palette&#9;" order="4" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/../../../../Petbook/Petbook/app/src/main/res/layout/activity_pantalla_prova.xml">
+      <provider selected="true" editor-type-id="android-designer2" />
+      <provider editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../Petbook/Petbook/app/src/main/java/com/example/petbook/LoginActivity.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../../Petbook/Petbook/app/src/main/java/com/example/petbook/PantallaHome.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="14" column="23" selection-start-line="14" selection-start-column="23" selection-end-line="14" selection-end-column="23" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#386#387#0" expanded="true" />
+            <element signature="e#407#408#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
