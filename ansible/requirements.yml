@@ -1,7 +1,0 @@
-# The requirements of those playbooks
-#
-# to install, do:
-# ansible-galaxy install --roles-path ./roles -r requirements.yml
-
-- src: nickjj.docker
-  name: docker
