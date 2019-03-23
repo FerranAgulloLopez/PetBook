@@ -4,6 +4,7 @@ package service.main;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
@@ -11,7 +12,7 @@ import service.main.repositories.UserRepository;
 
 
 @RestController
-@RequestMapping(value = "something")
+@RequestMapping(value = "ServerRESTAPI")
 @Api(value = "ServerRESTAPI")
 public class RestApiController {
 
@@ -36,11 +37,10 @@ public class RestApiController {
 
 
     @CrossOrigin
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/RegisterUser", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Testing")
-    public ResponseEntity<?> SaveUser(@ApiParam(value="Email", required = true, example = "foo@bar.com") @RequestParam("Email") String email,
-                                      @RequestBody String password) {
-        userRepository.save(new User(email,password));
+    public ResponseEntity<?> SaveUser(@ApiParam(value="A user with email and password", required = true) @RequestBody User input) {
+        userRepository.save(new User(input.getEmail(),input.getPassword()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -53,9 +53,10 @@ public class RestApiController {
 
 
     @CrossOrigin
-    @RequestMapping(value = "/getuser/{email}", method = RequestMethod.GET)
+    @RequestMapping(value = "/GetUser/{email}", method = RequestMethod.GET)
     @ApiOperation(value = "Testing")
     public ResponseEntity<?> InfoUser(@PathVariable String email) {
+        //TODO si no existe el usuario devolver una excepción o algo
         return new ResponseEntity<>(userRepository.findById(email),HttpStatus.OK);
     }
 

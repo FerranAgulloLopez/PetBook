@@ -19,6 +19,7 @@ public class Evento implements Serializable {
 
     private ArrayList<User> participantes;
 
+    public Evento() {}
 
 
     public Evento(  User creador,
@@ -45,6 +46,11 @@ public class Evento implements Serializable {
     public void setFecha(Fecha fecha) { this.fecha = fecha; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     public void setParticipantes(ArrayList<User> participantes) { this.participantes =  participantes; }
+
+    public String funcion_auxiliar_provar_random(String something) {
+        //hace cosas random
+        return "yea";
+    }
 
 
 
