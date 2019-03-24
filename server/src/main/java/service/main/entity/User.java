@@ -6,12 +6,22 @@ import io.swagger.annotations.ApiModel;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
 import java.io.Serializable;
+import java.security.SecureRandom;
+import java.security.spec.KeySpec;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "User", description = "An application user")
 @Document(collection = "domain")
 public class User implements Serializable {
+
+    static {
+        hasher = new PBKDF2Hasher();
+    }
+
+    private static PBKDF2Hasher hasher;
 
     @Id private String email;
 
@@ -26,7 +36,7 @@ public class User implements Serializable {
 
     public User(String email, String password) {
         this.email = email;
-        this.password = password;
+        this.password = hasher.hash(password.toCharArray());
     }
 
     public String getEmail() {return  email;}
@@ -46,10 +56,14 @@ public class User implements Serializable {
     public void setFirstName(String firstName) { this.FirstName = firstName; }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = hasher.hash(password.toCharArray());
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public boolean checkPassword(String password_to_check) {
+        return hasher.checkPassword(password_to_check.toCharArray(),password);
     }
 }

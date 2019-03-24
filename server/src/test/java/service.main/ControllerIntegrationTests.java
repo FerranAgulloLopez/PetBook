@@ -1,6 +1,7 @@
 package service.main;
 
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -23,14 +25,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ControllerSystemTests {
+public class ControllerIntegrationTests {
 
     @Autowired
     private MockMvc mockMvc;
     private String path = "../testing_files/server/";
 
+    @Before
+    public void ClearDB() throws Exception {
+        this.mockMvc.perform(delete("/ServerRESTAPI/Test/RemoveDatabase"))
+                .andDo(print()).andExpect(status().isOk());
+    }
+
+
     /*
-    Integration tests
+    Register User operation
      */
 
     @Test
@@ -42,7 +51,35 @@ public class ControllerSystemTests {
     }
 
     /*
-    Auxiliary tests
+    Login confirmation operation
+     */
+
+    @Test
+    public void LoginConfirmationOK() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"login_confirmation_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/ConfirmLogin").contentType(MediaType.APPLICATION_JSON).param("email","petbook@main.com").param("password", "believe_on_me"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"login_confirmation_operation/output_OK.json")));
+    }
+
+    @Test
+    public void LoginConfirmationNOTOK() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"login_confirmation_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/ConfirmLogin").contentType(MediaType.APPLICATION_JSON).param("email","petbook@main.com").param("password", "another_one"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"login_confirmation_operation/output_NOTOK.json")));
+    }
+
+    @Test
+    public void LoginConfirmationUserNOTINDB() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/ConfirmLogin").contentType(MediaType.APPLICATION_JSON).param("email","petbook@main.com").param("password", "another_one"))
+                .andDo(print()).andExpect(status().isNotFound());
+    }
+
+
+
+    /*
+    Auxiliary operations
      */
 
     private String read_file(String path) throws Exception {

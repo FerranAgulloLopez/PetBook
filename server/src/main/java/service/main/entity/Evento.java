@@ -47,11 +47,5 @@ public class Evento implements Serializable {
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     public void setParticipantes(ArrayList<User> participantes) { this.participantes =  participantes; }
 
-    public String funcion_auxiliar_provar_random(String something) {
-        //hace cosas random
-        return "yea";
-    }
-
-
 
 }
