@@ -25,10 +25,14 @@
     <string name="my_calendar">My Calendar</string>
     <string name="my_events">My Events</string>
     <string name="pantalla_home">Pantalla Home</string>
-    <string name="log_in">Log In</string>
     <string name="sign_up">Sign Up</string>
     <string name="pantalla_log_sign">Pantalla Log Sign</string>
     <string name="pantalla_sign_up">Pantalla Sign Up</string>
-    <string name="sign_up">Sign Up</string>
     <string name="pantalla_pet1">Pantalla Pet1</string>
+    <string name="todo">TODO</string>
+    <string name="user">user</string>
+    <string name="password">password</string>
+    <string name="the_passsword_is_incorrect">the passsword is incorrect</string>
+    <string name="the_username_is_incorrect">the username is incorrect</string>
+    <string name="log_in">Log in</string>
 </resources>
