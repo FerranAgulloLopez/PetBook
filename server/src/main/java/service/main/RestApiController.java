@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
+import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.UserRepository;
 import service.main.service.ServerService;
@@ -37,15 +38,28 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/ConfirmLogin", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/ConfirmLogin", method = RequestMethod.POST)
     @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.")
-    public ResponseEntity<?> ConfirmLogin(@ApiParam(value="User's email", required = true) @RequestParam String email,
-                                          @ApiParam(value="Password introduced", required = true) @RequestParam String password) {
+    public ResponseEntity<?> ConfirmLogin(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
+                                          @ApiParam(value="Password introduced", required = true, example = "1234") @RequestParam String password) {
         try {
-            boolean result = serverService.ConfirmLogin(email, password);
-            return new ResponseEntity<>(result,HttpStatus.OK);
+            return new ResponseEntity<>(serverService.ConfirmLogin(email,password),HttpStatus.OK);
         } catch (NotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/SendConfirmationEmail", method = RequestMethod.POST)
+    @ApiOperation(value = "Send a confirmation email", notes = "Sends to the specified user an email with the instructions to verify it.")
+    public ResponseEntity<?> ConfirmationEmail(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email) {
+        try {
+            serverService.SendConfirmationEmail(email);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -65,7 +79,7 @@ public class RestApiController {
     @ApiOperation(value = "Testing")
     public ResponseEntity<?> InfoUser(@PathVariable String email) {
         //TODO si no existe el usuario devolver una excepción o algo
-        return new ResponseEntity<>(userRepository.findById(email).get().getEmail(),HttpStatus.OK);
+        return new ResponseEntity<>(userRepository.findById(email).get(),HttpStatus.OK);
     }
 
     @CrossOrigin

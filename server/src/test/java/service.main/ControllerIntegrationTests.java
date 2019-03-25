@@ -76,6 +76,19 @@ public class ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
+    /*
+    Confirm email operation
+     */
+    @Test
+    public void EmailConfirmation() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"confirm_email_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/mailconfirmation/petbook@main.com"))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUser/petbook@main.com"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"confirm_email_operation/output_confirm_email.json")));
+    }
+
 
 
     /*

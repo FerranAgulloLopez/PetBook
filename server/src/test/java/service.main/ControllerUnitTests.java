@@ -4,8 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import service.main.entity.Evento;
-import service.main.entity.PBKDF2Hasher;
+import service.main.util.PBKDF2Hasher;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
