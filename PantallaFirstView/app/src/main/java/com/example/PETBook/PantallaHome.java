@@ -13,6 +13,7 @@ public class PantallaHome extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_home);
+        getSupportActionBar().hide();
     }
         public void myPets(View view){
         Intent intent = new Intent(this, MyPets.class);
