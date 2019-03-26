@@ -37,8 +37,6 @@ public class PantallaLogSign extends AppCompatActivity {
         String pass = password.getText().toString();
 
         if (user.equals("admin") && pass.equals("admin")) {
-            passWrong.setVisibility(View.INVISIBLE);
-            userWrong.setVisibility(View.INVISIBLE);
             Intent intent = new Intent(this, PantallaHome.class);
             startActivity(intent);
         }

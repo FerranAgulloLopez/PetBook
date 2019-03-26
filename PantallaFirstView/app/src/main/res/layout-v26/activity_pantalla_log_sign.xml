@@ -86,7 +86,7 @@
         android:autofillHints="" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/password"
         android:layout_width="241dp"
         android:layout_height="58dp"
         android:layout_marginStart="8dp"
@@ -95,6 +95,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
+        android:autofillHints=""
         android:ems="10"
         android:hint="@string/password"
         android:inputType="textPassword"
@@ -102,11 +103,10 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:autofillHints="" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/userWrong"
         android:layout_width="224dp"
         android:layout_height="47dp"
         android:layout_marginStart="8dp"
@@ -127,7 +127,7 @@
         app:layout_constraintVertical_bias="0.402" />
 
     <TextView
-        android:id="@+id/textView8"
+        android:id="@+id/passWrong"
         android:layout_width="216dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
