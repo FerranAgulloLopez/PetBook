@@ -90,6 +90,25 @@ public class ControllerIntegrationTests {
     }
 
 
+    /*
+    Get user by email operation
+     */
+
+    @Test
+    public void getUserByEmail() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"login_confirmation_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUser/petbook@main.com"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"register_operation/output_register.json")));
+    }
+
+    @Test
+    public void getUserByEmailNOTINDB() throws Exception {
+        this.mockMvc.perform(post("/ServerRestAPI/GetUser/noUser@petbook.com")).andDo(print()).andExpect(status().isNotFound());
+    }
+
+
+
 
     /*
     Auxiliary operations

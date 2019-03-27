@@ -15,6 +15,7 @@ import service.main.repositories.UserRepository;
 import service.main.service.ServerService;
 
 import java.util.Calendar;
+import java.util.Optional;
 
 
 @RestController
@@ -74,30 +75,40 @@ public class RestApiController {
      */
 
     @CrossOrigin
-    @RequestMapping(value = "/GetNames", method = RequestMethod.GET)
-    @ApiOperation(value = "Testing")
-    public ResponseEntity<?> SecondName() {
+    @RequestMapping(value = "/GetAllUsers", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all usuarios")
+    public ResponseEntity<?> GetAllUsers() {
         return new ResponseEntity<>(userRepository.findAll(),HttpStatus.OK);
     }
 
     @CrossOrigin
     @RequestMapping(value = "/GetUser/{email}", method = RequestMethod.GET)
-    @ApiOperation(value = "Testing")
+    @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email.")
     public ResponseEntity<?> InfoUser(@PathVariable String email) {
-        //TODO si no existe el usuario devolver una excepción o algo
-        return new ResponseEntity<>(userRepository.findById(email).get(),HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(serverService.getUserByEmail(email), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/update/{email}", method = RequestMethod.PATCH)
-    @ApiOperation(value = "Testing")
+    @RequestMapping(value = "/update/{email}", method = RequestMethod.POST)
+    @ApiOperation(value = "Update all the information of the user")
     public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody User user)
     {
-        userRepository.deleteById(email);
-        userRepository.insert(user);
-        //userRepository.save(user);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            serverService.updateUserByEmail(email,user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
+
+
+
 
     /*
     Only testing purposes TODO remove this section in the future

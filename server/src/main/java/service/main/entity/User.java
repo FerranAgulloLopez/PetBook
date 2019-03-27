@@ -79,6 +79,19 @@ public class User implements Serializable {
         this.mailconfirmed = mailconfirmed;
     }
 
+    public void setSecondName(String secondName) {
+        this.SecondName = secondName;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+
     /*
     Auxiliary operations
      */

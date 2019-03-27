@@ -57,6 +57,25 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
+
+    public User getUserByEmail(String email) throws NotFoundException {
+        Optional<User> userToReturn = userRepository.findById(email);
+        if (!userToReturn.isPresent()) throw new NotFoundException("There is no user with that email");
+        else return userToReturn.get();
+    }
+
+    public void updateUserByEmail(String email, User user) throws NotFoundException {
+        Optional<User> userToUpdate = userRepository.findById(email);
+        if (!userToUpdate.isPresent()) throw new NotFoundException("There is no user with that email");
+        else {
+            userRepository.deleteById(email);
+            userRepository.insert(user);
+        }
+    }
+
+
+
+
     public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) {
         Fecha fecha2 = new Fecha(any, mes, dia ,hora);
         Localizacion localizacion = new Localizacion(coordenadas,radio);

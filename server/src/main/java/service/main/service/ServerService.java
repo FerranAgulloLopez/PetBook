@@ -19,6 +19,10 @@ public interface ServerService {
 
     public void RegisterUser(User input);
 
+    public User getUserByEmail(String email) throws NotFoundException;
+
+    public void updateUserByEmail(String email, User user) throws NotFoundException;
+
     public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio);
     public List<Evento> findAllEventos();
 
