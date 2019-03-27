@@ -41,15 +41,13 @@ public class PantallaLogSign extends AppCompatActivity {
         String user = usuari.getText().toString();
         String pass = password.getText().toString();
 
+        boolean conta = Conexion.comprobarUsuario(user,pass);
 
-
-        if (user.equals("admin") && pass.equals("admin")) {
-            username = user;
-            passwordd = pass;
+        if (conta) {
             Intent intent = new Intent(this, PantallaHome.class);
             startActivity(intent);
         }
-        else if(user != "admin" && pass.equals("admin")) {
+        /*else if(user != "admin" && pass.equals("admin")) {
             userWrong.setVisibility(View.VISIBLE);
             passWrong.setVisibility(View.INVISIBLE);
         }
@@ -57,7 +55,7 @@ public class PantallaLogSign extends AppCompatActivity {
 
             passWrong.setVisibility(View.VISIBLE);
             userWrong.setVisibility(View.INVISIBLE);
-        }
+        }*/
         else{
             userWrong.setVisibility(View.VISIBLE);
             passWrong.setVisibility(View.VISIBLE);

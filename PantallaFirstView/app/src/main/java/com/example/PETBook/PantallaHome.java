@@ -16,12 +16,14 @@ public class PantallaHome extends AppCompatActivity {
     private String name;
     private ImageView imatgePerfil;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_home);
         getSupportActionBar().hide();
-        ImageView imageProfile = findViewById(R.id.imageView4);
+        /*ImageView imageProfile = findViewById(R.id.imageView4);
         imatgePerfil.setImageResource(R.drawable.imatge_defecte);
         imageProfile = imatgePerfil;
 

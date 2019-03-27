@@ -26,13 +26,6 @@
             android:layout_marginBottom="20dp"
             android:textColor="@color/colorPrimaryDark"/>
 
-        <TextView
-            android:id="@+id/nameLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text ="@string/name"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/nameInput"
@@ -41,18 +34,12 @@
             android:textSize="15sp"
             android:inputType="textPersonName"
             android:focusable="true"
+            android:hint="name"
             android:textColorHighlight="@color/colorPrimary"
             android:textColorHint="#222222"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:padding="5dp"/>
 
-        <TextView
-            android:id="@+id/surnamesLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text ="@string/surnames"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/surnamesInput"
@@ -61,37 +48,24 @@
             android:textSize="15sp"
             android:inputType="textPersonName"
             android:focusable="true"
+            android:hint="surname"
             android:textColorHint="#222222"
             android:textColorHighlight="@color/colorPrimary"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:padding="5dp"/>
 
-        <TextView
-            android:id="@+id/mailLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text ="@string/email"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/mailInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
+            android:hint="mail"
             android:inputType="textPersonName"
             android:focusable="true"
             android:textColorHint="#222222"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:padding="5dp" />
-
-        <TextView
-            android:id="@+id/password1Label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text ="@string/password1"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/password1Input"
@@ -99,18 +73,13 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:focusable="true"
+            android:hint="password"
+
             android:textColorHint="#222222"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:padding="5dp"
             android:inputType="textPassword" />
 
-        <TextView
-            android:id="@+id/password2Label"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text ="@string/password2"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/password2Input"
@@ -118,24 +87,20 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:focusable="true"
+            android:hint="password repeat"
+
             android:textColorHint="#222222"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:padding="5dp"
             android:inputType="textPassword" />
-
-        <TextView
-            android:id="@+id/birthdayLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text ="@string/birthday"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:textSize="15sp"/>
 
         <EditText
             android:id="@+id/birthdayInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="birthday"
+
             android:inputType="date"
             android:clickable="true"
             android:focusable="false"/>

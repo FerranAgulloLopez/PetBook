@@ -39,15 +39,6 @@ public class PantallaSignUp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_sign_up);
 
-        labelName = (TextView) findViewById(R.id.nameLabel);
-        labelSurnames = (TextView) findViewById(R.id.surnamesLabel);
-        labelMail = (TextView) findViewById(R.id.mailLabel);
-        labelPassword1 = (TextView) findViewById(R.id.password1Label);
-        labelPassword2 = (TextView) findViewById(R.id.password2Label);
-        labelBirthday = (TextView) findViewById(R.id.birthdayLabel);
-
-
-
         inputName      = (EditText) findViewById(R.id.nameInput);
         inputSurnames  = (EditText) findViewById(R.id.surnamesInput);
         inputMail      = (EditText) findViewById(R.id.mailInput);
@@ -57,7 +48,7 @@ public class PantallaSignUp extends AppCompatActivity {
 
         buttonSignIn   = (Button) findViewById(R.id.signInButton);
 
-        buttonSignIn.setOnClickListener(new View.OnClickListener() {
+        inputBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DatePickerDialog(PantallaSignUp.this, date, calendario
@@ -83,10 +74,10 @@ public class PantallaSignUp extends AppCompatActivity {
     };
 
     private void actualizarInput() {
-        String formatoDeFecha = "MM/dd/yy"; //In which you need put here
+        String formatoDeFecha = "dd/mm/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(formatoDeFecha, Locale.US);
 
-        buttonSignIn.setText(sdf.format(calendario.getTime()));
+        inputBirthday.setText(sdf.format(calendario.getTime()));
     }
 
     public void signUp(View view){
