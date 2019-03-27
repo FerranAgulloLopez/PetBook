@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
-    tools:context=".LogInSignUp">
+    tools:context=".PantallaLogSign">
 
     <EditText
         android:id="@+id/password"
@@ -40,6 +40,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="112dp"
         android:background="#840705"
+        android:onClick="signUp"
         android:text="@string/sign_up"
         android:textColor="@android:color/white"
         android:textColorLink="@color/colorPrimary"
@@ -48,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button11"
-        app:layout_constraintVertical_bias="0.206" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/button11"
@@ -62,12 +63,14 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="216dp"
         android:background="#840705"
+        android:onClick="comprovarConta"
         android:text="@string/log_in"
         android:textColor="@android:color/white"
         android:textColorLink="@color/colorPrimary"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.459"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/passWrong"
         app:layout_constraintVertical_bias="1.0" />

@@ -15,10 +15,10 @@
         android:layout_height="30dp"
         android:background="@color/colorAccent"
         android:scaleType="centerInside"
-        android:src="@drawable/volver"
+        android:src="?attr/actionModeCloseDrawable"
         android:tint="@android:color/background_light" />
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:text="Mis eventos"
         android:textColor="@android:color/white"

@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.PETBook.PantallaSignUp"
+        <activity
+            android:name="com.example.PETBook.PantallaSignUp"
             android:parentActivityName="com.example.PETBook.PantallaLogSign">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
@@ -30,44 +31,44 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.PETBook.MyPets" />
         </activity>
-        <activity android:name="com.example.PETBook.MyCalendar"
-        android:parentActivityName="com.example.PETBook.PantallaHome">
+        <activity
+            android:name="com.example.PETBook.MyCalendar"
+            android:parentActivityName="com.example.PETBook.PantallaHome">
 
-        <!-- The meta-data tag is required if you support API level 15 and lower -->
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.PETBook.MyPets" />
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.PETBook.MyPets" />
         </activity>
-
-        <activity android:name="com.example.PETBook.MyEvents"
-            android:parentActivityName="com.example.PETBook.PantallaHome"
+        <activity
+            android:name="com.example.PETBook.MyEvents"
             android:label="MyEvents"
+            android:parentActivityName="com.example.PETBook.PantallaHome"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
-        <!-- The meta-data tag is required if you support API level 15 and lower -->
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.PETBook.MyPets" />
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.PETBook.MyPets" />
         </activity>
+        <activity
+            android:name="com.example.PETBook.MyPets"
+            android:parentActivityName="com.example.PETBook.PantallaHome">
 
-        <activity android:name="com.example.PETBook.MyPets"
-        android:parentActivityName="com.example.PETBook.PantallaHome">
-
-        <!-- The meta-data tag is required if you support API level 15 and lower -->
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.PETBook.MyPets" />
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.PETBook.MyPets" />
         </activity>
+        <activity
+            android:name="com.example.PETBook.MyPosts"
+            android:parentActivityName="com.example.PETBook.PantallaHome">
 
-        <activity android:name="com.example.PETBook.MyPosts"
-        android:parentActivityName="com.example.PETBook.PantallaHome">
-
-        <!-- The meta-data tag is required if you support API level 15 and lower -->
-        <meta-data
-            android:name="android.support.PARENT_ACTIVITY"
-            android:value="com.example.PETBook.MyPets" />
+            <!-- The meta-data tag is required if you support API level 15 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.PETBook.MyPets" />
         </activity>
-
         <activity android:name="com.example.PETBook.PantallaHome" />
         <activity android:name="com.example.PETBook.PantallaLogSign" />
         <activity android:name="com.example.PETBook.PantallaFirstView">

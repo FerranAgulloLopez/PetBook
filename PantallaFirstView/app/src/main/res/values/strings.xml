@@ -35,4 +35,5 @@
     <string name="the_passsword_is_incorrect">the passsword is incorrect</string>
     <string name="the_username_is_incorrect">the username is incorrect</string>
     <string name="log_in">Log in</string>
+    <string name="title_activity_pantalla_crear_evento">PantallaCrearEvento</string>
 </resources>
