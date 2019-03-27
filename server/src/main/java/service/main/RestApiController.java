@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
 import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
+import service.main.repositories.EventoRepository;
 import service.main.repositories.UserRepository;
 import service.main.service.ServerService;
+
+import java.util.Calendar;
 
 
 @RestController
@@ -23,6 +26,9 @@ public class RestApiController {
     private UserRepository userRepository;
     @Autowired
     private ServerService serverService;
+
+    @Autowired
+    private EventoRepository eventoRepository;
 
 
     /*
@@ -105,5 +111,99 @@ public class RestApiController {
         userRepository.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+
+
+
+
+
+
+
+    // Evento
+    //@RequestMapping(value = "/CreaEvento", method = {RequestMethod.POST,RequestMethod.GET})
+
+
+    @CrossOrigin
+    @RequestMapping(value = "/CreaEvento", method = {RequestMethod.POST})
+    @ApiOperation(value = "Crear Evento", notes = "Guarda un evento en la base de datos. ")
+    public ResponseEntity<?> creaEvento(@ApiParam(value="Email del usuario creador", required = true, example = "petbook@mail.com") @RequestParam String userEmail,
+                                        @ApiParam(value="Año del evento", required = true, example = "2019") @RequestParam Integer any,
+                                        @ApiParam(value="Mes del evento", required = true, example = "12") @RequestParam Integer mes,
+                                        @ApiParam(value="Dia dentro del mes del evento", required = true, example = "31") @RequestParam Integer dia,
+                                        @ApiParam(value="Hora del evento, Formato 24 horas", required = true, example = "16") @RequestParam Integer hora,
+                                        @ApiParam(value="Coordenadas", required = true, example = "2") @RequestParam Integer coordenadas,
+                                        @ApiParam(value="Radio", required = true, example = "2") @RequestParam Integer radio)
+    {
+
+            serverService.creaEvento(userEmail, any, mes, dia, hora, coordenadas, radio);
+            return new ResponseEntity<>(HttpStatus.OK);
+
+
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/getALLEventos", method = RequestMethod.GET)
+    @ApiOperation(value = "GET ALL Evento", notes = "Obtiene la informacion de todos los eventos ")
+    public ResponseEntity<?> getAllEventos()
+    {
+        return new ResponseEntity<>(serverService.findAllEventos(),HttpStatus.OK);
+
+    }
+
+
+
+
+
+
+
+    @CrossOrigin
+    @RequestMapping(value = "/CreaMascota", method = {RequestMethod.POST})
+    @ApiOperation(value = "Crear Mascota", notes = "Guarda una mascota en la base de datos.")
+    public ResponseEntity<?> creaMascota(@ApiParam(value="Email del dueño", required = true, example = "RealMadrid@mail.com") @RequestParam String emailDuenyo,
+                                        @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
+    {
+
+        serverService.creaMascota(emailDuenyo, nombreMascota);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+    @CrossOrigin
+    @RequestMapping(value = "/GetMascota", method = RequestMethod.GET)
+    @ApiOperation(value = "GET Mascota", notes = "Obtiene la informacion de una mascota ")
+    public ResponseEntity<?> getMascota(@ApiParam(value="Email del dueño", required = true, example = "RealMadrid@mail.com") @RequestParam String emailDuenyo,
+                                        @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
+    {
+        return new ResponseEntity<>(serverService.mascota_findById(emailDuenyo, nombreMascota).get(),HttpStatus.OK);
+
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/getALLMascotas", method = RequestMethod.GET)
+    @ApiOperation(value = "GET ALL Mascotas", notes = "Obtiene la informacion de todas las mascotas ")
+    public ResponseEntity<?> getAllMascotas()
+    {
+        return new ResponseEntity<>(serverService.findAllMascotas(),HttpStatus.OK);
+
+    }
+
+
+
+
+    @CrossOrigin
+    @RequestMapping(value = "/DeleteMascota", method = RequestMethod.DELETE)
+    @ApiOperation(value = "DELETE Mascota", notes = "Elimina una mascota ")
+    public ResponseEntity<?> deleteMascota(@ApiParam(value="Email del dueño", required = true, example = "RealMadrid@mail.com") @RequestParam String emailDuenyo,
+                                        @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
+    {
+        serverService.deleteMascota(emailDuenyo, nombreMascota);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+
+
+
 
 }
