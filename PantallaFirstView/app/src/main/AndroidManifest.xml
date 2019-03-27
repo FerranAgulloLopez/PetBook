@@ -40,7 +40,9 @@
         </activity>
 
         <activity android:name="com.example.PETBook.MyEvents"
-        android:parentActivityName="com.example.PETBook.PantallaHome">
+            android:parentActivityName="com.example.PETBook.PantallaHome"
+            android:label="MyEvents"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         <!-- The meta-data tag is required if you support API level 15 and lower -->
         <meta-data
