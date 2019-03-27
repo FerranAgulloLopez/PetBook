@@ -6,34 +6,159 @@
     android:layout_height="match_parent"
     tools:context="com.example.PETBook.PantallaSignUp">
 
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/pantalla_sign_up"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-    <Button
-        android:id="@+id/button5"
-        android:layout_width="169dp"
-        android:layout_height="85dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/colorProjecte"
-        android:onClick="signUp"
-        android:text="@string/sign_up"
-        android:textColor="@android:color/background_light"
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.813" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/register_header"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:padding="10dp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <TextView
+            android:id="@+id/nameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text ="@string/name"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/nameInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:inputType="textPersonName"
+            android:focusable="true"
+            android:textColorHighlight="@color/colorPrimary"
+            android:textColorHint="#222222"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:padding="5dp"/>
+
+        <TextView
+            android:id="@+id/surnamesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text ="@string/surnames"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/surnamesInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:inputType="textPersonName"
+            android:focusable="true"
+            android:textColorHint="#222222"
+            android:textColorHighlight="@color/colorPrimary"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:padding="5dp"/>
+
+        <TextView
+            android:id="@+id/mailLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text ="@string/email"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/mailInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:inputType="textPersonName"
+            android:focusable="true"
+            android:textColorHint="#222222"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:padding="5dp" />
+
+        <TextView
+            android:id="@+id/password1Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text ="@string/password1"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/password1Input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:focusable="true"
+            android:textColorHint="#222222"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:padding="5dp"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/password2Label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text ="@string/password2"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/password2Input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:focusable="true"
+            android:textColorHint="#222222"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:padding="5dp"
+            android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/birthdayLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text ="@string/birthday"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:textSize="15sp"/>
+
+        <EditText
+            android:id="@+id/birthdayInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="date"
+            android:clickable="true"
+            android:focusable="false"/>
+
+        <Button
+            android:id="@+id/signInButton"
+            android:layout_width="169dp"
+            android:layout_height="85dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/colorProjecte"
+            android:paddingLeft="15dip"
+            android:paddingRight="15dip"
+            android:text="@string/sign_up"
+            android:textColor="@android:color/background_light"
+            android:textSize="24sp" />
+
+    </LinearLayout>
+
+
 </android.support.constraint.ConstraintLayout>

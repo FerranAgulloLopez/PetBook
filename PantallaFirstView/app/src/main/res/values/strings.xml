@@ -35,4 +35,13 @@
     <string name="the_passsword_is_incorrect">the passsword is incorrect</string>
     <string name="the_username_is_incorrect">the username is incorrect</string>
     <string name="log_in">Log in</string>
+    <!-- Strings related to register -->
+    <string name="register_header">Registro de usuario</string>
+    <string name="name">Name</string>
+    <string name="surnames">Surnames</string>
+    <string name="email">E-mail</string>
+    <string name="password1">Password</string>
+    <string name="password2">Password repeat</string>
+    <string name="birthday">Birthday</string>
+    <string name="register_action">Registrarse</string>
 </resources>
