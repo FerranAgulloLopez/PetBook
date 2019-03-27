@@ -12,6 +12,11 @@ import com.example.pantallafirstview.R;
 public class PantallaLogSign extends AppCompatActivity {
 
 
+    static String username;
+    static String passwordd;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +41,11 @@ public class PantallaLogSign extends AppCompatActivity {
         String user = usuari.getText().toString();
         String pass = password.getText().toString();
 
+
+
         if (user.equals("admin") && pass.equals("admin")) {
+            username = user;
+            passwordd = pass;
             Intent intent = new Intent(this, PantallaHome.class);
             startActivity(intent);
         }
