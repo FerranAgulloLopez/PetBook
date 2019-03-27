@@ -33,4 +33,8 @@ public interface ServerService {
     public void deleteMascota(String emailDuenyo, String nombreMascota);
 
     public List<Mascota> findAllMascotas();
+
+    public void removeDataBase();
+
+
 }

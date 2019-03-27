@@ -24,21 +24,17 @@ import java.util.Optional;
 public class RestApiController {
 
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private ServerService serverService;
-
-    @Autowired
-    private EventoRepository eventoRepository;
 
 
     /*
     Sign up and login operations
      */
 
+
     @CrossOrigin
     @RequestMapping(value = "/RegisterUser", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "User Registration", notes = "Saves a new user to the database. It receives the user's email and password")
+    @ApiOperation(value = "User Registration", notes = "Saves a new user to the database. It receives the user's email and password", tags="User")
     public ResponseEntity<?> RegisterUser(@ApiParam(value="A user with email and password", required = true) @RequestBody User input) {
         serverService.RegisterUser(input);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -46,7 +42,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/ConfirmLogin", method = RequestMethod.POST)
-    @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.")
+    @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.",tags="LogIn")
     public ResponseEntity<?> ConfirmLogin(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
                                           @ApiParam(value="Password introduced", required = true, example = "1234") @RequestParam String password) {
         try {
@@ -58,7 +54,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/SendConfirmationEmail", method = RequestMethod.POST)
-    @ApiOperation(value = "Send a confirmation email", notes = "Sends to the specified user an email with the instructions to verify it.")
+    @ApiOperation(value = "Send a confirmation email", notes = "Sends to the specified user an email with the instructions to verify it.",tags="LogIn")
     public ResponseEntity<?> ConfirmationEmail(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email) {
         try {
             serverService.SendConfirmationEmail(email);
@@ -70,20 +66,15 @@ public class RestApiController {
         }
     }
 
+
+
     /*
     Profile operations
      */
 
     @CrossOrigin
-    @RequestMapping(value = "/GetAllUsers", method = RequestMethod.GET)
-    @ApiOperation(value = "Get all usuarios")
-    public ResponseEntity<?> GetAllUsers() {
-        return new ResponseEntity<>(userRepository.findAll(),HttpStatus.OK);
-    }
-
-    @CrossOrigin
     @RequestMapping(value = "/GetUser/{email}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email.")
+    @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email.", tags="User")
     public ResponseEntity<?> InfoUser(@PathVariable String email) {
         try {
             return new ResponseEntity<>(serverService.getUserByEmail(email), HttpStatus.OK);
@@ -95,7 +86,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/update/{email}", method = RequestMethod.POST)
-    @ApiOperation(value = "Update all the information of the user")
+    @ApiOperation(value = "Update all the information of the user",tags = "User")
     public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody User user)
     {
         try {
@@ -110,34 +101,10 @@ public class RestApiController {
 
 
 
-    /*
-    Only testing purposes TODO remove this section in the future
-     */
-
-    @CrossOrigin
-    @RequestMapping(value = "/Test/RemoveDatabase", method = RequestMethod.DELETE)
-    @ApiOperation(value = "Testing")
-    public ResponseEntity<?> RemoveDatabase()
-    {
-        userRepository.deleteAll();
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-
-
-
-
-
-
-
-
-    // Evento
-    //@RequestMapping(value = "/CreaEvento", method = {RequestMethod.POST,RequestMethod.GET})
-
 
     @CrossOrigin
     @RequestMapping(value = "/CreaEvento", method = {RequestMethod.POST})
-    @ApiOperation(value = "Crear Evento", notes = "Guarda un evento en la base de datos. ")
+    @ApiOperation(value = "Crear Evento", notes = "Guarda un evento en la base de datos.", tags = "Events")
     public ResponseEntity<?> creaEvento(@ApiParam(value="Email del usuario creador", required = true, example = "petbook@mail.com") @RequestParam String userEmail,
                                         @ApiParam(value="Año del evento", required = true, example = "2019") @RequestParam Integer any,
                                         @ApiParam(value="Mes del evento", required = true, example = "12") @RequestParam Integer mes,
@@ -155,7 +122,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/getALLEventos", method = RequestMethod.GET)
-    @ApiOperation(value = "GET ALL Evento", notes = "Obtiene la informacion de todos los eventos ")
+    @ApiOperation(value = "GET ALL Evento", notes = "Obtiene la informacion de todos los eventos ", tags = "Events")
     public ResponseEntity<?> getAllEventos()
     {
         return new ResponseEntity<>(serverService.findAllEventos(),HttpStatus.OK);
@@ -170,7 +137,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/CreaMascota", method = {RequestMethod.POST})
-    @ApiOperation(value = "Crear Mascota", notes = "Guarda una mascota en la base de datos.")
+    @ApiOperation(value = "Crear Mascota", notes = "Guarda una mascota en la base de datos.", tags = "Pets")
     public ResponseEntity<?> creaMascota(@ApiParam(value="Email del dueño", required = true, example = "RealMadrid@mail.com") @RequestParam String emailDuenyo,
                                         @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
     {
@@ -182,7 +149,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/GetMascota", method = RequestMethod.GET)
-    @ApiOperation(value = "GET Mascota", notes = "Obtiene la informacion de una mascota ")
+    @ApiOperation(value = "GET Mascota", notes = "Obtiene la informacion de una mascota ", tags = "Pets")
     public ResponseEntity<?> getMascota(@ApiParam(value="Email del dueño", required = true, example = "RealMadrid@mail.com") @RequestParam String emailDuenyo,
                                         @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
     {
@@ -192,7 +159,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/getALLMascotas", method = RequestMethod.GET)
-    @ApiOperation(value = "GET ALL Mascotas", notes = "Obtiene la informacion de todas las mascotas ")
+    @ApiOperation(value = "GET ALL Mascotas", notes = "Obtiene la informacion de todas las mascotas ", tags = "Pets")
     public ResponseEntity<?> getAllMascotas()
     {
         return new ResponseEntity<>(serverService.findAllMascotas(),HttpStatus.OK);
@@ -204,7 +171,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/DeleteMascota", method = RequestMethod.DELETE)
-    @ApiOperation(value = "DELETE Mascota", notes = "Elimina una mascota ")
+    @ApiOperation(value = "DELETE Mascota", notes = "Elimina una mascota ", tags = "Pets")
     public ResponseEntity<?> deleteMascota(@ApiParam(value="Email del dueño", required = true, example = "RealMadrid@mail.com") @RequestParam String emailDuenyo,
                                         @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
     {
@@ -213,6 +180,21 @@ public class RestApiController {
 
     }
 
+
+
+
+    /*
+    Only testing purposes TODO remove this section in the future
+     */
+
+    @CrossOrigin
+    @RequestMapping(value = "/Test/RemoveDatabase", method = RequestMethod.DELETE)
+    @ApiOperation(value = "Testing", tags = "Testing")
+    public ResponseEntity<?> RemoveDatabase()
+    {
+        serverService.removeDataBase();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 
 

@@ -94,6 +94,13 @@ public class ControllerIntegrationTests {
     Get user by email operation
      */
 
+
+    /*
+    documento para testear
+        */
+
+
+
     @Test
     public void getUserByEmail() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"login_confirmation_operation/input_register.json")))

@@ -120,5 +120,8 @@ public class ServerServiceImpl implements ServerService {
         mascotaRepository.deleteById(id);
     }
 
+    public void removeDataBase() {
+        userRepository.deleteAll();
+    }
 
 }
