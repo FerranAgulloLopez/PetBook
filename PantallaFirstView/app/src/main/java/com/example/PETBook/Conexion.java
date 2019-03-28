@@ -13,7 +13,7 @@ public class Conexion {
         try {
             url = new URL("http://10.4.41.146:9999/ServerRESTAPI/ConfirmLogin?email=");
             URL url1 = new URL(url + user + "&password=" + pass);
-
+            System.out.print(url1);
 
             urlConnection = (HttpURLConnection) url
                     .openConnection();
