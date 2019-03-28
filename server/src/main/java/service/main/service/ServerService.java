@@ -4,6 +4,7 @@ import service.main.entity.Evento;
 import service.main.entity.Mascota;
 import service.main.entity.User;
 import service.main.entity.output.OutLogin;
+import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
 import java.util.List;
@@ -23,16 +24,16 @@ public interface ServerService {
 
     public void updateUserByEmail(String email, User user) throws NotFoundException;
 
-    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio);
+    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException;
     public List<Evento> findAllEventos();
 
 
-    public void creaMascota(String email, String nom_mascota);
-    Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota);
+    public void creaMascota(String email, String nom_mascota) throws AlreadyExistsException, NotFoundException;
+    Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
-    public void deleteMascota(String emailDuenyo, String nombreMascota);
+    public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
-    public List<Mascota> findAllMascotas();
+    public List<Mascota> findAllMascotasByUser(String email) throws NotFoundException;
 
     public void removeDataBase();
 

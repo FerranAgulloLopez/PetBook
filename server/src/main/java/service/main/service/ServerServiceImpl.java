@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
 import service.main.entity.output.OutLogin;
+import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.EventoRepository;
@@ -11,6 +12,7 @@ import service.main.repositories.MascotaRepository;
 import service.main.repositories.UserRepository;
 import service.main.util.EmailServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,13 +78,12 @@ public class ServerServiceImpl implements ServerService {
 
 
 
-    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) {
+    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException {
         Fecha fecha2 = new Fecha(any, mes, dia ,hora);
         Localizacion localizacion = new Localizacion(coordenadas,radio);
 
-
-
         Evento evento = new Evento(userEmail, localizacion.getId(), fecha2.getId());
+        if(eventoRepository.existsById(evento.getId())) throw new AlreadyExistsException("El Evento ya existe en el sistema");
         eventoRepository.save(evento);
     }
 
@@ -96,27 +97,40 @@ public class ServerServiceImpl implements ServerService {
 
 
 
-    public void creaMascota(String email, String nom_mascota) {
+    public void creaMascota(String email, String nom_mascota) throws AlreadyExistsException, NotFoundException {
         Mascota mascota = new Mascota(nom_mascota,email);
+        if(! userRepository.existsById(email)) throw new NotFoundException("El Usuario no existe en el sistema");
+        if(mascotaRepository.existsById(mascota.getId())) throw new AlreadyExistsException("La mascota ya existe en el sistema");
         mascotaRepository.save(mascota);
     }
 
 
-    public Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) {
+    public Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
+        if(! userRepository.existsById(emailDuenyo)) throw new NotFoundException("El Usuario no existe en el sistema");
+        if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
         return mascotaRepository.findById(id);
     }
 
-    public List<Mascota> findAllMascotas() {
-        return mascotaRepository.findAll();
+    public List<Mascota> findAllMascotasByUser(String email) throws NotFoundException{
+        if(! userRepository.existsById(email)) throw new NotFoundException("El Usuario no existe en el sistema");
+
+        List<Mascota> mascotas = mascotaRepository.findAll();
+        List<Mascota> resultado = new ArrayList<Mascota>();
+
+        for(Mascota mascota : mascotas)
+            if(mascota.getUserEmail().equals(email)) resultado.add(mascota);
+
+        return resultado;
     }
 
 
 
 
 
-    public void deleteMascota(String emailDuenyo, String nombreMascota) {
+    public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
+        if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existia en el sistema");
         mascotaRepository.deleteById(id);
     }
 
