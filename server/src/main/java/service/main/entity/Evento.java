@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+//
 @Document(collection = "domain")
 public class Evento implements Serializable {
 

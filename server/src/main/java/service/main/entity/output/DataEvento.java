@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Document(collection = "domain")
 public class DataEvento implements Serializable {
-
+//
     private String userEmail;
     private Integer any;
     private Integer mes;
