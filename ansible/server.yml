@@ -7,10 +7,10 @@
 
 ---
 
-- name: "Install docker"
+- name: "Configure server"
   hosts: 10.4.41.146
 
   roles:
     #- docker
-    - push_repo
+    - build_images
 
