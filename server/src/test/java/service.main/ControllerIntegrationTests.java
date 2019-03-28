@@ -94,20 +94,12 @@ public class ControllerIntegrationTests {
     /*
     Get user by email operation
      */
-
-
-    /*
-    documento para testear
-        */
-
-
-
     @Test
     public void getUserByEmail() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"login_confirmation_operation/input_register.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getUserByEmail_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUser/petbook@main.com"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"register_operation/output_register.json")));
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUser/foo@mail.com"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"getUserByEmail_operation/output_getUser.json")));
     }
 
     @Test
@@ -116,7 +108,25 @@ public class ControllerIntegrationTests {
     }
 
 
+    /*
+    Update user by email operation
+     */
 
+    @Test
+    public void updateUserByEmail() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updateUserByEmail_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/update/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updateUserByEmail_operation/input_updateUser.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUser/foo@mail.com"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"updateUserByEmail_operation/output_getUser.json")));
+    }
+
+
+    @Test
+    public void updateUserByEmailNOTINDB() throws Exception {
+        this.mockMvc.perform(post("/ServerRestAPI/update/noUser@petbook.com")).andDo(print()).andExpect(status().isNotFound());
+    }
 
 
 

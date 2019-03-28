@@ -4,6 +4,7 @@ import service.main.entity.Evento;
 import service.main.entity.Mascota;
 import service.main.entity.User;
 import service.main.entity.output.OutLogin;
+import service.main.entity.output.OutUpdateUserProfile;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
@@ -22,7 +23,7 @@ public interface ServerService {
 
     public User getUserByEmail(String email) throws NotFoundException;
 
-    public void updateUserByEmail(String email, User user) throws NotFoundException;
+    public void updateUserByEmail(String email, OutUpdateUserProfile user) throws NotFoundException;
 
     public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException, NotFoundException;
     public List<Evento> findAllEventos();
@@ -36,6 +37,7 @@ public interface ServerService {
     public List<Mascota> findAllMascotasByUser(String email) throws NotFoundException;
 
     public void removeDataBase();
+
 
 
 }

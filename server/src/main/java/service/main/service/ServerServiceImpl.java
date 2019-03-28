@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
 import service.main.entity.output.OutLogin;
+import service.main.entity.output.OutUpdateUserProfile;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
@@ -66,11 +67,16 @@ public class ServerServiceImpl implements ServerService {
         else return userToReturn.get();
     }
 
-    public void updateUserByEmail(String email, User user) throws NotFoundException {
+    public void updateUserByEmail(String email, OutUpdateUserProfile userUpdated) throws NotFoundException {
         Optional<User> userToUpdate = userRepository.findById(email);
         if (!userToUpdate.isPresent()) throw new NotFoundException("There is no user with that email");
         else {
-            userRepository.deleteById(email);
+            User user = userToUpdate.get();
+            userRepository.delete(user);
+            user.setFirstName(userUpdated.getFirstName());
+            user.setSecondName(userUpdated.getSecondName());
+            user.setDateOfBirth(userUpdated.getDateOfBirth());
+            user.setPostalCode(userUpdated.getPostalCode());
             userRepository.insert(user);
         }
     }

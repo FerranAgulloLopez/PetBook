@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
 import service.main.entity.output.DataEvento;
 import service.main.entity.output.DataMascota;
+import service.main.entity.output.OutUpdateUserProfile;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
@@ -90,7 +91,7 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/update/{email}", method = RequestMethod.POST)
     @ApiOperation(value = "Update all the information of the user",tags = "User")
-    public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody User user)
+    public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody OutUpdateUserProfile user)
     {
         try {
             serverService.updateUserByEmail(email,user);
@@ -100,9 +101,6 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
-
-
 
 
 //

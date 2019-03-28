@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import service.main.entity.output.OutUpdateUserProfile;
 import service.main.util.PBKDF2Hasher;
 
 import java.io.Serializable;
@@ -90,6 +91,7 @@ public class User implements Serializable {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
+
 
 
     /*
