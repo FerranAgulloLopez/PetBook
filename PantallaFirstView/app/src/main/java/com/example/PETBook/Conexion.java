@@ -11,10 +11,10 @@ public class Conexion {
     private URL url;
     HttpURLConnection urlConnection = null;
 
-    public void comprobarUsuario(String user, String pass) {
+    public static boolean comprobarUsuario(String user, String pass) {
         HttpURLConnection urlConnection = null;
         try {
-            url = new URL("http://10.4.41.146:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass);
+            URL url = new URL("http://10.4.41.146:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass);
             //URL url1 = new URL(url + user + "&password=" + pass);
             //System.out.print(url1);
 
@@ -24,7 +24,6 @@ public class Conexion {
             urlConnection.connect();
 
             Integer nume = urlConnection.getResponseCode();
-            System.out.print(nume);
 
             InputStream in = urlConnection.getInputStream();
 
@@ -34,15 +33,27 @@ public class Conexion {
             while (data != -1) {
                 char current = (char) data;
                 data = isw.read();
-                //System.out.print(current);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
             }
         }
+        return true;
     }
+
+
+    /*public static void main(String[] args) {
+        URL url;
+        HttpURLConnection urlConnection = null;
+        boolean i = comprobarUsuario("alex","alex");
+        System.out.print(i);
+    }*/
+
+
 
 }
