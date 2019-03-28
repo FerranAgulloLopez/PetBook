@@ -9,6 +9,11 @@
 
     <include layout="@layout/toolbar"></include>
 
+    <include
+        android:id="@+id/botonCrear"
+        android:onClick="crearEvento"
+        layout="@layout/boton_anadir"></include>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="547dp"
