@@ -124,6 +124,7 @@ public class ControllerIntegrationTests {
 
     @Test
     public void creaYgetALLEvento() throws Exception {
+
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_crea_evento.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/getALLEventos"))
@@ -131,7 +132,7 @@ public class ControllerIntegrationTests {
     }
 
     @Test
-    public void creaEventoPeroJaExisteix() throws AlreadyExistsException, Exception {
+    public void creaEventoPeroJaExisteix() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_crea_evento.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_crea_evento.json")))

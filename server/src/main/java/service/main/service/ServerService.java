@@ -24,7 +24,7 @@ public interface ServerService {
 
     public void updateUserByEmail(String email, User user) throws NotFoundException;
 
-    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException;
+    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException, NotFoundException;
     public List<Evento> findAllEventos();
 
 

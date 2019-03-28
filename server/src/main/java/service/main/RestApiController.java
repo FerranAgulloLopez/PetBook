@@ -110,12 +110,12 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/CreaEvento", method = {RequestMethod.POST})
     @ApiOperation(value = "Crear Evento", notes = "Guarda un evento en la base de datos.", tags = "Events")
-    public ResponseEntity<?> creaEvento(@ApiParam(value="Un Evento", required = true) @RequestBody DataEvento evento) throws AlreadyExistsException {
+    public ResponseEntity<?> creaEvento(@ApiParam(value="Un Evento", required = true) @RequestBody DataEvento evento) throws AlreadyExistsException, NotFoundException {
         try {
             serverService.creaEvento(evento.getUserEmail(), evento.getAny(), evento.getMes(), evento.getDia(), evento.getHora(), evento.getCoordenadas(), evento.getRadio());
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        catch(AlreadyExistsException exception) {
+        catch(Exception exception) {
             return new ResponseEntity<>(exception.getMessage(), HttpStatus.FOUND);
         }
     }

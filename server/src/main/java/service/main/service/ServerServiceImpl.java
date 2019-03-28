@@ -78,7 +78,7 @@ public class ServerServiceImpl implements ServerService {
 
 
 
-    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException {
+    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException, NotFoundException {
         Fecha fecha2 = new Fecha(any, mes, dia ,hora);
         Localizacion localizacion = new Localizacion(coordenadas,radio);
 
