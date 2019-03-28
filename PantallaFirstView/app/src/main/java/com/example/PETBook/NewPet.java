@@ -7,20 +7,15 @@ import android.view.View;
 
 import com.example.pantallafirstview.R;
 
-public class MyPets extends AppCompatActivity {
+public class NewPet extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_pets);
+        setContentView(R.layout.activity_new_pet);
     }
-    public void pet1(View view){
-        Intent intent = new Intent(this, Pet1.class);
-        startActivity(intent);
-
-    }
-    public void newPet(View view){
-        Intent intent = new Intent(this, NewPet.class);
+    public void myPets(View view){
+        Intent intent = new Intent(this, MyPets.class);
         startActivity(intent);
 
     }

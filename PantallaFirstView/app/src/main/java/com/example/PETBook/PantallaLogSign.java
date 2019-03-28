@@ -12,6 +12,11 @@ import com.example.pantallafirstview.R;
 public class PantallaLogSign extends AppCompatActivity {
 
 
+    static String username;
+    static String passwordd;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,11 +41,13 @@ public class PantallaLogSign extends AppCompatActivity {
         String user = usuari.getText().toString();
         String pass = password.getText().toString();
 
-        if (user.equals("admin") && pass.equals("admin")) {
+        boolean conta = Conexion.comprobarUsuario(user,pass);
+
+        if (conta) {
             Intent intent = new Intent(this, PantallaHome.class);
             startActivity(intent);
         }
-        else if(user != "admin" && pass.equals("admin")) {
+        /*else if(user != "admin" && pass.equals("admin")) {
             userWrong.setVisibility(View.VISIBLE);
             passWrong.setVisibility(View.INVISIBLE);
         }
@@ -48,7 +55,7 @@ public class PantallaLogSign extends AppCompatActivity {
 
             passWrong.setVisibility(View.VISIBLE);
             userWrong.setVisibility(View.INVISIBLE);
-        }
+        }*/
         else{
             userWrong.setVisibility(View.VISIBLE);
             passWrong.setVisibility(View.VISIBLE);
