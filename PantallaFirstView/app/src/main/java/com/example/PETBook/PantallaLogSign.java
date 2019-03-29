@@ -14,7 +14,7 @@ public class PantallaLogSign extends AppCompatActivity {
 
     static String username;
     static String passwordd;
-
+    private Conexion conexion;
 
 
     @Override
@@ -22,8 +22,7 @@ public class PantallaLogSign extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_log_sign);
         getSupportActionBar().hide();
-
-
+        conexion = new Conexion();
     }
     public void signUp(View view){
         Intent intent = new Intent(this, PantallaSignUp.class);
@@ -41,7 +40,7 @@ public class PantallaLogSign extends AppCompatActivity {
         String user = usuari.getText().toString();
         String pass = password.getText().toString();
 
-        boolean conta = Conexion.comprobarUsuario(user,pass);
+        boolean conta = conexion.comprobarUsuario(user,pass);
 
         if (conta) {
             Intent intent = new Intent(this, PantallaHome.class);
