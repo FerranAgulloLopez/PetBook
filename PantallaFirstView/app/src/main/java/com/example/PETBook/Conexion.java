@@ -47,12 +47,12 @@ public class Conexion {
     }
 
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         URL url;
         HttpURLConnection urlConnection = null;
         boolean i = comprobarUsuario("alex","alex");
         System.out.print(i);
-    }*/
+    }
 
 
 
