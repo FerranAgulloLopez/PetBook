@@ -1,4 +1,6 @@
-package com.example.conexion;
+package com.example.PETBook;
+
+import org.json.JSONObject;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,7 +11,8 @@ import java.net.URL;
 public class Conexion {
 
     private URL url;
-    HttpURLConnection urlConnection = null;
+    private HttpURLConnection urlConnection = null;
+    private static JSONObject json;
 
     public static boolean comprobarUsuario(String user, String pass) {
         HttpURLConnection urlConnection = null;
@@ -45,6 +48,19 @@ public class Conexion {
         }
         return true;
     }
+
+    /*public static void crearEvento(){
+        HttpURLConnection urlConnection = null;
+        try {
+            URL url = new URL("http://10.4.41.146:9999/ServerRESTAPI/CreaEvento");
+        } catch (Exception e){
+            e.printStackTrace();
+        } finally {
+            if (urlConnection != null) {
+                urlConnection.disconnect();
+            }
+        }
+    }*/
 
 
     /*public static void main(String[] args) {
