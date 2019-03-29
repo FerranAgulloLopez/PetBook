@@ -139,18 +139,16 @@ public class PantallaSignUp extends AppCompatActivity {
             return false;
         } else {
             textInputPassword1.setErrorEnabled(false);
-            return true;
-        }
-
-        if (inputPassword2.getText().toString().isEmpty()) {
-            textInputPassword2.setError("Field can't be empty");
-            return false;
-        } else if (inputPassword2.getText().toString().trim().length() > 8 ) {
-            textInputPassword2.setError("Password too long");
-            return false;
-        } else {
-            textInputPassword2.setErrorEnabled(false);
-            return true;
+            if (inputPassword2.getText().toString().isEmpty()) {
+                textInputPassword2.setError("Field can't be empty");
+                return false;
+            } else if (inputPassword2.getText().toString().trim().length() > 8) {
+                textInputPassword2.setError("Password too long");
+                return false;
+            } else {
+                textInputPassword2.setErrorEnabled(false);
+                return true;
+            }
         }
     }
 
