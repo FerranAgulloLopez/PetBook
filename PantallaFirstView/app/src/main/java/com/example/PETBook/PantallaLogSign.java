@@ -40,21 +40,22 @@ public class PantallaLogSign extends AppCompatActivity {
         String user = usuari.getText().toString();
         String pass = password.getText().toString();
 
-        boolean conta = conexion.comprobarUsuario(user,pass);
-
-        if (conta) {
+        String conta = conexion.comprobarUsuario(user,pass);
+        char success = conta.charAt(0);
+        char mailconf = conta.charAt(1);
+        if (success == 't') {
             Intent intent = new Intent(this, PantallaHome.class);
             startActivity(intent);
         }
-        /*else if(user != "admin" && pass.equals("admin")) {
+        else if(conta == "malament") {
             userWrong.setVisibility(View.VISIBLE);
             passWrong.setVisibility(View.INVISIBLE);
         }
-        else if(pass != "admin" && user.equals("admin")){
+        else if(success == 'f'){
 
             passWrong.setVisibility(View.VISIBLE);
             userWrong.setVisibility(View.INVISIBLE);
-        }*/
+        }
         else{
             userWrong.setVisibility(View.VISIBLE);
             passWrong.setVisibility(View.VISIBLE);
