@@ -30,23 +30,24 @@ public class PantallaLogSign extends AppCompatActivity {
     }
 
     public void comprovarConta(View view) {
+        try {
 
-        EditText usuari = findViewById(R.id.user);
-        EditText password = findViewById(R.id.password);
-        TextView userWrong = findViewById(R.id.userWrong);
-        TextView passWrong = findViewById(R.id.passWrong);
+            EditText usuari = findViewById(R.id.user);
+            EditText password = findViewById(R.id.password);
+            TextView userWrong = findViewById(R.id.userWrong);
+            TextView passWrong = findViewById(R.id.passWrong);
 
 
-        String user = usuari.getText().toString();
-        String pass = password.getText().toString();
+            String user = usuari.getText().toString();
+            String pass = password.getText().toString();
 
-        String conta = conexion.comprobarUsuario(user,pass);
-        char success = conta.charAt(0);
-        char mailconf = conta.charAt(1);
-        if (success == 't') {
-            Intent intent = new Intent(this, PantallaHome.class);
-            startActivity(intent);
-        }
+            Conexion con = new Conexion();
+            RespuestaServer rs = con.comprobarUsuario("ConfirmLogin?email=" + user + "&password=" + pass, null);
+            if (rs.getCodigo() == 200) {
+                if (rs.getJson().getBoolean("success")) {
+                    Intent intent = new Intent(this, PantallaHome.class);
+                    startActivity(intent);
+                }/*
         else if(conta == "malament") {
             userWrong.setVisibility(View.VISIBLE);
             passWrong.setVisibility(View.INVISIBLE);
@@ -55,10 +56,14 @@ public class PantallaLogSign extends AppCompatActivity {
 
             passWrong.setVisibility(View.VISIBLE);
             userWrong.setVisibility(View.INVISIBLE);
+        }*/ else {
+                    userWrong.setVisibility(View.VISIBLE);
+                    passWrong.setVisibility(View.VISIBLE);
+                }
+            }
         }
-        else{
-            userWrong.setVisibility(View.VISIBLE);
-            passWrong.setVisibility(View.VISIBLE);
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
 }
