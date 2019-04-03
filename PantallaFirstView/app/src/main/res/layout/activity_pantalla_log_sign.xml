@@ -62,6 +62,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="216dp"
         android:background="#840705"
+        android:onClick="comprovarConta"
         android:text="@string/log_in"
         android:textColor="@android:color/white"
         android:textColorLink="@color/colorPrimary"

@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.example.pantallafirstview.R;
 
+import org.json.JSONObject;
+
 public class PantallaLogSign extends AppCompatActivity {
 
 
@@ -42,12 +44,15 @@ public class PantallaLogSign extends AppCompatActivity {
             String pass = password.getText().toString();
 
             Conexion con = new Conexion();
-            RespuestaServer rs = con.comprobarUsuario("ConfirmLogin?email=" + user + "&password=" + pass, null);
+            RespuestaServer rs = con.comprobarUsuario("ConfirmLogin?email=" + user + "&password=" + pass);
             if (rs.getCodigo() == 200) {
-                if (rs.getJson().getBoolean("success")) {
+                String resposta = rs.getJson().getString("true");
+                System.out.print(resposta);
+                if (resposta ==null) {
                     Intent intent = new Intent(this, PantallaHome.class);
                     startActivity(intent);
-                }/*
+                }
+                /*
         else if(conta == "malament") {
             userWrong.setVisibility(View.VISIBLE);
             passWrong.setVisibility(View.INVISIBLE);
@@ -56,11 +61,13 @@ public class PantallaLogSign extends AppCompatActivity {
 
             passWrong.setVisibility(View.VISIBLE);
             userWrong.setVisibility(View.INVISIBLE);
-        }*/ else {
+        }*/
+            }
+            else {
                     userWrong.setVisibility(View.VISIBLE);
                     passWrong.setVisibility(View.VISIBLE);
                 }
-            }
+            //}
         }
         catch (Exception e){
             e.printStackTrace();
