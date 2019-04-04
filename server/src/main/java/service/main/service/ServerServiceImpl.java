@@ -67,6 +67,7 @@ public class ServerServiceImpl implements ServerService {
         else return userToReturn.get();
     }
 
+
     public void updateUserByEmail(String email, OutUpdateUserProfile userUpdated) throws NotFoundException {
         Optional<User> userToUpdate = userRepository.findById(email);
         if (!userToUpdate.isPresent()) throw new NotFoundException("There is no user with that email");

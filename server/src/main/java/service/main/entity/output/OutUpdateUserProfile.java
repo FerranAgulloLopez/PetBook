@@ -2,8 +2,8 @@ package service.main.entity.output;
 
 public class OutUpdateUserProfile {
 
-    private String FirstName;
-    private String SecondName;
+    private String firstName;
+    private String secondName;
     private String dateOfBirth;
     private String postalCode;
 
@@ -11,11 +11,11 @@ public class OutUpdateUserProfile {
     public OutUpdateUserProfile() {}
 
     public String getFirstName() {
-        return this.FirstName;
+        return this.firstName;
     }
 
     public String getSecondName() {
-        return this.SecondName;
+        return this.secondName;
     }
 
     public String getDateOfBirth() {
@@ -27,4 +27,20 @@ public class OutUpdateUserProfile {
     }
 
 
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
 }

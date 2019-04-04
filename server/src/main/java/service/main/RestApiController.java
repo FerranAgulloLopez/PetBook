@@ -78,7 +78,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/GetUser/{email}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email.", tags="User")
+    @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email", tags="User")
     public ResponseEntity<?> InfoUser(@PathVariable String email) {
         try {
             return new ResponseEntity<>(serverService.getUserByEmail(email), HttpStatus.OK);
@@ -90,7 +90,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/update/{email}", method = RequestMethod.POST)
-    @ApiOperation(value = "Update all the information of the user",tags = "User")
+    @ApiOperation(value = "Update all the information of the user", notes = "Updates the dateOfBirth, firstName, secondName and the postalCode of an user given its email",tags = "User")
     public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody OutUpdateUserProfile user)
     {
         try {
