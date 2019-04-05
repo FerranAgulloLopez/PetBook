@@ -1,6 +1,7 @@
 package com.example.PETBook;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +17,6 @@ public class PantallaLogSign extends AppCompatActivity {
 
     static String username;
     static String passwordd;
-    private Conexion conexion;
 
 
     @Override
@@ -24,9 +24,9 @@ public class PantallaLogSign extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pantalla_log_sign);
         getSupportActionBar().hide();
-        conexion = new Conexion();
     }
-    public void signUp(View view){
+
+    public void signUp(View view) {
         Intent intent = new Intent(this, PantallaSignUp.class);
         startActivity(intent);
     }
@@ -43,34 +43,31 @@ public class PantallaLogSign extends AppCompatActivity {
             String user = usuari.getText().toString();
             String pass = password.getText().toString();
 
-            Conexion con = new Conexion();
-            RespuestaServer rs = con.comprobarUsuario("ConfirmLogin?email=" + user + "&password=" + pass);
-            if (rs.getCodigo() == 200) {
-                String resposta = rs.getJson().getString("true");
-                System.out.print(resposta);
-                if (resposta ==null) {
-                    Intent intent = new Intent(this, PantallaHome.class);
-                    startActivity(intent);
-                }
-                /*
-        else if(conta == "malament") {
-            userWrong.setVisibility(View.VISIBLE);
-            passWrong.setVisibility(View.INVISIBLE);
-        }
-        else if(success == 'f'){
+            Conexion con = new Conexion(user, pass);
 
-            passWrong.setVisibility(View.VISIBLE);
-            userWrong.setVisibility(View.INVISIBLE);
-        }*/
+
+            // ESTO HACE QUE LO PERMITA TODO, basicamente todo lo ejecuta el mismo thread( el principal)
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        // Lo suyo seria que hicieras que lo del Background funcionara, o otro metodo
+
+            JSONObject json = con.doInBackground();
+
+
+            if (json.getInt("code") == 200) {
+
+                System.out.println("Ha ido bien, codigo 200");
+
+                Intent intent = new Intent(this, PantallaHome.class);
+                startActivity(intent);
             }
-            else {
-                    userWrong.setVisibility(View.VISIBLE);
-                    passWrong.setVisibility(View.VISIBLE);
-                }
-            //}
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+
 }
+
+
