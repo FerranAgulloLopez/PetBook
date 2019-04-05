@@ -24,7 +24,7 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
             //url = new URL("http://localhost:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass);
             // EL hijo de puta del Android studio usa el localhost como su direccion, asi que hay que usar otra
             // Hay que usar la de tu red local. En mi caso es 192.168.1.12, de todos modos creo que basta con una ip local dentro de tu red privada que te assigina el router
-            url = new URL("http://192.168.1.12:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass);
+            url = new URL("http://10.4.41.146:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass);
 
         }
         catch (Exception e){

@@ -49,18 +49,27 @@ public class PantallaLogSign extends AppCompatActivity {
             // ESTO HACE QUE LO PERMITA TODO, basicamente todo lo ejecuta el mismo thread( el principal)
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-        // Lo suyo seria que hicieras que lo del Background funcionara, o otro metodo
+            // Lo suyo seria que hicieras que lo del Background funcionara, o otro metodo
 
             JSONObject json = con.doInBackground();
 
 
             if (json.getInt("code") == 200) {
-
-                System.out.println("Ha ido bien, codigo 200");
-
-                Intent intent = new Intent(this, PantallaHome.class);
-                startActivity(intent);
+                if(json.getString("success").equals("true")) {
+                    // System.out.println("Ha ido bien, codigo 200");
+                    Intent intent = new Intent(this, PantallaHome.class);
+                    startActivity(intent);
+                }
+                else if(json.getString("success").equals("false")){
+                    userWrong.setVisibility(View.INVISIBLE);
+                    passWrong.setVisibility(View.VISIBLE);
+                }
             }
+            else{
+                userWrong.setVisibility(View.VISIBLE);
+                passWrong.setVisibility(View.INVISIBLE);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

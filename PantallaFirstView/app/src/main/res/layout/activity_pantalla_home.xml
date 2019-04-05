@@ -145,7 +145,6 @@
         app:srcCompat="@drawable/calendar" />
 
     <ImageView
-        android:id="@+id/imageView5"
         android:layout_width="44dp"
         android:layout_height="41dp"
         android:layout_marginStart="8dp"
@@ -163,7 +162,7 @@
         app:srcCompat="@drawable/localitzacio" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/username"
         android:layout_width="172dp"
         android:layout_height="39dp"
         android:layout_marginStart="8dp"
@@ -183,7 +182,7 @@
         app:layout_constraintVertical_bias="0.349" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/fotoPerfil"
         android:layout_width="172dp"
         android:layout_height="169dp"
         android:layout_marginStart="8dp"
