@@ -44,4 +44,7 @@
     <string name="password2">Password repeat</string>
     <string name="birthday">Birthday</string>
     <string name="register_action">Registrarse</string>
+    <string name="title_activity_pets">Pets</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 </resources>

@@ -54,7 +54,7 @@ public class PantallaHome extends AppCompatActivity {
 
     }
         public void myPets(View view){
-        Intent intent = new Intent(this, MyPets.class);
+        Intent intent = new Intent(this, Pets.class);
         startActivity(intent);
 
     }

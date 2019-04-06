@@ -17,15 +17,16 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
 
 
     private URL url;
+    private String Metodo;
     HttpURLConnection urlConnection;
 
-    public Conexion (String user, String pass){
+    public Conexion (String URL, String tipoMetodo, JSONObject body){
         try {
             //url = new URL("http://localhost:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass);
             // EL hijo de puta del Android studio usa el localhost como su direccion, asi que hay que usar otra
             // Hay que usar la de tu red local. En mi caso es 192.168.1.12, de todos modos creo que basta con una ip local dentro de tu red privada que te assigina el router
-            url = new URL("http://10.4.41.146:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass);
-
+            url = new URL(URL);
+            Metodo = tipoMetodo;
         }
         catch (Exception e){
             e.printStackTrace();
@@ -40,7 +41,7 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
 
             urlConnection = (HttpURLConnection) url
                     .openConnection();
-            urlConnection.setRequestMethod("POST");
+            urlConnection.setRequestMethod(Metodo);
 
             System.out.println("Arriba--------------------------------------------------------------------------------------------------------------------------------------------");
             URL u = urlConnection.getURL();
@@ -59,13 +60,8 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
                 bf.append(input);
             }
             JSONObject inter = new JSONObject(bf.toString());
-
-            String success = inter.getString("success");
-            String mail = inter.getString("mailconfirmed");
+            result = inter;
             result.put("code",nume);
-            result.put("success",success);
-            result.put("mailconfirmed",mail);
-
 
         } catch (Exception e) {
             e.printStackTrace();

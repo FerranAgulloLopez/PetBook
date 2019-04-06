@@ -43,7 +43,8 @@ public class PantallaLogSign extends AppCompatActivity {
             String user = usuari.getText().toString();
             String pass = password.getText().toString();
 
-            Conexion con = new Conexion(user, pass);
+            Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass,
+                    "POST", null);
 
 
             // ESTO HACE QUE LO PERMITA TODO, basicamente todo lo ejecuta el mismo thread( el principal)
@@ -55,14 +56,16 @@ public class PantallaLogSign extends AppCompatActivity {
 
 
             if (json.getInt("code") == 200) {
-                if(json.getString("success").equals("true")) {
+                String success = json.getString("success");
+                String mail = json.getString("mailconfirmed");
+                if(success.equals("true")) {
                     SingletonUsuario.getInstance();
                     SingletonUsuario.setEmail(user);
                     // System.out.println("Ha ido bien, codigo 200");
                     Intent intent = new Intent(this, PantallaHome.class);
                     startActivity(intent);
                 }
-                else if(json.getString("success").equals("false")){
+                else if(success.equals("false")){
                     userWrong.setVisibility(View.INVISIBLE);
                     passWrong.setVisibility(View.VISIBLE);
                 }
