@@ -39,6 +39,8 @@ public class PantallaHome extends AppCompatActivity {
 
 
         TextView usuari = findViewById(R.id.username);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        usuari.setText(su.getEmail());
         //Conexion con = new Conexion(user, pass);
 
 

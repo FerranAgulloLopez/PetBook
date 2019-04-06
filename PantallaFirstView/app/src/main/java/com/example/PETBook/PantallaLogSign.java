@@ -56,6 +56,8 @@ public class PantallaLogSign extends AppCompatActivity {
 
             if (json.getInt("code") == 200) {
                 if(json.getString("success").equals("true")) {
+                    SingletonUsuario.getInstance();
+                    SingletonUsuario.setEmail(user);
                     // System.out.println("Ha ido bien, codigo 200");
                     Intent intent = new Intent(this, PantallaHome.class);
                     startActivity(intent);
