@@ -14,7 +14,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Conexion extends AsyncTask<String,Void,JSONObject> {
+public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
 
 
     private URL url;
@@ -37,7 +37,7 @@ public class Conexion extends AsyncTask<String,Void,JSONObject> {
     }
 
     @Override
-    protected JSONObject doInBackground(String... params) {
+    protected JSONObject doInBackground(JSONObject... jsonObjects) {
         HttpURLConnection urlConnection = null;
         JSONObject result = new JSONObject();
         try {
