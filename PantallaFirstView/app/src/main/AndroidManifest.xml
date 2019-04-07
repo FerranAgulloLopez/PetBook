@@ -7,6 +7,11 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <supports-screens
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,12 +31,12 @@
         </activity>
         <activity
             android:name="com.example.PETBook.NewPet"
-            android:parentActivityName="com.example.PETBook.MyPets">
+            android:parentActivityName="com.example.PETBook.Pets">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MyPets" />
+                android:value="com.example.PETBook.Pets" />
         </activity>
         <activity
             android:name="com.example.PETBook.PantallaSignUp"
@@ -40,16 +45,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MyPets" />
-        </activity>
-        <activity
-            android:name="com.example.PETBook.Pet1"
-            android:parentActivityName="com.example.PETBook.MyPets">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MyPets" />
+                android:value="com.example.PETBook.Pets" />
         </activity>
         <activity
             android:name="com.example.PETBook.MyCalendar"
@@ -58,7 +54,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MyPets" />
+                android:value="com.example.PETBook.Pets" />
         </activity>
         <activity
             android:name="com.example.PETBook.MyEvents"
@@ -67,16 +63,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MyPets" />
-        </activity>
-        <activity
-            android:name="com.example.PETBook.MyPets"
-            android:parentActivityName="com.example.PETBook.PantallaHome">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MyPets" />
+                android:value="com.example.PETBook.Pets" />
         </activity>
         <activity
             android:name="com.example.PETBook.MyPosts"
@@ -85,7 +72,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MyPets" />
+                android:value="com.example.PETBook.Pets" />
         </activity>
         <activity android:name="com.example.PETBook.PantallaHome" />
         <activity android:name="com.example.PETBook.PantallaLogSign" />

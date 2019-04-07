@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">PantallaFirstView</string>
+    <string name="app_name">PETBook</string>
     <string name="title_activity_my_events">Sign in</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -47,4 +47,11 @@
     <string name="title_activity_pets">Pets</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <string-array name="Sex">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string name="Sex">Sex</string>
+
 </resources>

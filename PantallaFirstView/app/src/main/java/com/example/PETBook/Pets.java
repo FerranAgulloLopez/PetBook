@@ -1,5 +1,7 @@
 package com.example.PETBook;
 
+import android.content.Intent;
+import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.pantallafirstview.R;
+
+import org.json.JSONObject;
 
 public class Pets extends AppCompatActivity {
 
@@ -55,14 +59,23 @@ public class Pets extends AppCompatActivity {
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View view){
+                Intent intent = new Intent(Pets.this, NewPet.class);
+                startActivity(intent);
+
             }
         });
 
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser" + su,
+                "GET", null);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+
     }
+
+
 
 
     @Override
@@ -136,6 +149,7 @@ public class Pets extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+            //Aqui ficarem el switch amb les pantalles que volguem
             return PlaceholderFragment.newInstance(position + 1);
         }
 
