@@ -1,6 +1,7 @@
 package com.example.PETBook;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import java.text.SimpleDateFormat;
 import com.example.pantallafirstview.R;
 import java.util.Locale;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class PantallaSignUp extends AppCompatActivity {
 
@@ -156,15 +160,49 @@ public class PantallaSignUp extends AppCompatActivity {
     private void signUp() {
 
         if (validateName() && validateSurnames() && validateEmail() && validatePasswords()) {
-            /* recoger datos para backend
+
+            /* recoger datos para backend */
 
             String name = inputName.getText().toString();
             String surnames = inputSurnames.getText().toString();
             String email = inputMail.getText().toString();
             String password1 = inputPassword1.getText().toString();
             String password2 = inputPassword2.getText().toString();
-            String birthday = inputPassword2.getText().toString();
-            */
+            String birthday = inputBirthday.getText().toString();
+
+
+
+            /* Juntar los datos en un Json para ponerlo en el body */
+
+            JSONObject jsonToSend = new JSONObject();
+            try {
+                jsonToSend.accumulate("dateOfBirth", birthday);
+                jsonToSend.accumulate("email", email);
+                jsonToSend.accumulate("firstName", name);
+                jsonToSend.accumulate("mailconfirmed", true);
+                jsonToSend.accumulate("password", password1);
+                jsonToSend.accumulate("postalCode", "test");
+                jsonToSend.accumulate("secondName", surnames);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            
+
+            /* Nueva conexion llamando a la funcion del server */
+
+            Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/RegisterUser/",
+                    "POST", jsonToSend);
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            JSONObject json = con.doInBackground();
+
+
+
+
+
             Toast.makeText(this, "Registrado correctamente", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, PantallaLogSign.class);
             startActivity(intent);

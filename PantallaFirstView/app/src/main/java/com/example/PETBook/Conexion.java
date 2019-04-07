@@ -9,15 +9,17 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
+public class Conexion extends AsyncTask<String,Void,JSONObject> {
 
 
     private URL url;
     private String Metodo;
+    private JSONObject body;
     HttpURLConnection urlConnection;
 
     public Conexion (String URL, String tipoMetodo, JSONObject body){
@@ -27,6 +29,7 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
             // Hay que usar la de tu red local. En mi caso es 192.168.1.12, de todos modos creo que basta con una ip local dentro de tu red privada que te assigina el router
             url = new URL(URL);
             Metodo = tipoMetodo;
+            this.body = body;
         }
         catch (Exception e){
             e.printStackTrace();
@@ -34,7 +37,7 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
     }
 
     @Override
-    protected JSONObject doInBackground(JSONObject... jsonObjects) {
+    protected JSONObject doInBackground(String... params) {
         HttpURLConnection urlConnection = null;
         JSONObject result = new JSONObject();
         try {
@@ -43,11 +46,26 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
                     .openConnection();
             urlConnection.setRequestMethod(Metodo);
 
+
+
+            urlConnection.setRequestProperty("Content-Type", "application/json");
+
+
             System.out.println("Arriba--------------------------------------------------------------------------------------------------------------------------------------------");
             URL u = urlConnection.getURL();
             System.out.println(u.toString());
             urlConnection.connect();    //
             System.out.println("Arriba--------------------------------------------------------------------------------------------------------------------------------------------");
+
+
+
+            if (this.body != null) {
+                OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
+                wr.write(body.toString());
+                wr.flush();
+            }
+
+
 
             Integer nume = urlConnection.getResponseCode();
 
