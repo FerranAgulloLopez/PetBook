@@ -104,7 +104,7 @@ public class NewPet extends AppCompatActivity {
                         Toast.makeText(this, nombrePet + " añadida correctamente", Toast.LENGTH_SHORT).show();
                     }
 
-                    Intent intent = new Intent(this, Pets.class);
+                    Intent intent = new Intent(this, PetsContainer.class);
                     startActivity(intent);
                 }
                 else{

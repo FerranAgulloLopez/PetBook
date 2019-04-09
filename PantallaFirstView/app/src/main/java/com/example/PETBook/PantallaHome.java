@@ -1,7 +1,6 @@
 package com.example.PETBook;
 
 import android.content.Intent;
-import android.media.Image;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,9 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pantallafirstview.R;
-
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class PantallaHome extends AppCompatActivity {
 
@@ -54,7 +50,7 @@ public class PantallaHome extends AppCompatActivity {
 
     }
         public void myPets(View view){
-        Intent intent = new Intent(this, Pets.class);
+        Intent intent = new Intent(this, PetsContainer.class);
         startActivity(intent);
 
     }
