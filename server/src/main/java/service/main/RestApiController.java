@@ -8,9 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
-import service.main.entity.output.DataEvento;
-import service.main.entity.output.DataMascota;
-import service.main.entity.output.OutUpdateUserProfile;
+import service.main.entity.output.*;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
@@ -133,6 +131,41 @@ public class RestApiController {
 
 
 
+    @CrossOrigin
+    @RequestMapping(value = "/UpdateEvento/{email}", method = RequestMethod.PUT)
+    @ApiOperation(value = "UPDATE Evento", notes = "Modifica un evento. Sirve para modificar los atributos descripcion, numero de asistentes, participantes, publico. EL Evento se identifica por any, coordenadas, dia, hora, mes, radio.", tags = "Events")
+    public ResponseEntity<?> updateEvento(@PathVariable String email,
+                                          @ApiParam(value="Evento", required = true) @RequestBody DataEventoUpdate evento) throws NotFoundException
+    {
+        try {
+            serverService.updateEvento(email, evento);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/DeleteEvento", method = RequestMethod.DELETE)
+    @ApiOperation(value = "DELETE Evento", notes = "Elimina un evento ", tags = "Events")
+    public ResponseEntity<?> deleteEvento(
+                                           @ApiParam(value="Evento", required = true) @RequestBody DataEvento evento) throws NotFoundException
+    {
+        try {
+            serverService.deleteEvento(evento.getUserEmail(), evento.getAny(), evento.getMes(), evento.getDia(), evento.getHora(), evento.getCoordenadas(), evento.getRadio());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+
+    }
+
+
+
 
 
 
@@ -182,7 +215,21 @@ public class RestApiController {
     }
 
 
+    @CrossOrigin
+    @RequestMapping(value = "/UpdateMascota/{email}", method = RequestMethod.PUT)
+    @ApiOperation(value = "UPDATE Mascota", notes = "Modifica una mascota. Sirve para modificar los atributos de la mascota. La mascota se identifica por email y nombre.",tags = "Pets")
+    public ResponseEntity<?> updateMascota(@PathVariable String email,
+                                          @ApiParam(value="Nuevos datos de la Mascota", required = true) @RequestBody DataMascotaUpdate mascota) throws NotFoundException
+    {
+        try {
+            serverService.updateMascota(email, mascota);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/DeleteMascota/{email}", method = RequestMethod.DELETE)
