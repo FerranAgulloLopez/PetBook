@@ -18,6 +18,6 @@ public class PantallaFirstView extends AppCompatActivity {
     public void nextScreen(View view){
         Intent intent = new Intent(this, PantallaLogSign.class);
         startActivity(intent);
-
+        finish();
     }
 }
