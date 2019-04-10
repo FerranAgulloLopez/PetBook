@@ -1,9 +1,12 @@
 package com.example.PETBook;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.StrictMode;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
@@ -47,6 +50,7 @@ public class PetsContainer extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,22 +62,26 @@ public class PetsContainer extends AppCompatActivity {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         List<PetModel> pets = new ArrayList<>();
-        pets.add(new PetModel("idPet", "nom"));
-        pets.add(new PetModel("idPet2", "nom2"));
+       // pets.add(new PetModel("idPet", "nom"));
+        //pets.add(new PetModel("idPet2", "nom2"));
         //TODO: pets comes from DB
 
         SingletonUsuario su = SingletonUsuario.getInstance();
-        Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser" + su,
+        String us = su.getEmail();
+        Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser/" + us,
                 "GET", null);
+        System.out.println("Aqui llego 0");
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        /*JSONObject jsonObject = con.doInBackground();
+        @SuppressLint("WrongThread") JSONObject jsonObject = con.doInBackground();
         JSONArray jsonArray = null;
         try {
-            jsonArray = jsonObject.getJSONArray("");
+            jsonArray = new JSONArray(jsonObject);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        System.out.println("Aqui llego 1");
+
         for (int i = 0; i < jsonArray.length(); i++)
         {
             try {
@@ -88,7 +96,10 @@ public class PetsContainer extends AppCompatActivity {
             } catch (JSONException e) {
                 Log.e("Parser JSON", e.toString());
             }
-        }*/
+        }
+        System.out.println("Aqui llego 2");
+
+
         mSectionsPagerAdapter = new PetAdapters(getSupportFragmentManager(), pets);
 
         // Set up the ViewPager with the sections adapter.
