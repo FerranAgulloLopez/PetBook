@@ -53,5 +53,6 @@
         <item>Female</item>
     </string-array>
     <string name="Sex">Sex</string>
+    <string name="title_activity_new_event">NewEvent</string>
 
 </resources>
