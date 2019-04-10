@@ -1,32 +1,13 @@
 package com.example.PETBook.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.PETBook.Adapters.PetAdapters;
-import com.example.PETBook.Conexion;
-import com.example.PETBook.Models.PetModel;
-import com.example.PETBook.NewPet;
-import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PetInfoFragment extends Fragment {
     /**
@@ -57,7 +38,7 @@ public class PetInfoFragment extends Fragment {
 
         if (getArguments() != null) {
             petId = getArguments().getString(ID_PET);
-            textView.setText("hola pet id: "+petId);
+            textView.setText("Este es el pet: " + petId);
 
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
         }

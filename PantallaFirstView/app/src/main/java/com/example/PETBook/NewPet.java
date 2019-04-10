@@ -65,7 +65,7 @@ public class NewPet extends AppCompatActivity {
     }
 
 
-    public void addNewPet(View view) {
+    public void addNewPet(View view) throws JSONException {
 
         String nombrePet = nombremascota.getText().toString();
         String edadPet = edad.getText().toString();
@@ -90,12 +90,8 @@ public class NewPet extends AppCompatActivity {
 
             Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/CreaMascota/",
                     "POST", jsonToSend);
-
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
             JSONObject json = con.doInBackground();
-
+            System.out.println(json.getInt("code"));
             try {
                 if(json.getInt("code")==200) {
                     if (sexoPet.equals("Male")) {
@@ -103,15 +99,23 @@ public class NewPet extends AppCompatActivity {
                     } else {
                         Toast.makeText(this, nombrePet + " añadida correctamente", Toast.LENGTH_SHORT).show();
                     }
+                    System.out.println(json.getInt("code") +"\n\n\n");
 
                     Intent intent = new Intent(this, PetsContainer.class);
                     startActivity(intent);
                 }
                 else{
                     Toast.makeText(this, nombrePet + " ya existe", Toast.LENGTH_SHORT).show();
+                    System.out.println(json.getInt("code") +"\n\n\n");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+                try {
+                    System.out.println(json.getInt("code") +"\n\n\n");
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+
             }
         }
     }

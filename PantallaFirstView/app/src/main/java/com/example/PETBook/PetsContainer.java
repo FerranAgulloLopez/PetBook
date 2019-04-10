@@ -1,16 +1,20 @@
 package com.example.PETBook;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +22,10 @@ import android.view.View;
 import com.example.PETBook.Adapters.PetAdapters;
 import com.example.PETBook.Models.PetModel;
 import com.example.pantallafirstview.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +61,34 @@ public class PetsContainer extends AppCompatActivity {
         pets.add(new PetModel("idPet", "nom"));
         pets.add(new PetModel("idPet2", "nom2"));
         //TODO: pets comes from DB
+
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser" + su,
+                "GET", null);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        /*JSONObject jsonObject = con.doInBackground();
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = jsonObject.getJSONArray("");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for (int i = 0; i < jsonArray.length(); i++)
+        {
+            try {
+                JSONObject jsonObjectHijo = jsonArray.getJSONObject(i);
+                String id = jsonObjectHijo.getString("id");
+                String nombre = jsonObjectHijo.getString("nombre");
+                String especie = jsonObjectHijo.getString("especie");
+                String raza = jsonObjectHijo.getString("raza");
+                String sexo = jsonObjectHijo.getString("sexo");
+                String descripcion = jsonObjectHijo.getString("descripcion");
+                pets.add(new PetModel(id, nombre, especie, raza, sexo, descripcion));
+            } catch (JSONException e) {
+                Log.e("Parser JSON", e.toString());
+            }
+        }*/
         mSectionsPagerAdapter = new PetAdapters(getSupportFragmentManager(), pets);
 
         // Set up the ViewPager with the sections adapter.
@@ -67,14 +103,6 @@ public class PetsContainer extends AppCompatActivity {
 
             }
         });
-
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser" + su,
-                "GET", null);
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-
     }
 
 
@@ -96,7 +124,23 @@ public class PetsContainer extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            return true;
+            //Intent intent = new Intent(this, DeletePet.class);
+            //startActivity(intent);
+            /*AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
+            // Add the buttons
+            builder.setPositiveButton("Borrar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User clicked OK button
+                }
+            });
+            builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    // User cancelled the dialog
+                }
+            });
+
+            // Create the AlertDialog
+            AlertDialog dialog = builder.create();*/
         }
 
         return super.onOptionsItemSelected(item);

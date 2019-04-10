@@ -51,12 +51,11 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
             urlConnection.setRequestProperty("Content-Type", "application/json");
 
 
-            System.out.println("Arriba--------------------------------------------------------------------------------------------------------------------------------------------");
+          //  System.out.println("Arriba--------------------------------------------------------------------------------------------------------------------------------------------");
             URL u = urlConnection.getURL();
             System.out.println(u.toString());
             urlConnection.connect();    //
-            System.out.println("Arriba--------------------------------------------------------------------------------------------------------------------------------------------");
-
+            //System.out.println("Aqui llego 0");
 
 
             if (this.body != null) {
@@ -65,7 +64,7 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
                 wr.flush();
             }
 
-
+            //System.out.println("Aqui llego 1");
 
             Integer nume = urlConnection.getResponseCode();
 
@@ -77,8 +76,14 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
             while ((input = read.readLine()) != null){
                 bf.append(input);
             }
-            JSONObject inter = new JSONObject(bf.toString());
-            result = inter;
+           /* System.out.println("Aqui llego 2");
+
+            System.out.println(bf.toString());
+            System.out.println("Length = "+bf.length());*/
+            if(bf.length() != 0) {
+                JSONObject inter = new JSONObject(bf.toString());
+                result = inter;
+            }
             result.put("code",nume);
 
         } catch (Exception e) {

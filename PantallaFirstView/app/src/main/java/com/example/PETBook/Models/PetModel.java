@@ -11,9 +11,14 @@ public class PetModel {
     private String descripcion;
     private String foto;
 
-    public PetModel(String id, String name){
+    public PetModel(String id, String name/*, String especie, String raza, String sexo, String descripcion*/){
         this.id = id;
         this.nombre = name;
+        /*this.especie = especie;
+        this.raza = raza;
+        this.sexo = sexo;
+        this.descripcion = descripcion;*/
+
     }
     public String getId() {
         return id;
