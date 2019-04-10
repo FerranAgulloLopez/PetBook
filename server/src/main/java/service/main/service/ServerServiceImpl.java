@@ -3,7 +3,7 @@ package service.main.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
-import service.main.entity.output.OutLogin;
+import service.main.entity.output.*;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
@@ -66,11 +66,17 @@ public class ServerServiceImpl implements ServerService {
         else return userToReturn.get();
     }
 
-    public void updateUserByEmail(String email, User user) throws NotFoundException {
+
+    public void updateUserByEmail(String email, OutUpdateUserProfile userUpdated) throws NotFoundException {
         Optional<User> userToUpdate = userRepository.findById(email);
         if (!userToUpdate.isPresent()) throw new NotFoundException("There is no user with that email");
         else {
-            userRepository.deleteById(email);
+            User user = userToUpdate.get();
+            userRepository.delete(user);
+            user.setFirstName(userUpdated.getFirstName());
+            user.setSecondName(userUpdated.getSecondName());
+            user.setDateOfBirth(userUpdated.getDateOfBirth());
+            user.setPostalCode(userUpdated.getPostalCode());
             userRepository.insert(user);
         }
     }
@@ -94,7 +100,25 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
+    public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException {
+        Fecha fecha2 = new Fecha(evento.getAny(), evento.getMes(), evento.getDia() ,evento.getHora());
+        Localizacion localizacion = new Localizacion(evento.getCoordenadas(),evento.getRadio());
 
+        Evento evento2 = new Evento(email, localizacion.getId(), fecha2.getId(), evento.getDescripcion(), evento.getPublico(), evento.getNumero_asistentes(), evento.getParticipantes());
+        if(! eventoRepository.existsById(evento2.getId())) throw new NotFoundException("El Evento no existe en el sistema");
+        eventoRepository.deleteById(evento2.getId());
+        eventoRepository.insert(evento2);
+    }
+
+
+    public void deleteEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws NotFoundException {
+        Fecha fecha2 = new Fecha(any, mes, dia ,hora);
+        Localizacion localizacion = new Localizacion(coordenadas,radio);
+
+        Evento evento = new Evento(userEmail, localizacion.getId(), fecha2.getId());
+        if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException("El Evento no existe en el sistema");
+        eventoRepository.deleteById(evento.getId());
+    }
 
 
     public void creaMascota(String email, String nom_mascota) throws AlreadyExistsException, NotFoundException {
@@ -110,6 +134,16 @@ public class ServerServiceImpl implements ServerService {
         if(! userRepository.existsById(emailDuenyo)) throw new NotFoundException("El Usuario no existe en el sistema");
         if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
         return mascotaRepository.findById(id);
+    }
+
+    public void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException {
+        Mascota mascota2 = new Mascota(mascota.getNombre(), email, mascota.getEspecie(), mascota.getRaza(),
+                                       mascota.getSexo(), mascota.getDescripcion(), mascota.getFoto());
+
+        String id = mascota2.getId();
+        if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
+        mascotaRepository.deleteById(id);
+        mascotaRepository.save(mascota2);
     }
 
     public List<Mascota> findAllMascotasByUser(String email) throws NotFoundException{
@@ -130,12 +164,14 @@ public class ServerServiceImpl implements ServerService {
 
     public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
-        if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existia en el sistema");
+        if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
         mascotaRepository.deleteById(id);
     }
 
     public void removeDataBase() {
         userRepository.deleteAll();
     }
+
+
 
 }

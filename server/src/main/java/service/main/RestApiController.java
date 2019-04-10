@@ -8,8 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
-import service.main.entity.output.DataEvento;
-import service.main.entity.output.DataMascota;
+import service.main.entity.output.*;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.NotFoundException;
@@ -17,6 +16,7 @@ import service.main.repositories.EventoRepository;
 import service.main.repositories.UserRepository;
 import service.main.service.ServerService;
 
+import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.Optional;
 
@@ -46,6 +46,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/ConfirmLogin", method = RequestMethod.POST)
     @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.",tags="LogIn")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database.")
+    })
     public ResponseEntity<?> ConfirmLogin(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
                                           @ApiParam(value="Password introduced", required = true, example = "1234") @RequestParam String password) {
         try {
@@ -58,6 +61,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/SendConfirmationEmail", method = RequestMethod.POST)
     @ApiOperation(value = "Send a confirmation email", notes = "Sends to the specified user an email with the instructions to verify it.",tags="LogIn")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database.")
+    })
     public ResponseEntity<?> ConfirmationEmail(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email) {
         try {
             serverService.SendConfirmationEmail(email);
@@ -77,7 +83,10 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/GetUser/{email}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email.", tags="User")
+    @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "There is no user with that email")
+    })
     public ResponseEntity<?> InfoUser(@PathVariable String email) {
         try {
             return new ResponseEntity<>(serverService.getUserByEmail(email), HttpStatus.OK);
@@ -89,8 +98,11 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/update/{email}", method = RequestMethod.POST)
-    @ApiOperation(value = "Update all the information of the user",tags = "User")
-    public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody User user)
+    @ApiOperation(value = "Update all the information of the user", notes = "Updates the dateOfBirth, firstName, secondName and the postalCode of an user given its email",tags = "User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "There is no user with that email")
+    })
+    public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody OutUpdateUserProfile user)
     {
         try {
             serverService.updateUserByEmail(email,user);
@@ -100,9 +112,6 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
-
-
-
 
 
 //
@@ -130,6 +139,41 @@ public class RestApiController {
     public ResponseEntity<?> getAllEventos()
     {
         return new ResponseEntity<>(serverService.findAllEventos(),HttpStatus.OK);
+
+    }
+
+
+
+    @CrossOrigin
+    @RequestMapping(value = "/UpdateEvento/{email}", method = RequestMethod.PUT)
+    @ApiOperation(value = "UPDATE Evento", notes = "Modifica un evento. Sirve para modificar los atributos descripcion, numero de asistentes, participantes, publico. EL Evento se identifica por any, coordenadas, dia, hora, mes, radio.", tags = "Events")
+    public ResponseEntity<?> updateEvento(@PathVariable String email,
+                                          @ApiParam(value="Evento", required = true) @RequestBody DataEventoUpdate evento) throws NotFoundException
+    {
+        try {
+            serverService.updateEvento(email, evento);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/DeleteEvento", method = RequestMethod.DELETE)
+    @ApiOperation(value = "DELETE Evento", notes = "Elimina un evento ", tags = "Events")
+    public ResponseEntity<?> deleteEvento(
+                                           @ApiParam(value="Evento", required = true) @RequestBody DataEvento evento) throws NotFoundException
+    {
+        try {
+            serverService.deleteEvento(evento.getUserEmail(), evento.getAny(), evento.getMes(), evento.getDia(), evento.getHora(), evento.getCoordenadas(), evento.getRadio());
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+
 
     }
 
@@ -184,7 +228,21 @@ public class RestApiController {
     }
 
 
+    @CrossOrigin
+    @RequestMapping(value = "/UpdateMascota/{email}", method = RequestMethod.PUT)
+    @ApiOperation(value = "UPDATE Mascota", notes = "Modifica una mascota. Sirve para modificar los atributos de la mascota. La mascota se identifica por email y nombre.",tags = "Pets")
+    public ResponseEntity<?> updateMascota(@PathVariable String email,
+                                          @ApiParam(value="Nuevos datos de la Mascota", required = true) @RequestBody DataMascotaUpdate mascota) throws NotFoundException
+    {
+        try {
+            serverService.updateMascota(email, mascota);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
 
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/DeleteMascota/{email}", method = RequestMethod.DELETE)

@@ -3,6 +3,7 @@ package service.main.entity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import service.main.util.PBKDF2Hasher;
@@ -24,10 +25,12 @@ public class User implements Serializable {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
+
     private String FirstName;
     private String SecondName;
     private String dateOfBirth;
     private String postalCode;
+    @ApiModelProperty(example = "false")
     private boolean mailconfirmed;
 
 
@@ -53,9 +56,13 @@ public class User implements Serializable {
         return SecondName;
     }
 
-    public String getDateOfBirth() {return dateOfBirth;}
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
 
-    public String getPostalCode() {return  postalCode;}
+    public String getPostalCode() {
+        return  postalCode;
+    }
 
     public String getPassword() {
         return password;
@@ -65,11 +72,15 @@ public class User implements Serializable {
         return mailconfirmed;
     }
 
+
+
     /*
     Set
      */
 
-    public void setFirstName(String firstName) { this.FirstName = firstName; }
+    public void setFirstName(String firstName) {
+            this.FirstName = firstName;
+    }
 
     public void setPassword(String password) {
         this.password = hasher.hash(password.toCharArray());
@@ -90,6 +101,7 @@ public class User implements Serializable {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
+
 
 
     /*
