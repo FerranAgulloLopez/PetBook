@@ -15,6 +15,8 @@ import android.app.DatePickerDialog;
 import java.text.SimpleDateFormat;
 import com.example.pantallafirstview.R;
 import java.util.Locale;
+import android.util.Patterns;
+import java.util.regex.Pattern;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -28,12 +30,8 @@ public class PantallaSignUp extends AppCompatActivity {
     private TextInputLayout textInputPassword1;
     private TextInputLayout textInputPassword2;
     private TextInputLayout textInputBirthday;
+    private TextInputLayout textInputPostalCode;
 
-    private EditText inputName;
-    private EditText inputSurnames;
-    private EditText inputMail;
-    private EditText inputPassword1;
-    private EditText inputPassword2;
     private EditText inputBirthday;
 
     private Button   buttonSignIn;
@@ -51,17 +49,11 @@ public class PantallaSignUp extends AppCompatActivity {
         textInputPassword1  = (TextInputLayout) findViewById(R.id.password1TextInput);
         textInputPassword2 = (TextInputLayout) findViewById(R.id.password2TextInput);
         textInputBirthday  = (TextInputLayout) findViewById(R.id.birthdayTextInput);
-
-        inputName      = (EditText) findViewById(R.id.nameInput);
-        inputSurnames  = (EditText) findViewById(R.id.surnamesInput);
-        inputMail      = (EditText) findViewById(R.id.mailInput);
-        inputPassword1  = (EditText) findViewById(R.id.password1Input);
-        inputPassword2 = (EditText) findViewById(R.id.password2Input);
-        inputBirthday  = (EditText) findViewById(R.id.birthdayInput);
+        textInputPostalCode  = (TextInputLayout) findViewById(R.id.postalCodeTextInput);
 
         buttonSignIn   = (Button) findViewById(R.id.signInButton);
 
-
+        inputBirthday  = (EditText) findViewById(R.id.birthdayInput);
         inputBirthday.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,9 +69,6 @@ public class PantallaSignUp extends AppCompatActivity {
                 signUp();
             }
         });
-
-
-
     }
 
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -97,16 +86,30 @@ public class PantallaSignUp extends AppCompatActivity {
     };
 
     private void actualizarInput() {
-        String formatoDeFecha = "dd/mm/yy"; //In which you need put here
+/*
+        String formatoDeFecha = "dd/MM/yy"; //In which you need put here
         Locale spanish = new Locale("es", "ES");
         SimpleDateFormat sdf = new SimpleDateFormat(formatoDeFecha, spanish);
 
         inputBirthday.setText(sdf.format(calendario.getTime()));
+*/
+        String formatoDeFecha = "dd/MM/yy"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(formatoDeFecha, Locale.US);
+
+        inputBirthday.setText(sdf.format(calendario.getTime()));
     }
 
-    private boolean validateName() {
-        if (inputName.getText().toString().isEmpty()) {
-            textInputName.setError("Field can't be empty");
+    private boolean validateName(String name) {
+
+        Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+        if (name.isEmpty()) {
+            textInputName.setError("Please enter your first name");
+            return false;
+        } else if (name.length() > 20) {
+            textInputName.setError("First Name is too long");
+            return false;
+        } else if (!patron.matcher(name).matches()) {
+            textInputName.setError("Please enter a valid name");
             return false;
         } else {
             textInputName.setErrorEnabled(false);
@@ -114,9 +117,18 @@ public class PantallaSignUp extends AppCompatActivity {
         }
     }
 
-    private boolean validateSurnames() {
-        if (inputSurnames.getText().toString().isEmpty()) {
-            textInputSurnames.setError("Field can't be empty");
+    private boolean validateSurnames(String surnames) {
+
+        Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+
+        if (surnames.isEmpty()) {
+            textInputSurnames.setError("Please enter your last name");
+            return false;
+        } else if (surnames.length() > 30) {
+            textInputSurnames.setError("Last Name too long");
+            return false;
+        } else if (!patron.matcher(surnames).matches()) {
+            textInputSurnames.setError("Please enter a valid last name");
             return false;
         } else {
             textInputSurnames.setErrorEnabled(false);
@@ -124,9 +136,13 @@ public class PantallaSignUp extends AppCompatActivity {
         }
     }
 
-    private boolean validateEmail() {
-        if (inputMail.getText().toString().isEmpty()) {
-            textInputMail.setError("Field can't be empty");
+    private boolean validateEmail(String email) {
+
+        if (email.isEmpty()) {
+            textInputMail.setError("Please enter your email address");
+            return false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            textInputMail.setError("Please enter a valid email address");
             return false;
         } else {
             textInputMail.setErrorEnabled(false);
@@ -134,44 +150,83 @@ public class PantallaSignUp extends AppCompatActivity {
         }
     }
 
-    private boolean validatePasswords() {
-        if (inputPassword1.getText().toString().isEmpty()) {
-            textInputPassword1.setError("Field can't be empty");
-            return false;
-        } else if (inputPassword1.getText().toString().trim().length() > 8 ) {
-            textInputPassword1.setError("Password too long");
-            return false;
+    private boolean validatePasswords(String password1, String password2) {
+
+        boolean passwords_ok = false;
+
+        if (password1.isEmpty()) {
+            textInputPassword1.setError("Please enter your password");
+            passwords_ok = false;
+        } else if (password1.length() < 8) {
+            textInputPassword1.setError("Password too short");
+            passwords_ok = false;
         } else {
             textInputPassword1.setErrorEnabled(false);
-            if (inputPassword2.getText().toString().isEmpty()) {
-                textInputPassword2.setError("Field can't be empty");
-                return false;
-            } else if (inputPassword2.getText().toString().trim().length() > 8) {
-                textInputPassword2.setError("Password too long");
-                return false;
+        }
+
+        if (password2.isEmpty()) {
+            textInputPassword2.setError("Please retype your password");
+            passwords_ok = false;
+        } else if (password2.length() < 8) {
+            textInputPassword2.setError("Confirm password too short");
+            passwords_ok = false;
+        } else {
+            textInputPassword2.setErrorEnabled(false);
+            if (password1.equals(password2)) {
+                passwords_ok = true;
             } else {
-                textInputPassword2.setErrorEnabled(false);
-                return true;
+                textInputPassword1.setError("The password and its confirm are not the same");
+                textInputPassword2.setError("The password and its confirm are not the same");
+                passwords_ok = false;
             }
+        }
+
+        return passwords_ok;
+    }
+
+    private boolean validatePostalCode(String postalCode) {
+
+        Pattern patron = Pattern.compile("^[0-5][1-9]{3}[0-9]$");
+
+        if (postalCode.isEmpty()) {
+            textInputPostalCode.setError("Please enter your postal code");
+            return false;
+        } else if (!patron.matcher(postalCode).matches()) {
+            textInputPostalCode.setError("postal Code is not valid");
+            return false;
+        } else {
+            textInputPostalCode.setErrorEnabled(false);
+            return true;
         }
     }
 
+    private boolean validateBirthday(String birthday) {
+        if (birthday.isEmpty()) {
+            textInputBirthday.setError("Please enter your birthday");
+            return false;
+        } else {
+            textInputBirthday.setErrorEnabled(false);
+            return true;
+        }
+    }
 
     private void signUp() {
 
-        if (validateName() && validateSurnames() && validateEmail() && validatePasswords()) {
-
-            /* recoger datos para backend */
-
-            String name = inputName.getText().toString();
-            String surnames = inputSurnames.getText().toString();
-            String email = inputMail.getText().toString();
-            String password1 = inputPassword1.getText().toString();
-            String password2 = inputPassword2.getText().toString();
-            String birthday = inputBirthday.getText().toString();
-
-
-
+        /* recoger datos para backend */
+        String name = textInputName.getEditText().getText().toString().trim();
+        String surnames = textInputSurnames.getEditText().getText().toString().trim();
+        String email = textInputMail.getEditText().getText().toString().trim();
+        String password1 = textInputPassword1.getEditText().getText().toString().trim();
+        String password2 = textInputPassword2.getEditText().getText().toString().trim();
+        String birthday = textInputBirthday.getEditText().getText().toString().trim();
+        String postalCode = textInputPostalCode.getEditText().getText().toString().trim();
+        boolean isValidName = validateName(name);
+        boolean isValidSurname = validateSurnames(surnames);
+        boolean isValidEmail = validateEmail(email);
+        boolean isValidPassword = validatePasswords(password1,password2);
+        boolean isValidBirthday = validateBirthday(birthday);
+        boolean isValidPostalCode = validatePostalCode(postalCode);
+        if (isValidName && isValidSurname && isValidEmail && isValidPassword && isValidBirthday && isValidPostalCode) {
             /* Juntar los datos en un Json para ponerlo en el body */
 
             JSONObject jsonToSend = new JSONObject();
@@ -181,13 +236,13 @@ public class PantallaSignUp extends AppCompatActivity {
                 jsonToSend.accumulate("firstName", name);
                 jsonToSend.accumulate("mailconfirmed", true);
                 jsonToSend.accumulate("password", password1);
-                jsonToSend.accumulate("postalCode", "test");
+                jsonToSend.accumulate("postalCode", postalCode);
                 jsonToSend.accumulate("secondName", surnames);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            
+
 
             /* Nueva conexion llamando a la funcion del server */
 

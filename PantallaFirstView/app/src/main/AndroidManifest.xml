@@ -23,7 +23,7 @@
         android:usesCleartextTraffic="true">
         <activity android:name="com.example.PETBook.NewEvent"></activity>
         <activity
-            android:name="com.example.PETBook.Pets"
+            android:name="com.example.PETBook.PetsContainer"
             android:label="@string/title_activity_pets"
             android:parentActivityName="com.example.PETBook.PantallaHome"
             android:theme="@style/AppTheme.NoActionBar">
@@ -33,12 +33,12 @@
         </activity>
         <activity
             android:name="com.example.PETBook.NewPet"
-            android:parentActivityName="com.example.PETBook.Pets">
+            android:parentActivityName="com.example.PETBook.PetsContainer">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.Pets" />
+                android:value="com.example.PETBook.PetsContainer" />
         </activity>
         <activity
             android:name="com.example.PETBook.PantallaSignUp"
@@ -47,7 +47,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.Pets" />
+                android:value="com.example.PETBook.PetsContainer" />
         </activity>
         <activity
             android:name="com.example.PETBook.MyCalendar"
@@ -56,7 +56,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.Pets" />
+                android:value="com.example.PETBook.PetsContainer" />
         </activity>
         <activity
             android:name="com.example.PETBook.MyEvents"
@@ -65,7 +65,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.Pets" />
+                android:value="com.example.PETBook.PetsContainer" />
         </activity>
         <activity
             android:name="com.example.PETBook.MyPosts"
@@ -74,7 +74,7 @@
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.Pets" />
+                android:value="com.example.PETBook.PetsContainer" />
         </activity>
         <activity android:name="com.example.PETBook.PantallaHome" />
         <activity android:name="com.example.PETBook.PantallaLogSign" />

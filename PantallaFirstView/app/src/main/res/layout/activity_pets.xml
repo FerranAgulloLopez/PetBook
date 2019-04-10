@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.PETBook.Pets">
+    tools:context="com.example.PETBook.PetsContainer">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/appbar"
@@ -43,6 +43,7 @@
         android:layout_margin="@dimen/fab_margin"
         app:layout_anchor="@+id/container"
         app:layout_anchorGravity="right|bottom"
-        app:srcCompat="@android:drawable/ic_menu_edit" />
+        app:srcCompat="@android:drawable/ic_menu_edit"
+        tools:srcCompat="@drawable/signo_mas" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -64,6 +64,7 @@ public class PantallaLogSign extends AppCompatActivity {
                     // System.out.println("Ha ido bien, codigo 200");
                     Intent intent = new Intent(this, PantallaHome.class);
                     startActivity(intent);
+                    finish();
                 }
                 else if(success.equals("false")){
                     userWrong.setVisibility(View.INVISIBLE);

@@ -40,6 +40,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="112dp"
         android:background="#840705"
+        android:onClick="signUp"
         android:text="@string/sign_up"
         android:textColor="@android:color/white"
         android:textColorLink="@color/colorPrimary"
