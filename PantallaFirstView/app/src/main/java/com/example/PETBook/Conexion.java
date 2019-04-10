@@ -2,7 +2,8 @@ package com.example.PETBook;
 
 import android.os.AsyncTask;
 
-import org.json.JSONException;
+import com.example.PETBook.Controllers.AsyncResult;
+
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
@@ -14,57 +15,55 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
+public class Conexion extends AsyncTask<String, Void, JSONObject> {
 
 
     private URL url;
     private String Metodo;
+    private String JsonString;
+    private AsyncResult asyncResult;
+
     private JSONObject body;
     HttpURLConnection urlConnection;
 
-    public Conexion (String URL, String tipoMetodo, JSONObject body){
-        try {
-            //url = new URL("http://localhost:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass);
-            // EL hijo de puta del Android studio usa el localhost como su direccion, asi que hay que usar otra
-            // Hay que usar la de tu red local. En mi caso es 192.168.1.12, de todos modos creo que basta con una ip local dentro de tu red privada que te assigina el router
-            url = new URL(URL);
-            Metodo = tipoMetodo;
-            this.body = body;
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+    public Conexion (AsyncResult asyncResult){
+        this.asyncResult = asyncResult;
     }
 
     @Override
-    protected JSONObject doInBackground(JSONObject... jsonObjects) {
+    protected JSONObject doInBackground(String... params) {
+
+        try {
+            url = new URL(params[0]);
+            Metodo = params[1];
+            if (params[2] != null) JsonString = params[2];
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+
         HttpURLConnection urlConnection = null;
+
         JSONObject result = new JSONObject();
+
+
         try {
 
-            urlConnection = (HttpURLConnection) url
-                    .openConnection();
+            urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod(Metodo);
-
-
-
             urlConnection.setRequestProperty("Content-Type", "application/json");
 
-
-          //  System.out.println("Arriba--------------------------------------------------------------------------------------------------------------------------------------------");
             URL u = urlConnection.getURL();
             System.out.println(u.toString());
             urlConnection.connect();    //
-            //System.out.println("Aqui llego 0");
 
 
-            if (this.body != null) {
+            if (this.JsonString != null) {
                 OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
-                wr.write(body.toString());
+                wr.write(JsonString);
                 wr.flush();
             }
 
-            //System.out.println("Aqui llego 1");
 
             Integer nume = urlConnection.getResponseCode();
 
@@ -76,10 +75,7 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
             while ((input = read.readLine()) != null){
                 bf.append(input);
             }
-           /* System.out.println("Aqui llego 2");
 
-            System.out.println(bf.toString());
-            System.out.println("Length = "+bf.length());*/
             if(bf.length() != 0) {
                 JSONObject inter = new JSONObject(bf.toString());
                 result = inter;
@@ -105,5 +101,9 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
     }
 
 
+    @Override
+    public void onPostExecute(JSONObject Result) {
+        this.asyncResult.OnprocessFinish(Result);
+    }
 
 }

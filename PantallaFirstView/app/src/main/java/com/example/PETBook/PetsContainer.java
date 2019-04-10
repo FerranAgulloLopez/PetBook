@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.PETBook.Adapters.PetAdapters;
+import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.PetModel;
 import com.example.pantallafirstview.R;
 
@@ -32,8 +33,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
-public class PetsContainer extends AppCompatActivity {
+public class PetsContainer extends AppCompatActivity implements AsyncResult {
 
     /**
      * The {@link PagerAdapter} that will provide
@@ -44,6 +46,7 @@ public class PetsContainer extends AppCompatActivity {
      * {@link FragmentStatePagerAdapter}.
      */
     private PetAdapters mSectionsPagerAdapter;
+    private List<PetModel> pets;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -61,43 +64,23 @@ public class PetsContainer extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        List<PetModel> pets = new ArrayList<>();
+        pets = new ArrayList<>();
        // pets.add(new PetModel("idPet", "nom"));
         //pets.add(new PetModel("idPet2", "nom2"));
         //TODO: pets comes from DB
 
+
         SingletonUsuario su = SingletonUsuario.getInstance();
         String us = su.getEmail();
-        Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser/" + us,
-                "GET", null);
-        System.out.println("Aqui llego 0");
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        @SuppressLint("WrongThread") JSONObject jsonObject = con.doInBackground();
-        JSONArray jsonArray = null;
-        try {
-            jsonArray = new JSONArray(jsonObject);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Aqui llego 1");
 
-        for (int i = 0; i < jsonArray.length(); i++)
-        {
-            try {
-                JSONObject jsonObjectHijo = jsonArray.getJSONObject(i);
-                String id = jsonObjectHijo.getString("id");
-                String nombre = jsonObjectHijo.getString("nombre");
-                String especie = jsonObjectHijo.getString("especie");
-                String raza = jsonObjectHijo.getString("raza");
-                String sexo = jsonObjectHijo.getString("sexo");
-                String descripcion = jsonObjectHijo.getString("descripcion");
-                pets.add(new PetModel(id, nombre, especie, raza, sexo, descripcion));
-            } catch (JSONException e) {
-                Log.e("Parser JSON", e.toString());
-            }
-        }
-        System.out.println("Aqui llego 2");
+
+
+        Conexion con = new Conexion(this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser/" + us, "GET", null);
+
+
+
+
 
 
         mSectionsPagerAdapter = new PetAdapters(getSupportFragmentManager(), pets);
@@ -155,5 +138,39 @@ public class PetsContainer extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    @Override
+    public void OnprocessFinish(JSONObject json) {
+
+        /*
+
+        JSONArray jsonArray = null;
+        try {
+            jsonArray = new JSONArray(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Aqui llego 1");
+
+        for (int i = 0; i < jsonArray.length(); i++)
+        {
+            try {
+                JSONObject jsonObjectHijo = jsonArray.getJSONObject(i);
+                String id = jsonObjectHijo.getString("id");
+                String nombre = jsonObjectHijo.getString("nombre");
+                String especie = jsonObjectHijo.getString("especie");
+                String raza = jsonObjectHijo.getString("raza");
+                String sexo = jsonObjectHijo.getString("sexo");
+                String descripcion = jsonObjectHijo.getString("descripcion");
+                pets.add(new PetModel(id, nombre, especie, raza, sexo, descripcion));
+            } catch (JSONException e) {
+                Log.e("Parser JSON", e.toString());
+            }
+        }
+        System.out.println("Aqui llego 2");
+
+        */
     }
 }

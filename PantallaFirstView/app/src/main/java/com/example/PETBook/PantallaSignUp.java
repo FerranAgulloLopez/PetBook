@@ -13,16 +13,20 @@ import java.util.Calendar;
 import android.widget.DatePicker;
 import android.app.DatePickerDialog;
 import java.text.SimpleDateFormat;
+
+import com.example.PETBook.Controllers.AsyncResult;
 import com.example.pantallafirstview.R;
 import java.util.Locale;
 import android.util.Patterns;
+
+import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PantallaSignUp extends AppCompatActivity {
+public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
 
     private TextInputLayout textInputName;
     private TextInputLayout textInputSurnames;
@@ -246,14 +250,8 @@ public class PantallaSignUp extends AppCompatActivity {
 
             /* Nueva conexion llamando a la funcion del server */
 
-            Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/RegisterUser/",
-                    "POST", jsonToSend);
-
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-            JSONObject json = con.doInBackground();
-
+            Conexion con = new Conexion(this);
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/RegisterUser/", "POST", jsonToSend.toString());
 
 
 
@@ -262,5 +260,10 @@ public class PantallaSignUp extends AppCompatActivity {
             Intent intent = new Intent(this, PantallaLogSign.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    public void OnprocessFinish(JSONObject output) {
+
     }
 }

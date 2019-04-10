@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.PETBook.Controllers.AsyncResult;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
@@ -21,8 +22,9 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
-public class NewEvent extends AppCompatActivity {
+public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private EditText inputLocalizacion;
     private EditText inputFecha;
@@ -130,15 +132,14 @@ public class NewEvent extends AppCompatActivity {
 
         /* Nueva conexion llamando a la funcion del server */
 
-        Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/CreaEvento",
-                "POST", jsonToSend);
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        JSONObject json = con.doInBackground();
-
-
+        Conexion con = new Conexion(this);
+        try {
+            JSONObject json = con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreaEvento", "POST", jsonToSend.toString()).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -148,4 +149,8 @@ public class NewEvent extends AppCompatActivity {
 
     }
 
+    @Override
+    public void OnprocessFinish(JSONObject output) {
+
+    }
 }

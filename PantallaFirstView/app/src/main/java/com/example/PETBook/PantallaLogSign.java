@@ -8,16 +8,22 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.PETBook.Controllers.AsyncResult;
 import com.example.pantallafirstview.R;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PantallaLogSign extends AppCompatActivity {
+public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
 
 
     static String username;
     static String passwordd;
 
+    EditText usuari;
+    EditText password;
+    TextView userWrong;
+    TextView passWrong;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,35 +38,33 @@ public class PantallaLogSign extends AppCompatActivity {
     }
 
     public void comprovarConta(View view) {
-        try {
 
-            EditText usuari = findViewById(R.id.user);
-            EditText password = findViewById(R.id.password);
-            TextView userWrong = findViewById(R.id.userWrong);
-            TextView passWrong = findViewById(R.id.passWrong);
+
+            usuari = findViewById(R.id.user);
+            password = findViewById(R.id.password);
+            userWrong = findViewById(R.id.userWrong);
+            passWrong = findViewById(R.id.passWrong);
 
 
             String user = usuari.getText().toString();
             String pass = password.getText().toString();
 
-            Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass,
-                    "POST", null);
+            Conexion con = new Conexion(this);
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/ConfirmLogin?email=" + user + "&password=" + pass, "POST", null);
 
 
-            // ESTO HACE QUE LO PERMITA TODO, basicamente todo lo ejecuta el mismo thread( el principal)
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            // Lo suyo seria que hicieras que lo del Background funcionara, o otro metodo
-
-            JSONObject json = con.doInBackground();
+    }
 
 
+    @Override
+    public void OnprocessFinish(JSONObject json) {
+        try {
             if (json.getInt("code") == 200) {
                 String success = json.getString("success");
                 String mail = json.getString("mailconfirmed");
                 if(success.equals("true")) {
                     SingletonUsuario.getInstance();
-                    SingletonUsuario.setEmail(user);
+                    SingletonUsuario.setEmail(usuari.getText().toString());
                     // System.out.println("Ha ido bien, codigo 200");
                     Intent intent = new Intent(this, PantallaHome.class);
                     startActivity(intent);
@@ -75,14 +79,10 @@ public class PantallaLogSign extends AppCompatActivity {
                 userWrong.setVisibility(View.VISIBLE);
                 passWrong.setVisibility(View.INVISIBLE);
             }
-
-        } catch (Exception e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
-
-
-
 }
 
 

@@ -11,28 +11,41 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.PETBook.Controllers.AsyncResult;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class NewPet extends AppCompatActivity {
+import java.util.concurrent.ExecutionException;
+
+public class NewPet extends AppCompatActivity implements AsyncResult {
 
 
     private EditText nombremascota;
-    private EditText edad ;
-    private Spinner sexo ;
-    private EditText color ;
+    private EditText edad;
+    private Spinner sexo;
+    private EditText color;
     private EditText race;
     private EditText type;
-    private EditText observations ;
-    private Button buttonAddPet ;
+    private EditText observations;
+    private Button buttonAddPet;
     private TextView textNM;
+
+
+    String nombrePet;
+    String edadPet;
+    String sexoPet;
+    String colorPet;
+    String racePet;
+    String typePet;
+    String obsPet;
 
 
     private String usuario;
 
     private Button buttonAdd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +80,13 @@ public class NewPet extends AppCompatActivity {
 
     public void addNewPet(View view) throws JSONException {
 
-        String nombrePet = nombremascota.getText().toString();
-        String edadPet = edad.getText().toString();
-        String sexoPet = sexo.getSelectedItem().toString();
-        String colorPet = color.getText().toString();
-        String racePet = race.getText().toString();
-        String typePet = type.getText().toString();
-        String obsPet = observations.getText().toString();
+        nombrePet = nombremascota.getText().toString();
+        edadPet = edad.getText().toString();
+        sexoPet = sexo.getSelectedItem().toString();
+        colorPet = color.getText().toString();
+        racePet = race.getText().toString();
+        typePet = type.getText().toString();
+        obsPet = observations.getText().toString();
 
         if (validateName()) {
             /* Juntar los datos en un Json para ponerlo en el body */
@@ -88,35 +101,41 @@ public class NewPet extends AppCompatActivity {
 
             /* Nueva conexion llamando a la funcion del server */
 
-            Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/CreaMascota/",
-                    "POST", jsonToSend);
-            JSONObject json = con.doInBackground();
-            System.out.println(json.getInt("code"));
-            try {
-                if(json.getInt("code")==200) {
-                    if (sexoPet.equals("Male")) {
-                        Toast.makeText(this, nombrePet + " añadido correctamente", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, nombrePet + " añadida correctamente", Toast.LENGTH_SHORT).show();
-                    }
-                    System.out.println(json.getInt("code") +"\n\n\n");
+            Conexion con = new Conexion(this);
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreaMascota/", "POST", jsonToSend.toString());
 
-                    Intent intent = new Intent(this, PetsContainer.class);
-                    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(this, nombrePet + " ya existe", Toast.LENGTH_SHORT).show();
-                    System.out.println(json.getInt("code") +"\n\n\n");
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-                try {
-                    System.out.println(json.getInt("code") +"\n\n\n");
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
 
+
+        }
+
+    }
+
+    @Override
+    public void OnprocessFinish(JSONObject json) {
+        try {
+            if (json.getInt("code") == 200) {
+                if (sexoPet.equals("Male")) {
+                    Toast.makeText(this, nombrePet + " añadido correctamente", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, nombrePet + " añadida correctamente", Toast.LENGTH_SHORT).show();
+                }
+                System.out.println(json.getInt("code") + "\n\n\n");
+
+                Intent intent = new Intent(this, PetsContainer.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, nombrePet + " ya existe", Toast.LENGTH_SHORT).show();
+                System.out.println(json.getInt("code") + "\n\n\n");
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            try {
+                System.out.println(json.getInt("code") + "\n\n\n");
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+
         }
     }
+
 }
