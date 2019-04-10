@@ -50,6 +50,7 @@ public class PetsContainer extends AppCompatActivity {
      */
     private ViewPager mViewPager;
 
+    @SuppressLint("WrongThread")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +74,15 @@ public class PetsContainer extends AppCompatActivity {
         System.out.println("Aqui llego 0");
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-        @SuppressLint("WrongThread") JSONObject jsonObject = con.doInBackground();
+        JSONObject json = con.doInBackground();
         JSONArray jsonArray = null;
         try {
-            jsonArray = new JSONArray(jsonObject);
+            jsonArray = (JSONArray) json.get("array");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println("Aqui llego 1");
+        //System.out.println("Aixo es el json: " + jsonArray);
+        //System.out.println("Aqui llego 1");
 
         for (int i = 0; i < jsonArray.length(); i++)
         {
@@ -97,7 +99,7 @@ public class PetsContainer extends AppCompatActivity {
                 Log.e("Parser JSON", e.toString());
             }
         }
-        System.out.println("Aqui llego 2");
+        //System.out.println("Aqui llego 2");
 
 
         mSectionsPagerAdapter = new PetAdapters(getSupportFragmentManager(), pets);

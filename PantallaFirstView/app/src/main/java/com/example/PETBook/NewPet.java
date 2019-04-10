@@ -1,7 +1,6 @@
 package com.example.PETBook;
 
 import android.content.Intent;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -44,9 +43,9 @@ public class NewPet extends AppCompatActivity {
         nombremascota = findViewById(R.id.Name);
         edad = findViewById(R.id.Age);
         sexo = findViewById(R.id.Sex);
-        color = findViewById(R.id.Color);
+        color = findViewById(R.id.Type);
         race = findViewById(R.id.Race);
-        type = findViewById(R.id.Type);
+        type = findViewById(R.id.Race);
         observations = findViewById(R.id.Observations);
         buttonAddPet = findViewById(R.id.buttonAddPet);
         textNM = findViewById(R.id.textNM);

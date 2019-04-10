@@ -2,11 +2,14 @@ package com.example.PETBook;
 
 import android.os.AsyncTask;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -71,19 +74,25 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
             InputStream in = null;
             StringBuffer bf = new StringBuffer();
             in = new BufferedInputStream(urlConnection.getInputStream());
-            BufferedReader read = new BufferedReader(new InputStreamReader(in));
-            String input = "";
-            while ((input = read.readLine()) != null){
-                bf.append(input);
-            }
-           /* System.out.println("Aqui llego 2");
 
-            System.out.println(bf.toString());
-            System.out.println("Length = "+bf.length());*/
-            if(bf.length() != 0) {
+            String response = parseResponse(in);
+            if(response.length() != 0){
+            Object json = new JSONTokener(response).nextValue();
+                if (json instanceof JSONArray) {
+                    JSONArray array = (JSONArray) json;
+                    result.accumulate("array", array);
+                } else if (json instanceof JSONObject) {
+                    result = (JSONObject) json;
+                }
+            }
+           /* System.out.println("Aqui llego 2");*/
+
+            //System.out.println(bf.toString() + "Desde conexion");/*
+           // System.out.println("Length = "+bf.length());*/
+            /*if(bf.length() != 0) {
                 JSONObject inter = new JSONObject(bf.toString());
                 result = inter;
-            }
+            }*/
             result.put("code",nume);
 
         } catch (Exception e) {
@@ -104,6 +113,19 @@ public class Conexion extends AsyncTask<JSONObject,Void,JSONObject> {
         return result;
     }
 
+    private String parseResponse(InputStream inputStream) {
+        BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder sb = new StringBuilder();
+        String output;
+        try {
+            while ((output = br.readLine()) != null) {
+                sb.append(output);
+            }
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
+    }
 
 }
