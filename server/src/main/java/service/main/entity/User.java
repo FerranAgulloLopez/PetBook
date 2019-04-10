@@ -3,6 +3,7 @@ package service.main.entity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import service.main.util.PBKDF2Hasher;
@@ -29,6 +30,7 @@ public class User implements Serializable {
     private String SecondName;
     private String dateOfBirth;
     private String postalCode;
+    @ApiModelProperty(example = "false")
     private boolean mailconfirmed;
 
 

@@ -16,6 +16,7 @@ import service.main.repositories.EventoRepository;
 import service.main.repositories.UserRepository;
 import service.main.service.ServerService;
 
+import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.Optional;
 
@@ -45,6 +46,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/ConfirmLogin", method = RequestMethod.POST)
     @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.",tags="LogIn")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database.")
+    })
     public ResponseEntity<?> ConfirmLogin(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
                                           @ApiParam(value="Password introduced", required = true, example = "1234") @RequestParam String password) {
         try {
@@ -57,6 +61,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/SendConfirmationEmail", method = RequestMethod.POST)
     @ApiOperation(value = "Send a confirmation email", notes = "Sends to the specified user an email with the instructions to verify it.",tags="LogIn")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database.")
+    })
     public ResponseEntity<?> ConfirmationEmail(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email) {
         try {
             serverService.SendConfirmationEmail(email);
@@ -77,6 +84,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/GetUser/{email}", method = RequestMethod.GET)
     @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "There is no user with that email")
+    })
     public ResponseEntity<?> InfoUser(@PathVariable String email) {
         try {
             return new ResponseEntity<>(serverService.getUserByEmail(email), HttpStatus.OK);
@@ -89,6 +99,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/update/{email}", method = RequestMethod.POST)
     @ApiOperation(value = "Update all the information of the user", notes = "Updates the dateOfBirth, firstName, secondName and the postalCode of an user given its email",tags = "User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "There is no user with that email")
+    })
     public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody OutUpdateUserProfile user)
     {
         try {
