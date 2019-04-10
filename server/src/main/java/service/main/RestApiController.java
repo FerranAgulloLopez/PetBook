@@ -11,6 +11,7 @@ import service.main.entity.User;
 import service.main.entity.output.*;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
+import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.EventoRepository;
 import service.main.repositories.UserRepository;
@@ -72,6 +73,8 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        } catch (InternalErrorException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

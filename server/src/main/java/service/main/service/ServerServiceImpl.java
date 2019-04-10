@@ -1,16 +1,18 @@
 package service.main.service;
 
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
 import service.main.entity.output.*;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
+import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.EventoRepository;
 import service.main.repositories.MascotaRepository;
 import service.main.repositories.UserRepository;
-import service.main.util.EmailServiceImpl;
+import service.main.util.SendEmailTLS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,8 @@ import java.util.Optional;
 
 @Service("serverService")
 public class ServerServiceImpl implements ServerService {
+
+    private SendEmailTLS mailsender;
 
     @Autowired
     private UserRepository userRepository;
@@ -46,16 +50,18 @@ public class ServerServiceImpl implements ServerService {
         userRepository.save(user.get());
     }
 
-    public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException {
+    public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException {
         Optional<User> user = userRepository.findById(email);
         if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database.");
         if (user.get().isMailconfirmed()) throw new BadRequestException("The user has already verified his email.");
-        sendEmail();
+        sendEmail(email);
     }
 
-    private void sendEmail() {
-        EmailServiceImpl emailService = new EmailServiceImpl();
-        emailService.sendSimpleMessage("fewrna@gmail.com", "yea", "Just testing my friend");
+    private void sendEmail(String mail) throws InternalErrorException {
+        if (mailsender == null) mailsender = new SendEmailTLS();
+        String subject = "Petbook confirmation email";
+        String text = "Enter in http://10.4.41.146:9999/mailconfirmation/" + mail + " to confirm your email.";
+        mailsender.sendEmail(mail,subject,text);
     }
 
 
