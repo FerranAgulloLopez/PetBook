@@ -39,8 +39,9 @@ public class ServerServiceImpl implements ServerService {
         return new OutLogin(result,user.get().isMailconfirmed());
     }
 
-    public void RegisterUser(User input) {
-        //TODO check if input has email and password
+    public void RegisterUser(User input) throws AlreadyExistsException {
+        Optional<User> userToCheck = userRepository.findById(input.getEmail());
+        if (userToCheck.isPresent()) throw  new  AlreadyExistsException("The user already exists");
         userRepository.save(input);
     }
     public void ConfirmEmail(String email) throws NotFoundException {

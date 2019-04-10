@@ -52,6 +52,18 @@ public class ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"register_operation/output_register.json")));
     }
 
+    @Test
+    public void RegisterUserAgain() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"register_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"register_operation/input_register.json")))
+                .andDo(print()).andDo(print()).andExpect(status().isFound());
+    }
+
+
+
+
+
     /*
     Login confirmation operation
      */

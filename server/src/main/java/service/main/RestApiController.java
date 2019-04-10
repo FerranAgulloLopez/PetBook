@@ -39,9 +39,16 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/RegisterUser", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "User Registration", notes = "Saves a new user to the database. It receives the user's email and password", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 302, message = "The user already exists")
+    })
     public ResponseEntity<?> RegisterUser(@ApiParam(value="A user with email and password", required = true) @RequestBody User input) {
-        serverService.RegisterUser(input);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            serverService.RegisterUser(input);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (AlreadyExistsException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FOUND);
+        }
     }
 
     @CrossOrigin
@@ -136,7 +143,7 @@ public class RestApiController {
 
 
 
-        @CrossOrigin
+    @CrossOrigin
     @RequestMapping(value = "/getALLEventos", method = RequestMethod.GET)
     @ApiOperation(value = "GET ALL Evento", notes = "Obtiene la informacion de todos los eventos ", tags = "Events")
     public ResponseEntity<?> getAllEventos()
