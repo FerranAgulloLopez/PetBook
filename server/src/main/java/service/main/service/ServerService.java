@@ -6,6 +6,7 @@ import service.main.entity.User;
 import service.main.entity.output.*;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
+import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public interface ServerService {
 
     public void ConfirmEmail(String email) throws NotFoundException;
 
-    public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException;
+    public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException;
 
     public void RegisterUser(User input);
 
