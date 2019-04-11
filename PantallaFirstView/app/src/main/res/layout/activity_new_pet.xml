@@ -7,7 +7,7 @@
     tools:context="com.example.PETBook.NewPet">
 
     <EditText
-        android:id="@+id/Type"
+        android:id="@+id/Color"
         android:layout_width="347dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
@@ -15,19 +15,36 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
         android:ems="10"
-        android:hint="Type"
+        android:hint="Color"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Race"
-        app:layout_constraintVertical_bias="0.033" />
+        app:layout_constraintTop_toBottomOf="@+id/Type" />
 
     <EditText
-        android:id="@+id/Color"
+        android:id="@+id/Race"
+        android:layout_width="347dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:autofillHints=""
+        android:ems="10"
+        android:hint="Race"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/Observations"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Color" />
+
+    <EditText
+        android:id="@+id/Type"
         android:layout_width="347dp"
         android:layout_height="45dp"
         android:layout_marginStart="16dp"
@@ -37,34 +54,14 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:ems="10"
-        android:hint="Color"
+        android:hint="Type. Per example: Dog, Cat, Bird, etc"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.031"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Imatge"
         app:layout_constraintVertical_bias="0.0" />
-
-    <EditText
-        android:id="@+id/Race"
-        android:layout_width="347dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="16dp"
-        android:ems="10"
-        android:hint="Race"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Color"
-        app:layout_constraintVertical_bias="0.024" />
 
     <ImageView
         android:id="@+id/Imatge"
@@ -147,23 +144,20 @@
 
     <EditText
         android:id="@+id/Observations"
-        android:layout_width="345dp"
+        android:layout_width="350dp"
         android:layout_height="98dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="84dp"
         android:ems="10"
         android:hint="Observations"
         android:inputType="textMultiLine"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Type"
-        app:layout_constraintVertical_bias="0.065" />
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textNM"
@@ -197,7 +191,7 @@
         android:layout_marginBottom="8dp"
         android:entries="@array/Sex"
         android:prompt="@string/Sex"
-        app:layout_constraintBottom_toTopOf="@+id/Color"
+        app:layout_constraintBottom_toTopOf="@+id/Type"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.925"
         app:layout_constraintStart_toStartOf="parent"

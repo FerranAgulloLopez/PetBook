@@ -1,7 +1,6 @@
 package com.example.PETBook;
 
 import android.content.Intent;
-import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -57,9 +56,9 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
         nombremascota = findViewById(R.id.Name);
         edad = findViewById(R.id.Age);
         sexo = findViewById(R.id.Sex);
-        color = findViewById(R.id.Color);
+        color = findViewById(R.id.Type);
         race = findViewById(R.id.Race);
-        type = findViewById(R.id.Type);
+        type = findViewById(R.id.Race);
         observations = findViewById(R.id.Observations);
         buttonAddPet = findViewById(R.id.buttonAddPet);
         textNM = findViewById(R.id.textNM);
@@ -112,30 +111,33 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
 
     @Override
     public void OnprocessFinish(JSONObject json) {
+
         try {
-            if (json.getInt("code") == 200) {
+            if(json.getInt("code")==200) {
                 if (sexoPet.equals("Male")) {
                     Toast.makeText(this, nombrePet + " añadido correctamente", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this, nombrePet + " añadida correctamente", Toast.LENGTH_SHORT).show();
                 }
-                System.out.println(json.getInt("code") + "\n\n\n");
+                System.out.println(json.getInt("code") +"\n\n\n");
 
                 Intent intent = new Intent(this, PetsContainer.class);
                 startActivity(intent);
-            } else {
+            }
+            else{
                 Toast.makeText(this, nombrePet + " ya existe", Toast.LENGTH_SHORT).show();
-                System.out.println(json.getInt("code") + "\n\n\n");
+                System.out.println(json.getInt("code") +"\n\n\n");
             }
         } catch (JSONException e) {
             e.printStackTrace();
             try {
-                System.out.println(json.getInt("code") + "\n\n\n");
+                System.out.println(json.getInt("code") +"\n\n\n");
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
 
         }
+
     }
 
 }

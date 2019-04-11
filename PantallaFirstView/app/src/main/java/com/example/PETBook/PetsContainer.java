@@ -33,7 +33,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class PetsContainer extends AppCompatActivity implements AsyncResult {
 
@@ -53,6 +52,7 @@ public class PetsContainer extends AppCompatActivity implements AsyncResult {
      */
     private ViewPager mViewPager;
 
+    //@SuppressLint("WrongThread")
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,34 +69,23 @@ public class PetsContainer extends AppCompatActivity implements AsyncResult {
         //pets.add(new PetModel("idPet2", "nom2"));
         //TODO: pets comes from DB
 
-
         SingletonUsuario su = SingletonUsuario.getInstance();
         String us = su.getEmail();
 
 
+        System.out.println("petscContainer1111111111111");
+
 
         Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser/" + us, "GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser/" + us,"GET", null);
 
 
 
 
+        System.out.println("petscContainer222222222222222");
 
 
-        mSectionsPagerAdapter = new PetAdapters(getSupportFragmentManager(), pets);
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view){
-                Intent intent = new Intent(PetsContainer.this, NewPet.class);
-                startActivity(intent);
-
-            }
-        });
     }
 
 
@@ -140,19 +129,16 @@ public class PetsContainer extends AppCompatActivity implements AsyncResult {
         return super.onOptionsItemSelected(item);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void OnprocessFinish(JSONObject json) {
-
-        /*
-
         JSONArray jsonArray = null;
         try {
-            jsonArray = new JSONArray(json);
+            jsonArray = (JSONArray) json.get("array");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        System.out.println("Aqui llego 1");
+        //System.out.println("Aixo es el json: " + jsonArray);
+        //System.out.println("Aqui llego 1");
 
         for (int i = 0; i < jsonArray.length(); i++)
         {
@@ -169,8 +155,21 @@ public class PetsContainer extends AppCompatActivity implements AsyncResult {
                 Log.e("Parser JSON", e.toString());
             }
         }
-        System.out.println("Aqui llego 2");
 
-        */
+
+        mSectionsPagerAdapter = new PetAdapters(getSupportFragmentManager(), pets);
+
+        // Set up the ViewPager with the sections adapter.
+        mViewPager = (ViewPager) findViewById(R.id.container);
+        mViewPager.setAdapter(mSectionsPagerAdapter);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view){
+                Intent intent = new Intent(PetsContainer.this, NewPet.class);
+                startActivity(intent);
+
+            }
+        });
     }
 }
