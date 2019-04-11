@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.StrictMode;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,11 +23,12 @@ import org.json.JSONObject;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 public class NewEvent extends AppCompatActivity implements AsyncResult {
 
-    private EditText inputLocalizacion;
+    private TextInputLayout Localizacion;
+    private TextInputLayout Fecha;
+    private TextInputLayout Hora;
     private EditText inputFecha;
     private EditText inputHora;
 
@@ -39,12 +41,13 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
 
-        inputLocalizacion = (EditText) findViewById(R.id.editLocalizacion);
-        inputFecha = (EditText) findViewById(R.id.editFecha);
-        inputHora = (EditText) findViewById(R.id.editHora);
+        Localizacion = (TextInputLayout) findViewById(R.id.Localizacion);
+        Fecha = (TextInputLayout) findViewById(R.id.Fecha);
+        Hora = (TextInputLayout) findViewById(R.id.Hora);
 
         addEventButton = (Button) findViewById(R.id.addEventButton);
 
+        inputFecha = (EditText) findViewById(R.id.editFecha);
         inputFecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,6 +57,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             }
         });
 
+        inputHora = (EditText) findViewById(R.id.editHora);
         inputHora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -96,7 +100,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
     private void actualizarFecha(){
         String formatoFecha = "%02d/%02d/%02d";
         inputFecha.setText(String.format(formatoFecha,calendario.get(Calendar.DAY_OF_MONTH),
-                calendario.get(Calendar.MONTH),
+                1+calendario.get(Calendar.MONTH),
                 calendario.get(Calendar.YEAR)));
     }
 
@@ -107,50 +111,89 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 calendario.get(Calendar.MINUTE)));
     }
 
+    private boolean validateLocation(String loc){
+        if(loc.isEmpty()) {
+            Localizacion.setError("Introduzca la localización del evento");
+            return false;
+        }
+        else {
+            Localizacion.setErrorEnabled(false);
+            return true;
+        }
+    }
+
+    private boolean validateFecha(String date){
+        if(date.isEmpty()) {
+            Fecha.setError("Introduzca la fecha del evento");
+            return false;
+        }
+        else {
+            Fecha.setErrorEnabled(false);
+            return true;
+        }
+    }
+
+    private boolean validateHora(String hora){
+        if(hora.isEmpty()) {
+            Hora.setError("Introduzca la hora del evento");
+            return false;
+        }
+        else {
+            Hora.setErrorEnabled(false);
+            return true;
+        }
+    }
+
     private void createEvent(){
-        String localizacion = inputLocalizacion.getText().toString();
-        String fechaE = inputFecha.getText().toString();
-        String horaE = inputHora.getText().toString();
+        String localizacion = Localizacion.getEditText().getText().toString();
         Integer any = calendario.get(Calendar.YEAR);
-        Integer mes = calendario.get(Calendar.MONTH);
+        Integer mes = 1 + calendario.get(Calendar.MONTH);
         Integer dia = calendario.get(Calendar.DAY_OF_MONTH);
         String hora = inputHora.getText().toString();
 
+        boolean isValidLoc = validateLocation(localizacion);
+        boolean isValidFecha = validateFecha(inputFecha.getText().toString());
+        boolean isValidHora = validateHora(hora);
 
-        JSONObject jsonToSend = new JSONObject();
-        try {
-            jsonToSend.accumulate("any", any.toString());
-            jsonToSend.accumulate("coordenadas", localizacion);
-            jsonToSend.accumulate("dia", dia.toString());
-            jsonToSend.accumulate("hora", hora);
-            jsonToSend.accumulate("mes", mes.toString());
-            jsonToSend.accumulate("radio", "0");
-            jsonToSend.accumulate("userEmail", SingletonUsuario.getInstance().getEmail());
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(isValidLoc && isValidFecha && isValidHora) {
+            JSONObject jsonToSend = new JSONObject();
+            try {
+                jsonToSend.accumulate("any", any);
+                jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion));
+                jsonToSend.accumulate("dia", dia);
+                jsonToSend.accumulate("hora", calendario.get(Calendar.HOUR_OF_DAY)); //Cuando cambien el valor de hora se cambia!!!!!!!!!!!
+                jsonToSend.accumulate("mes", mes);
+                jsonToSend.accumulate("radio", 0);
+                jsonToSend.accumulate("userEmail", SingletonUsuario.getInstance().getEmail());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            /* Nueva conexion llamando a la funcion del server */
+
+            Conexion con = new Conexion(this);
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreaEvento/", "POST", jsonToSend.toString());
+
+
         }
 
-        /* Nueva conexion llamando a la funcion del server */
 
-        Conexion con = new Conexion(this);
-        try {
-            JSONObject json = con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreaEvento", "POST", jsonToSend.toString()).get();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-
-        Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, MyEvents.class);
-        startActivity(intent);
 
     }
 
     @Override
-    public void OnprocessFinish(JSONObject output) {
+    public void OnprocessFinish(JSONObject json) {
 
+        try {
+            if (json.getInt("code") == 200) {
+                Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, MyEvents.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "El evento ya existe", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
