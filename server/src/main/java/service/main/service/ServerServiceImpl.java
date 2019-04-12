@@ -60,7 +60,10 @@ public class ServerServiceImpl implements ServerService {
     private void sendEmail(String mail) throws InternalErrorException {
         if (mailsender == null) mailsender = new SendEmailTLS();
         String subject = "Petbook confirmation email";
-        String text = "Enter in http://10.4.41.146:9999/mailconfirmation/" + mail + " to confirm your email.";
+        String text = "Hello. You've received this email because your email address was used for registering into Petbook application. " +
+                "Please follow this link to confirm email address http://10.4.41.146:9999/mailconfirmation/" + mail + ". If you click the " +
+                "link and it appears to be broken, please copy and paste it " +
+                "into a new browser window. If you aren't able to access the link, please contact us via petbookasesores@gmail.com.";
         mailsender.sendEmail(mail,subject,text);
     }
 
