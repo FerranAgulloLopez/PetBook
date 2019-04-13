@@ -37,21 +37,12 @@ public class PantallaHome extends AppCompatActivity {
         TextView usuari = findViewById(R.id.username);
         SingletonUsuario su = SingletonUsuario.getInstance();
         usuari.setText(su.getEmail());
-        //Conexion con = new Conexion(user, pass);
-
-
-        // ESTO HACE QUE LO PERMITA TODO, basicamente todo lo ejecuta el mismo thread( el principal)
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-        // Lo suyo seria que hicieras que lo del Background funcionara, o otro metodo
-
-        //JSONObject json = con.doInBackground();
-
 
     }
-        public void myPets(View view){
-        Intent intent = new Intent(this, PetsContainer.class);
-        startActivity(intent);
+
+    public void myPets(View view){
+    Intent intent = new Intent(this, PetsContainer.class);
+    startActivity(intent);
 
     }
     public void myPosts(View view){

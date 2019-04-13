@@ -49,7 +49,11 @@ public class PetInfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+
         View rootView = inflater.inflate(R.layout.fragment_pets, container, false);
+
+
         TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         TextView name = rootView.findViewById(R.id.petName);
         TextView age = rootView.findViewById(R.id.petAge);
@@ -79,6 +83,9 @@ public class PetInfoFragment extends Fragment {
 
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
         }
+
         return rootView;
+
+
     }
 }

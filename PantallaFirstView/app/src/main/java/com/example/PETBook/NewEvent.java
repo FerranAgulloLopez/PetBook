@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.PETBook.Controllers.AsyncResult;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
@@ -23,7 +24,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class NewEvent extends AppCompatActivity {
+public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private TextInputLayout Localizacion;
     private TextInputLayout Fecha;
@@ -170,26 +171,29 @@ public class NewEvent extends AppCompatActivity {
 
             /* Nueva conexion llamando a la funcion del server */
 
-            Conexion con = new Conexion("http://10.4.41.146:9999/ServerRESTAPI/CreaEvento/",
-                    "POST", jsonToSend);
+            Conexion con = new Conexion(this);
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreaEvento/", "POST", jsonToSend.toString());
 
-            JSONObject json = con.doInBackground();
 
-            try {
-                if (json.getInt("code") == 200) {
-                    Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, MyEvents.class);
-                    startActivity(intent);
-                } else {
-                    Toast.makeText(this, "El evento ya existe", Toast.LENGTH_SHORT).show();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
 
 
     }
 
+    @Override
+    public void OnprocessFinish(JSONObject json) {
+
+        try {
+            if (json.getInt("code") == 200) {
+                Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, MyEvents.class);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "El evento ya existe", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
