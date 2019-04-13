@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+
 //
 @Document(collection = "domain")
 public class Mascota implements Serializable {
@@ -18,7 +19,11 @@ public class Mascota implements Serializable {
     private String raza;
     private String sexo;
     private String descripcion;
-    private String foto;    // Usar GridFS en el siguiente sprint
+    private String foto;    // Esta encodeado en Base64(byte[]) y luego pasado a String[].
+                            // Para conseguir la foto, pasar a Base64(byte[]) y luego convertir a file.
+                            // File   -> byte[] -> String[]
+                            // String[] -> byte[] -> File
+
 
 
 

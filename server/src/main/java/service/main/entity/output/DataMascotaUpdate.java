@@ -1,6 +1,7 @@
 package service.main.entity.output;
 
 //
+
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "domain")
