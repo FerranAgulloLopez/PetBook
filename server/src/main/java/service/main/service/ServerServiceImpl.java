@@ -1,10 +1,12 @@
 package service.main.service;
 
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
-import service.main.entity.output.*;
+import service.main.entity.output.DataEventoUpdate;
+import service.main.entity.output.DataMascotaUpdate;
+import service.main.entity.output.OutLogin;
+import service.main.entity.output.OutUpdateUserProfile;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
@@ -144,6 +146,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     public void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException {
+
         Mascota mascota2 = new Mascota(mascota.getNombre(), email, mascota.getEspecie(), mascota.getRaza(),
                                        mascota.getSexo(), mascota.getDescripcion(), mascota.getFoto());
 
