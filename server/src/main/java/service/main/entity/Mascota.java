@@ -1,11 +1,12 @@
 package service.main.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
-//
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "domain")
 public class Mascota implements Serializable {
 

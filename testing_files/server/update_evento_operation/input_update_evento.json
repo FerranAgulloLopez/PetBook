@@ -1,10 +1,7 @@
 {
-  "any": 2019,
   "coordenadas": 0,
+  "fecha": "2019-04-16T19:46:03.437+0000",
   "descripcion": "string",
-  "dia": 31,
-  "hora": 15,
-  "mes": 12,
   "numero_asistentes": 10,
   "participantes": [
     {

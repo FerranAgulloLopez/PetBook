@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
 import service.main.entity.input_output.*;
-import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
@@ -40,8 +39,8 @@ public class RestApiController {
         try {
             serverService.RegisterUser(input);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (AlreadyExistsException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FOUND);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -123,9 +122,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/CreaEvento", method = {RequestMethod.POST})
     @ApiOperation(value = "Crear Evento", notes = "Guarda un evento en la base de datos.", tags = "Events")
-    public ResponseEntity<?> creaEvento(@ApiParam(value="Un Evento", required = true) @RequestBody DataEvento evento) throws AlreadyExistsException, NotFoundException {
+    public ResponseEntity<?> creaEvento(@ApiParam(value="event", required = true) @RequestBody DataEvento evento) {
         try {
-            serverService.creaEvento(evento.getUserEmail(), evento.getAny(), evento.getMes(), evento.getDia(), evento.getHora(), evento.getCoordenadas(), evento.getRadio());
+            serverService.creaEvento(evento);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch(Exception exception) {
@@ -152,7 +151,7 @@ public class RestApiController {
     @RequestMapping(value = "/UpdateEvento/{email}", method = RequestMethod.PUT)
     @ApiOperation(value = "UPDATE Evento", notes = "Modifica un evento. Sirve para modificar los atributos descripcion, numero de asistentes, participantes, publico. EL Evento se identifica por any, coordenadas, dia, hora, mes, radio.", tags = "Events")
     public ResponseEntity<?> updateEvento(@PathVariable String email,
-                                          @ApiParam(value="Evento", required = true) @RequestBody DataEventoUpdate evento)
+                                          @ApiParam(value="event", required = true) @RequestBody DataEventoUpdate evento)
     {
         try {
             serverService.updateEvento(email, evento);
@@ -167,11 +166,10 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/DeleteEvento", method = RequestMethod.DELETE)
     @ApiOperation(value = "DELETE Evento", notes = "Elimina un evento ", tags = "Events")
-    public ResponseEntity<?> deleteEvento(
-                                           @ApiParam(value="Evento", required = true) @RequestBody DataEvento evento)
+    public ResponseEntity<?> deleteEvento(@ApiParam(value="Evento", required = true) @RequestBody DataEvento event)
     {
         try {
-            serverService.deleteEvento(evento.getUserEmail(), evento.getAny(), evento.getMes(), evento.getDia(), evento.getHora(), evento.getCoordenadas(), evento.getRadio());
+            serverService.deleteEvento(event);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {
@@ -196,7 +194,9 @@ public class RestApiController {
             serverService.creaMascota(mascota.getEmail(), mascota.getNombre());
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        catch (Exception e) {
+        catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }

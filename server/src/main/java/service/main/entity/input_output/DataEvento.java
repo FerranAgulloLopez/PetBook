@@ -3,15 +3,13 @@ package service.main.entity.input_output;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.Date;
 
 @Document(collection = "domain")
 public class DataEvento implements Serializable {
-//
+
     private String userEmail;
-    private Integer any;
-    private Integer mes;
-    private Integer dia;
-    private Integer hora;
+    private Date fecha;
     private Integer coordenadas;
     private Integer radio;
 
@@ -24,36 +22,12 @@ public class DataEvento implements Serializable {
         this.userEmail = userEmail;
     }
 
-    public Integer getAny() {
-        return any;
+    public Date getFecha() {
+        return fecha;
     }
 
-    public void setAny(Integer any) {
-        this.any = any;
-    }
-
-    public Integer getMes() {
-        return mes;
-    }
-
-    public void setMes(Integer mes) {
-        this.mes = mes;
-    }
-
-    public Integer getDia() {
-        return dia;
-    }
-
-    public void setDia(Integer dia) {
-        this.dia = dia;
-    }
-
-    public Integer getHora() {
-        return hora;
-    }
-
-    public void setHora(Integer hora) {
-        this.hora = hora;
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
     public Integer getCoordenadas() {

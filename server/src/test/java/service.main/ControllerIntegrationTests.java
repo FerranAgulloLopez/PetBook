@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import service.main.entity.Imagen;
-import service.main.exception.AlreadyExistsException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -67,7 +66,7 @@ public class ControllerIntegrationTests {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"register_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"register_operation/input_register.json")))
-                .andDo(print()).andDo(print()).andExpect(status().isFound());
+                .andDo(print()).andDo(print()).andExpect(status().isBadRequest());
     }
 
 
@@ -226,13 +225,13 @@ public class ControllerIntegrationTests {
     }
 
     @Test
-    public void creaMascotaPeroJaExisteix() throws AlreadyExistsException, Exception {
+    public void creaMascotaPeroJaExisteix() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaMascota").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_crea.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaMascota").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_crea.json")))
-                .andDo(print()).andExpect(status().isFound());
+                .andDo(print()).andExpect(status().isBadRequest());
     }
 
     @Test

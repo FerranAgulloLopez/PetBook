@@ -3,11 +3,7 @@ package service.main.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
-import service.main.entity.input_output.DataEventoUpdate;
-import service.main.entity.input_output.DataMascotaUpdate;
-import service.main.entity.input_output.OutLogin;
-import service.main.entity.input_output.OutUpdateUserProfile;
-import service.main.exception.AlreadyExistsException;
+import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
@@ -41,9 +37,9 @@ public class ServerServiceImpl implements ServerService {
         return new OutLogin(result,user.get().isMailconfirmed());
     }
 
-    public void RegisterUser(User input) throws AlreadyExistsException {
+    public void RegisterUser(User input) throws BadRequestException {
         Optional<User> userToCheck = userRepository.findById(input.getEmail());
-        if (userToCheck.isPresent()) throw  new  AlreadyExistsException("The user already exists");
+        if (userToCheck.isPresent()) throw new BadRequestException("The user already exists");
         userRepository.save(input);
     }
     public void ConfirmEmail(String email) throws NotFoundException {
@@ -93,15 +89,11 @@ public class ServerServiceImpl implements ServerService {
         }
     }
 
+    public void creaEvento(DataEvento event) throws BadRequestException {
+        Localizacion localizacion = new Localizacion(event.getCoordenadas(),event.getRadio());
 
-//
-
-    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException, NotFoundException {
-        Fecha fecha2 = new Fecha(any, mes, dia ,hora);
-        Localizacion localizacion = new Localizacion(coordenadas,radio);
-
-        Evento evento = new Evento(userEmail, localizacion.getId(), fecha2.getId());
-        if(eventoRepository.existsById(evento.getId())) throw new AlreadyExistsException("El Evento ya existe en el sistema");
+        Evento evento = new Evento(event.getUserEmail(), localizacion.getId(), event.getFecha());
+        if(eventoRepository.existsById(evento.getId())) throw new BadRequestException("El Evento ya existe en el sistema");
         eventoRepository.save(evento);
     }
 
@@ -113,30 +105,28 @@ public class ServerServiceImpl implements ServerService {
 
 
     public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException {
-        Fecha fecha2 = new Fecha(evento.getAny(), evento.getMes(), evento.getDia() ,evento.getHora());
         Localizacion localizacion = new Localizacion(evento.getCoordenadas(),evento.getRadio());
 
-        Evento evento2 = new Evento(email, localizacion.getId(), fecha2.getId(), evento.getDescripcion(), evento.getPublico(), evento.getNumero_asistentes(), evento.getParticipantes());
+        Evento evento2 = new Evento(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getNumero_asistentes(), evento.getParticipantes());
         if(! eventoRepository.existsById(evento2.getId())) throw new NotFoundException("El Evento no existe en el sistema");
         eventoRepository.deleteById(evento2.getId());
         eventoRepository.insert(evento2);
     }
 
 
-    public void deleteEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws NotFoundException {
-        Fecha fecha2 = new Fecha(any, mes, dia ,hora);
-        Localizacion localizacion = new Localizacion(coordenadas,radio);
+    public void deleteEvento(DataEvento event) throws NotFoundException {
+        Localizacion localizacion = new Localizacion(event.getCoordenadas(),event.getRadio());
 
-        Evento evento = new Evento(userEmail, localizacion.getId(), fecha2.getId());
+        Evento evento = new Evento(event.getUserEmail(), localizacion.getId(), event.getFecha());
         if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException("El Evento no existe en el sistema");
         eventoRepository.deleteById(evento.getId());
     }
 
 
-    public void creaMascota(String email, String nom_mascota) throws AlreadyExistsException, NotFoundException {
+    public void creaMascota(String email, String nom_mascota) throws BadRequestException, NotFoundException {
         Mascota mascota = new Mascota(nom_mascota,email);
         if(! userRepository.existsById(email)) throw new NotFoundException("El Usuario no existe en el sistema");
-        if(mascotaRepository.existsById(mascota.getId())) throw new AlreadyExistsException("La mascota ya existe en el sistema");
+        if(mascotaRepository.existsById(mascota.getId())) throw new BadRequestException("La mascota ya existe en el sistema");
         mascotaRepository.save(mascota);
     }
 

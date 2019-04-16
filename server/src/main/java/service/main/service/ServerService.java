@@ -4,7 +4,6 @@ import service.main.entity.Evento;
 import service.main.entity.Mascota;
 import service.main.entity.User;
 import service.main.entity.input_output.*;
-import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
@@ -19,7 +18,7 @@ public interface ServerService {
 
     public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException;
 
-    public void RegisterUser(User input) throws AlreadyExistsException;
+    public void RegisterUser(User input) throws BadRequestException;
 
     public User getUserByEmail(String email) throws NotFoundException;
 
@@ -28,15 +27,15 @@ public interface ServerService {
 
     // EVENTOS
 
-    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException, NotFoundException;
+    public void creaEvento(DataEvento event) throws BadRequestException, NotFoundException;
     public List<Evento> findAllEventos();
     public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException;
-    public void deleteEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws NotFoundException;
+    public void deleteEvento(DataEvento event) throws NotFoundException;
 
 
     // MASCOTAS
 
-    public void creaMascota(String email, String nom_mascota) throws AlreadyExistsException, NotFoundException;
+    public void creaMascota(String email, String nom_mascota) throws BadRequestException, NotFoundException;
     Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
     void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException;

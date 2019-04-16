@@ -5,18 +5,15 @@ import service.main.entity.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Document(collection = "domain")
 public class DataEventoUpdate implements Serializable {
 //
     //private String userEmail;
-    private Integer any;
-    private Integer mes;
-    private Integer dia;
-    private Integer hora;
     private Integer coordenadas;
     private Integer radio;
-
+    private Date fecha;
 
     private String descripcion;
     private Boolean publico;
@@ -33,37 +30,6 @@ public class DataEventoUpdate implements Serializable {
         this.userEmail = userEmail;
     }
 */
-    public Integer getAny() {
-        return any;
-    }
-
-    public void setAny(Integer any) {
-        this.any = any;
-    }
-
-    public Integer getMes() {
-        return mes;
-    }
-
-    public void setMes(Integer mes) {
-        this.mes = mes;
-    }
-
-    public Integer getDia() {
-        return dia;
-    }
-
-    public void setDia(Integer dia) {
-        this.dia = dia;
-    }
-
-    public Integer getHora() {
-        return hora;
-    }
-
-    public void setHora(Integer hora) {
-        this.hora = hora;
-    }
 
     public Integer getCoordenadas() {
         return coordenadas;
@@ -71,6 +37,14 @@ public class DataEventoUpdate implements Serializable {
 
     public void setCoordenadas(Integer coordenadas) {
         this.coordenadas = coordenadas;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 
     public Integer getRadio() {
