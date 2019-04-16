@@ -1,10 +1,12 @@
 package service.main.service;
 
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
-import service.main.entity.output.*;
+import service.main.entity.output.DataEventoUpdate;
+import service.main.entity.output.DataMascotaUpdate;
+import service.main.entity.output.OutLogin;
+import service.main.entity.output.OutUpdateUserProfile;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
@@ -39,8 +41,9 @@ public class ServerServiceImpl implements ServerService {
         return new OutLogin(result,user.get().isMailconfirmed());
     }
 
-    public void RegisterUser(User input) {
-        //TODO check if input has email and password
+    public void RegisterUser(User input) throws AlreadyExistsException {
+        Optional<User> userToCheck = userRepository.findById(input.getEmail());
+        if (userToCheck.isPresent()) throw  new  AlreadyExistsException("The user already exists");
         userRepository.save(input);
     }
     public void ConfirmEmail(String email) throws NotFoundException {
@@ -146,6 +149,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     public void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException {
+
         Mascota mascota2 = new Mascota(mascota.getNombre(), email, mascota.getEspecie(), mascota.getRaza(),
                                        mascota.getSexo(), mascota.getDescripcion(), mascota.getFoto());
 

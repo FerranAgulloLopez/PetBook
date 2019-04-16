@@ -10,11 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import service.main.entity.Imagen;
 import service.main.exception.AlreadyExistsException;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
+import java.io.FileWriter;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -32,6 +33,15 @@ public class ControllerIntegrationTests {
     @Autowired
     private MockMvc mockMvc;
     private String path = "../testing_files/server/";
+
+    private String pathFotos = "../testing_files/Fotos/";
+
+
+
+    // Mascota
+    private String inputFilePath  = pathFotos + "RealMadrid.png";
+    private String outputFilePath = pathFotos + "RealMadrid_prueba.png";
+
 
     @Before
     public void ClearDB() throws Exception {
@@ -51,6 +61,18 @@ public class ControllerIntegrationTests {
         this.mockMvc.perform(get("/ServerRESTAPI/GetUser/petbook@main.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"register_operation/output_register.json")));
     }
+
+    @Test
+    public void RegisterUserAgain() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"register_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"register_operation/input_register.json")))
+                .andDo(print()).andDo(print()).andExpect(status().isFound());
+    }
+
+
+
+
 
     /*
     Login confirmation operation
@@ -248,7 +270,27 @@ public class ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "update_mascota_operation/output_crea.json")));
 
 
-        this.mockMvc.perform(put("/ServerRESTAPI/UpdateMascota/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "update_mascota_operation/input_update_mascota.json")))
+        Imagen foto = new Imagen(inputFilePath);
+
+        JSONObject json = new JSONObject();
+
+        json.accumulate("descripcion", "string");
+        json.accumulate("email", "foo@mail.com");
+        json.accumulate("especie", "Enano");
+
+        json.accumulate("foto", foto.getImagen() );
+
+        json.accumulate("nombre", "Messi");
+        json.accumulate("raza", "Humana");
+        json.accumulate("sexo", "Hombre");
+
+
+        FileWriter fileWriter = new FileWriter(path+"update_mascota_operation/mascota.json");
+        fileWriter.write(json.toString(0));
+        fileWriter.close();
+
+
+        this.mockMvc.perform(put("/ServerRESTAPI/UpdateMascota/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content((read_file(path + "update_mascota_operation/mascota.json"))))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/GetMascota/foo@mail.com?nombreMascota=Messi"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "update_mascota_operation/output_update_mascota.json")));

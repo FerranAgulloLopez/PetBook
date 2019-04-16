@@ -19,7 +19,7 @@ public interface ServerService {
 
     public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException;
 
-    public void RegisterUser(User input);
+    public void RegisterUser(User input) throws AlreadyExistsException;
 
     public User getUserByEmail(String email) throws NotFoundException;
 
