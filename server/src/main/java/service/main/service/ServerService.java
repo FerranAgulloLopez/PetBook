@@ -3,7 +3,7 @@ package service.main.service;
 import service.main.entity.Evento;
 import service.main.entity.Mascota;
 import service.main.entity.User;
-import service.main.entity.output.*;
+import service.main.entity.input_output.*;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;

@@ -1,4 +1,4 @@
-package service.main.entity.output;
+package service.main.entity.input_output;
 
 //
 
@@ -14,6 +14,8 @@ public class DataMascotaUpdate {
     private String raza;
     private String sexo;
     private String descripcion;
+    private int edad;
+    private String color;
     private String foto;
 
     public String getEmail() {
@@ -62,6 +64,22 @@ public class DataMascotaUpdate {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public String getFoto() {

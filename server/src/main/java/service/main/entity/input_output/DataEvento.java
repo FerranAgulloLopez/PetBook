@@ -1,4 +1,4 @@
-package service.main.entity.output;
+package service.main.entity.input_output;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 

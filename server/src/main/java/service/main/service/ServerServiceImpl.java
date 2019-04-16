@@ -3,10 +3,10 @@ package service.main.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
-import service.main.entity.output.DataEventoUpdate;
-import service.main.entity.output.DataMascotaUpdate;
-import service.main.entity.output.OutLogin;
-import service.main.entity.output.OutUpdateUserProfile;
+import service.main.entity.input_output.DataEventoUpdate;
+import service.main.entity.input_output.DataMascotaUpdate;
+import service.main.entity.input_output.OutLogin;
+import service.main.entity.input_output.OutUpdateUserProfile;
 import service.main.exception.AlreadyExistsException;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
@@ -151,7 +151,7 @@ public class ServerServiceImpl implements ServerService {
     public void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException {
 
         Mascota mascota2 = new Mascota(mascota.getNombre(), email, mascota.getEspecie(), mascota.getRaza(),
-                                       mascota.getSexo(), mascota.getDescripcion(), mascota.getFoto());
+                                       mascota.getSexo(), mascota.getDescripcion(), mascota.getEdad(), mascota.getColor(), mascota.getFoto());
 
         String id = mascota2.getId();
         if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
