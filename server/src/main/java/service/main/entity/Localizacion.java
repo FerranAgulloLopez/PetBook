@@ -1,33 +1,24 @@
 package service.main.entity;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.io.Serializable;
-//
-@Document(collection = "domain")
+
 public class Localizacion implements Serializable {
 
-    @Id
     private String id;
 
     private Integer coordenadas;
     private Integer radio;
 
-    //String separador = "/"; // Separador entre valores
-
     public Localizacion() {
         this.coordenadas = 0;
         this.radio = 0;
-        setRadio(0);
-        setCoordenadas(0);
+        makeId();
     }
 
     public Localizacion(Integer coordenadas, Integer radio) {
         this.coordenadas = 0;
         this.radio = 0;
-        setRadio(radio);
-        setCoordenadas(coordenadas);
+        makeId();
     }
 
 

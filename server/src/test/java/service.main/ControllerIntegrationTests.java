@@ -156,7 +156,8 @@ public class ControllerIntegrationTests {
 
     @Test
     public void creaYgetALLEvento() throws Exception {
-
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_crea_evento.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/getALLEventos"))
@@ -165,14 +166,18 @@ public class ControllerIntegrationTests {
 
     @Test
     public void creaEventoPeroJaExisteix() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_crea_evento.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_crea_evento.json")))
-                .andDo(print()).andExpect(status().isFound());
+                .andDo(print()).andExpect(status().isBadRequest());
     }
 
     @Test
     public void updateEvento() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_evento_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_evento_operation/input_crea_evento.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/getALLEventos"))
@@ -195,6 +200,8 @@ public class ControllerIntegrationTests {
 
     @Test
     public void deleteEvento() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_evento_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_evento_operation/input_crea_evento.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/getALLEventos"))

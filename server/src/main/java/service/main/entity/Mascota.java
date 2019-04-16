@@ -7,7 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Document(collection = "domain")
+@Document(collection = "users")
 public class Mascota implements Serializable {
 
     @Id

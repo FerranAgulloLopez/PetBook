@@ -10,39 +10,37 @@ public class DataEvento implements Serializable {
 
     private String userEmail;
     private Date fecha;
-    private Integer coordenadas;
-    private Integer radio;
-
+    private int coordenadas;
+    private int radio;
+    private String titulo;
+    private String descripcion;
+    private boolean publico;
 
     public String getUserEmail() {
         return userEmail;
-    }
-
-    public void setUserEmail(String userEmail) {
-        this.userEmail = userEmail;
     }
 
     public Date getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
-    }
-
     public Integer getCoordenadas() {
         return coordenadas;
-    }
-
-    public void setCoordenadas(Integer coordenadas) {
-        this.coordenadas = coordenadas;
     }
 
     public Integer getRadio() {
         return radio;
     }
 
-    public void setRadio(Integer radio) {
-        this.radio = radio;
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public boolean isPublico() {
+        return publico;
     }
 }

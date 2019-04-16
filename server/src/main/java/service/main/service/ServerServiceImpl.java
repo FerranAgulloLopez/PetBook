@@ -89,12 +89,16 @@ public class ServerServiceImpl implements ServerService {
         }
     }
 
-    public void creaEvento(DataEvento event) throws BadRequestException {
-        Localizacion localizacion = new Localizacion(event.getCoordenadas(),event.getRadio());
+    public void creaEvento(DataEvento input_event) throws BadRequestException, NotFoundException {
 
-        Evento evento = new Evento(event.getUserEmail(), localizacion.getId(), event.getFecha());
-        if(eventoRepository.existsById(evento.getId())) throw new BadRequestException("El Evento ya existe en el sistema");
-        eventoRepository.save(evento);
+        String usermail = input_event.getUserEmail();
+        Optional<User> user = userRepository.findById(usermail);
+        if(!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
+
+        Localizacion localizacion = new Localizacion(input_event.getCoordenadas(),input_event.getRadio());
+        Evento event = new Evento(user.get(),localizacion.getId(),input_event.getFecha(),input_event.getTitulo(),input_event.getDescripcion(),input_event.isPublico());
+        if(eventoRepository.existsById(event.getId())) throw new BadRequestException("The event already exists in the database");
+        eventoRepository.save(event);
     }
 
 
@@ -107,7 +111,7 @@ public class ServerServiceImpl implements ServerService {
     public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException {
         Localizacion localizacion = new Localizacion(evento.getCoordenadas(),evento.getRadio());
 
-        Evento evento2 = new Evento(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getNumero_asistentes(), evento.getParticipantes());
+        Evento evento2 = new Evento(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getParticipantes());
         if(! eventoRepository.existsById(evento2.getId())) throw new NotFoundException("El Evento no existe en el sistema");
         eventoRepository.deleteById(evento2.getId());
         eventoRepository.insert(evento2);
@@ -173,6 +177,8 @@ public class ServerServiceImpl implements ServerService {
 
     public void removeDataBase() {
         userRepository.deleteAll();
+        mascotaRepository.deleteAll();
+        eventoRepository.deleteAll();
     }
 
 

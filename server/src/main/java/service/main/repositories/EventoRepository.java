@@ -7,7 +7,7 @@ import service.main.entity.Evento;
 import java.util.Calendar;
 
 
-@Document(collection = "domain")
+
 public interface EventoRepository extends MongoRepository<Evento, String> {
 
 }

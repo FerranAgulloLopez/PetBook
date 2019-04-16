@@ -1,1 +1,1 @@
-[{"localizacion":"00","fecha":"2019-04-16T19:46:03.437+0000","publico":false,"numero_asistentes":0,"creador":"foo@mail.com"}]
+[{"localizacion":"00","fecha":"2019-04-16T19:46:03.437+0000","publico":false,"participantes":[{"email":"foo@mail.com","mailconfirmed":false}],"creador":"foo@mail.com"}]

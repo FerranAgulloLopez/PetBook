@@ -126,9 +126,10 @@ public class RestApiController {
         try {
             serverService.creaEvento(evento);
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch(Exception exception) {
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.FOUND);
+        } catch(BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

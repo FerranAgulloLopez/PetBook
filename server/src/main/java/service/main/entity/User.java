@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "User", description = "An application user")
-@Document(collection = "domain")
+@Document(collection = "users")
 public class User implements Serializable {
 
     static {
