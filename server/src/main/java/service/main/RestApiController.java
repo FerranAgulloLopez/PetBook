@@ -106,7 +106,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/update/{email}", method = RequestMethod.POST)
+    @RequestMapping(value = "/update/{email}", method = RequestMethod.PUT)
     @ApiOperation(value = "Update all the information of the user", notes = "Updates the dateOfBirth, firstName, secondName and the postalCode of an user given its email",tags = "User")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")

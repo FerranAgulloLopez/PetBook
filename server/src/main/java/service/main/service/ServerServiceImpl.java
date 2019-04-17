@@ -84,12 +84,12 @@ public class ServerServiceImpl implements ServerService {
         if (!userToUpdate.isPresent()) throw new NotFoundException("The user does not exist in the database");
         else {
             User user = userToUpdate.get();
-            userRepository.delete(user);
+            //userRepository.delete(user);
             user.setFirstName(userUpdated.getFirstName());
             user.setSecondName(userUpdated.getSecondName());
             user.setDateOfBirth(userUpdated.getDateOfBirth());
             user.setPostalCode(userUpdated.getPostalCode());
-            userRepository.insert(user);
+            userRepository.save(user);
         }
     }
 
