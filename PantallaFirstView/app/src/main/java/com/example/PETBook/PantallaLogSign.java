@@ -65,7 +65,7 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                 if(success.equals("true")) {
                     SingletonUsuario.getInstance();
                     SingletonUsuario.setEmail(usuari.getText().toString());
-                    // System.out.println("Ha ido bien, codigo 200");
+                     System.out.println("Ha ido bien, codigo 200");
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);
                     finish();
