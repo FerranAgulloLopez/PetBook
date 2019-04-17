@@ -6,6 +6,7 @@ import service.main.entity.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "domain")
 public class DataEventoUpdate implements Serializable {
@@ -17,7 +18,7 @@ public class DataEventoUpdate implements Serializable {
 
     private String descripcion;
     private Boolean publico;
-    private ArrayList<User> participantes;
+    private List<String> participantes;
 
     public Integer getCoordenadas() {
         return coordenadas;
@@ -39,7 +40,7 @@ public class DataEventoUpdate implements Serializable {
         return publico;
     }
 
-    public ArrayList<User> getParticipantes() {
+    public List<String> getParticipantes() {
         return participantes;
     }
 }

@@ -107,6 +107,14 @@ public class ServerServiceImpl implements ServerService {
         return eventoRepository.findAll();
     }
 
+    public List<Evento> findEventsByCreator(String creatormail) throws NotFoundException {
+
+        Optional<User> user = userRepository.findById(creatormail);
+        if(!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
+
+        return eventoRepository.findByemailCreador(creatormail);
+    }
+
 
     public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException {
         Localizacion localizacion = new Localizacion(evento.getCoordenadas(),evento.getRadio());

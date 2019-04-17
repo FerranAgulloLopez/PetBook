@@ -2,6 +2,7 @@ package service.main;
 
 
 import io.swagger.annotations.*;
+import org.mockito.internal.matchers.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -117,7 +118,9 @@ public class RestApiController {
     }
 
 
-//
+    /*
+    Events operations
+     */
 
     @CrossOrigin
     @RequestMapping(value = "/CreaEvento", method = {RequestMethod.POST})
@@ -134,9 +137,6 @@ public class RestApiController {
     }
 
 
-
-
-
     @CrossOrigin
     @RequestMapping(value = "/getALLEventos", method = RequestMethod.GET)
     @ApiOperation(value = "GET ALL Evento", notes = "Obtiene la informacion de todos los eventos ", tags = "Events")
@@ -144,6 +144,18 @@ public class RestApiController {
     {
         return new ResponseEntity<>(serverService.findAllEventos(),HttpStatus.OK);
 
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/getEventsByCreator", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all the events of a specific creator", notes = "Returns all the events of the input mail creator.", tags = "Events")
+    public ResponseEntity<?> getEventsByCreator(@ApiParam(value="Creator's email", required = true, example = "petbook@mail.com") @RequestParam("email") String email)
+    {
+        try {
+            return new ResponseEntity<>(serverService.findEventsByCreator(email), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
     }
 
 
@@ -180,11 +192,9 @@ public class RestApiController {
 
     }
 
-
-
-
-
-
+    /*
+    Pets operations
+     */
 
     @CrossOrigin
     @RequestMapping(value = "/CreaMascota", method = {RequestMethod.POST})

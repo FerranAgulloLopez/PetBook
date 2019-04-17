@@ -26,7 +26,7 @@ public class Evento implements Serializable {
     private String titulo;
     private String descripcion;
     private boolean publico;
-    private List<User> participantes;
+    private List<String> participantes;
 
     public Evento() {
         this.participantes = new ArrayList<>();
@@ -62,7 +62,7 @@ public class Evento implements Serializable {
         this.descripcion = descripcion;
         this.publico = publico;
         this.participantes = new ArrayList<>();
-        participantes.add(creador);
+        participantes.add(creador.getEmail());
 
         makeId();
     }
@@ -72,7 +72,7 @@ public class Evento implements Serializable {
                     Date fecha,
                     String descripcion,
                     boolean publico,
-                    ArrayList<User> participantes)
+                    List<String> participantes)
     {
         this.emailCreador = creador;
         this.localizacion = localizacion;
@@ -101,7 +101,7 @@ public class Evento implements Serializable {
     }
     public String getDescripcion()              { return descripcion; }
     public Boolean getPublico()                 { return publico; }
-    public List<User> getParticipantes()   { return participantes; }
+    public List<String> getParticipantes()   { return participantes; }
 
 
     public void setCreador(String creador)                            { this.emailCreador = creador; makeId(); }
@@ -109,7 +109,7 @@ public class Evento implements Serializable {
     public void setFecha(Date fecha)                               { this.fecha = fecha; makeId(); }
     public void setDescripcion(String descripcion)                  { this.descripcion = descripcion; }
     public void setPublico(Boolean publico)                         { this.publico = publico; }
-    public void setParticipantes(ArrayList<User> participantes)     { this.participantes =  participantes; }
+    public void setParticipantes(List<String> participantes)     { this.participantes =  participantes; }
 
 
 

@@ -29,6 +29,7 @@ public interface ServerService {
 
     public void creaEvento(DataEvento event) throws BadRequestException, NotFoundException;
     public List<Evento> findAllEventos();
+    public List<Evento> findEventsByCreator(String creatormail) throws NotFoundException;
     public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException;
     public void deleteEvento(DataEvento event) throws NotFoundException;
 
