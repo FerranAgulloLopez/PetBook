@@ -5,9 +5,13 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import service.main.entity.Evento;
 
 import java.util.Calendar;
+import java.util.List;
 
 
-@Document(collection = "domain")
-public interface EventoRepository extends MongoRepository<Evento, String> {
+public interface EventoRepository extends MongoRepository<Evento, String>, CustomizedEventoRepository {
+
+    public List<Evento> findByemailCreador(String creatormail);
+
+    public List<Evento> findByParticipantesIn(String participantmail);
 
 }

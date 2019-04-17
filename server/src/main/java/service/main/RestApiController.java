@@ -2,24 +2,21 @@ package service.main;
 
 
 import io.swagger.annotations.*;
+import org.mockito.internal.matchers.Not;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
-import service.main.entity.output.*;
-import service.main.exception.AlreadyExistsException;
+import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
-import service.main.repositories.EventoRepository;
-import service.main.repositories.UserRepository;
 import service.main.service.ServerService;
 
-import javax.validation.Valid;
-import java.util.Calendar;
-import java.util.Optional;
+import java.util.Date;
 
 
 @RestController
@@ -39,9 +36,16 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/RegisterUser", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "User Registration", notes = "Saves a new user to the database. It receives the user's email and password", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 302, message = "The user already exists")
+    })
     public ResponseEntity<?> RegisterUser(@ApiParam(value="A user with email and password", required = true) @RequestBody User input) {
-        serverService.RegisterUser(input);
-        return new ResponseEntity<>(HttpStatus.OK);
+        try {
+            serverService.RegisterUser(input);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @CrossOrigin
@@ -117,26 +121,26 @@ public class RestApiController {
     }
 
 
-//
+    /*
+    Events operations
+     */
 
     @CrossOrigin
     @RequestMapping(value = "/CreaEvento", method = {RequestMethod.POST})
     @ApiOperation(value = "Crear Evento", notes = "Guarda un evento en la base de datos.", tags = "Events")
-    public ResponseEntity<?> creaEvento(@ApiParam(value="Un Evento", required = true) @RequestBody DataEvento evento) throws AlreadyExistsException, NotFoundException {
+    public ResponseEntity<?> creaEvento(@ApiParam(value="event", required = true) @RequestBody DataEvento evento) {
         try {
-            serverService.creaEvento(evento.getUserEmail(), evento.getAny(), evento.getMes(), evento.getDia(), evento.getHora(), evento.getCoordenadas(), evento.getRadio());
+            serverService.creaEvento(evento);
             return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch(Exception exception) {
-            return new ResponseEntity<>(exception.getMessage(), HttpStatus.FOUND);
+        } catch(BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
 
-
-
-
-        @CrossOrigin
+    @CrossOrigin
     @RequestMapping(value = "/getALLEventos", method = RequestMethod.GET)
     @ApiOperation(value = "GET ALL Evento", notes = "Obtiene la informacion de todos los eventos ", tags = "Events")
     public ResponseEntity<?> getAllEventos()
@@ -145,13 +149,35 @@ public class RestApiController {
 
     }
 
+    @CrossOrigin
+    @RequestMapping(value = "/getEventsByCreator", method = RequestMethod.GET)
+    @ApiOperation(value = "Get all the events of a specific creator", notes = "Returns all the events of the input mail creator.", tags = "Events")
+    public ResponseEntity<?> getEventsByCreator(@ApiParam(value="Creator's email", required = true, example = "petbook@mail.com") @RequestParam("email") String email)
+    {
+        try {
+            return new ResponseEntity<>(serverService.findEventsByCreator(email), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
+    @CrossOrigin
+    @RequestMapping(value = "/getEventsByParticipant", method = RequestMethod.GET)
+    @ApiOperation(value = "Returns all events where the input user participates", notes = "Returns all events where the input user participates", tags = "Events")
+    public ResponseEntity<?> getEventsByParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("email") String email)
+    {
+        try {
+            return new ResponseEntity<>(serverService.findEventsByParticipant(email), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/UpdateEvento/{email}", method = RequestMethod.PUT)
     @ApiOperation(value = "UPDATE Evento", notes = "Modifica un evento. Sirve para modificar los atributos descripcion, numero de asistentes, participantes, publico. EL Evento se identifica por any, coordenadas, dia, hora, mes, radio.", tags = "Events")
     public ResponseEntity<?> updateEvento(@PathVariable String email,
-                                          @ApiParam(value="Evento", required = true) @RequestBody DataEventoUpdate evento) throws NotFoundException
+                                          @ApiParam(value="event", required = true) @RequestBody DataEventoUpdate evento)
     {
         try {
             serverService.updateEvento(email, evento);
@@ -164,27 +190,38 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/DeleteEvento", method = RequestMethod.DELETE)
-    @ApiOperation(value = "DELETE Evento", notes = "Elimina un evento ", tags = "Events")
-    public ResponseEntity<?> deleteEvento(
-                                           @ApiParam(value="Evento", required = true) @RequestBody DataEvento evento) throws NotFoundException
+    @RequestMapping(value = "/addEventParticipant", method = RequestMethod.PATCH)
+    @ApiOperation(value = "Adds a user to an event", notes = "Adds a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
+    public ResponseEntity<?> addEventParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantemail") String usermail,
+                                                 @ApiParam(value="event", required = true) @RequestBody DataEvento evento)
     {
         try {
-            serverService.deleteEvento(evento.getUserEmail(), evento.getAny(), evento.getMes(), evento.getDia(), evento.getHora(), evento.getCoordenadas(), evento.getRadio());
+            serverService.addEventParticipant(usermail,evento.getUserEmail(),evento.getCoordenadas(),evento.getRadio(),evento.getFecha());
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/DeleteEvento", method = RequestMethod.DELETE)
+    @ApiOperation(value = "DELETE Evento", notes = "Elimina un evento ", tags = "Events")
+    public ResponseEntity<?> deleteEvento(@ApiParam(value="Evento", required = true) @RequestBody DataEvento event)
+    {
+        try {
+            serverService.deleteEvento(event);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
-
     }
 
-
-
-
-
-
+    /*
+    Pets operations
+     */
 
     @CrossOrigin
     @RequestMapping(value = "/CreaMascota", method = {RequestMethod.POST})
@@ -195,8 +232,10 @@ public class RestApiController {
             serverService.creaMascota(mascota.getEmail(), mascota.getNombre());
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        catch (Exception e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.FOUND);
+        catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -205,7 +244,7 @@ public class RestApiController {
     @RequestMapping(value = "/GetMascota/{email}", method = RequestMethod.GET)
     @ApiOperation(value = "GET Mascota", notes = "Obtiene la informacion de una mascota ", tags = "Pets")
     public ResponseEntity<?> getMascota(@PathVariable String email,
-                                        @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota) throws NotFoundException
+                                        @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
     {
         try {
             return new ResponseEntity<>(serverService.mascota_findById(email, nombreMascota).get(),HttpStatus.OK);
@@ -235,7 +274,7 @@ public class RestApiController {
     @RequestMapping(value = "/UpdateMascota/{email}", method = RequestMethod.PUT)
     @ApiOperation(value = "UPDATE Mascota", notes = "Modifica una mascota. Sirve para modificar los atributos de la mascota. La mascota se identifica por email y nombre.",tags = "Pets")
     public ResponseEntity<?> updateMascota(@PathVariable String email,
-                                          @ApiParam(value="Nuevos datos de la Mascota", required = true) @RequestBody DataMascotaUpdate mascota) throws NotFoundException
+                                          @ApiParam(value="Nuevos datos de la Mascota", required = true) @RequestBody DataMascotaUpdate mascota)
     {
         try {
             serverService.updateMascota(email, mascota);
@@ -251,7 +290,7 @@ public class RestApiController {
     @RequestMapping(value = "/DeleteMascota/{email}", method = RequestMethod.DELETE)
     @ApiOperation(value = "DELETE Mascota", notes = "Elimina una mascota ", tags = "Pets")
     public ResponseEntity<?> deleteMascota(@PathVariable String email,
-                                        @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota) throws NotFoundException
+                                        @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
     {
         try {
             serverService.deleteMascota(email, nombreMascota);

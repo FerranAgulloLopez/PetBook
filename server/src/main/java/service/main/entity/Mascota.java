@@ -1,11 +1,13 @@
 package service.main.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-//
-@Document(collection = "domain")
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@Document(collection = "users")
 public class Mascota implements Serializable {
 
     @Id
@@ -18,7 +20,13 @@ public class Mascota implements Serializable {
     private String raza;
     private String sexo;
     private String descripcion;
-    private String foto;    // Usar GridFS en el siguiente sprint
+    private int edad;
+    private String color;
+    private String foto;    // Esta encodeado en Base64(byte[]) y luego pasado a String[].
+                            // Para conseguir la foto, pasar a Base64(byte[]) y luego convertir a file.
+                            // File   -> byte[] -> String[]
+                            // String[] -> byte[] -> File
+
 
 
 
@@ -47,6 +55,8 @@ public class Mascota implements Serializable {
                     String raza,
                     String sexo,
                     String descripcion,
+                    int edad,
+                    String color,
                     String foto)
     {
         this.userEmail = "";
@@ -60,6 +70,8 @@ public class Mascota implements Serializable {
         setRaza(raza);
         setSexo(sexo);
         setDescripcion(descripcion);
+        setColor(color);
+        setEdad(edad);
         setFoto(foto);
     }
 
@@ -78,9 +90,15 @@ public class Mascota implements Serializable {
     public String getSexo() { return sexo; }
     public String getDescripcion() { return descripcion; }
     public String getFoto() { return foto; }
+    public String getColor() {
+        return color;
+    }
 
+    public int getEdad() {
+        return edad;
+    }
 
-        // SETTERS
+    // SETTERS
     public void setNombre(String nombre) { this.nombre = nombre; makeId(); }
     public void setUserEmail(String userEmail) { this.userEmail = userEmail; makeId(); }
 
@@ -89,6 +107,10 @@ public class Mascota implements Serializable {
     public void setSexo(String sexo) { this.sexo = sexo; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     public void setFoto(String foto) { this.foto = foto; }
-
-
+    public void setColor(String color) {
+        this.color = color;
+    }
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
 }

@@ -1,46 +1,65 @@
 package service.main.service;
 
+import org.mockito.internal.matchers.Not;
 import service.main.entity.Evento;
 import service.main.entity.Mascota;
 import service.main.entity.User;
-import service.main.entity.output.*;
-import service.main.exception.AlreadyExistsException;
+import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 public interface ServerService {
-//
+
+    /*
+    User operations
+     */
+
     public OutLogin ConfirmLogin(String email, String password) throws NotFoundException;
 
     public void ConfirmEmail(String email) throws NotFoundException;
 
     public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException;
 
-    public void RegisterUser(User input);
+    public void RegisterUser(User input) throws BadRequestException;
 
     public User getUserByEmail(String email) throws NotFoundException;
 
     public void updateUserByEmail(String email, OutUpdateUserProfile user) throws NotFoundException;
 
 
-    // EVENTOS
+    /*
+    Event operations
+     */
 
-    public void creaEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws AlreadyExistsException, NotFoundException;
+    public void creaEvento(DataEvento event) throws BadRequestException, NotFoundException;
+
     public List<Evento> findAllEventos();
+
+    public List<Evento> findEventsByCreator(String creatormail) throws NotFoundException;
+
+    public List<Evento> findEventsByParticipant(String participantmail) throws NotFoundException;
+
     public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException;
-    public void deleteEvento(String userEmail, Integer any, Integer mes, Integer dia, Integer hora, Integer coordenadas, Integer radio) throws NotFoundException;
+
+    public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException;
+
+    public void deleteEvento(DataEvento event) throws NotFoundException;
 
 
-    // MASCOTAS
+    /*
+    Pet operations
+     */
 
-    public void creaMascota(String email, String nom_mascota) throws AlreadyExistsException, NotFoundException;
+    public void creaMascota(String email, String nom_mascota) throws BadRequestException, NotFoundException;
+
     Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
     void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException;
-
 
     public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
