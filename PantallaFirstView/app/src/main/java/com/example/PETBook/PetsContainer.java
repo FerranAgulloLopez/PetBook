@@ -24,6 +24,7 @@ import android.view.View;
 
 import com.example.PETBook.Adapters.PetAdapters;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Fragments.PetInfoFragment;
 import com.example.PETBook.Models.PetModel;
 import com.example.pantallafirstview.R;
 
@@ -65,7 +66,7 @@ public class PetsContainer extends AppCompatActivity implements AsyncResult {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         pets = new ArrayList<>();
-       // pets.add(new PetModel("idPet", "nom"));
+        // pets.add(new PetModel("idPet", "nom"));
         //pets.add(new PetModel("idPet2", "nom2"));
         //TODO: pets comes from DB
 

@@ -2,6 +2,7 @@ package com.example.PETBook;
 
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -46,6 +47,7 @@ public class MyEvents extends AppCompatActivity {
         lista = (ListView) findViewById(R.id.list_eventos);
         lista.setAdapter(eventosUser);
 
+
         FloatingActionButton fab = findViewById(R.id.addButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,5 +56,7 @@ public class MyEvents extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
 }

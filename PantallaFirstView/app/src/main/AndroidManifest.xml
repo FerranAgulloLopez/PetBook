@@ -22,6 +22,10 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name="com.example.PETBook.MainActivity"
+            android:label="@string/title_activity_main"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name="com.example.PETBook.DeletePet"
             android:label="@string/title_activity_pets"
             android:parentActivityName="com.example.PETBook.PetsContainer"

@@ -41,23 +41,34 @@ public class PantallaHome extends AppCompatActivity {
     }
 
     public void myPets(View view){
-    Intent intent = new Intent(this, PetsContainer.class);
-    startActivity(intent);
+
+        System.out.println("PantallaHome");
+
+
+        // Intent intent = new Intent(this, PetsContainer.class);
+        //startActivity(intent);
+
 
     }
     public void myPosts(View view){
-        Intent intent = new Intent(this, MyPosts.class);
-        startActivity(intent);
+
+       // Intent intent = new Intent(this, MyPosts.class);
+      //  startActivity(intent);
+
 
     }
     public void myCalendar(View view) {
-        Intent intent = new Intent(this, MyCalendar.class);
-        startActivity(intent);
+
+       // Intent intent = new Intent(this, MyCalendar.class);
+       // startActivity(intent);
+
 
     }
     public void myEvents(View view){
-        Intent intent = new Intent(this, MyEvents.class);
-        startActivity(intent);
+
+      //  Intent intent = new Intent(this, MyEvents.class);
+      //  startActivity(intent);
+
 
     }
 }
