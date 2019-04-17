@@ -37,7 +37,7 @@ public class RestApiController {
     @RequestMapping(value = "/RegisterUser", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "User Registration", notes = "Saves a new user to the database. It receives the user's email and password", tags="User")
     @ApiResponses(value = {
-            @ApiResponse(code = 302, message = "The user already exists")
+            @ApiResponse(code = 400, message = "The user already exists")
     })
     public ResponseEntity<?> RegisterUser(@ApiParam(value="A user with email and password", required = true) @RequestBody User input) {
         try {
@@ -52,7 +52,7 @@ public class RestApiController {
     @RequestMapping(value = "/ConfirmLogin", method = RequestMethod.POST)
     @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.",tags="LogIn")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "The user does not exist in the database.")
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> ConfirmLogin(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
                                           @ApiParam(value="Password introduced", required = true, example = "1234") @RequestParam String password) {
@@ -67,7 +67,9 @@ public class RestApiController {
     @RequestMapping(value = "/SendConfirmationEmail", method = RequestMethod.POST)
     @ApiOperation(value = "Send a confirmation email", notes = "Sends to the specified user an email with the instructions to verify it.",tags="LogIn")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "The user does not exist in the database.")
+            @ApiResponse(code = 404, message = "The user does not exist in the database"),
+            @ApiResponse(code = 400, message = "The user has already verified his email"),
+            @ApiResponse(code = 500, message = "Error while sending a new email")
     })
     public ResponseEntity<?> ConfirmationEmail(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email) {
         try {
@@ -92,7 +94,7 @@ public class RestApiController {
     @RequestMapping(value = "/GetUser/{email}", method = RequestMethod.GET)
     @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email", tags="User")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "There is no user with that email")
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> InfoUser(@PathVariable String email) {
         try {
@@ -107,7 +109,7 @@ public class RestApiController {
     @RequestMapping(value = "/update/{email}", method = RequestMethod.POST)
     @ApiOperation(value = "Update all the information of the user", notes = "Updates the dateOfBirth, firstName, secondName and the postalCode of an user given its email",tags = "User")
     @ApiResponses(value = {
-            @ApiResponse(code = 404, message = "There is no user with that email")
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody OutUpdateUserProfile user)
     {
@@ -152,6 +154,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/getEventsByCreator", method = RequestMethod.GET)
     @ApiOperation(value = "Get all the events of a specific creator", notes = "Returns all the events of the input mail creator.", tags = "Events")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+    })
     public ResponseEntity<?> getEventsByCreator(@ApiParam(value="Creator's email", required = true, example = "petbook@mail.com") @RequestParam("email") String email)
     {
         try {
@@ -164,6 +169,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/getEventsByParticipant", method = RequestMethod.GET)
     @ApiOperation(value = "Returns all events where the input user participates", notes = "Returns all events where the input user participates", tags = "Events")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+    })
     public ResponseEntity<?> getEventsByParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("email") String email)
     {
         try {
@@ -192,6 +200,10 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/addEventParticipant", method = RequestMethod.PATCH)
     @ApiOperation(value = "Adds a user to an event", notes = "Adds a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user or the event does not exist in the database"),
+            @ApiResponse(code = 400, message = "The user already participates in the event")
+    })
     public ResponseEntity<?> addEventParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantemail") String usermail,
                                                  @ApiParam(value="event", required = true) @RequestBody DataEvento evento)
     {

@@ -37,7 +37,7 @@ public class ServerServiceImpl implements ServerService {
 
     public OutLogin ConfirmLogin(String email, String password) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database.");
+        if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
         boolean result = user.get().checkPassword(password);
         return new OutLogin(result,user.get().isMailconfirmed());
     }
@@ -47,17 +47,18 @@ public class ServerServiceImpl implements ServerService {
         if (userToCheck.isPresent()) throw new BadRequestException("The user already exists");
         userRepository.save(input);
     }
+
     public void ConfirmEmail(String email) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database.");
+        if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
         user.get().setMailconfirmed(true);
         userRepository.save(user.get());
     }
 
     public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException {
         Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database.");
-        if (user.get().isMailconfirmed()) throw new BadRequestException("The user has already verified his email.");
+        if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
+        if (user.get().isMailconfirmed()) throw new BadRequestException("The user has already verified his email");
         sendEmail(email);
     }
 
@@ -73,14 +74,14 @@ public class ServerServiceImpl implements ServerService {
 
     public User getUserByEmail(String email) throws NotFoundException {
         Optional<User> userToReturn = userRepository.findById(email);
-        if (!userToReturn.isPresent()) throw new NotFoundException("There is no user with that email");
+        if (!userToReturn.isPresent()) throw new NotFoundException("The user does not exist in the database");
         else return userToReturn.get();
     }
 
 
     public void updateUserByEmail(String email, OutUpdateUserProfile userUpdated) throws NotFoundException {
         Optional<User> userToUpdate = userRepository.findById(email);
-        if (!userToUpdate.isPresent()) throw new NotFoundException("There is no user with that email");
+        if (!userToUpdate.isPresent()) throw new NotFoundException("The user does not exist in the database");
         else {
             User user = userToUpdate.get();
             userRepository.delete(user);
@@ -156,7 +157,7 @@ public class ServerServiceImpl implements ServerService {
 
     public void creaMascota(String email, String nom_mascota) throws BadRequestException, NotFoundException {
         Mascota mascota = new Mascota(nom_mascota,email);
-        if(! userRepository.existsById(email)) throw new NotFoundException("El Usuario no existe en el sistema");
+        if(!userRepository.existsById(email)) throw new NotFoundException("El Usuario no existe en el sistema");
         if(mascotaRepository.existsById(mascota.getId())) throw new BadRequestException("La mascota ya existe en el sistema");
         mascotaRepository.save(mascota);
     }
@@ -164,8 +165,8 @@ public class ServerServiceImpl implements ServerService {
 
     public Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
-        if(! userRepository.existsById(emailDuenyo)) throw new NotFoundException("El Usuario no existe en el sistema");
-        if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
+        if(!userRepository.existsById(emailDuenyo)) throw new NotFoundException("El Usuario no existe en el sistema");
+        if(!mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
         return mascotaRepository.findById(id);
     }
 
@@ -175,7 +176,7 @@ public class ServerServiceImpl implements ServerService {
                                        mascota.getSexo(), mascota.getDescripcion(), mascota.getEdad(), mascota.getColor(), mascota.getFoto());
 
         String id = mascota2.getId();
-        if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
+        if(!mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
         mascotaRepository.deleteById(id);
         mascotaRepository.save(mascota2);
     }
