@@ -4,6 +4,7 @@ package service.main;
 import io.swagger.annotations.*;
 import org.mockito.internal.matchers.Not;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,8 @@ import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.service.ServerService;
+
+import java.util.Date;
 
 
 @RestController
@@ -158,7 +161,17 @@ public class RestApiController {
         }
     }
 
-
+    @CrossOrigin
+    @RequestMapping(value = "/getEventsByParticipant", method = RequestMethod.GET)
+    @ApiOperation(value = "Returns all events where the input user participates", notes = "Returns all events where the input user participates", tags = "Events")
+    public ResponseEntity<?> getEventsByParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("email") String email)
+    {
+        try {
+            return new ResponseEntity<>(serverService.findEventsByParticipant(email), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
     @CrossOrigin
     @RequestMapping(value = "/UpdateEvento/{email}", method = RequestMethod.PUT)
@@ -177,6 +190,22 @@ public class RestApiController {
     }
 
     @CrossOrigin
+    @RequestMapping(value = "/addEventParticipant", method = RequestMethod.PATCH)
+    @ApiOperation(value = "Adds a user to an event", notes = "Adds a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
+    public ResponseEntity<?> addEventParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantemail") String usermail,
+                                                 @ApiParam(value="event", required = true) @RequestBody DataEvento evento)
+    {
+        try {
+            serverService.addEventParticipant(usermail,evento.getUserEmail(),evento.getCoordenadas(),evento.getRadio(),evento.getFecha());
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
     @RequestMapping(value = "/DeleteEvento", method = RequestMethod.DELETE)
     @ApiOperation(value = "DELETE Evento", notes = "Elimina un evento ", tags = "Events")
     public ResponseEntity<?> deleteEvento(@ApiParam(value="Evento", required = true) @RequestBody DataEvento event)
@@ -188,8 +217,6 @@ public class RestApiController {
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
-
-
     }
 
     /*

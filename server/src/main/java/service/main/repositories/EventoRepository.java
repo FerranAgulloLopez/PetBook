@@ -8,8 +8,10 @@ import java.util.Calendar;
 import java.util.List;
 
 
-public interface EventoRepository extends MongoRepository<Evento, String> {
+public interface EventoRepository extends MongoRepository<Evento, String>, CustomizedEventoRepository {
 
     public List<Evento> findByemailCreador(String creatormail);
+
+    public List<Evento> findByParticipantesIn(String participantmail);
 
 }

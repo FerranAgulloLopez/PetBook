@@ -13,6 +13,7 @@ import service.main.repositories.UserRepository;
 import service.main.util.SendEmailTLS;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +30,10 @@ public class ServerServiceImpl implements ServerService {
 
     @Autowired
     private MascotaRepository mascotaRepository;
+
+    /*
+    User operations
+     */
 
     public OutLogin ConfirmLogin(String email, String password) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
@@ -66,8 +71,6 @@ public class ServerServiceImpl implements ServerService {
         mailsender.sendEmail(mail,subject,text);
     }
 
-
-
     public User getUserByEmail(String email) throws NotFoundException {
         Optional<User> userToReturn = userRepository.findById(email);
         if (!userToReturn.isPresent()) throw new NotFoundException("There is no user with that email");
@@ -89,6 +92,10 @@ public class ServerServiceImpl implements ServerService {
         }
     }
 
+    /*
+    Event operations
+     */
+
     public void creaEvento(DataEvento input_event) throws BadRequestException, NotFoundException {
 
         String usermail = input_event.getUserEmail();
@@ -101,18 +108,18 @@ public class ServerServiceImpl implements ServerService {
         eventoRepository.save(event);
     }
 
-
-
     public List<Evento> findAllEventos() {
         return eventoRepository.findAll();
     }
 
     public List<Evento> findEventsByCreator(String creatormail) throws NotFoundException {
-
-        Optional<User> user = userRepository.findById(creatormail);
-        if(!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
-
+        if(!userRepository.existsById(creatormail)) throw new NotFoundException("The user does not exist in the database");
         return eventoRepository.findByemailCreador(creatormail);
+    }
+
+    public List<Evento> findEventsByParticipant(String participantmail) throws NotFoundException {
+        if(!userRepository.existsById(participantmail)) throw new NotFoundException("The user does not exist in the database");
+        return eventoRepository.findByParticipantesIn(participantmail);
     }
 
 
@@ -120,9 +127,18 @@ public class ServerServiceImpl implements ServerService {
         Localizacion localizacion = new Localizacion(evento.getCoordenadas(),evento.getRadio());
 
         Evento evento2 = new Evento(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getParticipantes());
-        if(! eventoRepository.existsById(evento2.getId())) throw new NotFoundException("El Evento no existe en el sistema");
+        if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException("El Evento no existe en el sistema");
         eventoRepository.deleteById(evento2.getId());
         eventoRepository.insert(evento2);
+    }
+
+    public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException {
+        if(!userRepository.existsById(usermail)) throw new NotFoundException("The user does not exist in the database");
+        Localizacion localizacion = new Localizacion(coordinates,radius);
+        Evento event = new Evento(creatormail,localizacion.getId(),fecha);
+        if(!eventoRepository.existsById(event.getId())) throw new NotFoundException("The event does not exist in the database");
+
+        eventoRepository.addParticipant(usermail,event.getId());
     }
 
 
@@ -134,6 +150,9 @@ public class ServerServiceImpl implements ServerService {
         eventoRepository.deleteById(evento.getId());
     }
 
+    /*
+    Pet operations
+     */
 
     public void creaMascota(String email, String nom_mascota) throws BadRequestException, NotFoundException {
         Mascota mascota = new Mascota(nom_mascota,email);
@@ -172,10 +191,6 @@ public class ServerServiceImpl implements ServerService {
 
         return resultado;
     }
-
-
-
-
 
     public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;

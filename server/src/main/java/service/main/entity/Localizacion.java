@@ -6,8 +6,8 @@ public class Localizacion implements Serializable {
 
     private String id;
 
-    private Integer coordenadas;
-    private Integer radio;
+    private int coordenadas;
+    private int radio;
 
     public Localizacion() {
         this.coordenadas = 0;
@@ -15,7 +15,7 @@ public class Localizacion implements Serializable {
         makeId();
     }
 
-    public Localizacion(Integer coordenadas, Integer radio) {
+    public Localizacion(int coordenadas, int radio) {
         this.coordenadas = 0;
         this.radio = 0;
         makeId();
@@ -23,7 +23,7 @@ public class Localizacion implements Serializable {
 
 
     private void makeId() {
-        id = coordenadas.toString() +  radio.toString();
+        id = "" + coordenadas + radio;
     }
 
 
@@ -32,11 +32,11 @@ public class Localizacion implements Serializable {
     public int getRadio() { return radio; }
 
 
-    public void setRadio(Integer radio) {
+    public void setRadio(int radio) {
         this.radio = radio;
         makeId();
     }
-    public void setCoordenadas(Integer coordenadas) {
+    public void setCoordenadas(int coordenadas) {
         this.coordenadas = coordenadas;
         makeId();
     }
