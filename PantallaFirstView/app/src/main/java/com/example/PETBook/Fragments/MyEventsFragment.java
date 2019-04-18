@@ -12,10 +12,16 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.example.PETBook.Adapters.EventAdapter;
+import com.example.PETBook.Conexion;
+import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.MyEvents;
 import com.example.PETBook.NewEvent;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -27,7 +33,7 @@ import java.util.ArrayList;
  * Use the {@link MyEventsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyEventsFragment extends Fragment {
+public class MyEventsFragment extends Fragment implements AsyncResult {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,10 +44,10 @@ public class MyEventsFragment extends Fragment {
     private String mParam2;
 
 
-
-
+    private View MyView;
     private ListView lista;
     private EventAdapter eventosUser;
+    private ArrayList<EventModel> model;
     private OnFragmentInteractionListener mListener;
 
     public MyEventsFragment() {
@@ -73,11 +79,6 @@ public class MyEventsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
-
-
     }
 
     @Override
@@ -85,10 +86,17 @@ public class MyEventsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View MyView =  inflater.inflate(R.layout.activity_my_events, container, false);
+        MyView =  inflater.inflate(R.layout.activity_my_events, container, false);
 
         // Set tittle to the fragment
         getActivity().setTitle("Mis eventos");
+
+
+        Conexion con = new Conexion(MyEventsFragment.this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getEventsByCreator?email=" + su.getEmail(),"GET", null);
+
 
         FloatingActionButton fab = MyView.findViewById(R.id.addButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -99,36 +107,16 @@ public class MyEventsFragment extends Fragment {
             }
         });
 
-
-        ArrayList<EventModel> model = new ArrayList<>();
-
-        EventModel e = new EventModel();
-        e.setLocalizacion("12334");
-        e.setFecha("17/4/2019 20:00");
-
-        model.add(e);
-
-        e = new EventModel();
-        e.setLocalizacion("12320");
-        e.setFecha("18/4/2019 20:00");
-        model.add(e);
-
-        e = new EventModel();
-        e.setLocalizacion("14020");
-        e.setFecha("24/4/2019 10:00");
-        model.add(e);
-
-
-        eventosUser = new EventAdapter(getActivity(), model);
-
-
-        lista = (ListView) MyView.findViewById(R.id.list_eventos);
-        lista.setAdapter(eventosUser);
-
-
         return MyView;
     }
 
+
+    private String transformacionFechaHora(String fechaHora){
+        Integer fin = 0;
+        String result = fechaHora.replace("T", " ");
+        result = result.replace(":00.000+0000", "");
+        return result;
+    }
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -155,6 +143,7 @@ public class MyEventsFragment extends Fragment {
         mListener = null;
     }
 
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -171,5 +160,33 @@ public class MyEventsFragment extends Fragment {
     }
 
 
+    @Override
+    public void OnprocessFinish(JSONObject json) {
+        try{
+            if(json.getInt("code") == 200){
+                model = new ArrayList<>();
+                JSONArray jsonArray = json.getJSONArray("array");
+                for(int i = 0; i < jsonArray.length(); ++i){
+                    JSONObject evento = jsonArray.getJSONObject(i);
+                    EventModel e = new EventModel();
+                    e.setTitulo(evento.getString("titulo"));
+                    e.setDescripcion(evento.getString("descripcion"));
+                    e.setFecha(transformacionFechaHora(evento.getString("fecha")));
+                    e.setLocalizacion(evento.getInt("localizacion"));
+                    e.setPublico(evento.getBoolean("publico"));
+                    model.add(e);
+                }
+                eventosUser = new EventAdapter(getActivity(), model);
+                lista = (ListView) MyView.findViewById(R.id.list_eventos);
+                lista.setAdapter(eventosUser);
+                System.out.print(json.getInt("code") + " se muestran correctamente la lista de eventos\n");
+            }
+            else{
+                System.out.print("El sistema no logra mostrar la lista de eventos del creador\n");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
 }

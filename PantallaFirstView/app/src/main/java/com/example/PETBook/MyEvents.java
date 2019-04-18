@@ -66,7 +66,7 @@ public class MyEvents extends AppCompatActivity implements AsyncResult {
                     e.setTitulo(evento.getString("titulo"));
                     e.setDescripcion(evento.getString("descripcion"));
                     e.setFecha(transformacionFechaHora(evento.getString("fecha")));
-                    e.setLocalizacion(evento.getString("localizacion"));
+                    e.setLocalizacion(evento.getInt("localizacion"));
                     e.setPublico(evento.getBoolean("publico"));
                     model.add(e);
                 }
