@@ -2,21 +2,20 @@ package service.main;
 
 
 import io.swagger.annotations.*;
-import org.mockito.internal.matchers.Not;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
-import service.main.entity.input_output.*;
+import service.main.entity.input_output.DataEvento;
+import service.main.entity.input_output.DataEventoUpdate;
+import service.main.entity.input_output.DataMascotaUpdate;
+import service.main.entity.input_output.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.service.ServerService;
-
-import java.util.Date;
 
 
 @RestController
@@ -130,6 +129,10 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/CreaEvento", method = {RequestMethod.POST})
     @ApiOperation(value = "Crear Evento", notes = "Guarda un evento en la base de datos.", tags = "Events")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database"),
+            @ApiResponse(code = 400, message = "The event already exists in the database")
+    })
     public ResponseEntity<?> creaEvento(@ApiParam(value="event", required = true) @RequestBody DataEvento evento) {
         try {
             serverService.creaEvento(evento);
@@ -184,6 +187,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/UpdateEvento/{email}", method = RequestMethod.PUT)
     @ApiOperation(value = "UPDATE Evento", notes = "Modifica un evento. Sirve para modificar los atributos descripcion, numero de asistentes, participantes, publico. EL Evento se identifica por any, coordenadas, dia, hora, mes, radio.", tags = "Events")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The event does not exist in the database")
+    })
     public ResponseEntity<?> updateEvento(@PathVariable String email,
                                           @ApiParam(value="event", required = true) @RequestBody DataEventoUpdate evento)
     {
@@ -219,7 +225,10 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/DeleteEvento", method = RequestMethod.DELETE)
-    @ApiOperation(value = "DELETE Evento", notes = "Elimina un evento ", tags = "Events")
+    @ApiOperation(value = "DELETE Evento", notes = "Deletes an event ", tags = "Events")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The event does not exist in the database")
+    })
     public ResponseEntity<?> deleteEvento(@ApiParam(value="Evento", required = true) @RequestBody DataEvento event)
     {
         try {
@@ -237,11 +246,15 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/CreaMascota", method = {RequestMethod.POST})
-    @ApiOperation(value = "Crear Mascota", notes = "Guarda una mascota en la base de datos.", tags = "Pets")
-    public ResponseEntity<?> creaMascota(@ApiParam(value="Mascota", required = true) @RequestBody DataMascota mascota)
+    @ApiOperation(value = "Crear Mascota", notes = "Stores a pet in the database.", tags = "Pets")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database"),
+            @ApiResponse(code = 400, message = "The pet already exists in the database")
+    })
+    public ResponseEntity<?> creaMascota(@ApiParam(value="Mascota", required = true) @RequestBody DataMascotaUpdate mascota)
     {
         try {
-            serverService.creaMascota(mascota.getEmail(), mascota.getNombre());
+            serverService.creaMascota(mascota);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (BadRequestException e) {
@@ -255,6 +268,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/GetMascota/{email}", method = RequestMethod.GET)
     @ApiOperation(value = "GET Mascota", notes = "Obtiene la informacion de una mascota ", tags = "Pets")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user or the pet does not exist in the database"),
+    })
     public ResponseEntity<?> getMascota(@PathVariable String email,
                                         @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
     {
@@ -270,6 +286,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/getALLMascotasByUser/{email}", method = RequestMethod.GET)
     @ApiOperation(value = "GET ALL Mascotas de un Usuario", notes = "Obtiene la informacion de todas las mascotas del usuario", tags = "Pets")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database"),
+    })
     public ResponseEntity<?> getAllMascotasByUser(@PathVariable String email) throws Exception
     {
         try {
@@ -285,6 +304,9 @@ public class RestApiController {
     @CrossOrigin
     @RequestMapping(value = "/UpdateMascota/{email}", method = RequestMethod.PUT)
     @ApiOperation(value = "UPDATE Mascota", notes = "Modifica una mascota. Sirve para modificar los atributos de la mascota. La mascota se identifica por email y nombre.",tags = "Pets")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The pet does not exist in the database"),
+    })
     public ResponseEntity<?> updateMascota(@PathVariable String email,
                                           @ApiParam(value="Nuevos datos de la Mascota", required = true) @RequestBody DataMascotaUpdate mascota)
     {
@@ -300,9 +322,12 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/DeleteMascota/{email}", method = RequestMethod.DELETE)
-    @ApiOperation(value = "DELETE Mascota", notes = "Elimina una mascota ", tags = "Pets")
+    @ApiOperation(value = "DELETE Mascota", notes = "Deletes a pet ", tags = "Pets")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The pet does not exist in the database"),
+    })
     public ResponseEntity<?> deleteMascota(@PathVariable String email,
-                                        @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
+                                        @ApiParam(value="Name of the pet", required = true, example = "Messi") @RequestParam String nombreMascota)
     {
         try {
             serverService.deleteMascota(email, nombreMascota);

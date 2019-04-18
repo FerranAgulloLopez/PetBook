@@ -3,7 +3,6 @@ package service.main.entity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -29,7 +28,6 @@ public class Evento implements Serializable {
     private List<String> participantes;
 
     public Evento() {
-        this.participantes = new ArrayList<>();
     }
 
 
@@ -39,13 +37,12 @@ public class Evento implements Serializable {
                     String localizacion,
                     Date fecha)
     {
+
         this.emailCreador = creador;
         this.localizacion = localizacion;
         this.fecha = fecha;
 
-        this.setCreador(creador);
-        this.setLocalizacion(localizacion);
-        this.setFecha(fecha);
+        makeId();
     }
 
     public Evento(User creador,
@@ -74,13 +71,12 @@ public class Evento implements Serializable {
                     boolean publico,
                     List<String> participantes)
     {
+
         this.emailCreador = creador;
         this.localizacion = localizacion;
         this.fecha = fecha;
+        makeId();
 
-        this.setCreador(creador);
-        this.setLocalizacion(localizacion);
-        this.setFecha(fecha);
         this.setDescripcion(descripcion);
         this.setPublico(publico);
         this.setParticipantes(participantes);

@@ -129,7 +129,7 @@ public class ServerServiceImpl implements ServerService {
         Localizacion localizacion = new Localizacion(evento.getCoordenadas(),evento.getRadio());
 
         Evento evento2 = new Evento(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getParticipantes());
-        if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException("El Evento no existe en el sistema");
+        if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException("The event does not exist in the database");
         eventoRepository.deleteById(evento2.getId());
         eventoRepository.insert(evento2);
     }
@@ -148,7 +148,7 @@ public class ServerServiceImpl implements ServerService {
         Localizacion localizacion = new Localizacion(event.getCoordenadas(),event.getRadio());
 
         Evento evento = new Evento(event.getUserEmail(), localizacion.getId(), event.getFecha());
-        if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException("El Evento no existe en el sistema");
+        if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException("The event does not exist in the database");
         eventoRepository.deleteById(evento.getId());
     }
 
@@ -156,18 +156,19 @@ public class ServerServiceImpl implements ServerService {
     Pet operations
      */
 
-    public void creaMascota(String email, String nom_mascota) throws BadRequestException, NotFoundException {
-        Mascota mascota = new Mascota(nom_mascota,email);
-        if(!userRepository.existsById(email)) throw new NotFoundException("El Usuario no existe en el sistema");
-        if(mascotaRepository.existsById(mascota.getId())) throw new BadRequestException("La mascota ya existe en el sistema");
+    public void creaMascota(DataMascotaUpdate inMascota) throws BadRequestException, NotFoundException {
+        Mascota mascota = new Mascota(inMascota.getNombre(),inMascota.getEmail(), inMascota.getEspecie(), inMascota.getRaza(), inMascota.getSexo(),
+                                                            inMascota.getDescripcion(),inMascota.getEdad(),inMascota.getColor(),inMascota.getFoto());
+        if(!userRepository.existsById(inMascota.getEmail())) throw new NotFoundException("The user does not exist in the database");
+        if(mascotaRepository.existsById(mascota.getId())) throw new BadRequestException("The pet already exists in the database");
         mascotaRepository.save(mascota);
     }
 
 
     public Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
-        if(!userRepository.existsById(emailDuenyo)) throw new NotFoundException("El Usuario no existe en el sistema");
-        if(!mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
+        if(!userRepository.existsById(emailDuenyo)) throw new NotFoundException("The user does not exist in the database");
+        if(!mascotaRepository.existsById(id)) throw new NotFoundException("The pet does not exist in the database");
         return mascotaRepository.findById(id);
     }
 
@@ -177,26 +178,26 @@ public class ServerServiceImpl implements ServerService {
                                        mascota.getSexo(), mascota.getDescripcion(), mascota.getEdad(), mascota.getColor(), mascota.getFoto());
 
         String id = mascota2.getId();
-        if(!mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
+        if(!mascotaRepository.existsById(id)) throw new NotFoundException("The pet does not exist in the database");
         mascotaRepository.deleteById(id);
         mascotaRepository.save(mascota2);
     }
 
     public List<Mascota> findAllMascotasByUser(String email) throws NotFoundException{
-        if(! userRepository.existsById(email)) throw new NotFoundException("El Usuario no existe en el sistema");
+        if(! userRepository.existsById(email)) throw new NotFoundException("The user does not exist in the database");
 
         List<Mascota> mascotas = mascotaRepository.findAll();
         List<Mascota> resultado = new ArrayList<Mascota>();
 
         for(Mascota mascota : mascotas)
-            if(mascota.getUserEmail().equals(email)) resultado.add(mascota);
+            if(mascota.getUserEmail() != null && mascota.getUserEmail().equals(email)) resultado.add(mascota);
 
         return resultado;
     }
 
     public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
-        if(! mascotaRepository.existsById(id)) throw new NotFoundException("La Mascota no existe en el sistema");
+        if(! mascotaRepository.existsById(id)) throw new NotFoundException("The pet does not exist in the database");
         mascotaRepository.deleteById(id);
     }
 
