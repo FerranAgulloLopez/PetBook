@@ -60,7 +60,6 @@ public class Conexion extends AsyncTask<String, Void, JSONObject> {
             System.out.println(u.toString());
             urlConnection.connect();    //
 
-
             if (this.JsonString != null) {
                 OutputStreamWriter wr = new OutputStreamWriter(urlConnection.getOutputStream());
                 wr.write(JsonString);
@@ -69,8 +68,6 @@ public class Conexion extends AsyncTask<String, Void, JSONObject> {
 
 
             Integer nume = urlConnection.getResponseCode();
-
-
 
 
             InputStream in = null;
