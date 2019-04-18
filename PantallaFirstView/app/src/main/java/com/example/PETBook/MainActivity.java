@@ -1,11 +1,13 @@
 package com.example.PETBook;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.PETBook.Fragments.HomeFragment;
 import com.example.PETBook.Fragments.MyCalendarFragment;
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
     }
 
     @Override
@@ -93,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         Fragment myFragment=null;
         boolean fragmentSeleccionado=false;
 
-        if (id == R.id.nav_profile) {
+        if (id == R.id.nav_home) {
             myFragment = new HomeFragment();
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_pets) {
@@ -105,14 +110,33 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_calendar) {
             myFragment = new MyCalendarFragment();
             fragmentSeleccionado = true;
-        } else if (id == R.id.nav_posts) {
-            myFragment = new MyPostsFragment();
-            fragmentSeleccionado = true;
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_chat) {
 
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_forum) {
 
+        } else if (id == R.id.nav_logout) {
+            //salir a la ventana de log in
+            AlertDialog.Builder exit = new AlertDialog.Builder(MainActivity.this);
+            exit.setMessage("¿Esta seguro de querer salir de la aplicación?")
+                    .setCancelable(false)
+                    .setPositiveButton("Si",new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No",new DialogInterface.OnClickListener(){
+                        @Override
+                        public void onClick(DialogInterface dialog, int which){
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog cerrar = exit.create();
+            cerrar.setTitle("Salida");
+            cerrar.show();
         }
+
 
         if (fragmentSeleccionado){
             getSupportFragmentManager().beginTransaction().replace(R.id.content_main,myFragment).commit();

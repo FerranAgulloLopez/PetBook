@@ -5,16 +5,16 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Mi perfil" />
+            android:id="@+id/nav_home"
+            android:icon="@drawable/icono_home"
+            android:title="Home" />
         <item
             android:id="@+id/nav_pets"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/pets"
             android:title="Mis mascotas" />
         <item
             android:id="@+id/nav_events"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/icono_eventos"
             android:title="Eventos" />
         <item
             android:id="@+id/nav_calendar"
@@ -22,22 +22,24 @@
             android:title="Mi calendario" />
 
         <item
-            android:id="@+id/nav_posts"
-            android:icon="@drawable/ic_menu_share"
-            android:title="Mis posts" />
-    </group>
+            android:id="@+id/nav_map"
+            android:icon="@drawable/icono_mapa"
+            android:title="Mapa" />
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+        <item
+            android:id="@+id/nav_chat"
+            android:icon="@drawable/icono_chat2"
+            android:title="Chat" />
+        <item
+            android:id="@+id/nav_forum"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Foro" />
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/icono_cerrar_sesion"
+            android:title="Cerrar sesión" />
+
+    </group>
 
 </menu>
