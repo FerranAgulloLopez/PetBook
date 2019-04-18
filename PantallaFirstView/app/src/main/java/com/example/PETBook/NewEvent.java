@@ -7,6 +7,7 @@ import android.os.StrictMode;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.format.Time;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -164,16 +165,19 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
         }
     }
 
+    private String transformacionFechaHora(){
+        String fecha = String.format("%04d-%02d-%02d",calendario.get(Calendar.YEAR),
+                (calendario.get(Calendar.MONTH)+1),calendario.get(Calendar.DAY_OF_MONTH));
+        String hora = inputHora.getText().toString();
+        return fecha + "T" + hora + ":00.000Z";
+    }
+
     private void createEvent(){
         SingletonUsuario su = SingletonUsuario.getInstance();
 
         String localizacion = Localizacion.getEditText().getText().toString();
         String titulo = Titulo.getEditText().getText().toString();
         String descripcion = inputDescripcion.getText().toString();
-        Integer any = calendario.get(Calendar.YEAR);
-        Integer mes = 1 + calendario.get(Calendar.MONTH);
-        Integer dia = calendario.get(Calendar.DAY_OF_MONTH);
-        String hora = inputHora.getText().toString();
         Integer radio = 0;
         String user = su.getEmail();
         boolean pubOpriv = publicButton.isChecked();
@@ -182,14 +186,15 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
         boolean isValidTitulo = validateTitulo(titulo);
         boolean isValidLoc = validateLocation(localizacion);
         boolean isValidFecha = validateFecha(inputFecha.getText().toString());
-        boolean isValidHora = validateHora(hora);
+        boolean isValidHora = validateHora(inputHora.getText().toString());
 
         if(isValidTitulo && isValidLoc && isValidFecha && isValidHora) {
+            String fechaHora = transformacionFechaHora();
             JSONObject jsonToSend = new JSONObject();
             try {
                 jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion)); //No recibe el parametro por backend
                 jsonToSend.accumulate("descripcion", descripcion);
-                jsonToSend.accumulate("fecha", "2019-05-24T19:13:00.000Z"); //2019-05-24T19:13:00.000Z formato fecha
+                jsonToSend.accumulate("fecha", fechaHora); //2019-05-24T19:13:00.000Z formato fecha
                 jsonToSend.accumulate("publico", pubOpriv);
                 jsonToSend.accumulate("radio", 0); //No se trata el valor por Google Maps
                 jsonToSend.accumulate("titulo", titulo);
