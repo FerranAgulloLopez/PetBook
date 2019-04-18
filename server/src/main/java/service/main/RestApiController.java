@@ -185,7 +185,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @RequestMapping(value = "/UpdateEvento/{email}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/UpdateEvento/{email}", method = RequestMethod.PATCH)
     @ApiOperation(value = "UPDATE Evento", notes = "Modifica un evento. Sirve para modificar los atributos descripcion, numero de asistentes, participantes, publico. EL Evento se identifica por any, coordenadas, dia, hora, mes, radio.", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The event does not exist in the database")
@@ -302,7 +302,7 @@ public class RestApiController {
 
 
     @CrossOrigin
-    @RequestMapping(value = "/UpdateMascota/{email}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/UpdateMascota/{email}", method = RequestMethod.PATCH)
     @ApiOperation(value = "UPDATE Mascota", notes = "Modifica una mascota. Sirve para modificar los atributos de la mascota. La mascota se identifica por email y nombre.",tags = "Pets")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The pet does not exist in the database"),
