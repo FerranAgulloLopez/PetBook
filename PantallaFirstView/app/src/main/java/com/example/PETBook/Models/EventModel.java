@@ -23,7 +23,7 @@ public class EventModel {
 
     public String getTitulo() { return titulo; }
 
-    public void setLocalizacion(Integer localizacion){ this.localizacion = localizacion; }
+    public void setLocalizacion(String localizacion){ this.localizacion = Integer.parseInt(localizacion); }
 
     public Integer getLocalizacion(){ return localizacion;}
 
