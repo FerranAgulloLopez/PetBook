@@ -25,8 +25,8 @@ public class SitioInteres implements Serializable {
 
 
     public SitioInteres() {
-        setNombre("NULL");
-        setLocalizacion("NULL");
+        nombre = "NULL";
+        localizacion = "NULL";
 
         makeId();
     }
@@ -35,8 +35,9 @@ public class SitioInteres implements Serializable {
                         String localizacion)
     {
 
-        this.setLocalizacion("");
-        this.setNombre("");
+        this.nombre = "NULL";
+        this.localizacion = "NULL";
+
 
         setNombre(nombre);
         setLocalizacion(localizacion);
@@ -51,8 +52,9 @@ public class SitioInteres implements Serializable {
                          boolean aceptado,
                          String emailCreador)
     {
-        this.setLocalizacion("");
-        this.setNombre("");
+        this.nombre = "NULL";
+        this.localizacion = "NULL";
+
 
 
         setNombre(nombre);
@@ -66,7 +68,7 @@ public class SitioInteres implements Serializable {
 
 
     private void makeId() {
-        id = nombre + localizacion;
+        id = nombre + " " + localizacion;
     }
 
     public String getNombre() {
