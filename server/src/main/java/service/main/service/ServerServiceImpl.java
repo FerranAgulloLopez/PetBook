@@ -105,6 +105,7 @@ public class ServerServiceImpl implements ServerService {
 
         Localizacion localizacion = new Localizacion(input_event.getCoordenadas(),input_event.getRadio());
         Evento event = new Evento(user.get(),localizacion.getId(),input_event.getFecha(),input_event.getTitulo(),input_event.getDescripcion(),input_event.isPublico());
+        System.out.println(event.getId());
         if(eventoRepository.existsById(event.getId())) throw new BadRequestException("The event already exists in the database");
         eventoRepository.save(event);
     }
