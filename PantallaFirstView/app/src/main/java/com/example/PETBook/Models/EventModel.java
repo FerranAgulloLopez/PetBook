@@ -2,8 +2,12 @@ package com.example.PETBook.Models;
 
 public class EventModel {
 
-    private String localizacion;
+
+    private Integer localizacion;
     private String fecha;
+    private String titulo;
+    private String descripcion;
+    private boolean publico;
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
@@ -13,11 +17,21 @@ public class EventModel {
         return fecha;
     }
 
-    public void setLocalizacion(String localizacion) {
-        this.localizacion = localizacion;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
-    public String getLocalizacion() {
-        return localizacion;
-    }
+    public String getTitulo() { return titulo; }
+
+    public void setLocalizacion(Integer localizacion){ this.localizacion = localizacion; }
+
+    public Integer getLocalizacion(){ return localizacion;}
+
+    public void setDescripcion(String descripcion){ this.descripcion = descripcion; }
+
+    public String getDescripcion(){ return descripcion; }
+
+    public void setPublico(boolean publico){ this.publico = publico; }
+
+    public boolean getPublic(){ return publico; }
 }

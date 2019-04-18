@@ -47,7 +47,7 @@ public class EventAdapter extends BaseAdapter {
         TextView localizacion = (TextView) convertView.findViewById(R.id.e_localizacion);
         TextView fecha = (TextView) convertView.findViewById(R.id.e_fecha);
 
-        localizacion.setText(events.get(position).getLocalizacion());
+        localizacion.setText(events.get(position).getTitulo());
         fecha.setText(events.get(position).getFecha());
         return convertView;
     }
