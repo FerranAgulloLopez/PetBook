@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -29,10 +30,13 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
     private TextInputLayout Localizacion;
     private TextInputLayout Fecha;
     private TextInputLayout Hora;
+    private TextInputLayout Titulo;
     private EditText inputFecha;
     private EditText inputHora;
+    private EditText inputDescripcion;
 
     private Button addEventButton;
+    private RadioButton publicButton;
 
     Calendar calendario = Calendar.getInstance();
 
@@ -44,8 +48,13 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
         Localizacion = (TextInputLayout) findViewById(R.id.Localizacion);
         Fecha = (TextInputLayout) findViewById(R.id.Fecha);
         Hora = (TextInputLayout) findViewById(R.id.Hora);
+        Titulo = (TextInputLayout) findViewById(R.id.Titulo);
+
 
         addEventButton = (Button) findViewById(R.id.addEventButton);
+        publicButton = (RadioButton) findViewById(R.id.PublicRadioButton);
+
+        inputDescripcion = (EditText) findViewById(R.id.editDescripcion);
 
         inputFecha = (EditText) findViewById(R.id.editFecha);
         inputFecha.setOnClickListener(new View.OnClickListener() {
@@ -144,27 +153,48 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
         }
     }
 
+    private boolean validateTitulo(String titulo){
+        if(titulo.isEmpty()){
+            Titulo.setError("Introduzca el título del evento");
+            return false;
+        }
+        else{
+            Titulo.setErrorEnabled(false);
+            return true;
+        }
+    }
+
     private void createEvent(){
+        SingletonUsuario su = SingletonUsuario.getInstance();
+
         String localizacion = Localizacion.getEditText().getText().toString();
+        String titulo = Titulo.getEditText().getText().toString();
+        String descripcion = inputDescripcion.getText().toString();
         Integer any = calendario.get(Calendar.YEAR);
         Integer mes = 1 + calendario.get(Calendar.MONTH);
         Integer dia = calendario.get(Calendar.DAY_OF_MONTH);
         String hora = inputHora.getText().toString();
+        Integer radio = 0;
+        String user = su.getEmail();
+        boolean pubOpriv = publicButton.isChecked();
 
+
+        boolean isValidTitulo = validateTitulo(titulo);
         boolean isValidLoc = validateLocation(localizacion);
         boolean isValidFecha = validateFecha(inputFecha.getText().toString());
         boolean isValidHora = validateHora(hora);
 
-        if(isValidLoc && isValidFecha && isValidHora) {
+        if(isValidTitulo && isValidLoc && isValidFecha && isValidHora) {
             JSONObject jsonToSend = new JSONObject();
             try {
-                jsonToSend.accumulate("any", any);
-                jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion));
-                jsonToSend.accumulate("dia", dia);
-                jsonToSend.accumulate("hora", calendario.get(Calendar.HOUR_OF_DAY)); //Cuando cambien el valor de hora se cambia!!!!!!!!!!!
-                jsonToSend.accumulate("mes", mes);
-                jsonToSend.accumulate("radio", 0);
-                jsonToSend.accumulate("userEmail", SingletonUsuario.getInstance().getEmail());
+                jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion)); //No recibe el parametro por backend
+                jsonToSend.accumulate("descripcion", descripcion);
+                jsonToSend.accumulate("fecha", "2019-05-24T19:13:00.000Z"); //2019-05-24T19:13:00.000Z formato fecha
+                jsonToSend.accumulate("publico", pubOpriv);
+                jsonToSend.accumulate("radio", 0); //No se trata el valor por Google Maps
+                jsonToSend.accumulate("titulo", titulo);
+                jsonToSend.accumulate("userEmail", user);
+                System.out.print(jsonToSend);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -186,10 +216,12 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
         try {
             if (json.getInt("code") == 200) {
+                System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
                 Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, MyEvents.class);
                 startActivity(intent);
             } else {
+                System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
                 Toast.makeText(this, "El evento ya existe", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
