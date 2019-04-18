@@ -44,7 +44,7 @@ public class SendEmailTLS {
 
             System.out.println("Done");
         } catch (Exception e) {
-            throw new InternalErrorException("Error while sending a new mail");
+            throw new InternalErrorException("Error while sending a new email");
         }
 
     }

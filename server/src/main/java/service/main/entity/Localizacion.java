@@ -16,8 +16,8 @@ public class Localizacion implements Serializable {
     }
 
     public Localizacion(int coordenadas, int radio) {
-        this.coordenadas = 0;
-        this.radio = 0;
+        this.coordenadas = coordenadas;
+        this.radio = radio;
         makeId();
     }
 
