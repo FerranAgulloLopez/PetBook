@@ -15,6 +15,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Fragments.MyEventsFragment;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
@@ -219,7 +220,8 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             if (json.getInt("code") == 200) {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
                 Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, MyEvents.class);
+                Intent intent = new Intent(this, MainActivity.class);
+                //intent.putExtra("fragment", "events");
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
