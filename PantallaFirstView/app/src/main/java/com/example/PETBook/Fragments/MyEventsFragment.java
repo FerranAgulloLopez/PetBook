@@ -9,11 +9,13 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.PETBook.Adapters.EventAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.EventInfo;
 import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.MyEvents;
 import com.example.PETBook.NewEvent;
@@ -97,7 +99,15 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
 
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/getEventsByCreator?email=" + su.getEmail(),"GET", null);
 
-
+        lista = MyView.findViewById(R.id.list_eventos);
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), EventInfo.class);
+                intent.putExtra("event",model.get(position));
+                startActivity(intent);
+            }
+        });
         FloatingActionButton fab = MyView.findViewById(R.id.addButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

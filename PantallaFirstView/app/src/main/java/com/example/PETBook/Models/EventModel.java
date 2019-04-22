@@ -1,6 +1,8 @@
 package com.example.PETBook.Models;
 
-public class EventModel {
+import java.io.Serializable;
+
+public class EventModel implements Serializable {
 
 
     private Integer localizacion;
