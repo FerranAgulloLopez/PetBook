@@ -321,7 +321,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @DeleteMapping(value = "/DeleteMascota/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/DeleteMascota/{email}")
     @ApiOperation(value = "DELETE Mascota", notes = "Deletes a pet ", tags = "Pets")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The pet does not exist in the database"),
