@@ -7,8 +7,8 @@ import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
-import service.main.repositories.EventoRepository;
-import service.main.repositories.MascotaRepository;
+import service.main.repositories.EventRepository;
+import service.main.repositories.PetRepository;
 import service.main.repositories.UserRepository;
 import service.main.util.SendEmailTLS;
 
@@ -30,10 +30,10 @@ public class ServerServiceImpl implements ServerService {
     private UserRepository userRepository;
 
     @Autowired
-    private EventoRepository eventoRepository;
+    private EventRepository eventoRepository;
 
     @Autowired
-    private MascotaRepository mascotaRepository;
+    private PetRepository mascotaRepository;
 
     /*
     User operations
@@ -100,37 +100,37 @@ public class ServerServiceImpl implements ServerService {
     Event operations
      */
 
-    public void creaEvento(DataEvento inputEvent) throws BadRequestException, NotFoundException {
+    public void creaEvento(DataEvent inputEvent) throws BadRequestException, NotFoundException {
 
         String usermail = inputEvent.getUserEmail();
         Optional<User> user = userRepository.findById(usermail);
         if(!user.isPresent()) throw new NotFoundException(USERNOTDB);
 
-        Localizacion localizacion = new Localizacion(inputEvent.getCoordenadas(),inputEvent.getRadio());
-        Evento event = new Evento(user.get(),localizacion.getId(),inputEvent.getFecha(),inputEvent.getTitulo(),inputEvent.getDescripcion(),inputEvent.isPublico());
+        Localization localizacion = new Localization(inputEvent.getCoordenadas(),inputEvent.getRadio());
+        Event event = new Event(user.get(),localizacion.getId(),inputEvent.getFecha(),inputEvent.getTitulo(),inputEvent.getDescripcion(),inputEvent.isPublico());
         if(eventoRepository.existsById(event.getId())) throw new BadRequestException("The event already exists in the database");
         eventoRepository.save(event);
     }
 
-    public List<Evento> findAllEventos() {
+    public List<Event> findAllEventos() {
         return eventoRepository.findAll();
     }
 
-    public List<Evento> findEventsByCreator(String creatormail) throws NotFoundException {
+    public List<Event> findEventsByCreator(String creatormail) throws NotFoundException {
         if(!userRepository.existsById(creatormail)) throw new NotFoundException(USERNOTDB);
         return eventoRepository.findByemailCreador(creatormail);
     }
 
-    public List<Evento> findEventsByParticipant(String participantmail) throws NotFoundException {
+    public List<Event> findEventsByParticipant(String participantmail) throws NotFoundException {
         if(!userRepository.existsById(participantmail)) throw new NotFoundException(USERNOTDB);
         return eventoRepository.findByParticipantesInOrderByFecha(participantmail);
     }
 
 
-    public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException {
-        Localizacion localizacion = new Localizacion(evento.getCoordenadas(),evento.getRadio());
+    public void updateEvento(String email, DataEventUpdate evento) throws NotFoundException {
+        Localization localizacion = new Localization(evento.getCoordenadas(),evento.getRadio());
 
-        Evento evento2 = new Evento(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getParticipantes());
+        Event evento2 = new Event(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getParticipantes());
         if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException(EVENTNOTDB);
         eventoRepository.deleteById(evento2.getId());
         eventoRepository.insert(evento2);
@@ -138,18 +138,18 @@ public class ServerServiceImpl implements ServerService {
 
     public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException {
         if(!userRepository.existsById(usermail)) throw new NotFoundException(USERNOTDB);
-        Localizacion localizacion = new Localizacion(coordinates,radius);
-        Evento event = new Evento(creatormail,localizacion.getId(),fecha);
+        Localization localizacion = new Localization(coordinates,radius);
+        Event event = new Event(creatormail,localizacion.getId(),fecha);
         if(!eventoRepository.existsById(event.getId())) throw new NotFoundException(EVENTNOTDB);
 
         eventoRepository.addParticipant(usermail,event.getId());
     }
 
 
-    public void deleteEvento(DataEvento event) throws NotFoundException {
-        Localizacion localizacion = new Localizacion(event.getCoordenadas(),event.getRadio());
+    public void deleteEvento(DataEvent event) throws NotFoundException {
+        Localization localizacion = new Localization(event.getCoordenadas(),event.getRadio());
 
-        Evento evento = new Evento(event.getUserEmail(), localizacion.getId(), event.getFecha());
+        Event evento = new Event(event.getUserEmail(), localizacion.getId(), event.getFecha());
         if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException(EVENTNOTDB);
         eventoRepository.deleteById(evento.getId());
     }
@@ -158,8 +158,8 @@ public class ServerServiceImpl implements ServerService {
     Pet operations
      */
 
-    public void creaMascota(DataMascotaUpdate inMascota) throws BadRequestException, NotFoundException {
-        Mascota mascota = new Mascota(inMascota.getNombre(),inMascota.getEmail(), inMascota.getEspecie(), inMascota.getRaza(), inMascota.getSexo(),
+    public void creaMascota(DataPetUpdate inMascota) throws BadRequestException, NotFoundException {
+        Pet mascota = new Pet(inMascota.getNombre(),inMascota.getEmail(), inMascota.getEspecie(), inMascota.getRaza(), inMascota.getSexo(),
                                                             inMascota.getDescripcion(),inMascota.getEdad(),inMascota.getColor(),inMascota.getFoto());
         if(!userRepository.existsById(inMascota.getEmail())) throw new NotFoundException(USERNOTDB);
         if(mascotaRepository.existsById(mascota.getId())) throw new BadRequestException("The pet already exists in the database");
@@ -167,17 +167,17 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
-    public Mascota mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
+    public Pet mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
         if(!userRepository.existsById(emailDuenyo)) throw new NotFoundException(USERNOTDB);
-        Optional<Mascota> pet = mascotaRepository.findById(id);
+        Optional<Pet> pet = mascotaRepository.findById(id);
         if(!pet.isPresent()) throw new NotFoundException(PETNOTDB);
         return pet.get();
     }
 
-    public void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException {
+    public void updateMascota(String email, DataPetUpdate mascota) throws NotFoundException {
 
-        Mascota mascota2 = new Mascota(mascota.getNombre(), email, mascota.getEspecie(), mascota.getRaza(),
+        Pet mascota2 = new Pet(mascota.getNombre(), email, mascota.getEspecie(), mascota.getRaza(),
                                        mascota.getSexo(), mascota.getDescripcion(), mascota.getEdad(), mascota.getColor(), mascota.getFoto());
 
         String id = mascota2.getId();
@@ -186,13 +186,13 @@ public class ServerServiceImpl implements ServerService {
         mascotaRepository.save(mascota2);
     }
 
-    public List<Mascota> findAllMascotasByUser(String email) throws NotFoundException{
+    public List<Pet> findAllMascotasByUser(String email) throws NotFoundException{
         if(! userRepository.existsById(email)) throw new NotFoundException(USERNOTDB);
 
-        List<Mascota> mascotas = mascotaRepository.findAll();
-        List<Mascota> resultado = new ArrayList<>();
+        List<Pet> mascotas = mascotaRepository.findAll();
+        List<Pet> resultado = new ArrayList<>();
 
-        for(Mascota mascota : mascotas)
+        for(Pet mascota : mascotas)
             if(mascota.getUserEmail() != null && mascota.getUserEmail().equals(email)) resultado.add(mascota);
 
         return resultado;

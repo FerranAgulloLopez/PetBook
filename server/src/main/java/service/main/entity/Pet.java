@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "users")
-public class Mascota implements Serializable {
+public class Pet implements Serializable {
 
     @Id
     private String id;
@@ -30,11 +30,11 @@ public class Mascota implements Serializable {
 
 
 
-    public Mascota() {
+    public Pet() {
     }
 
-    public Mascota( String nombre,
-                    String userEmail)
+    public Pet(String nombre,
+               String userEmail)
     {
         this.userEmail = userEmail;
         this.nombre = nombre;
@@ -43,15 +43,15 @@ public class Mascota implements Serializable {
     }
 
 
-    public Mascota( String nombre,
-                    String userEmail,
-                    String especie,
-                    String raza,
-                    String sexo,
-                    String descripcion,
-                    int edad,
-                    String color,
-                    String foto)
+    public Pet(String nombre,
+               String userEmail,
+               String especie,
+               String raza,
+               String sexo,
+               String descripcion,
+               int edad,
+               String color,
+               String foto)
     {
 
         this.userEmail = userEmail;

@@ -1,11 +1,9 @@
 package service.main.repositories;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
-import service.main.entity.User;
+import service.main.entity.Pet;
 
-
-public interface UserRepository extends MongoRepository<User, String> {
-
+public interface PetRepository extends MongoRepository<Pet, String> {
 
 
 }

@@ -8,7 +8,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.test.context.junit4.SpringRunner;
-import service.main.entity.Imagen;
+import service.main.entity.Image;
 
 import java.io.*;
 
@@ -17,7 +17,7 @@ import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ControllerFotoTests {
+public class ControllerImageTests {
 
     private String path = "../testing_files/Fotos/";
 
@@ -27,7 +27,7 @@ public class ControllerFotoTests {
     @Test
     public void guardaJSONImagenUsandoBase64() throws Exception {
 
-        Imagen foto = new Imagen(inputFilePath);
+        Image foto = new Image(inputFilePath);
 
         JSONObject json = new JSONObject();
         json.accumulate("foto", foto.getImagen());  // En String

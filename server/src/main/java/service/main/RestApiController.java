@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.main.entity.User;
 import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
@@ -130,7 +129,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The event already exists in the database")
     })
-    public ResponseEntity<?> creaEvento(@ApiParam(value="event", required = true) @RequestBody DataEvento evento) {
+    public ResponseEntity<?> creaEvento(@ApiParam(value="event", required = true) @RequestBody DataEvent evento) {
         try {
             serverService.creaEvento(evento);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -188,7 +187,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The event does not exist in the database")
     })
     public ResponseEntity<?> updateEvento(@PathVariable String email,
-                                          @ApiParam(value="event", required = true) @RequestBody DataEventoUpdate evento)
+                                          @ApiParam(value="event", required = true) @RequestBody DataEventUpdate evento)
     {
         try {
             serverService.updateEvento(email, evento);
@@ -208,7 +207,7 @@ public class RestApiController {
             @ApiResponse(code = 400, message = "The user already participates in the event")
     })
     public ResponseEntity<?> addEventParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantemail") String usermail,
-                                                 @ApiParam(value="event", required = true) @RequestBody DataEvento evento)
+                                                 @ApiParam(value="event", required = true) @RequestBody DataEvent evento)
     {
         try {
             serverService.addEventParticipant(usermail,evento.getUserEmail(),evento.getCoordenadas(),evento.getRadio(),evento.getFecha());
@@ -226,7 +225,7 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The event does not exist in the database")
     })
-    public ResponseEntity<?> deleteEvento(@ApiParam(value="Evento", required = true) @RequestBody DataEvento event)
+    public ResponseEntity<?> deleteEvento(@ApiParam(value="Evento", required = true) @RequestBody DataEvent event)
     {
         try {
             serverService.deleteEvento(event);
@@ -248,7 +247,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The pet already exists in the database")
     })
-    public ResponseEntity<?> creaMascota(@ApiParam(value="Mascota", required = true) @RequestBody DataMascotaUpdate mascota)
+    public ResponseEntity<?> creaMascota(@ApiParam(value="Mascota", required = true) @RequestBody DataPetUpdate mascota)
     {
         try {
             serverService.creaMascota(mascota);
@@ -305,7 +304,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The pet does not exist in the database"),
     })
     public ResponseEntity<?> updateMascota(@PathVariable String email,
-                                          @ApiParam(value="Nuevos datos de la Mascota", required = true) @RequestBody DataMascotaUpdate mascota)
+                                          @ApiParam(value="Nuevos datos de la Mascota", required = true) @RequestBody DataPetUpdate mascota)
     {
         try {
             serverService.updateMascota(email, mascota);

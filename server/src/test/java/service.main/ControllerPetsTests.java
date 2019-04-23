@@ -3,7 +3,7 @@ package service.main;
 import org.json.JSONObject;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import service.main.entity.Imagen;
+import service.main.entity.Image;
 
 import java.io.FileWriter;
 
@@ -73,7 +73,7 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "update_mascota_operation/output_crea.json")));
 
 
-        Imagen foto = new Imagen(inputFilePath);
+        Image foto = new Image(inputFilePath);
 
         JSONObject json = new JSONObject();
 

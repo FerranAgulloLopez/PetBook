@@ -1,6 +1,6 @@
 package service.main.entity.input_output;
 
-public class DataMascotaUpdate {
+public class DataPetUpdate {
 
     private String email;
     private String nombre;

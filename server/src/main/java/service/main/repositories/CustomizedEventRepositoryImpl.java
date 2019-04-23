@@ -6,16 +6,15 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
-import service.main.entity.Evento;
+import service.main.entity.Event;
 import service.main.exception.BadRequestException;
-import service.main.exception.InternalErrorException;
 
-public class CustomizedEventoRepositoryImpl implements CustomizedEventoRepository {
+public class CustomizedEventRepositoryImpl implements CustomizedEventRepository {
 
     private final MongoTemplate mongoTemplate;
 
     @Autowired
-    public CustomizedEventoRepositoryImpl(MongoTemplate mongoTemplate) {
+    public CustomizedEventRepositoryImpl(MongoTemplate mongoTemplate) {
         this.mongoTemplate = mongoTemplate;
     }
 
@@ -24,7 +23,7 @@ public class CustomizedEventoRepositoryImpl implements CustomizedEventoRepositor
         Query query = new Query(Criteria.where("id").is(eventId));
         Update update = new Update();
         update.addToSet("participantes",participantmail);
-        UpdateResult result = mongoTemplate.updateFirst(query,update,Evento.class);
+        UpdateResult result = mongoTemplate.updateFirst(query,update, Event.class);
         if(result.getModifiedCount() != 1) throw new BadRequestException("The user already participates in the event");
     }
 }

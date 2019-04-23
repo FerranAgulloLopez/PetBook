@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class Imagen implements Serializable {
+public class Image implements Serializable {
 
     private String imagen; // Imagen
 
@@ -16,11 +16,11 @@ public class Imagen implements Serializable {
     File file;
 
 
-    public Imagen() {
+    public Image() {
         setImagen(new String());
     }
 
-    public Imagen(String path) throws IOException {         // USAR ESTA FUNCION PARA LEER LAS FOTOS(PASANDO EL PATH DE LA FOTO)
+    public Image(String path) throws IOException {         // USAR ESTA FUNCION PARA LEER LAS FOTOS(PASANDO EL PATH DE LA FOTO)
         setImagen(new String() );
 
         File file = new File(path);

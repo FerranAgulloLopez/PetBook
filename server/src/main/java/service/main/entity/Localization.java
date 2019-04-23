@@ -2,20 +2,20 @@ package service.main.entity;
 
 import java.io.Serializable;
 
-public class Localizacion implements Serializable {
+public class Localization implements Serializable {
 
     private String id;
 
     private int coordenadas;
     private int radio;
 
-    public Localizacion() {
+    public Localization() {
         this.coordenadas = 0;
         this.radio = 0;
         makeId();
     }
 
-    public Localizacion(int coordenadas, int radio) {
+    public Localization(int coordenadas, int radio) {
         this.coordenadas = coordenadas;
         this.radio = radio;
         makeId();

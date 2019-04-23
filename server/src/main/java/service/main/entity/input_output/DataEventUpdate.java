@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class DataEventoUpdate implements Serializable {
+public class DataEventUpdate implements Serializable {
 
     //private String userEmail;
     private Integer coordenadas;

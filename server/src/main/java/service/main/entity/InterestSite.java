@@ -7,8 +7,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.io.Serializable;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Document(collection = "SitioInteres")
-public class SitioInteres implements Serializable {
+@Document(collection = "interestsites")
+public class InterestSite implements Serializable {
 
     @Id
     private String id;
@@ -24,14 +24,14 @@ public class SitioInteres implements Serializable {
 
 
 
-    public SitioInteres() {
+    public InterestSite() {
         nombre = "NULL";
         localizacion = "NULL";
 
         makeId();
     }
 
-    public SitioInteres(String nombre,
+    public InterestSite(String nombre,
                         String localizacion)
     {
 
@@ -44,13 +44,13 @@ public class SitioInteres implements Serializable {
     }
 
 
-    public SitioInteres( String nombre,
-                         String localizacion,
-                         String descripcion,
-                         String tipo,
-                         int numeroVotos,
-                         boolean aceptado,
-                         String emailCreador)
+    public InterestSite(String nombre,
+                        String localizacion,
+                        String descripcion,
+                        String tipo,
+                        int numeroVotos,
+                        boolean aceptado,
+                        String emailCreador)
     {
         this.nombre = "NULL";
         this.localizacion = "NULL";
