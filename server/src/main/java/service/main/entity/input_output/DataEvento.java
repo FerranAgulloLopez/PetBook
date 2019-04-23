@@ -1,11 +1,8 @@
 package service.main.entity.input_output;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.io.Serializable;
 import java.util.Date;
 
-@Document(collection = "domain")
 public class DataEvento implements Serializable {
 
     private String userEmail;

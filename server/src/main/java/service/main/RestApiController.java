@@ -8,10 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.User;
-import service.main.entity.input_output.DataEvento;
-import service.main.entity.input_output.DataEventoUpdate;
-import service.main.entity.input_output.DataMascotaUpdate;
-import service.main.entity.input_output.OutUpdateUserProfile;
+import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
@@ -38,9 +35,9 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "The user already exists")
     })
-    public ResponseEntity<?> RegisterUser(@ApiParam(value="A user with email and password", required = true) @RequestBody User input) {
+    public ResponseEntity<?> registerUser(@ApiParam(value="A user with email and password", required = true) @RequestBody DataUser inputUser) {
         try {
-            serverService.RegisterUser(input);
+            serverService.RegisterUser(inputUser);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
@@ -53,7 +50,7 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> ConfirmLogin(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
+    public ResponseEntity<?> confirmLogin(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
                                           @ApiParam(value="Password introduced", required = true, example = "1234") @RequestParam String password) {
         try {
             return new ResponseEntity<>(serverService.ConfirmLogin(email,password),HttpStatus.OK);
@@ -70,7 +67,7 @@ public class RestApiController {
             @ApiResponse(code = 400, message = "The user has already verified his email"),
             @ApiResponse(code = 500, message = "Error while sending a new email")
     })
-    public ResponseEntity<?> ConfirmationEmail(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email) {
+    public ResponseEntity<?> confirmationEmail(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email) {
         try {
             serverService.SendConfirmationEmail(email);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -95,7 +92,7 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> InfoUser(@PathVariable String email) {
+    public ResponseEntity<?> infoUser(@PathVariable String email) {
         try {
             return new ResponseEntity<>(serverService.getUserByEmail(email), HttpStatus.OK);
         }
@@ -110,7 +107,7 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> UpdateUser(@PathVariable String email, @RequestBody OutUpdateUserProfile user)
+    public ResponseEntity<?> updateUser(@PathVariable String email, @RequestBody OutUpdateUserProfile user)
     {
         try {
             serverService.updateUserByEmail(email,user);
@@ -275,7 +272,7 @@ public class RestApiController {
                                         @ApiParam(value="Nombre de la mascota", required = true, example = "Messi") @RequestParam String nombreMascota)
     {
         try {
-            return new ResponseEntity<>(serverService.mascota_findById(email, nombreMascota).get(),HttpStatus.OK);
+            return new ResponseEntity<>(serverService.mascota_findById(email, nombreMascota),HttpStatus.OK);
         }
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -350,7 +347,7 @@ public class RestApiController {
     @CrossOrigin
     @DeleteMapping(value = "/Test/RemoveDatabase")
     @ApiOperation(value = "Testing", tags = "Testing")
-    public ResponseEntity<?> RemoveDatabase()
+    public ResponseEntity<?> removeDatabase()
     {
         serverService.removeDataBase();
         return new ResponseEntity<>(HttpStatus.OK);

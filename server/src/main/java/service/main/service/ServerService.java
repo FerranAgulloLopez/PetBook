@@ -10,7 +10,6 @@ import service.main.exception.NotFoundException;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 public interface ServerService {
 
@@ -24,7 +23,7 @@ public interface ServerService {
 
     public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException;
 
-    public void RegisterUser(User input) throws BadRequestException;
+    public void RegisterUser(DataUser inputUser) throws BadRequestException;
 
     public User getUserByEmail(String email) throws NotFoundException;
 
@@ -56,7 +55,7 @@ public interface ServerService {
 
     public void creaMascota(DataMascotaUpdate mascota) throws BadRequestException, NotFoundException;
 
-    Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException;
+    public Mascota mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
     void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException;
 

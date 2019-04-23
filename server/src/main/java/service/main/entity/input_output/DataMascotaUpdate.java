@@ -1,10 +1,5 @@
 package service.main.entity.input_output;
 
-//
-
-import org.springframework.data.mongodb.core.mapping.Document;
-
-@Document(collection = "domain")
 public class DataMascotaUpdate {
 
     private String email;

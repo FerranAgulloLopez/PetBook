@@ -46,10 +46,10 @@ public class ServerServiceImpl implements ServerService {
         return new OutLogin(result,user.get().isMailconfirmed());
     }
 
-    public void RegisterUser(User input) throws BadRequestException {
-        Optional<User> userToCheck = userRepository.findById(input.getEmail());
+    public void RegisterUser(DataUser inputUser) throws BadRequestException {
+        Optional<User> userToCheck = userRepository.findById(inputUser.getEmail());
         if (userToCheck.isPresent()) throw new BadRequestException("The user already exists");
-        userRepository.save(input);
+        userRepository.save(inputUser.toUser());
     }
 
     public void ConfirmEmail(String email) throws NotFoundException {
@@ -167,11 +167,12 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
-    public Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
+    public Mascota mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
         if(!userRepository.existsById(emailDuenyo)) throw new NotFoundException(USERNOTDB);
-        if(!mascotaRepository.existsById(id)) throw new NotFoundException(PETNOTDB);
-        return mascotaRepository.findById(id);
+        Optional<Mascota> pet = mascotaRepository.findById(id);
+        if(!pet.isPresent()) throw new NotFoundException(PETNOTDB);
+        return pet.get();
     }
 
     public void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException {

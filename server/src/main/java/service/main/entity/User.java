@@ -25,12 +25,10 @@ public class User implements Serializable {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
-
-    private String FirstName;
-    private String SecondName;
+    private String firstName;
+    private String secondName;
     private String dateOfBirth;
     private String postalCode;
-    @ApiModelProperty(example = "false")
     private boolean mailconfirmed;
 
 
@@ -41,6 +39,16 @@ public class User implements Serializable {
         this.password = hasher.hash(password.toCharArray());
     }
 
+    public User(String email, String password, String firstName, String secondName, String dateOfBirth, String postalCode, boolean mailconfirmed) {
+        this.email = email;
+        this.password = hasher.hash(password.toCharArray());
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.dateOfBirth = dateOfBirth;
+        this.postalCode = postalCode;
+        this.mailconfirmed = mailconfirmed;
+    }
+
 
     /*
     Get
@@ -49,11 +57,11 @@ public class User implements Serializable {
     public String getEmail() {return  email;}
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
     public String getSecondName() {
-        return SecondName;
+        return secondName;
     }
 
     public String getDateOfBirth() {
@@ -79,7 +87,7 @@ public class User implements Serializable {
      */
 
     public void setFirstName(String firstName) {
-            this.FirstName = firstName;
+            this.firstName = firstName;
     }
 
     public void setPassword(String password) {
@@ -91,7 +99,7 @@ public class User implements Serializable {
     }
 
     public void setSecondName(String secondName) {
-        this.SecondName = secondName;
+        this.secondName = secondName;
     }
 
     public void setDateOfBirth(String dateOfBirth) {
