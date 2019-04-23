@@ -171,7 +171,7 @@ public class RestApiController {
 
     @CrossOrigin
     @RequestMapping(value = "/getEventsByParticipant", method = RequestMethod.GET)
-    @ApiOperation(value = "Returns all events where the input user participates", notes = "Returns all events where the input user participates", tags = "Events")
+    @ApiOperation(value = "Returns all events where the input user participates", notes = "Returns all events where the input user participates. The result is ordered by the date of the event ", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })

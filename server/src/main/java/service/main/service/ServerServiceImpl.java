@@ -121,7 +121,7 @@ public class ServerServiceImpl implements ServerService {
 
     public List<Evento> findEventsByParticipant(String participantmail) throws NotFoundException {
         if(!userRepository.existsById(participantmail)) throw new NotFoundException("The user does not exist in the database");
-        return eventoRepository.findByParticipantesIn(participantmail);
+        return eventoRepository.findByParticipantesInOrderByFecha(participantmail);
     }
 
 
