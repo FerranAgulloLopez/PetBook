@@ -31,21 +31,15 @@ public class Mascota implements Serializable {
 
 
     public Mascota() {
-        nombre = "NULL";
-        userEmail = "NULL";
-
-        makeId();
     }
 
     public Mascota( String nombre,
                     String userEmail)
     {
+        this.userEmail = userEmail;
+        this.nombre = nombre;
+        makeId();
 
-        this.userEmail = "";
-        this.nombre = "";
-
-        setNombre(nombre);
-        setUserEmail(userEmail);
     }
 
 
@@ -59,12 +53,10 @@ public class Mascota implements Serializable {
                     String color,
                     String foto)
     {
-        this.userEmail = "";
-        this.nombre = "";
 
-
-        setNombre(nombre);
-        setUserEmail(userEmail);
+        this.userEmail = userEmail;
+        this.nombre = nombre;
+        makeId();
 
         setEspecie( especie);
         setRaza(raza);
@@ -90,13 +82,8 @@ public class Mascota implements Serializable {
     public String getSexo() { return sexo; }
     public String getDescripcion() { return descripcion; }
     public String getFoto() { return foto; }
-    public String getColor() {
-        return color;
-    }
-
-    public int getEdad() {
-        return edad;
-    }
+    public String getColor() { return color; }
+    public int getEdad() { return edad; }
 
     // SETTERS
     public void setNombre(String nombre) { this.nombre = nombre; makeId(); }
@@ -107,10 +94,6 @@ public class Mascota implements Serializable {
     public void setSexo(String sexo) { this.sexo = sexo; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
     public void setFoto(String foto) { this.foto = foto; }
-    public void setColor(String color) {
-        this.color = color;
-    }
-    public void setEdad(int edad) {
-        this.edad = edad;
-    }
+    public void setColor(String color) { this.color = color; }
+    public void setEdad(int edad) { this.edad = edad; }
 }

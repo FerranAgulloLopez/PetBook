@@ -39,8 +39,12 @@ public class Imagen implements Serializable {
 
     public String getImagen() { return imagen;}
 
-    public void setImagen(String imagen) {                // Obtener imagen en String
+    public void setImagen(String imagen) {
         this.imagen = imagen;
+    }
+
+    public byte[] getBytes() {                  // Conseguir la imagen en byte[]
+        return Base64.decodeBase64(imagen);
     }
 
 

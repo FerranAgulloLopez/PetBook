@@ -1,6 +1,5 @@
 package service.main.service;
 
-import org.mockito.internal.matchers.Not;
 import service.main.entity.Evento;
 import service.main.entity.Mascota;
 import service.main.entity.User;
@@ -55,7 +54,7 @@ public interface ServerService {
     Pet operations
      */
 
-    public void creaMascota(String email, String nom_mascota) throws BadRequestException, NotFoundException;
+    public void creaMascota(DataMascotaUpdate mascota) throws BadRequestException, NotFoundException;
 
     Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException;
 

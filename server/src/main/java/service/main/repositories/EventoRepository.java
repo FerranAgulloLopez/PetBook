@@ -12,6 +12,6 @@ public interface EventoRepository extends MongoRepository<Evento, String>, Custo
 
     public List<Evento> findByemailCreador(String creatormail);
 
-    public List<Evento> findByParticipantesIn(String participantmail);
+    public List<Evento> findByParticipantesInOrderByFecha(String participantmail);
 
 }
