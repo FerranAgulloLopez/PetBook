@@ -115,7 +115,7 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/getALLMascotasByUser/foo@mail.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"delete_mascota_operation/output_visualiza1.json")));
-        this.mockMvc.perform(delete("/ServerRESTAPI/DeleteMascota/foo@mail.com?nombreMascota=Messi"))
+        this.mockMvc.perform(delete("/ServerRESTAPI/DeleteMascota/foo@mail.com").param("nombreMascota","Messi"))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/getALLMascotasByUser/foo@mail.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"delete_mascota_operation/output_visualiza2.json")));
@@ -123,7 +123,7 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
 
     @Test
     public void deleteMascotaANDMascotaDontExists() throws Exception {
-        this.mockMvc.perform(delete("/ServerRESTAPI/DeleteMascota/foo@mail.com?nombreMascota=Messi"))
+        this.mockMvc.perform(delete("/ServerRESTAPI/DeleteMascota/foo@mail.com?nombreMascota=Messi").param("nombreMascota","Messi"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 }

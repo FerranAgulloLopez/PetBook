@@ -20,6 +20,10 @@ import java.util.Optional;
 @Service("serverService")
 public class ServerServiceImpl implements ServerService {
 
+    private static final String USERNOTDB = "The user does not exist in the database";
+    private static final String EVENTNOTDB = "The event does not exist in the database";
+    private static final String PETNOTDB = "The pet does not exist in the database";
+
     private SendEmailTLS mailsender;
 
     @Autowired
@@ -37,27 +41,27 @@ public class ServerServiceImpl implements ServerService {
 
     public OutLogin ConfirmLogin(String email, String password) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
         boolean result = user.get().checkPassword(password);
         return new OutLogin(result,user.get().isMailconfirmed());
     }
 
-    public void RegisterUser(User input) throws BadRequestException {
-        Optional<User> userToCheck = userRepository.findById(input.getEmail());
+    public void RegisterUser(DataUser inputUser) throws BadRequestException {
+        Optional<User> userToCheck = userRepository.findById(inputUser.getEmail());
         if (userToCheck.isPresent()) throw new BadRequestException("The user already exists");
-        userRepository.save(input);
+        userRepository.save(inputUser.toUser());
     }
 
     public void ConfirmEmail(String email) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
         user.get().setMailconfirmed(true);
         userRepository.save(user.get());
     }
 
     public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException {
         Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
         if (user.get().isMailconfirmed()) throw new BadRequestException("The user has already verified his email");
         sendEmail(email);
     }
@@ -74,17 +78,16 @@ public class ServerServiceImpl implements ServerService {
 
     public User getUserByEmail(String email) throws NotFoundException {
         Optional<User> userToReturn = userRepository.findById(email);
-        if (!userToReturn.isPresent()) throw new NotFoundException("The user does not exist in the database");
+        if (!userToReturn.isPresent()) throw new NotFoundException(USERNOTDB);
         else return userToReturn.get();
     }
 
 
     public void updateUserByEmail(String email, OutUpdateUserProfile userUpdated) throws NotFoundException {
         Optional<User> userToUpdate = userRepository.findById(email);
-        if (!userToUpdate.isPresent()) throw new NotFoundException("The user does not exist in the database");
+        if (!userToUpdate.isPresent()) throw new NotFoundException(USERNOTDB);
         else {
             User user = userToUpdate.get();
-            //userRepository.delete(user);
             user.setFirstName(userUpdated.getFirstName());
             user.setSecondName(userUpdated.getSecondName());
             user.setDateOfBirth(userUpdated.getDateOfBirth());
@@ -97,15 +100,14 @@ public class ServerServiceImpl implements ServerService {
     Event operations
      */
 
-    public void creaEvento(DataEvento input_event) throws BadRequestException, NotFoundException {
+    public void creaEvento(DataEvento inputEvent) throws BadRequestException, NotFoundException {
 
-        String usermail = input_event.getUserEmail();
+        String usermail = inputEvent.getUserEmail();
         Optional<User> user = userRepository.findById(usermail);
-        if(!user.isPresent()) throw new NotFoundException("The user does not exist in the database");
+        if(!user.isPresent()) throw new NotFoundException(USERNOTDB);
 
-        Localizacion localizacion = new Localizacion(input_event.getCoordenadas(),input_event.getRadio());
-        Evento event = new Evento(user.get(),localizacion.getId(),input_event.getFecha(),input_event.getTitulo(),input_event.getDescripcion(),input_event.isPublico());
-        System.out.println(event.getId());
+        Localizacion localizacion = new Localizacion(inputEvent.getCoordenadas(),inputEvent.getRadio());
+        Evento event = new Evento(user.get(),localizacion.getId(),inputEvent.getFecha(),inputEvent.getTitulo(),inputEvent.getDescripcion(),inputEvent.isPublico());
         if(eventoRepository.existsById(event.getId())) throw new BadRequestException("The event already exists in the database");
         eventoRepository.save(event);
     }
@@ -115,12 +117,12 @@ public class ServerServiceImpl implements ServerService {
     }
 
     public List<Evento> findEventsByCreator(String creatormail) throws NotFoundException {
-        if(!userRepository.existsById(creatormail)) throw new NotFoundException("The user does not exist in the database");
+        if(!userRepository.existsById(creatormail)) throw new NotFoundException(USERNOTDB);
         return eventoRepository.findByemailCreador(creatormail);
     }
 
     public List<Evento> findEventsByParticipant(String participantmail) throws NotFoundException {
-        if(!userRepository.existsById(participantmail)) throw new NotFoundException("The user does not exist in the database");
+        if(!userRepository.existsById(participantmail)) throw new NotFoundException(USERNOTDB);
         return eventoRepository.findByParticipantesInOrderByFecha(participantmail);
     }
 
@@ -129,16 +131,16 @@ public class ServerServiceImpl implements ServerService {
         Localizacion localizacion = new Localizacion(evento.getCoordenadas(),evento.getRadio());
 
         Evento evento2 = new Evento(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getParticipantes());
-        if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException("The event does not exist in the database");
+        if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException(EVENTNOTDB);
         eventoRepository.deleteById(evento2.getId());
         eventoRepository.insert(evento2);
     }
 
     public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException {
-        if(!userRepository.existsById(usermail)) throw new NotFoundException("The user does not exist in the database");
+        if(!userRepository.existsById(usermail)) throw new NotFoundException(USERNOTDB);
         Localizacion localizacion = new Localizacion(coordinates,radius);
         Evento event = new Evento(creatormail,localizacion.getId(),fecha);
-        if(!eventoRepository.existsById(event.getId())) throw new NotFoundException("The event does not exist in the database");
+        if(!eventoRepository.existsById(event.getId())) throw new NotFoundException(EVENTNOTDB);
 
         eventoRepository.addParticipant(usermail,event.getId());
     }
@@ -148,7 +150,7 @@ public class ServerServiceImpl implements ServerService {
         Localizacion localizacion = new Localizacion(event.getCoordenadas(),event.getRadio());
 
         Evento evento = new Evento(event.getUserEmail(), localizacion.getId(), event.getFecha());
-        if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException("The event does not exist in the database");
+        if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException(EVENTNOTDB);
         eventoRepository.deleteById(evento.getId());
     }
 
@@ -159,17 +161,18 @@ public class ServerServiceImpl implements ServerService {
     public void creaMascota(DataMascotaUpdate inMascota) throws BadRequestException, NotFoundException {
         Mascota mascota = new Mascota(inMascota.getNombre(),inMascota.getEmail(), inMascota.getEspecie(), inMascota.getRaza(), inMascota.getSexo(),
                                                             inMascota.getDescripcion(),inMascota.getEdad(),inMascota.getColor(),inMascota.getFoto());
-        if(!userRepository.existsById(inMascota.getEmail())) throw new NotFoundException("The user does not exist in the database");
+        if(!userRepository.existsById(inMascota.getEmail())) throw new NotFoundException(USERNOTDB);
         if(mascotaRepository.existsById(mascota.getId())) throw new BadRequestException("The pet already exists in the database");
         mascotaRepository.save(mascota);
     }
 
 
-    public Optional<Mascota> mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
+    public Mascota mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
-        if(!userRepository.existsById(emailDuenyo)) throw new NotFoundException("The user does not exist in the database");
-        if(!mascotaRepository.existsById(id)) throw new NotFoundException("The pet does not exist in the database");
-        return mascotaRepository.findById(id);
+        if(!userRepository.existsById(emailDuenyo)) throw new NotFoundException(USERNOTDB);
+        Optional<Mascota> pet = mascotaRepository.findById(id);
+        if(!pet.isPresent()) throw new NotFoundException(PETNOTDB);
+        return pet.get();
     }
 
     public void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException {
@@ -178,16 +181,16 @@ public class ServerServiceImpl implements ServerService {
                                        mascota.getSexo(), mascota.getDescripcion(), mascota.getEdad(), mascota.getColor(), mascota.getFoto());
 
         String id = mascota2.getId();
-        if(!mascotaRepository.existsById(id)) throw new NotFoundException("The pet does not exist in the database");
+        if(!mascotaRepository.existsById(id)) throw new NotFoundException(PETNOTDB);
         mascotaRepository.deleteById(id);
         mascotaRepository.save(mascota2);
     }
 
     public List<Mascota> findAllMascotasByUser(String email) throws NotFoundException{
-        if(! userRepository.existsById(email)) throw new NotFoundException("The user does not exist in the database");
+        if(! userRepository.existsById(email)) throw new NotFoundException(USERNOTDB);
 
         List<Mascota> mascotas = mascotaRepository.findAll();
-        List<Mascota> resultado = new ArrayList<Mascota>();
+        List<Mascota> resultado = new ArrayList<>();
 
         for(Mascota mascota : mascotas)
             if(mascota.getUserEmail() != null && mascota.getUserEmail().equals(email)) resultado.add(mascota);
@@ -197,7 +200,7 @@ public class ServerServiceImpl implements ServerService {
 
     public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
-        if(! mascotaRepository.existsById(id)) throw new NotFoundException("The pet does not exist in the database");
+        if(! mascotaRepository.existsById(id)) throw new NotFoundException(PETNOTDB);
         mascotaRepository.deleteById(id);
     }
 

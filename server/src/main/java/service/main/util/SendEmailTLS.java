@@ -11,7 +11,7 @@ import java.util.Properties;
 public class SendEmailTLS {
 
     private static final String username = "petbookasesores@gmail.com";
-    private static final String password = "gpgegxcglzoopxxx";
+    private static final String password = "";
 
     private static final Properties prop = new Properties();
 

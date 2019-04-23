@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Document(collection = "domain")
 public class DataEventoUpdate implements Serializable {
 
     //private String userEmail;

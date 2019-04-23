@@ -76,7 +76,7 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_byparticipant/input_create_third_event.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(patch("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"get_events_byparticipant/input_add_participant.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"get_events_byparticipant/input_add_participant.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/getEventsByParticipant").param("email","b@a.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "get_events_byparticipant/output.json")));
@@ -120,7 +120,7 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_create_event.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(patch("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/getALLEventos"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "add_participant_operation/output.json")));
@@ -130,7 +130,7 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
     public void addParticipantNOTINDBEVENT() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_register_second_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(patch("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
@@ -140,7 +140,7 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_create_event.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(patch("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
@@ -150,7 +150,7 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/CreaEvento").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_create_event.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(patch("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","a@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","a@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
