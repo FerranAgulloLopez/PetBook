@@ -1,6 +1,7 @@
 package service.main.service;
 
 import service.main.entity.Event;
+import service.main.entity.InterestSite;
 import service.main.entity.Pet;
 import service.main.entity.User;
 import service.main.entity.input_output.*;
@@ -64,6 +65,15 @@ public interface ServerService {
     public List<Pet> findAllMascotasByUser(String email) throws NotFoundException;
 
     public void removeDataBase();
+
+
+    /*
+    Interest site operations
+     */
+
+    public void createInterestSite(DataInterestSite inputInterestSite) throws BadRequestException, NotFoundException;
+
+    public InterestSite getInterestSite(String name, String localization) throws NotFoundException;
 
 
 }

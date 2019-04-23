@@ -1,6 +1,7 @@
 package service.main.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,122 +11,144 @@ import java.io.Serializable;
 @Document(collection = "interestsites")
 public class InterestSite implements Serializable {
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Id
     private String id;
 
-    private String nombre;
-    private String localizacion;
+    private String name;
+    private String localization;
 
-    private String descripcion;
-    private String tipo;
-    private int numeroVotos;
-    private boolean aceptado;
-    private String emailCreador;
+    private String description;
+    private String type;
+    private int votesNumber;
+    private boolean accepted;
+    private String creatorMail;
 
+    public InterestSite() {}
 
+    public InterestSite(String name,
+                        String localization)
+    {
+        this.name = name;
+        this.localization = localization;
+        makeId();
+    }
 
-    public InterestSite() {
-        nombre = "NULL";
-        localizacion = "NULL";
+    public InterestSite(String name,
+                        String localization,
+                        String description,
+                        String type,
+                        String creatorMail)
+    {
+        this.name = name;
+        this.localization = localization;
+        this.description = description;
+        this.type = type;
+        this.votesNumber = 0;
+        this.accepted = false;
+        this.creatorMail = creatorMail;
 
         makeId();
     }
 
-    public InterestSite(String nombre,
-                        String localizacion)
+    public InterestSite(String name,
+                        String localization,
+                        String description,
+                        String type,
+                        int votesNumber,
+                        boolean accepted,
+                        String creatorMail)
     {
+        this.name = name;
+        this.localization = localization;
+        this.description = description;
+        this.type = type;
+        this.votesNumber = votesNumber;
+        this.accepted = accepted;
+        this.creatorMail = creatorMail;
 
-        this.nombre = "NULL";
-        this.localizacion = "NULL";
-
-
-        setNombre(nombre);
-        setLocalizacion(localizacion);
+        makeId();
     }
 
 
-    public InterestSite(String nombre,
-                        String localizacion,
-                        String descripcion,
-                        String tipo,
-                        int numeroVotos,
-                        boolean aceptado,
-                        String emailCreador)
-    {
-        this.nombre = "NULL";
-        this.localizacion = "NULL";
+    /*
+    Get
+     */
 
+    public String getId() {
+        return id;
+    }
 
+    public String getName() {
+        return name;
+    }
 
-        setNombre(nombre);
-        setLocalizacion(localizacion);
-        setDescripcion(descripcion);
-        setTipo(tipo);
-        setNumeroVotos(numeroVotos);
-        setAceptado(aceptado);
-        setEmailCreador(emailCreador);
+    public String getLocalization() {
+        return localization;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getVotesNumber() {
+        return votesNumber;
+    }
+
+    public boolean isAccepted() {
+        return accepted;
+    }
+
+    public String getCreatorMail() {
+        return creatorMail;
     }
 
 
+    /*
+    Set
+     */
+
+    public void setName(String name) {
+        this.name = name;
+        makeId();
+    }
+
+    public void setLocalization(String localization) {
+        this.localization = localization;
+        makeId();
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setVotesNumber(int votesNumber) {
+        this.votesNumber = votesNumber;
+    }
+
+    public void setAccepted(boolean accepted) {
+        this.accepted = accepted;
+    }
+
+    public void setCreatorMail(String creatorMail) {
+        this.creatorMail = creatorMail;
+    }
+
+
+    /*
+    auxiliary operations
+    */
     private void makeId() {
-        id = nombre + " " + localizacion;
+        id = name + " " + localization;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-        makeId();
-    }
-
-    public String getLocalizacion() {
-        return localizacion;
-    }
-
-    public void setLocalizacion(String localizacion) {
-        this.localizacion = localizacion;
-        makeId();
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-    public int getNumeroVotos() {
-        return numeroVotos;
-    }
-
-    public void setNumeroVotos(int numeroVotos) {
-        this.numeroVotos = numeroVotos;
-    }
-
-    public boolean isAceptado() {
-        return aceptado;
-    }
-
-    public void setAceptado(boolean aceptado) {
-        this.aceptado = aceptado;
-    }
-
-    public String getEmailCreador() {
-        return emailCreador;
-    }
-
-    public void setEmailCreador(String emailCreador) {
-        this.emailCreador = emailCreador;
-    }
 }

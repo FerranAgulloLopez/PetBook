@@ -119,7 +119,7 @@ public class RestApiController {
 
 
     /*
-    Events operations
+    Event operations
      */
 
     @CrossOrigin
@@ -236,6 +236,7 @@ public class RestApiController {
         }
     }
 
+
     /*
     Pets operations
      */
@@ -296,7 +297,6 @@ public class RestApiController {
 
     }
 
-
     @CrossOrigin
     @PatchMapping(value = "/UpdateMascota/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "UPDATE Mascota", notes = "Modifica una mascota. Sirve para modificar los atributos de la mascota. La mascota se identifica por email y nombre.",tags = "Pets")
@@ -336,7 +336,45 @@ public class RestApiController {
 
     }
 
+    /*
+    InterestSite operations
+     */
 
+    @CrossOrigin
+    @PostMapping(value = "/SuggestInterestSite", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Suggest a new interest site", notes = "Saves a new interest site to the database. It receives a json with the necessary parameters: name, localization, description, type and the " +
+            "creator's email.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The interest site already exists"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+
+    })
+    public ResponseEntity<?> createInterestSite(@ApiParam(value="The site parameters", required = true) @RequestBody DataInterestSite inputInterestSite) {
+        try {
+            serverService.createInterestSite(inputInterestSite);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/GetInterestSite", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get one interest site", notes = "Get the interest site identified by the specified name and localization.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The interest site does not exist in the database")
+    })
+    public ResponseEntity<?> getInterestSite(@ApiParam(value="Name of the interest site", required = true, example = "Goddard Veterinary") @RequestParam("name") String name,
+                                             @ApiParam(value="Localization of the interest site", required = true, example = "00") @RequestParam("localization") String localization) {
+        try {
+            return new ResponseEntity<>(serverService.getInterestSite(name,localization), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     /*

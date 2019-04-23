@@ -8,6 +8,7 @@ import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.EventRepository;
+import service.main.repositories.InterestSiteRepository;
 import service.main.repositories.PetRepository;
 import service.main.repositories.UserRepository;
 import service.main.util.SendEmailTLS;
@@ -23,6 +24,7 @@ public class ServerServiceImpl implements ServerService {
     private static final String USERNOTDB = "The user does not exist in the database";
     private static final String EVENTNOTDB = "The event does not exist in the database";
     private static final String PETNOTDB = "The pet does not exist in the database";
+    private static final String SITENOTDB = "The interest site does not exist in the database";
 
     private SendEmailTLS mailsender;
 
@@ -34,6 +36,9 @@ public class ServerServiceImpl implements ServerService {
 
     @Autowired
     private PetRepository mascotaRepository;
+
+    @Autowired
+    private InterestSiteRepository interestSiteRepository;
 
     /*
     User operations
@@ -187,7 +192,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     public List<Pet> findAllMascotasByUser(String email) throws NotFoundException{
-        if(! userRepository.existsById(email)) throw new NotFoundException(USERNOTDB);
+        if(!userRepository.existsById(email)) throw new NotFoundException(USERNOTDB);
 
         List<Pet> mascotas = mascotaRepository.findAll();
         List<Pet> resultado = new ArrayList<>();
@@ -200,9 +205,34 @@ public class ServerServiceImpl implements ServerService {
 
     public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
-        if(! mascotaRepository.existsById(id)) throw new NotFoundException(PETNOTDB);
+        if(!mascotaRepository.existsById(id)) throw new NotFoundException(PETNOTDB);
         mascotaRepository.deleteById(id);
     }
+
+
+    /*
+    Interest Site operations
+     */
+
+    public void createInterestSite(DataInterestSite inputInterestSite) throws BadRequestException, NotFoundException {
+        InterestSite interestSite = inputInterestSite.toInterestSite();
+        if (!userRepository.existsById(inputInterestSite.getCreatorMail())) throw new NotFoundException(USERNOTDB);
+        if (interestSiteRepository.existsById(interestSite.getId())) throw new BadRequestException("The interest site already exists in the database");
+        interestSiteRepository.save(interestSite);
+    }
+
+    public InterestSite getInterestSite(String name, String localization) throws NotFoundException {
+        InterestSite aux = new InterestSite(name,localization);
+        Optional<InterestSite> interestSite = interestSiteRepository.findById(aux.getId());
+        if (!interestSite.isPresent()) throw new NotFoundException(SITENOTDB);
+        return interestSite.get();
+    }
+
+
+
+    /*
+    Test operations TODO remove this section in the future
+     */
 
     public void removeDataBase() {
         userRepository.deleteAll();
