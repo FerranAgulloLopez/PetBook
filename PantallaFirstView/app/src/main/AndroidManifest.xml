@@ -33,17 +33,17 @@
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.PantallaHome" />
+                android:value="com.example.PETBook.MainActivity" />
         </activity>
         <activity android:name="com.example.PETBook.NewEvent" />
         <activity
             android:name="com.example.PETBook.PetsContainer"
             android:label="@string/title_activity_pets"
-            android:parentActivityName="com.example.PETBook.PantallaHome"
+            android:parentActivityName="com.example.PETBook.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.PantallaHome" />
+                android:value="com.example.PETBook.MainActivity" />
         </activity>
         <activity
             android:name="com.example.PETBook.NewPet"
@@ -63,34 +63,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.PETBook.PetsContainer" />
         </activity>
-        <activity
-            android:name="com.example.PETBook.MyCalendar"
-            android:parentActivityName="com.example.PETBook.PantallaHome">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.PetsContainer" />
-        </activity>
-        <activity
-            android:name="com.example.PETBook.MyEvents"
-            android:parentActivityName="com.example.PETBook.PantallaHome">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.PetsContainer" />
-        </activity>
-        <activity
-            android:name="com.example.PETBook.MyPosts"
-            android:parentActivityName="com.example.PETBook.PantallaHome">
-
-            <!-- The meta-data tag is required if you support API level 15 and lower -->
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.PetsContainer" />
-        </activity>
-        <activity android:name="com.example.PETBook.PantallaHome" />
         <activity android:name="com.example.PETBook.PantallaLogSign" />
         <activity android:name="com.example.PETBook.PantallaFirstView">
             <intent-filter>

@@ -48,9 +48,12 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
 
+
+
         // First fragment to display (de momento HomeFragment -perfil-)
-        Fragment fragment= new HomeFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.content_main,fragment).commit();
+        Fragment fragment = new HomeFragment();
+        getSupportFragmentManager().beginTransaction().add(R.id.content_main, fragment).commit();
+
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);

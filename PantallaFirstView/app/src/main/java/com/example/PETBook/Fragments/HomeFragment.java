@@ -1,18 +1,16 @@
 package com.example.PETBook.Fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.PETBook.MyCalendar;
-import com.example.PETBook.MyEvents;
-import com.example.PETBook.MyPosts;
-import com.example.PETBook.PetsContainer;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
 /**
@@ -32,6 +30,12 @@ public class HomeFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+
+    private String username;
+    private String name;
+    private ImageView imatgePerfil;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -75,7 +79,28 @@ public class HomeFragment extends Fragment {
         getActivity().setTitle("Mi perfil");
 
         // De momento layout activity_pantalla_home
-        return inflater.inflate(R.layout.activity_pantalla_home, container, false);
+
+
+        View MyView = inflater.inflate(R.layout.activity_pantalla_home, container, false);
+
+
+         /*ImageView imageProfile = findViewById(R.id.imageView4);
+        imatgePerfil.setImageResource(R.drawable.imatge_defecte);
+        imageProfile = imatgePerfil;
+
+        TextView usern = findViewById(R.id.textView5);
+        username = PantallaLogSign.username;
+        usern.setText(username);
+        /*TextView nameus = findViewById(R.id.textView5);
+        nameus.setText(name);*/
+
+
+        TextView usuari = MyView.findViewById(R.id.username);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        usuari.setText(su.getEmail());
+
+
+        return MyView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

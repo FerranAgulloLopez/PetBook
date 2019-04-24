@@ -17,7 +17,6 @@ import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EventInfo;
 import com.example.PETBook.Models.EventModel;
-import com.example.PETBook.MyEvents;
 import com.example.PETBook.NewEvent;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
@@ -204,5 +203,8 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
             e.printStackTrace();
         }
     }
+
+
+
 
 }
