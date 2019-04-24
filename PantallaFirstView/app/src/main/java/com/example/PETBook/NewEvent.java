@@ -188,7 +188,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             String fechaHora = transformacionFechaHora();
             JSONObject jsonToSend = new JSONObject();
             try {
-                jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion)); //No recibe el parametro por backend
+                jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion));
                 jsonToSend.accumulate("descripcion", descripcion);
                 jsonToSend.accumulate("fecha", fechaHora); //2019-05-24T19:13:00.000Z formato fecha
                 jsonToSend.accumulate("publico", pubOpriv);
