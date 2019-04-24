@@ -13,15 +13,13 @@ import java.util.Calendar;
 import android.widget.DatePicker;
 import android.app.DatePickerDialog;
 import java.text.SimpleDateFormat;
-
-import com.example.PETBook.Controllers.AsyncResult;
 import com.example.pantallafirstview.R;
+import com.example.PETBook.Controllers.AsyncResult;
 import java.util.Locale;
 import android.util.Patterns;
-
-import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
 import android.widget.Toast;
+import java.util.concurrent.ExecutionException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,8 +33,6 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
     private TextInputLayout textInputPassword2;
     private TextInputLayout textInputBirthday;
     private TextInputLayout textInputPostalCode;
-
-    private EditText inputBirthday;
 
     private Button   buttonSignIn;
 
@@ -57,8 +53,7 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
 
         buttonSignIn   = (Button) findViewById(R.id.signInButton);
 
-        inputBirthday  = (EditText) findViewById(R.id.birthdayInput);
-        inputBirthday.setOnClickListener(new View.OnClickListener() {
+        textInputBirthday.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new DatePickerDialog(PantallaSignUp.this, date, calendario
@@ -91,21 +86,22 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
 
     private void actualizarInput() {
 /*
-        String formatoDeFecha = "dd/MM/yy"; //In which you need put here
-        Locale spanish = new Locale("es", "ES");
-        SimpleDateFormat sdf = new SimpleDateFormat(formatoDeFecha, spanish);
+     String formatoDeFecha = "dd/MM/yy"; //In which you need put here
+     Locale spanish = new Locale("es", "ES");
+     SimpleDateFormat sdf = new SimpleDateFormat(formatoDeFecha, spanish);
 
-        inputBirthday.setText(sdf.format(calendario.getTime()));
+     inputBirthday.setText(sdf.format(calendario.getTime()));
 */
         String formatoDeFecha = "dd/MM/yy"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(formatoDeFecha, Locale.US);
 
-        inputBirthday.setText(sdf.format(calendario.getTime()));
+        textInputBirthday.getEditText().setText(sdf.format(calendario.getTime()));
     }
 
     private boolean validateName(String name) {
-
         Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+        textInputName.setErrorTextAppearance(R.style.text_error);
+        textInputName.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_wrong24dp,0);
         if (name.isEmpty()) {
             textInputName.setError("Please enter your first name");
             return false;
@@ -116,15 +112,17 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
             textInputName.setError("Please enter a valid name");
             return false;
         } else {
-            textInputName.setErrorEnabled(false);
+            textInputName.setErrorTextAppearance(R.style.text_success);
+            textInputName.setError(" ");
+            textInputName.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_success24dp,0);
             return true;
         }
     }
 
     private boolean validateSurnames(String surnames) {
-
         Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
-
+        textInputSurnames.setErrorTextAppearance(R.style.text_error);
+        textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_wrong24dp,0);
         if (surnames.isEmpty()) {
             textInputSurnames.setError("Please enter your last name");
             return false;
@@ -135,13 +133,16 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
             textInputSurnames.setError("Please enter a valid last name");
             return false;
         } else {
-            textInputSurnames.setErrorEnabled(false);
+            textInputSurnames.setErrorTextAppearance(R.style.text_success);
+            textInputSurnames.setError(" ");
+            textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_success24dp,0);
             return true;
         }
     }
 
     private boolean validateEmail(String email) {
-
+        textInputMail.setErrorTextAppearance(R.style.text_error);
+        textInputMail.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_wrong24dp,0);
         if (email.isEmpty()) {
             textInputMail.setError("Please enter your email address");
             return false;
@@ -149,15 +150,16 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
             textInputMail.setError("Please enter a valid email address");
             return false;
         } else {
-            textInputMail.setErrorEnabled(false);
+            textInputMail.setErrorTextAppearance(R.style.text_success);
+            textInputMail.setError(" ");
+            textInputMail.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_success24dp,0);
             return true;
         }
     }
 
     private boolean validatePasswords(String password1, String password2) {
-
         boolean passwords_ok = false;
-
+        textInputPassword1.setErrorTextAppearance(R.style.text_error);
         if (password1.isEmpty()) {
             textInputPassword1.setError("Please enter your password");
             passwords_ok = false;
@@ -165,9 +167,11 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
             textInputPassword1.setError("Password too short");
             passwords_ok = false;
         } else {
-            textInputPassword1.setErrorEnabled(false);
+            textInputPassword1.setErrorTextAppearance(R.style.text_success);
+            textInputPassword1.setError(" ");
         }
 
+        textInputPassword2.setErrorTextAppearance(R.style.text_error);
         if (password2.isEmpty()) {
             textInputPassword2.setError("Please retype your password");
             passwords_ok = false;
@@ -175,10 +179,19 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
             textInputPassword2.setError("Confirm password too short");
             passwords_ok = false;
         } else {
-            textInputPassword2.setErrorEnabled(false);
+            textInputPassword2.setErrorTextAppearance(R.style.text_success);
+            textInputPassword2.setError(" ");
             if (password1.equals(password2)) {
+                //textInputPassword1.getEditText().setPadding(0,0,0,0);
+                //textInputPassword2.getEditText().setPadding(0,0,0,0);
+                textInputPassword1.setErrorTextAppearance(R.style.text_success);
+                textInputPassword1.setError(" ");
+                textInputPassword2.setErrorTextAppearance(R.style.text_success);
+                textInputPassword2.setError(" ");
                 passwords_ok = true;
             } else {
+                textInputPassword1.setErrorTextAppearance(R.style.text_error);
+                textInputPassword2.setErrorTextAppearance(R.style.text_error);
                 textInputPassword1.setError("The password and its confirm are not the same");
                 textInputPassword2.setError("The password and its confirm are not the same");
                 passwords_ok = false;
@@ -189,27 +202,34 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
     }
 
     private boolean validatePostalCode(String postalCode) {
-
         Pattern patron = Pattern.compile("^[0-5][1-9]{3}[0-9]$");
-
+        textInputPostalCode.setErrorTextAppearance(R.style.text_error);
+        textInputPostalCode.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_wrong24dp,0);
         if (postalCode.isEmpty()) {
             textInputPostalCode.setError("Please enter your postal code");
             return false;
         } else if (!patron.matcher(postalCode).matches()) {
-            textInputPostalCode.setError("postal Code is not valid");
+            textInputPostalCode.setError("Postal Code is not valid");
             return false;
         } else {
-            textInputPostalCode.setErrorEnabled(false);
+            textInputPostalCode.setErrorTextAppearance(R.style.text_success);
+            textInputPostalCode.setError(" ");
+            textInputPostalCode.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_success24dp,0);
             return true;
         }
     }
 
     private boolean validateBirthday(String birthday) {
+        textInputBirthday.setErrorTextAppearance(R.style.text_error);
         if (birthday.isEmpty()) {
             textInputBirthday.setError("Please enter your birthday");
+            textInputBirthday.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_wrong24dp,0);
+            textInputBirthday.getEditText().setCompoundDrawablePadding(10);
             return false;
         } else {
-            textInputBirthday.setErrorEnabled(false);
+            textInputBirthday.setErrorTextAppearance(R.style.text_success);
+            textInputBirthday.setError(" ");
+            textInputBirthday.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_success24dp,0);
             return true;
         }
     }
@@ -252,20 +272,30 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
 
             Conexion con = new Conexion(this);
             con.execute("http://10.4.41.146:9999/ServerRESTAPI/RegisterUser/", "POST", jsonToSend.toString());
-
-
-
-
-            Toast.makeText(this, "Registrado correctamente", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, PantallaLogSign.class);
-            startActivity(intent);
         }
     }
 
     @Override
     public void OnprocessFinish(JSONObject output) {
-
-
-
+        if (output != null) {
+            try {
+                int response = output.getInt("code");
+                if (response == 200) {
+                    Toast.makeText(this, "Registrado correctamente", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, PantallaLogSign.class);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this, "ERRORRRRRR", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, PantallaLogSign.class);
+                    startActivity(intent);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast toast = Toast.makeText(this, "El server no funciona", Toast.LENGTH_LONG);
+            toast.show();
+        }
     }
 }
+
