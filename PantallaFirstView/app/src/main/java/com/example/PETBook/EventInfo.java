@@ -129,7 +129,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             if (json.getInt("code") == 200) {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
                 Toast.makeText(this, "Evento correctamente eliminado", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, MyEvents.class);
+                Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");

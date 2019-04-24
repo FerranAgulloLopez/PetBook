@@ -24,12 +24,14 @@ import com.example.PETBook.Fragments.MyCalendarFragment;
 import com.example.PETBook.Fragments.MyEventsFragment;
 import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.PETBook.Fragments.MyPostsFragment;
+import com.example.PETBook.Fragments.MyProfileFragment;
 import com.example.PETBook.Fragments.PetInfoFragment;
 import com.example.pantallafirstview.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
-                            , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener {
+                            , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener
+                            , MyProfileFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +109,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
             fragmentSeleccionado = true;
+        } else if (id == R.id.nav_profile) {
+                myFragment = new MyProfileFragment();
+                fragmentSeleccionado = true;
         } else if (id == R.id.nav_events) {
             myFragment = new MyEventsFragment();
             fragmentSeleccionado = true;
