@@ -25,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -189,6 +190,13 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                     e.setFecha(transformacionFechaHora(evento.getString("fecha")));
                     e.setLocalizacion(evento.getInt("localizacion"));
                     e.setPublico(evento.getBoolean("publico"));
+                    JSONArray m = evento.getJSONArray("participantes");
+                    ArrayList<String> miembros = new ArrayList<String>();
+                    for(int j = 0; j < m.length(); ++j){
+                        miembros.add(m.getString(j));
+                    }
+                    e.setMiembros(miembros);
+                    e.setCreador(evento.getString("creador"));
                     model.add(e);
                 }
                 eventosUser = new EventAdapter(getActivity(), model);

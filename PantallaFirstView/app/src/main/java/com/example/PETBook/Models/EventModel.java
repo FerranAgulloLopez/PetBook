@@ -1,6 +1,7 @@
 package com.example.PETBook.Models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class EventModel implements Serializable {
 
@@ -10,6 +11,8 @@ public class EventModel implements Serializable {
     private String titulo;
     private String descripcion;
     private boolean publico;
+    private ArrayList<String> miembros;
+    private String creador;
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
@@ -36,4 +39,12 @@ public class EventModel implements Serializable {
     public void setPublico(boolean publico){ this.publico = publico; }
 
     public boolean getPublic(){ return publico; }
+
+    public void setMiembros(ArrayList<String> miembros){ this.miembros = miembros; }
+
+    public ArrayList<String> getMiembros(){ return miembros; }
+
+    public void setCreador(String creador){ this.creador = creador; }
+
+    public String getCreador(){ return creador; }
 }

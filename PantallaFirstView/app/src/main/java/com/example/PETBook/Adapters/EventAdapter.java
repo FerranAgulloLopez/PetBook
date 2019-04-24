@@ -44,11 +44,15 @@ public class EventAdapter extends BaseAdapter {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.event_design,null);
         }
-        TextView localizacion = (TextView) convertView.findViewById(R.id.e_localizacion);
+        TextView titulo = (TextView) convertView.findViewById(R.id.e_titulo);
         TextView fecha = (TextView) convertView.findViewById(R.id.e_fecha);
+        TextView localizacion = (TextView) convertView.findViewById(R.id.e_localizacion);
+        TextView miembros = (TextView) convertView.findViewById(R.id.e_miembros);
 
-        localizacion.setText(events.get(position).getTitulo());
+        titulo.setText(events.get(position).getTitulo());
         fecha.setText(events.get(position).getFecha());
+        localizacion.setText(String.format("%d",events.get(position).getLocalizacion()));
+        miembros.setText(String.format("%d",events.get(position).getMiembros().size()));
         return convertView;
     }
 
