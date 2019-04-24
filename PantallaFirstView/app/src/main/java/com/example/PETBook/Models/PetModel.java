@@ -10,14 +10,18 @@ public class PetModel {
     private String sexo;
     private String descripcion;
     private String foto;
+    private String color;
+    private String edad;
 
-    public PetModel(String id, String name, String especie, String raza, String sexo, String descripcion){
+    public PetModel(String id, String name, String especie, String raza, String sexo, String descripcion, String color, String edad){
         this.id = id;
         this.nombre = name;
         this.especie = especie;
         this.raza = raza;
         this.sexo = sexo;
         this.descripcion = descripcion;
+        this.edad = edad;
+        this.color = color;
 
     }
     public String getId() {
@@ -82,5 +86,20 @@ public class PetModel {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getEdad() {
+        return edad;
+    }
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public void setEdad(String edad) {
+        this.edad = edad;
     }
 }

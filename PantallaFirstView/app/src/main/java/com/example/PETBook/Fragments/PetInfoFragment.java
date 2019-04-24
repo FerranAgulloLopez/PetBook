@@ -54,7 +54,7 @@ public class PetInfoFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_pets, container, false);
 
 
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+        //TextView textView = (TextView) rootView.findViewById(R.id.section_label);
         TextView name = rootView.findViewById(R.id.petName);
         TextView age = rootView.findViewById(R.id.petAge);
         TextView sex = rootView.findViewById(R.id.petSex);
@@ -78,7 +78,7 @@ public class PetInfoFragment extends Fragment {
             sex.setText(petSex);
             type.setText(petType);
             color.setText(petColor);
-            race.setText("petrace" + petRace);
+            race.setText(petRace);
             description.setText(petDescription);
 
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));

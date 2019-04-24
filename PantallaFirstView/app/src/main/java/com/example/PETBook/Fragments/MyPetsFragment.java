@@ -220,7 +220,9 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
                 String raza = jsonObjectHijo.getString("raza");
                 String sexo = jsonObjectHijo.getString("sexo");
                 String descripcion = jsonObjectHijo.getString("descripcion");
-                pets.add(new PetModel(id, nombre, especie, raza, sexo, descripcion));
+                String edad = jsonObjectHijo.getString("edad");
+                String color = jsonObjectHijo.getString("color");
+                pets.add(new PetModel(id, nombre, especie, raza, sexo, descripcion, color, edad));
             } catch (JSONException e) {
                 Log.e("Parser JSON", e.toString());
             }

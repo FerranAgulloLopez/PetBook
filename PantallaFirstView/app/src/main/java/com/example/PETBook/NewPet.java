@@ -16,8 +16,6 @@ import com.example.pantallafirstview.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.ExecutionException;
-
 public class NewPet extends AppCompatActivity implements AsyncResult {
 
 
@@ -26,8 +24,8 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
     private Spinner sexo;
     private EditText color;
     private EditText race;
-    private EditText type;
-    private EditText observations;
+    private EditText especie;
+    private EditText description;
     private Button buttonAddPet;
     private TextView textNM;
 
@@ -37,8 +35,8 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
     String sexoPet;
     String colorPet;
     String racePet;
-    String typePet;
-    String obsPet;
+    String especiePet;
+    String descPet;
 
 
     private String usuario;
@@ -56,10 +54,10 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
         nombremascota = findViewById(R.id.Name);
         edad = findViewById(R.id.Age);
         sexo = findViewById(R.id.Sex);
-        color = findViewById(R.id.Type);
+        color = findViewById(R.id.Color);
         race = findViewById(R.id.Race);
-        type = findViewById(R.id.Race);
-        observations = findViewById(R.id.Observations);
+        especie = findViewById(R.id.Type);
+        description = findViewById(R.id.Observations);
         buttonAddPet = findViewById(R.id.buttonAddPet);
         textNM = findViewById(R.id.textNM);
 
@@ -84,8 +82,8 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
         sexoPet = sexo.getSelectedItem().toString();
         colorPet = color.getText().toString();
         racePet = race.getText().toString();
-        typePet = type.getText().toString();
-        obsPet = observations.getText().toString();
+        especiePet = especie.getText().toString();
+        descPet = description.getText().toString();
 
         if (validateName()) {
             /* Juntar los datos en un Json para ponerlo en el body */
@@ -94,6 +92,17 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
             try {
                 jsonToSend.accumulate("email", usuario);
                 jsonToSend.accumulate("nombre", nombrePet);
+                jsonToSend.accumulate("color", colorPet);
+                jsonToSend.accumulate("descripcion", descPet);
+                jsonToSend.accumulate("edad", edadPet);
+                jsonToSend.accumulate("especie", especiePet);
+                jsonToSend.accumulate("raza", racePet);
+                jsonToSend.accumulate("sexo", sexoPet);
+
+                //jsonToSend.accumulate("foto", fotoPet);
+
+
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
