@@ -118,6 +118,43 @@ public class RestApiController {
     }
 
 
+    @CrossOrigin
+    @GetMapping(value = "/getPicture/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get the profile picture of the user identified by email", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database or does not have profile picture")
+    })
+    public ResponseEntity<?> getPictureUser(@PathVariable String email) {
+        try {
+            return new ResponseEntity<>(serverService.getProfilePicture(email), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @CrossOrigin
+    @PostMapping(value = "/setPicture/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Set the profile picture of the user identified by email", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+    })
+    public ResponseEntity<?> setPictureUser(@PathVariable String email, @RequestBody String picture)
+    {
+        try {
+            serverService.setProfilePicture(email, picture);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
+
+
     /*
     Event operations
      */

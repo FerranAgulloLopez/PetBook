@@ -30,6 +30,10 @@ public class User implements Serializable {
     private String dateOfBirth;
     private String postalCode;
     private boolean mailconfirmed;
+    private String foto;    // Esta encodeado en Base64(byte[]) y luego pasado a String[].
+                            // Para conseguir la foto, pasar a Base64(byte[]) y luego convertir a file.
+                            // File   -> byte[] -> String[]
+                            // String[] -> byte[] -> File
 
 
     public User() {}
@@ -37,6 +41,17 @@ public class User implements Serializable {
     public User(String email, String password) {
         this.email = email;
         this.password = hasher.hash(password.toCharArray());
+    }
+
+    public User(String email, String password, String firstName, String secondName, String dateOfBirth, String postalCode, boolean mailconfirmed, String foto) {
+        this.email = email;
+        this.password = hasher.hash(password.toCharArray());
+        this.firstName = firstName;
+        this.secondName = secondName;
+        this.dateOfBirth = dateOfBirth;
+        this.postalCode = postalCode;
+        this.mailconfirmed = mailconfirmed;
+        this.foto = foto;
     }
 
     public User(String email, String password, String firstName, String secondName, String dateOfBirth, String postalCode, boolean mailconfirmed) {
@@ -80,6 +95,8 @@ public class User implements Serializable {
         return mailconfirmed;
     }
 
+    public String getFoto() { return foto; }
+
 
 
     /*
@@ -109,6 +126,9 @@ public class User implements Serializable {
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
     }
+
+    public void setFoto(String foto) { this.foto = foto; }
+
 
 
 

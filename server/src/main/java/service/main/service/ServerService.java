@@ -76,4 +76,7 @@ public interface ServerService {
     public InterestSite getInterestSite(String name, String localization) throws NotFoundException;
 
 
+    public String getProfilePicture(String email) throws NotFoundException;
+
+    public void setProfilePicture(String email, String picture) throws NotFoundException;
 }

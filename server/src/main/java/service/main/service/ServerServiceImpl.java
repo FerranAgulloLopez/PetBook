@@ -25,6 +25,7 @@ public class ServerServiceImpl implements ServerService {
     private static final String EVENTNOTDB = "The event does not exist in the database";
     private static final String PETNOTDB = "The pet does not exist in the database";
     private static final String SITENOTDB = "The interest site does not exist in the database";
+    private static final String NOTPICTURE = "The user does not have profile picture in the database";
 
     private SendEmailTLS mailsender;
 
@@ -98,6 +99,28 @@ public class ServerServiceImpl implements ServerService {
             user.setDateOfBirth(userUpdated.getDateOfBirth());
             user.setPostalCode(userUpdated.getPostalCode());
             userRepository.save(user);
+        }
+    }
+
+
+
+    @Override
+    public String getProfilePicture(String email) throws NotFoundException {
+        Optional<User> user = userRepository.findById(email);
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+        else {
+            String Picture = user.get().getFoto();
+            if (Picture == null) throw new NotFoundException(NOTPICTURE);
+            return Picture;
+        }
+    }
+
+    @Override
+    public void setProfilePicture(String email, String picture) throws NotFoundException {
+        Optional<User> user = userRepository.findById(email);
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+        else {
+            user.get().setFoto(picture);
         }
     }
 
@@ -227,6 +250,7 @@ public class ServerServiceImpl implements ServerService {
         if (!interestSite.isPresent()) throw new NotFoundException(SITENOTDB);
         return interestSite.get();
     }
+
 
 
 
