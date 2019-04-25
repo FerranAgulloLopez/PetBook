@@ -1,7 +1,9 @@
 package com.example.PETBook;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -120,7 +122,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private boolean validateLocation(String loc){
         if(loc.isEmpty()) {
-            Localizacion.setError("Introduzca la localización del evento");
+            Localizacion.setError("Campo obligatorio");
             return false;
         }
         else {
@@ -131,7 +133,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private boolean validateFecha(String date){
         if(date.isEmpty()) {
-            Fecha.setError("Introduzca la fecha del evento");
+            Fecha.setError("Campo obligatorio");
             return false;
         }
         else {
@@ -142,7 +144,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private boolean validateHora(String hora){
         if(hora.isEmpty()) {
-            Hora.setError("Introduzca la hora del evento");
+            Hora.setError("Campo obligatorio");
             return false;
         }
         else {
@@ -153,7 +155,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private boolean validateTitulo(String titulo){
         if(titulo.isEmpty()){
-            Titulo.setError("Introduzca el título del evento");
+            Titulo.setError("Campo obligatorio");
             return false;
         }
         else{
@@ -225,7 +227,18 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
-                Toast.makeText(this, "El evento ya existe", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder error = new AlertDialog.Builder(NewEvent.this);
+                error.setMessage("Evento existente con los mismos datos")
+                        .setCancelable(false)
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog errorE = error.create();
+                errorE.setTitle("Eliminar evento");
+                errorE.show();
             }
         } catch (Exception e) {
             e.printStackTrace();

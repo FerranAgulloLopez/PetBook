@@ -1,5 +1,7 @@
 package com.example.PETBook;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -59,7 +61,24 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteEvent();
+                AlertDialog.Builder error = new AlertDialog.Builder(EventInfo.this);
+                error.setMessage("Esta seguro que quiere eliminar el evento?")
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deleteEvent();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog errorE = error.create();
+                errorE.setTitle("Eliminar evento");
+                errorE.show();
             }
         });
 
@@ -78,7 +97,8 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             System.out.print(Titulo + "\n");
             System.out.print(Descripcion + "\n");
             System.out.print(Localizacion + "\n");
-            System.out.print(Fecha + "\n");
+            System.out.print(Fecha[0] + "\n");
+            System.out.print(Fecha[1] + "\n");
             editTitle.setText(Titulo);
             editDescription.setText(Descripcion);
             editLoc.setText(String.valueOf(Localizacion));
@@ -106,7 +126,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
 
         JSONObject jsonToSend = new JSONObject();
         try {
-            jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion));
+            jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion)/10); //cambiar cuando se implemente MAPS
             jsonToSend.accumulate("descripcion", descripcion);
             jsonToSend.accumulate("fecha", Fecha); //2019-05-24T19:13:00.000Z formato fecha
             jsonToSend.accumulate("publico", publico);
@@ -130,6 +150,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
                 Toast.makeText(this, "Evento correctamente eliminado", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, MainActivity.class);
+                //intent.putExtra("fragment", "events");
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
