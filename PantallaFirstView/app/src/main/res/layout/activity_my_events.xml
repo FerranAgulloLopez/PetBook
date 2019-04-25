@@ -8,11 +8,12 @@
 
     <ListView
         android:id="@+id/list_eventos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:footerDividersEnabled="true"
         android:headerDividersEnabled="true"
-        android:paddingLeft="0dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
