@@ -25,6 +25,9 @@ public class ServerServiceImpl implements ServerService {
     private static final String EVENTNOTDB = "The event does not exist in the database";
     private static final String PETNOTDB = "The pet does not exist in the database";
     private static final String SITENOTDB = "The interest site does not exist in the database";
+    private static final String NOTPICTURE = "The user does not have profile picture in the database";
+    private static final String USER_NOT_IN_EVENT = "The user does not participate in the event";
+
 
     private SendEmailTLS mailsender;
 
@@ -101,11 +104,33 @@ public class ServerServiceImpl implements ServerService {
         }
     }
 
+
+
+    @Override
+    public String getProfilePicture(String email) throws NotFoundException {
+        Optional<User> user = userRepository.findById(email);
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+        else {
+            String Picture = user.get().getFoto();
+            if (Picture == null) throw new NotFoundException(NOTPICTURE);
+            return Picture;
+        }
+    }
+
+    @Override
+    public void setProfilePicture(String email, String picture) throws NotFoundException {
+        Optional<User> user = userRepository.findById(email);
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+        else {
+            user.get().setFoto(picture);
+        }
+    }
+
     /*
     Event operations
      */
 
-    public void creaEvento(DataEvent inputEvent) throws BadRequestException, NotFoundException {
+    public void creaEvento(DataEventUpdate inputEvent) throws BadRequestException, NotFoundException {
 
         String usermail = inputEvent.getUserEmail();
         Optional<User> user = userRepository.findById(usermail);
@@ -135,10 +160,15 @@ public class ServerServiceImpl implements ServerService {
     public void updateEvento(String email, DataEventUpdate evento) throws NotFoundException {
         Localization localizacion = new Localization(evento.getCoordenadas(),evento.getRadio());
 
-        Event evento2 = new Event(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getParticipantes());
+        Event evento2 = new Event(email, localizacion.getId(), evento.getFecha(), evento.getTitulo(), evento.getDescripcion(), evento.isPublico());
         if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException(EVENTNOTDB);
-        eventoRepository.deleteById(evento2.getId());
-        eventoRepository.insert(evento2);
+
+        Optional<Event> optEvent = eventoRepository.findById(evento2.getId());
+        Event event3 = optEvent.get();
+        event3.setDescripcion(evento2.getDescripcion());
+        event3.setPublico(evento2.getPublico());
+        event3.setTitulo(evento2.getTitulo());
+        eventoRepository.save(event3);
     }
 
     public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException {
@@ -148,6 +178,19 @@ public class ServerServiceImpl implements ServerService {
         if(!eventoRepository.existsById(event.getId())) throw new NotFoundException(EVENTNOTDB);
 
         eventoRepository.addParticipant(usermail,event.getId());
+    }
+
+    public void removeEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException {
+        if(!userRepository.existsById(usermail)) throw new NotFoundException(USERNOTDB);
+        Localization localizacion = new Localization(coordinates,radius);
+        Event evento = new Event(creatormail,localizacion.getId(),fecha);
+        if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException(EVENTNOTDB);
+        Optional<Event> optEvent =  eventoRepository.findById(evento.getId());
+        Event event = optEvent.get();
+        if(! event.userParticipates(usermail)) throw new BadRequestException(USER_NOT_IN_EVENT);
+        event.removeUser(usermail);
+
+        eventoRepository.save(event);
     }
 
 
@@ -243,6 +286,7 @@ public class ServerServiceImpl implements ServerService {
         interestSite.addVote(userEmail);
         interestSiteRepository.save(interestSite);
     }
+
 
 
 

@@ -1,45 +1,44 @@
 package service.main.entity.input_output;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-import service.main.entity.User;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+        import java.io.Serializable;
+        import java.util.Date;
 
 public class DataEventUpdate implements Serializable {
 
-    //private String userEmail;
-    private Integer coordenadas;
-    private Integer radio;
+    private String userEmail;
     private Date fecha;
+    private int coordenadas;
+    private int radio;
 
+    private String titulo;
     private String descripcion;
-    private Boolean publico;
-    private List<String> participantes;
+    private boolean publico;
 
-    public Integer getCoordenadas() {
-        return coordenadas;
+    public String getUserEmail() {
+        return userEmail;
     }
 
     public Date getFecha() {
         return fecha;
     }
 
+    public Integer getCoordenadas() {
+        return coordenadas;
+    }
+
     public Integer getRadio() {
         return radio;
+    }
+
+    public String getTitulo() {
+        return titulo;
     }
 
     public String getDescripcion() {
         return descripcion;
     }
 
-    public Boolean getPublico() {
+    public boolean isPublico() {
         return publico;
-    }
-
-    public List<String> getParticipantes() {
-        return participantes;
     }
 }

@@ -93,7 +93,7 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
         fileWriter.close();
 
 
-        this.mockMvc.perform(patch("/ServerRESTAPI/UpdateMascota/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content((read_file(path + "update_mascota_operation/mascota.json"))))
+        this.mockMvc.perform(put("/ServerRESTAPI/UpdateMascota/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content((read_file(path + "update_mascota_operation/mascota.json"))))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/GetMascota/foo@mail.com?nombreMascota=Messi"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "update_mascota_operation/output_update_mascota.json")));
@@ -102,7 +102,7 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
 
     @Test
     public void updateMascotaPeroNoExisteix() throws Exception {
-        this.mockMvc.perform(patch("/ServerRESTAPI/UpdateMascota/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "update_mascota_operation/input_update_mascota.json")))
+        this.mockMvc.perform(put("/ServerRESTAPI/UpdateMascota/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "update_mascota_operation/input_update_mascota.json")))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
