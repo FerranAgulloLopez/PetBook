@@ -4,42 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 
 //-----------
-import android.annotation.SuppressLint;
 
-import android.support.v7.app.AppCompatActivity;
-
-import android.content.DialogInterface;
-import android.os.Build;
-import android.os.StrictMode;
-import android.support.annotation.RequiresApi;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
-import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
-import android.view.MenuItem;
-
-
-
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 
 //-------------
@@ -49,17 +26,15 @@ import com.example.PETBook.Adapters.PetAdapters;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.PetModel;
-import com.example.PETBook.NewEvent;
 import com.example.PETBook.NewPet;
+import com.example.PETBook.PetInfo;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,10 +54,11 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
     private String mParam1;
     private String mParam2;
 
-    private PetAdapters mSectionsPagerAdapter;
-    private List<PetModel> pets;
-    private ViewPager mViewPager;
+    private PetAdapters petsUser;
+    private ArrayList<PetModel> pets;
+    private View MyView;
     private OnFragmentInteractionListener mListener;
+    private ListView lista;
 
     public MyPetsFragment() {
         // Required empty public constructor
@@ -127,14 +103,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
         getActivity().setTitle("Mis mascotas");
 
 
-        FloatingActionButton fab = MyView.findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), NewPet.class);
-                startActivity(intent);
-            }
-        });
+
 
         Toolbar toolbar = (Toolbar) MyView.findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
@@ -153,9 +122,25 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
 
         Conexion con = new Conexion(this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser/" + us,"GET", null);
-
-
-        return MyView;
+            lista = MyView.findViewById(R.id.list_pets);
+            lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    PetModel petmodel = pets.get(position);
+                    Intent intent = new Intent(getActivity(), PetInfo.class);
+                    intent.putExtra("pet", petmodel);
+                    startActivity(intent);
+                }
+            });
+        FloatingActionButton fab = MyView.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), NewPet.class);
+                startActivity(intent);
+            }
+        });
+            return MyView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -200,57 +185,42 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
 
     @Override
     public void OnprocessFinish(JSONObject json) {
-
-        JSONArray jsonArray = null;
         try {
-            jsonArray = (JSONArray) json.get("array");
-        } catch (JSONException e) {
+            if (json.getInt("code") == 200) {
+                pets = new ArrayList<PetModel>();
+                JSONArray jsonArray = json.getJSONArray("array");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObjectHijo = jsonArray.getJSONObject(i);
+                    PetModel petModel = new PetModel();
+
+                    petModel.setId(jsonObjectHijo.getString("id"));
+                    petModel.setNombre(jsonObjectHijo.getString("nombre"));
+                    petModel.setEspecie(jsonObjectHijo.getString("especie"));
+                    petModel.setRaza(jsonObjectHijo.getString("raza"));
+                    petModel.setSexo(jsonObjectHijo.getString("sexo"));
+                    petModel.setDescripcion(jsonObjectHijo.getString("descripcion"));
+                    petModel.setEdad(jsonObjectHijo.getString("edad"));
+                    petModel.setColor(jsonObjectHijo.getString("color"));
+
+                    pets.add(petModel);
+
+                    petsUser = new PetAdapters(getActivity(), pets);
+                    lista = (ListView) MyView.findViewById(R.id.list_pets);
+                    lista.setAdapter(petsUser);
+                    System.out.print(json.getInt("code") + " se muestran correctamente la lista de pets\n");
+
+
+                }
+            }
+            else{
+                System.out.print("El sistema no logra mostrar la lista de pets del creador\n");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        //System.out.println("Aixo es el json: " + jsonArray);
-        //System.out.println("Aqui llego 1");
-
-        for (int i = 0; i < jsonArray.length(); i++)
-        {
-            try {
-                JSONObject jsonObjectHijo = jsonArray.getJSONObject(i);
-                String id = jsonObjectHijo.getString("id");
-                String nombre = jsonObjectHijo.getString("nombre");
-                String especie = jsonObjectHijo.getString("especie");
-                String raza = jsonObjectHijo.getString("raza");
-                String sexo = jsonObjectHijo.getString("sexo");
-                String descripcion = jsonObjectHijo.getString("descripcion");
-                String edad = jsonObjectHijo.getString("edad");
-                String color = jsonObjectHijo.getString("color");
-                pets.add(new PetModel(id, nombre, especie, raza, sexo, descripcion, color, edad));
-            } catch (JSONException e) {
-                Log.e("Parser JSON", e.toString());
-            }
-        }
-
-
-        /*
-
-        !!!!!!!!!!!
-
-        La respuesta habría se podría poner directamente (?)
-        Este layaout es el de fragment_pets.xlm
-
-         */
-
-
-
-
-
-        /*
-
-        mSectionsPagerAdapter = new PetAdapters(getSupportFragmentManager(), pets);
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        */
     }
 
+
 }
+
+
