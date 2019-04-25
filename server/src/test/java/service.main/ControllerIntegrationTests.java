@@ -16,13 +16,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@AutoConfigureMockMvc
+
 public class ControllerIntegrationTests {
 
-    @Autowired
-    protected MockMvc mockMvc;
+
     protected String path = "../testing_files/server/";
 
     private String pathFotos = "../testing_files/Fotos/";
@@ -32,13 +29,6 @@ public class ControllerIntegrationTests {
     // Mascota
     protected String inputFilePath  = pathFotos + "RealMadrid.png";
     protected String outputFilePath = pathFotos + "RealMadrid_prueba.png";
-
-
-    @Before
-    public void ClearDB() throws Exception {
-        this.mockMvc.perform(delete("/ServerRESTAPI/Test/RemoveDatabase"))
-                .andDo(print()).andExpect(status().isOk());
-    }
 
 
 

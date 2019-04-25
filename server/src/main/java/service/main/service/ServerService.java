@@ -43,7 +43,7 @@ public interface ServerService {
 
     public List<Event> findEventsByParticipant(String participantmail) throws NotFoundException;
 
-    public void updateEvento(String email, DataEventUpdate evento) throws NotFoundException;
+    public void updateEvento(DataEventUpdate evento) throws NotFoundException;
 
     public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException;
 
