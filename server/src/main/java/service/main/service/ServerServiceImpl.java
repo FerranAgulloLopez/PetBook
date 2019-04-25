@@ -157,10 +157,10 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
-    public void updateEvento(String email, DataEventUpdate evento) throws NotFoundException {
+    public void updateEvento(DataEventUpdate evento) throws NotFoundException {
         Localization localizacion = new Localization(evento.getCoordenadas(),evento.getRadio());
 
-        Event evento2 = new Event(email, localizacion.getId(), evento.getFecha(), evento.getTitulo(), evento.getDescripcion(), evento.isPublico());
+        Event evento2 = new Event(evento.getUserEmail(), localizacion.getId(), evento.getFecha(), evento.getTitulo(), evento.getDescripcion(), evento.isPublico());
         if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException(EVENTNOTDB);
 
         Optional<Event> optEvent = eventoRepository.findById(evento2.getId());
