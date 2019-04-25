@@ -28,12 +28,14 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
     private Integer Localizacion;
     private String[] Fecha;
     private ArrayList<String> Miembros;
+    private String Creador;
     private TextView txtTitle;
     private TextView txtDescription;
     private TextView txtLoc;
     private TextView txtFecha;
     private TextView txtHora;
     private TextView txtMiembros;
+    private TextView txtCreador;
     private ImageButton editButton;
     private ImageButton deleteButton;
 
@@ -48,6 +50,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
         txtFecha = (TextView) findViewById(R.id.textFecha);
         txtHora = (TextView) findViewById(R.id.textHora);
         txtMiembros = (TextView) findViewById(R.id.textNumPart);
+        txtCreador = (TextView) findViewById(R.id.textCreador);
 
 
         /*editButton = (Button) findViewById(R.id.buttonEditEvent);
@@ -97,6 +100,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             Localizacion = e.getLocalizacion();
             Fecha = e.getFecha().split(" ");
             Miembros = e.getMiembros();
+            Creador = e.getCreador();
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
             System.out.print(Titulo + "\n");
             System.out.print(Descripcion + "\n");
@@ -109,6 +113,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             txtFecha.setText(Fecha[0]);
             txtHora.setText(Fecha[1]);
             txtMiembros.setText(Miembros.size() + " usuarios participarán en este evento");
+            txtCreador.setText("Creado por: " + Creador);
         }
     }
 
