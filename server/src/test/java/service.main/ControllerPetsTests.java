@@ -22,9 +22,9 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
     public void creaYgetMascota() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreaMascota").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_crea.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_crea.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/GetMascota/foo@mail.com?nombreMascota=Messi"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetPet/foo@mail.com?nombreMascota=Messi"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"crea_mascota_operation/output_crea.json")));
     }
 
@@ -32,9 +32,9 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
     public void creaMascotaPeroJaExisteix() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreaMascota").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_crea.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_crea.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreaMascota").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_crea.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_mascota_operation/input_crea.json")))
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
@@ -42,23 +42,23 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
     public void getAllMascotasBySameUser() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getAll_mascotaBySameUser_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreaMascota").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getAll_mascotaBySameUser_operation/input_crea1.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getAll_mascotaBySameUser_operation/input_crea1.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreaMascota").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getAll_mascotaBySameUser_operation/input_crea2.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getAll_mascotaBySameUser_operation/input_crea2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLMascotasByUser/foo@mail.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/getALLPetsByUser/foo@mail.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"getAll_mascotaBySameUser_operation/output_crea.json")));
     }
 
     @Test
     public void getAllMascotasbyUserANDUserDontExist() throws Exception {
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLMascotasByUser/foo@mail.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/getALLPetsByUser/foo@mail.com"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
     public void getMascotaANDMascotaDontExist() throws Exception {
-        this.mockMvc.perform(get("/ServerRESTAPI/GetMascota/foo@mail.com?nombreMascota=Messi"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetPet/foo@mail.com?nombreMascota=Messi"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
@@ -67,9 +67,9 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
     public void updateMascota() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "update_mascota_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreaMascota").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "update_mascota_operation/input_crea.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "update_mascota_operation/input_crea.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/GetMascota/foo@mail.com?nombreMascota=Messi"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetPet/foo@mail.com?nombreMascota=Messi"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "update_mascota_operation/output_crea.json")));
 
 
@@ -93,16 +93,16 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
         fileWriter.close();
 
 
-        this.mockMvc.perform(put("/ServerRESTAPI/UpdateMascota/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content((read_file(path + "update_mascota_operation/mascota.json"))))
+        this.mockMvc.perform(put("/ServerRESTAPI/UpdatePet/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content((read_file(path + "update_mascota_operation/mascota.json"))))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/GetMascota/foo@mail.com?nombreMascota=Messi"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetPet/foo@mail.com?nombreMascota=Messi"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "update_mascota_operation/output_update_mascota.json")));
     }
 
 
     @Test
     public void updateMascotaPeroNoExisteix() throws Exception {
-        this.mockMvc.perform(put("/ServerRESTAPI/UpdateMascota/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "update_mascota_operation/input_update_mascota.json")))
+        this.mockMvc.perform(put("/ServerRESTAPI/UpdatePet/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "update_mascota_operation/input_update_mascota.json")))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
@@ -111,19 +111,19 @@ public class ControllerPetsTests extends ControllerIntegrationTests {
     public void deleteMascota() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_mascota_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreaMascota").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_mascota_operation/input_crea.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_mascota_operation/input_crea.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLMascotasByUser/foo@mail.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/getALLPetsByUser/foo@mail.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"delete_mascota_operation/output_visualiza1.json")));
-        this.mockMvc.perform(delete("/ServerRESTAPI/DeleteMascota/foo@mail.com").param("nombreMascota","Messi"))
+        this.mockMvc.perform(delete("/ServerRESTAPI/DeletePet/foo@mail.com").param("nombreMascota","Messi"))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLMascotasByUser/foo@mail.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/getALLPetsByUser/foo@mail.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"delete_mascota_operation/output_visualiza2.json")));
     }
 
     @Test
     public void deleteMascotaANDMascotaDontExists() throws Exception {
-        this.mockMvc.perform(delete("/ServerRESTAPI/DeleteMascota/foo@mail.com?nombreMascota=Messi").param("nombreMascota","Messi"))
+        this.mockMvc.perform(delete("/ServerRESTAPI/DeletePet/foo@mail.com?nombreMascota=Messi").param("nombreMascota","Messi"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 }
