@@ -121,7 +121,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
 
 
         Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser/" + us,"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLPetsByUser/" + us,"GET", null);
             lista = MyView.findViewById(R.id.list_pets);
             lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override

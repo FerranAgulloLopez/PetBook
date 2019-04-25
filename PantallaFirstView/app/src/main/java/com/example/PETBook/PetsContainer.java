@@ -72,7 +72,7 @@ public class PetsContainer extends AppCompatActivity implements AsyncResult {
 
 
         Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLMascotasByUser/" + us,"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLPetsByUser/" + us,"GET", null);
 
 
 

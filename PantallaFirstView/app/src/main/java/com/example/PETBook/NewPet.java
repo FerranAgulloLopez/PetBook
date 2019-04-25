@@ -110,7 +110,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
             /* Nueva conexion llamando a la funcion del server */
 
             Conexion con = new Conexion(this);
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreaMascota/", "POST", jsonToSend.toString());
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreatePet/", "POST", jsonToSend.toString());
 
 
 

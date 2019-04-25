@@ -206,7 +206,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             /* Nueva conexion llamando a la funcion del server */
 
             Conexion con = new Conexion(this);
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreaEvento/", "POST", jsonToSend.toString());
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreateEvent/", "POST", jsonToSend.toString());
 
 
         }
