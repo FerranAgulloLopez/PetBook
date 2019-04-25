@@ -222,8 +222,10 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             if (json.getInt("code") == 200) {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
                 Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
+                Bundle enviar = new Bundle();
                 Intent intent = new Intent(this, MainActivity.class);
-                //intent.putExtra("fragment", "events");
+                enviar.putString("fragment","events");
+                intent.putExtras(enviar);
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
@@ -237,7 +239,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                             }
                         });
                 AlertDialog errorE = error.create();
-                errorE.setTitle("Eliminar evento");
+                errorE.setTitle("Evento existente");
                 errorE.show();
             }
         } catch (Exception e) {

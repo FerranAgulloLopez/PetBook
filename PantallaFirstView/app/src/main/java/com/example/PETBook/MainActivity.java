@@ -53,10 +53,39 @@ public class MainActivity extends AppCompatActivity
 
 
         // First fragment to display (de momento HomeFragment -perfil-)
-        Fragment fragment = new HomeFragment();
-        getSupportFragmentManager().beginTransaction().add(R.id.content_main, fragment).commit();
-
-
+        Fragment fragment = null;
+        Bundle recibir = this.getIntent().getExtras();
+        if (recibir != null){
+            String fragType = recibir.getString("fragment");
+            if(fragType.equals("events")) {
+                fragment = new MyEventsFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if(fragType.equals("pets")) {
+                fragment = new MyPetsFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if(fragType.equals("profile")){
+                fragment = new MyProfileFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if(fragType.equals("posts")){
+                fragment = new MyPostsFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if (fragType.equals("calendar")){
+                fragment = new MyCalendarFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else {
+                fragment = new HomeFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+        }
+        else{
+            fragment = new HomeFragment();
+            getSupportFragmentManager().beginTransaction().add(R.id.content_main, fragment).commit();
+        }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 

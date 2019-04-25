@@ -150,7 +150,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
                 Toast.makeText(this, "Evento correctamente eliminado", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, MainActivity.class);
-                //intent.putExtra("fragment", "events");
+                intent.putExtra("fragment", "events");
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
