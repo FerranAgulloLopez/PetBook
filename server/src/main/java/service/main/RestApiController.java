@@ -218,16 +218,15 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PutMapping(value = "/UpdateEvent/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/UpdateEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "UPDATE Event", notes = "Updates an event. Updates only descripcion, publico and titulo. An Event is identified by any, coordenadas, dia, hora, mes, radio.", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The event does not exist in the database")
     })
-    public ResponseEntity<?> updateEvento(@PathVariable String email,
-                                          @ApiParam(value="event", required = true) @RequestBody DataEventUpdate evento)
+    public ResponseEntity<?> updateEvento(@ApiParam(value="event", required = true) @RequestBody DataEventUpdate evento)
     {
         try {
-            serverService.updateEvento(email, evento);
+            serverService.updateEvento(evento);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {
