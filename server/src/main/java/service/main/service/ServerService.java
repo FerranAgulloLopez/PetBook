@@ -35,7 +35,7 @@ public interface ServerService {
     Event operations
      */
 
-    public void creaEvento(DataEvent event) throws BadRequestException, NotFoundException;
+    public void creaEvento(DataEventUpdate event) throws BadRequestException, NotFoundException;
 
     public List<Event> findAllEventos();
 
@@ -46,6 +46,8 @@ public interface ServerService {
     public void updateEvento(String email, DataEventUpdate evento) throws NotFoundException;
 
     public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException;
+
+    public void removeEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException;
 
     public void deleteEvento(DataEvent event) throws NotFoundException;
 

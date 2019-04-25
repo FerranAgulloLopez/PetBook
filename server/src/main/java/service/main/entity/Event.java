@@ -55,11 +55,30 @@ public class Event implements Serializable {
         this.emailCreador = creador.getEmail();
         this.localizacion = localizacion;
         this.fecha = fecha;
-        this.titulo = titulo;
+        this.setTitulo(titulo);
         this.descripcion = descripcion;
         this.publico = publico;
         this.participantes = new ArrayList<>();
         participantes.add(creador.getEmail());
+
+        makeId();
+    }
+
+    public Event(String emailCreador,
+                 String localizacion,
+                 Date fecha,
+                 String titulo,
+                 String descripcion,
+                 boolean publico)
+    {
+        this.emailCreador = emailCreador;
+        this.localizacion = localizacion;
+        this.fecha = fecha;
+        this.setTitulo(titulo);
+        this.descripcion = descripcion;
+        this.publico = publico;
+        this.participantes = new ArrayList<>();
+        participantes.add(emailCreador);
 
         makeId();
     }
@@ -108,7 +127,15 @@ public class Event implements Serializable {
     public void setParticipantes(List<String> participantes)     { this.participantes =  participantes; }
 
 
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
+    public boolean userParticipates(String usermail) {
+        return participantes.contains(usermail);
+    }
 
-
+    public void removeUser(String usermail) {
+        participantes.remove(usermail);
+    }
 }
