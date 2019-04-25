@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
@@ -17,47 +19,47 @@ import com.example.pantallafirstview.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 public class EventInfo extends AppCompatActivity implements AsyncResult {
 
     private String Titulo;
     private String Descripcion;
     private Integer Localizacion;
     private String[] Fecha;
-    private EditText editTitle;
-    private EditText editDescription;
-    private EditText editLoc;
-    private EditText editFecha;
-    private EditText editHora;
-    private Button editButton;
-    private Button deleteButton;
+    private ArrayList<String> Miembros;
+    private TextView txtTitle;
+    private TextView txtDescription;
+    private TextView txtLoc;
+    private TextView txtFecha;
+    private TextView txtHora;
+    private TextView txtMiembros;
+    private ImageButton editButton;
+    private ImageButton deleteButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_info);
 
-        editTitle = (EditText) findViewById(R.id.editTextTitulo);
-        editTitle.setEnabled(false);
-        editDescription = (EditText) findViewById(R.id.editDesc);
-        editDescription.setEnabled(false);
-        editLoc = (EditText) findViewById(R.id.editTextLocalizacion);
-        editLoc.setEnabled(false);
-        editFecha = (EditText) findViewById(R.id.editTextFecha);
-        editFecha.setEnabled(false);
-        editHora = (EditText) findViewById(R.id.editTextHora);
-        editHora.setEnabled(false);
+        txtTitle = (TextView) findViewById(R.id.textTitulo);
+        txtDescription = (TextView) findViewById(R.id.textDesc);
+        txtLoc = (TextView) findViewById(R.id.textLoc);
+        txtFecha = (TextView) findViewById(R.id.textFecha);
+        txtHora = (TextView) findViewById(R.id.textHora);
+        txtMiembros = (TextView) findViewById(R.id.textNumPart);
 
 
-        editButton = (Button) findViewById(R.id.buttonEditEvent);
+        /*editButton = (Button) findViewById(R.id.buttonEditEvent);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 editEvent();
             }
-        });
+        });*/
 
 
-        deleteButton = (Button) findViewById(R.id.buttonDeleteEvent);
+        deleteButton = (ImageButton) findViewById(R.id.imageButtonDelete);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -89,39 +91,34 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
     private void recibirDatos(){
         Bundle datosRecibidos = this.getIntent().getExtras();
         if(datosRecibidos != null) {
-            Titulo = datosRecibidos.getString("titulo");
-            Descripcion = datosRecibidos.getString("descripcion");
-            Localizacion = datosRecibidos.getInt("localizacion");
-            Fecha = datosRecibidos.getString("fecha").split(" ");
+            EventModel e = (EventModel) datosRecibidos.getSerializable("event");
+            Titulo = e.getTitulo();
+            Descripcion = e.getDescripcion();
+            Localizacion = e.getLocalizacion();
+            Fecha = e.getFecha().split(" ");
+            Miembros = e.getMiembros();
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
             System.out.print(Titulo + "\n");
             System.out.print(Descripcion + "\n");
             System.out.print(Localizacion + "\n");
             System.out.print(Fecha[0] + "\n");
             System.out.print(Fecha[1] + "\n");
-            editTitle.setText(Titulo);
-            editDescription.setText(Descripcion);
-            editLoc.setText(String.valueOf(Localizacion));
-            editFecha.setText(Fecha[0]);
-            editHora.setText(Fecha[1]);
+            txtTitle.setText(Titulo);
+            txtDescription.setText(Descripcion);
+            txtLoc.setText(String.valueOf(Localizacion));
+            txtFecha.setText(Fecha[0]);
+            txtHora.setText(Fecha[1]);
+            txtMiembros.setText(Miembros.size() + " usuarios participarán en este evento");
         }
-    }
-
-    private void editEvent(){
-        editTitle.setEnabled(true);
-        editDescription.setEnabled(true);
-        editLoc.setEnabled(true);
-        editFecha.setEnabled(true);
-        editHora.setEnabled(true);
     }
 
     private void deleteEvent(){
         SingletonUsuario su = SingletonUsuario.getInstance();
-        String localizacion = editLoc.getText().toString();
-        String titulo = editTitle.getText().toString();
-        String descripcion = editDescription.getText().toString();
+        String localizacion = txtLoc.getText().toString();
+        String titulo = txtTitle.getText().toString();
+        String descripcion = txtDescription.getText().toString();
         Boolean publico = true;
-        String Fecha = editFecha.getText().toString() + "T" + editHora.getText().toString() + ":00.000Z";
+        String Fecha = txtFecha.getText().toString() + "T" + txtHora.getText().toString() + ":00.000Z";
         String user = su.getEmail();
 
         JSONObject jsonToSend = new JSONObject();

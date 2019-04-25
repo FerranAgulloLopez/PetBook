@@ -8,6 +8,7 @@
     tools:context="com.example.PETBook.EventInfo">
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout_editor_absoluteX="0dp"
@@ -18,187 +19,168 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/editTextTitulo"
-                android:layout_width="360dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="70dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="135dp"
-                android:layout_marginBottom="13dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:paddingLeft="70dp"
-                android:paddingRight="40dp"
-                android:singleLine="true"
-                android:textSize="22sp"
-                app:layout_constraintBottom_toTopOf="@+id/textViewDescripcion"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent" />
+            <TextView
+                android:id="@+id/textTitulo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="25dp"
+                android:gravity="center_horizontal"
+                android:text="Evento para perros"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="32sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textViewDescripcion"
-                android:layout_width="wrap_content"
+                android:id="@+id/textCreador"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="13dp"
-                android:layout_marginEnd="246dp"
-                android:layout_marginRight="246dp"
-                android:text="Descripción"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/editDesc"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTitulo" />
+                android:gravity="center_horizontal"
+                android:paddingBottom="15dp"
+                android:text="Creado por: borja@borja.com"
+                android:textSize="18sp" />
 
-            <EditText
-                android:id="@+id/editDesc"
-                android:layout_width="363dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginRight="32dp"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                android:textSize="22sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewDescripcion" />
-
-            <TextView
-                android:id="@+id/textViewLocalizacion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginEnd="237dp"
-                android:layout_marginRight="237dp"
-                android:text="Localización"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/editTextLocalizacion"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editDesc" />
-
-            <EditText
-                android:id="@+id/editTextLocalizacion"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginEnd="135dp"
-                android:layout_marginRight="135dp"
-                android:ems="10"
-                android:inputType="number"
-                android:singleLine="true"
-                android:textSize="22sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewLocalizacion" />
-
-            <TextView
-                android:id="@+id/textViewFecha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="235dp"
-                android:layout_marginRight="235dp"
-                android:text="Fecha y hora"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextLocalizacion" />
-
-            <EditText
-                android:id="@+id/editTextFecha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="17dp"
-                android:layout_marginLeft="17dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginEnd="134dp"
-                android:layout_marginRight="134dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:singleLine="true"
-                android:textSize="22sp"
-                app:layout_constraintBottom_toTopOf="@+id/editTextHora"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewFecha" />
+                android:orientation="horizontal"
+                android:paddingLeft="10dp">
 
-            <EditText
-                android:id="@+id/editTextHora"
-                android:layout_width="wrap_content"
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/tiempo" />
+
+                <TextView
+                    android:id="@+id/textFecha"
+                    android:layout_width="115dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingLeft="0dp"
+                    android:text="2019/05/04" />
+
+                <TextView
+                    android:id="@+id/textHora"
+                    android:layout_width="290dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="19:00" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="17dp"
-                android:layout_marginLeft="17dp"
-                android:layout_marginEnd="134dp"
-                android:layout_marginRight="134dp"
-                android:layout_marginBottom="70dp"
-                android:ems="10"
-                android:inputType="textPersonName"
-                android:singleLine="true"
-                android:textSize="22sp"
-                app:layout_constraintBottom_toTopOf="@+id/buttonEditEvent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextFecha" />
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp">
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="57dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    app:srcCompat="@drawable/icono_mapa" />
+
+                <TextView
+                    android:id="@+id/textLoc"
+                    android:layout_width="395dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Terrassa, España" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp">
 
-                <Button
-                    android:id="@+id/buttonEditEvent"
-                    android:layout_width="121dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="48dp"
-                    android:layout_marginLeft="48dp"
-                    android:layout_marginEnd="30dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginBottom="45dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:text="Editar"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/buttonDeleteEvent"
-                    app:layout_constraintStart_toStartOf="parent" />
+                <ImageView
+                    android:id="@+id/imageView8"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:tint="#39000000"
+                    app:srcCompat="@drawable/participantes" />
 
-                <Button
-                    android:id="@+id/buttonDeleteEvent"
-                    android:layout_width="121dp"
+                <TextView
+                    android:id="@+id/textNumPart"
+                    android:layout_width="390dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="55dp"
-                    android:layout_marginLeft="55dp"
-                    android:layout_marginEnd="66dp"
-                    android:layout_marginRight="66dp"
-                    android:layout_marginBottom="45dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:text="Eliminar"
-                    android:textColor="@android:color/background_light"
-                    android:textSize="20sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/buttonEditEvent" />
+                    android:layout_weight="1"
+                    android:text="8 usuarios participaran en este evento" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="10dp"
+                android:text="Información"
+                android:textAllCaps="false"
+                android:textColor="#C6840705"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="15dp"
+                android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
     </ScrollView>
+
+    <ImageButton
+        android:id="@+id/imageButtonDelete"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/background_light"
+        android:scaleType="fitXY"
+        android:tint="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintStart_toEndOf="@+id/imageButtonEdit"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98"
+        app:srcCompat="@drawable/borrar" />
+
+    <ImageButton
+        android:id="@+id/imageButtonEdit"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/background_light"
+        android:scaleType="fitXY"
+        android:tint="@color/colorPrimaryDark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/scrollView2"
+        app:layout_constraintVertical_bias="0.98"
+        app:srcCompat="@drawable/editar" />
+
 </android.support.constraint.ConstraintLayout>

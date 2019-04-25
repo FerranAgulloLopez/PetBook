@@ -104,13 +104,8 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EventModel eventoSeleccionado = model.get(position);
-                Bundle envio = new Bundle();
                 Intent intent = new Intent(getActivity(), EventInfo.class);
-                envio.putString("titulo",eventoSeleccionado.getTitulo());
-                envio.putString("descripcion",eventoSeleccionado.getDescripcion());
-                envio.putInt("localizacion",eventoSeleccionado.getLocalizacion());
-                envio.putString("fecha",eventoSeleccionado.getFecha());
-                intent.putExtras(envio);
+                intent.putExtra("event", eventoSeleccionado);
                 startActivity(intent);
             }
         });
