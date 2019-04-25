@@ -1,8 +1,15 @@
 package service.main;
 
 import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import service.main.entity.Image;
 
 import java.io.FileWriter;
@@ -14,9 +21,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class ControllerPetsTests extends ControllerIntegrationTests {
 
+    @Autowired
+    private MockMvc mockMvc;
     private String path = "../testing_files/server/pets/";
+
+    @Before
+    public void ClearDB() throws Exception {
+        this.mockMvc.perform(delete("/ServerRESTAPI/Test/RemoveDatabase"))
+                .andDo(print()).andExpect(status().isOk());
+    }
 
     @Test
     public void creaYgetMascota() throws Exception {
