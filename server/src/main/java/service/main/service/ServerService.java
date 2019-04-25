@@ -75,5 +75,7 @@ public interface ServerService {
 
     public InterestSite getInterestSite(String name, String localization) throws NotFoundException;
 
+    public void voteInterestSite(String interestSiteName, String interestSiteLocalization, String userEmail) throws NotFoundException, BadRequestException;
+
 
 }

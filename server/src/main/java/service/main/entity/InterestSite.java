@@ -6,6 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "interestsites")
@@ -14,23 +16,25 @@ public class InterestSite implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Id
     private String id;
-
     private String name;
     private String localization;
-
     private String description;
     private String type;
-    private int votesNumber;
     private boolean accepted;
     private String creatorMail;
+    private List<String> votes;
 
-    public InterestSite() {}
+
+    public InterestSite() {
+        this.votes = new ArrayList<>();
+    }
 
     public InterestSite(String name,
                         String localization)
     {
         this.name = name;
         this.localization = localization;
+        this.votes = new ArrayList<>();
         makeId();
     }
 
@@ -44,10 +48,9 @@ public class InterestSite implements Serializable {
         this.localization = localization;
         this.description = description;
         this.type = type;
-        this.votesNumber = 0;
         this.accepted = false;
         this.creatorMail = creatorMail;
-
+        this.votes = new ArrayList<>();
         makeId();
     }
 
@@ -63,10 +66,9 @@ public class InterestSite implements Serializable {
         this.localization = localization;
         this.description = description;
         this.type = type;
-        this.votesNumber = votesNumber;
         this.accepted = accepted;
         this.creatorMail = creatorMail;
-
+        this.votes = new ArrayList<>();
         makeId();
     }
 
@@ -95,8 +97,8 @@ public class InterestSite implements Serializable {
         return type;
     }
 
-    public int getVotesNumber() {
-        return votesNumber;
+    public List<String> getVotes() {
+        return votes;
     }
 
     public boolean isAccepted() {
@@ -130,8 +132,8 @@ public class InterestSite implements Serializable {
         this.type = type;
     }
 
-    public void setVotesNumber(int votesNumber) {
-        this.votesNumber = votesNumber;
+    public void setVotes(List<String> votes) {
+        this.votes = votes;
     }
 
     public void setAccepted(boolean accepted) {
@@ -146,8 +148,14 @@ public class InterestSite implements Serializable {
     /*
     auxiliary operations
     */
+
     private void makeId() {
         id = name + " " + localization;
+    }
+
+    public void addVote(String email) {
+        votes.add(email);
+        if (votes.size() > 5) accepted = true;
     }
 
 

@@ -376,6 +376,28 @@ public class RestApiController {
         }
     }
 
+    @CrossOrigin
+    @PostMapping(value = "/VoteInterestSite")
+    @ApiOperation(value = "Vote a interest site", notes = "Votes a interest site. A interest site with more than five votes is accepted.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The user already voted this interest site"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database"),
+            @ApiResponse(code = 404, message = "The interest site does not exist in the database")
+
+    })
+    public ResponseEntity<?> voteInterestSite(@ApiParam(value="The interest site's name", required = true) @RequestParam("name") String interestSiteName,
+                                              @ApiParam(value="The interest site's localization", required = true) @RequestParam("localization") String interestSiteLocalization,
+                                              @ApiParam(value="The interest site's name", required = true) @RequestParam("email") String userEmail) {
+        try {
+            serverService.voteInterestSite(interestSiteName,interestSiteLocalization,userEmail);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     /*
     Only testing purposes TODO remove this section in the future

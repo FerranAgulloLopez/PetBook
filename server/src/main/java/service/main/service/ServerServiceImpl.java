@@ -228,6 +228,22 @@ public class ServerServiceImpl implements ServerService {
         return interestSite.get();
     }
 
+    public void voteInterestSite(String interestSiteName, String interestSiteLocalization, String userEmail) throws NotFoundException, BadRequestException {
+        if (!userRepository.existsById(userEmail)) throw new NotFoundException(USERNOTDB);
+        InterestSite aux = new InterestSite(interestSiteName,interestSiteLocalization);
+        Optional<InterestSite> interestSite_opt = interestSiteRepository.findById(aux.getId());
+        if (!interestSite_opt.isPresent()) throw new NotFoundException(SITENOTDB);
+        InterestSite interestSite = interestSite_opt.get();
+        boolean found = false;
+        for (int i = 0; !found && i < interestSite.getVotes().size(); ++i) {
+            String email = interestSite.getVotes().get(i);
+            if (email.equals(userEmail)) found = true;
+        }
+        if (found) throw new BadRequestException("The user already voted this interest site");
+        interestSite.addVote(userEmail);
+        interestSiteRepository.save(interestSite);
+    }
+
 
 
     /*
@@ -238,6 +254,7 @@ public class ServerServiceImpl implements ServerService {
         userRepository.deleteAll();
         mascotaRepository.deleteAll();
         eventoRepository.deleteAll();
+        interestSiteRepository.deleteAll();
     }
 
 
