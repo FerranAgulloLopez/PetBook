@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.main.entity.User;
 import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
@@ -119,8 +118,45 @@ public class RestApiController {
     }
 
 
+    @CrossOrigin
+    @GetMapping(value = "/getPicture/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get the profile picture of the user identified by email", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database or does not have profile picture")
+    })
+    public ResponseEntity<?> getPictureUser(@PathVariable String email) {
+        try {
+            return new ResponseEntity<>(serverService.getProfilePicture(email), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @CrossOrigin
+    @PostMapping(value = "/setPicture/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Set the profile picture of the user identified by email", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+    })
+    public ResponseEntity<?> setPictureUser(@PathVariable String email, @RequestBody String picture)
+    {
+        try {
+            serverService.setProfilePicture(email, picture);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
+
+
     /*
-    Events operations
+    Event operations
      */
 
     @CrossOrigin
@@ -130,7 +166,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The event already exists in the database")
     })
-    public ResponseEntity<?> creaEvento(@ApiParam(value="event", required = true) @RequestBody DataEvento evento) {
+    public ResponseEntity<?> creaEvento(@ApiParam(value="event", required = true) @RequestBody DataEventUpdate evento) {
         try {
             serverService.creaEvento(evento);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -182,13 +218,13 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PatchMapping(value = "/UpdateEvento/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "UPDATE Evento", notes = "Modifica un evento. Sirve para modificar los atributos descripcion, numero de asistentes, participantes, publico. EL Evento se identifica por any, coordenadas, dia, hora, mes, radio.", tags = "Events")
+    @PutMapping(value = "/UpdateEvento/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "UPDATE Evento", notes = "Modifica un evento. Sirve para modificar los atributos descripcion, publico y titulo. EL Evento se identifica por any, coordenadas, dia, hora, mes, radio.", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The event does not exist in the database")
     })
     public ResponseEntity<?> updateEvento(@PathVariable String email,
-                                          @ApiParam(value="event", required = true) @RequestBody DataEventoUpdate evento)
+                                          @ApiParam(value="event", required = true) @RequestBody DataEventUpdate evento)
     {
         try {
             serverService.updateEvento(email, evento);
@@ -208,7 +244,7 @@ public class RestApiController {
             @ApiResponse(code = 400, message = "The user already participates in the event")
     })
     public ResponseEntity<?> addEventParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantemail") String usermail,
-                                                 @ApiParam(value="event", required = true) @RequestBody DataEvento evento)
+                                                 @ApiParam(value="event", required = true) @RequestBody DataEvent evento)
     {
         try {
             serverService.addEventParticipant(usermail,evento.getUserEmail(),evento.getCoordenadas(),evento.getRadio(),evento.getFecha());
@@ -221,12 +257,33 @@ public class RestApiController {
     }
 
     @CrossOrigin
+    @PostMapping(value = "/removeEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Removes a user to an event", notes = "Removes a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user or the event does not exist in the database"),
+            @ApiResponse(code = 400, message = "The user does not participate in the event")
+    })
+    public ResponseEntity<?> removeEventParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantemail") String usermail,
+                                                 @ApiParam(value="event", required = true) @RequestBody DataEvent evento)
+    {
+        try {
+            serverService.removeEventParticipant(usermail,evento.getUserEmail(),evento.getCoordenadas(),evento.getRadio(),evento.getFecha());
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @CrossOrigin
     @DeleteMapping(value = "/DeleteEvento", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "DELETE Evento", notes = "Deletes an event ", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The event does not exist in the database")
     })
-    public ResponseEntity<?> deleteEvento(@ApiParam(value="Evento", required = true) @RequestBody DataEvento event)
+    public ResponseEntity<?> deleteEvento(@ApiParam(value="Evento", required = true) @RequestBody DataEvent event)
     {
         try {
             serverService.deleteEvento(event);
@@ -236,6 +293,7 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
 
     /*
     Pets operations
@@ -248,7 +306,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The pet already exists in the database")
     })
-    public ResponseEntity<?> creaMascota(@ApiParam(value="Mascota", required = true) @RequestBody DataMascotaUpdate mascota)
+    public ResponseEntity<?> creaMascota(@ApiParam(value="Mascota", required = true) @RequestBody DataPetUpdate mascota)
     {
         try {
             serverService.creaMascota(mascota);
@@ -297,15 +355,14 @@ public class RestApiController {
 
     }
 
-
     @CrossOrigin
-    @PatchMapping(value = "/UpdateMascota/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/UpdateMascota/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "UPDATE Mascota", notes = "Modifica una mascota. Sirve para modificar los atributos de la mascota. La mascota se identifica por email y nombre.",tags = "Pets")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The pet does not exist in the database"),
     })
     public ResponseEntity<?> updateMascota(@PathVariable String email,
-                                          @ApiParam(value="Nuevos datos de la Mascota", required = true) @RequestBody DataMascotaUpdate mascota)
+                                          @ApiParam(value="Nuevos datos de la Mascota", required = true) @RequestBody DataPetUpdate mascota)
     {
         try {
             serverService.updateMascota(email, mascota);
@@ -337,7 +394,67 @@ public class RestApiController {
 
     }
 
+    /*
+    InterestSite operations
+     */
 
+    @CrossOrigin
+    @PostMapping(value = "/SuggestInterestSite", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Suggest a new interest site", notes = "Saves a new interest site to the database. It receives a json with the necessary parameters: name, localization, description, type and the " +
+            "creator's email.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The interest site already exists"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+
+    })
+    public ResponseEntity<?> createInterestSite(@ApiParam(value="The site parameters", required = true) @RequestBody DataInterestSite inputInterestSite) {
+        try {
+            serverService.createInterestSite(inputInterestSite);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/GetInterestSite", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get one interest site", notes = "Get the interest site identified by the specified name and localization.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The interest site does not exist in the database")
+    })
+    public ResponseEntity<?> getInterestSite(@ApiParam(value="Name of the interest site", required = true, example = "Goddard Veterinary") @RequestParam("name") String name,
+                                             @ApiParam(value="Localization of the interest site", required = true, example = "00") @RequestParam("localization") String localization) {
+        try {
+            return new ResponseEntity<>(serverService.getInterestSite(name,localization), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/VoteInterestSite")
+    @ApiOperation(value = "Vote a interest site", notes = "Votes a interest site. A interest site with more than five votes is accepted.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The user already voted this interest site"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database"),
+            @ApiResponse(code = 404, message = "The interest site does not exist in the database")
+
+    })
+    public ResponseEntity<?> voteInterestSite(@ApiParam(value="The interest site's name", required = true) @RequestParam("name") String interestSiteName,
+                                              @ApiParam(value="The interest site's localization", required = true) @RequestParam("localization") String interestSiteLocalization,
+                                              @ApiParam(value="The interest site's name", required = true) @RequestParam("email") String userEmail) {
+        try {
+            serverService.voteInterestSite(interestSiteName,interestSiteLocalization,userEmail);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
 
 
     /*

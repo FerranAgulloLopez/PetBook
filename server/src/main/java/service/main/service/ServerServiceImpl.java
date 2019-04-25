@@ -7,8 +7,9 @@ import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
-import service.main.repositories.EventoRepository;
-import service.main.repositories.MascotaRepository;
+import service.main.repositories.EventRepository;
+import service.main.repositories.InterestSiteRepository;
+import service.main.repositories.PetRepository;
 import service.main.repositories.UserRepository;
 import service.main.util.SendEmailTLS;
 
@@ -23,6 +24,10 @@ public class ServerServiceImpl implements ServerService {
     private static final String USERNOTDB = "The user does not exist in the database";
     private static final String EVENTNOTDB = "The event does not exist in the database";
     private static final String PETNOTDB = "The pet does not exist in the database";
+    private static final String SITENOTDB = "The interest site does not exist in the database";
+    private static final String NOTPICTURE = "The user does not have profile picture in the database";
+    private static final String USER_NOT_IN_EVENT = "The user does not participate in the event";
+
 
     private SendEmailTLS mailsender;
 
@@ -30,10 +35,13 @@ public class ServerServiceImpl implements ServerService {
     private UserRepository userRepository;
 
     @Autowired
-    private EventoRepository eventoRepository;
+    private EventRepository eventoRepository;
 
     @Autowired
-    private MascotaRepository mascotaRepository;
+    private PetRepository mascotaRepository;
+
+    @Autowired
+    private InterestSiteRepository interestSiteRepository;
 
     /*
     User operations
@@ -96,60 +104,100 @@ public class ServerServiceImpl implements ServerService {
         }
     }
 
+
+
+    @Override
+    public String getProfilePicture(String email) throws NotFoundException {
+        Optional<User> user = userRepository.findById(email);
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+        else {
+            String Picture = user.get().getFoto();
+            if (Picture == null) throw new NotFoundException(NOTPICTURE);
+            return Picture;
+        }
+    }
+
+    @Override
+    public void setProfilePicture(String email, String picture) throws NotFoundException {
+        Optional<User> user = userRepository.findById(email);
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+        else {
+            user.get().setFoto(picture);
+        }
+    }
+
     /*
     Event operations
      */
 
-    public void creaEvento(DataEvento inputEvent) throws BadRequestException, NotFoundException {
+    public void creaEvento(DataEventUpdate inputEvent) throws BadRequestException, NotFoundException {
 
         String usermail = inputEvent.getUserEmail();
         Optional<User> user = userRepository.findById(usermail);
         if(!user.isPresent()) throw new NotFoundException(USERNOTDB);
 
-        Localizacion localizacion = new Localizacion(inputEvent.getCoordenadas(),inputEvent.getRadio());
-        Evento event = new Evento(user.get(),localizacion.getId(),inputEvent.getFecha(),inputEvent.getTitulo(),inputEvent.getDescripcion(),inputEvent.isPublico());
+        Localization localizacion = new Localization(inputEvent.getCoordenadas(),inputEvent.getRadio());
+        Event event = new Event(user.get(),localizacion.getId(),inputEvent.getFecha(),inputEvent.getTitulo(),inputEvent.getDescripcion(),inputEvent.isPublico());
         if(eventoRepository.existsById(event.getId())) throw new BadRequestException("The event already exists in the database");
         eventoRepository.save(event);
     }
 
-    public List<Evento> findAllEventos() {
+    public List<Event> findAllEventos() {
         return eventoRepository.findAll();
     }
 
-    public List<Evento> findEventsByCreator(String creatormail) throws NotFoundException {
+    public List<Event> findEventsByCreator(String creatormail) throws NotFoundException {
         if(!userRepository.existsById(creatormail)) throw new NotFoundException(USERNOTDB);
         return eventoRepository.findByemailCreador(creatormail);
     }
 
-    public List<Evento> findEventsByParticipant(String participantmail) throws NotFoundException {
+    public List<Event> findEventsByParticipant(String participantmail) throws NotFoundException {
         if(!userRepository.existsById(participantmail)) throw new NotFoundException(USERNOTDB);
         return eventoRepository.findByParticipantesInOrderByFecha(participantmail);
     }
 
 
-    public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException {
-        Localizacion localizacion = new Localizacion(evento.getCoordenadas(),evento.getRadio());
+    public void updateEvento(String email, DataEventUpdate evento) throws NotFoundException {
+        Localization localizacion = new Localization(evento.getCoordenadas(),evento.getRadio());
 
-        Evento evento2 = new Evento(email, localizacion.getId(), evento.getFecha(), evento.getDescripcion(), evento.getPublico(), evento.getParticipantes());
+        Event evento2 = new Event(email, localizacion.getId(), evento.getFecha(), evento.getTitulo(), evento.getDescripcion(), evento.isPublico());
         if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException(EVENTNOTDB);
-        eventoRepository.deleteById(evento2.getId());
-        eventoRepository.insert(evento2);
+
+        Optional<Event> optEvent = eventoRepository.findById(evento2.getId());
+        Event event3 = optEvent.get();
+        event3.setDescripcion(evento2.getDescripcion());
+        event3.setPublico(evento2.getPublico());
+        event3.setTitulo(evento2.getTitulo());
+        eventoRepository.save(event3);
     }
 
     public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException {
         if(!userRepository.existsById(usermail)) throw new NotFoundException(USERNOTDB);
-        Localizacion localizacion = new Localizacion(coordinates,radius);
-        Evento event = new Evento(creatormail,localizacion.getId(),fecha);
+        Localization localizacion = new Localization(coordinates,radius);
+        Event event = new Event(creatormail,localizacion.getId(),fecha);
         if(!eventoRepository.existsById(event.getId())) throw new NotFoundException(EVENTNOTDB);
 
         eventoRepository.addParticipant(usermail,event.getId());
     }
 
+    public void removeEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException {
+        if(!userRepository.existsById(usermail)) throw new NotFoundException(USERNOTDB);
+        Localization localizacion = new Localization(coordinates,radius);
+        Event evento = new Event(creatormail,localizacion.getId(),fecha);
+        if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException(EVENTNOTDB);
+        Optional<Event> optEvent =  eventoRepository.findById(evento.getId());
+        Event event = optEvent.get();
+        if(! event.userParticipates(usermail)) throw new BadRequestException(USER_NOT_IN_EVENT);
+        event.removeUser(usermail);
 
-    public void deleteEvento(DataEvento event) throws NotFoundException {
-        Localizacion localizacion = new Localizacion(event.getCoordenadas(),event.getRadio());
+        eventoRepository.save(event);
+    }
 
-        Evento evento = new Evento(event.getUserEmail(), localizacion.getId(), event.getFecha());
+
+    public void deleteEvento(DataEvent event) throws NotFoundException {
+        Localization localizacion = new Localization(event.getCoordenadas(),event.getRadio());
+
+        Event evento = new Event(event.getUserEmail(), localizacion.getId(), event.getFecha());
         if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException(EVENTNOTDB);
         eventoRepository.deleteById(evento.getId());
     }
@@ -158,8 +206,8 @@ public class ServerServiceImpl implements ServerService {
     Pet operations
      */
 
-    public void creaMascota(DataMascotaUpdate inMascota) throws BadRequestException, NotFoundException {
-        Mascota mascota = new Mascota(inMascota.getNombre(),inMascota.getEmail(), inMascota.getEspecie(), inMascota.getRaza(), inMascota.getSexo(),
+    public void creaMascota(DataPetUpdate inMascota) throws BadRequestException, NotFoundException {
+        Pet mascota = new Pet(inMascota.getNombre(),inMascota.getEmail(), inMascota.getEspecie(), inMascota.getRaza(), inMascota.getSexo(),
                                                             inMascota.getDescripcion(),inMascota.getEdad(),inMascota.getColor(),inMascota.getFoto());
         if(!userRepository.existsById(inMascota.getEmail())) throw new NotFoundException(USERNOTDB);
         if(mascotaRepository.existsById(mascota.getId())) throw new BadRequestException("The pet already exists in the database");
@@ -167,17 +215,17 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
-    public Mascota mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
+    public Pet mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
         if(!userRepository.existsById(emailDuenyo)) throw new NotFoundException(USERNOTDB);
-        Optional<Mascota> pet = mascotaRepository.findById(id);
+        Optional<Pet> pet = mascotaRepository.findById(id);
         if(!pet.isPresent()) throw new NotFoundException(PETNOTDB);
         return pet.get();
     }
 
-    public void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException {
+    public void updateMascota(String email, DataPetUpdate mascota) throws NotFoundException {
 
-        Mascota mascota2 = new Mascota(mascota.getNombre(), email, mascota.getEspecie(), mascota.getRaza(),
+        Pet mascota2 = new Pet(mascota.getNombre(), email, mascota.getEspecie(), mascota.getRaza(),
                                        mascota.getSexo(), mascota.getDescripcion(), mascota.getEdad(), mascota.getColor(), mascota.getFoto());
 
         String id = mascota2.getId();
@@ -186,13 +234,13 @@ public class ServerServiceImpl implements ServerService {
         mascotaRepository.save(mascota2);
     }
 
-    public List<Mascota> findAllMascotasByUser(String email) throws NotFoundException{
-        if(! userRepository.existsById(email)) throw new NotFoundException(USERNOTDB);
+    public List<Pet> findAllMascotasByUser(String email) throws NotFoundException{
+        if(!userRepository.existsById(email)) throw new NotFoundException(USERNOTDB);
 
-        List<Mascota> mascotas = mascotaRepository.findAll();
-        List<Mascota> resultado = new ArrayList<>();
+        List<Pet> mascotas = mascotaRepository.findAll();
+        List<Pet> resultado = new ArrayList<>();
 
-        for(Mascota mascota : mascotas)
+        for(Pet mascota : mascotas)
             if(mascota.getUserEmail() != null && mascota.getUserEmail().equals(email)) resultado.add(mascota);
 
         return resultado;
@@ -200,14 +248,57 @@ public class ServerServiceImpl implements ServerService {
 
     public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
-        if(! mascotaRepository.existsById(id)) throw new NotFoundException(PETNOTDB);
+        if(!mascotaRepository.existsById(id)) throw new NotFoundException(PETNOTDB);
         mascotaRepository.deleteById(id);
     }
+
+
+    /*
+    Interest Site operations
+     */
+
+    public void createInterestSite(DataInterestSite inputInterestSite) throws BadRequestException, NotFoundException {
+        InterestSite interestSite = inputInterestSite.toInterestSite();
+        if (!userRepository.existsById(inputInterestSite.getCreatorMail())) throw new NotFoundException(USERNOTDB);
+        if (interestSiteRepository.existsById(interestSite.getId())) throw new BadRequestException("The interest site already exists in the database");
+        interestSiteRepository.save(interestSite);
+    }
+
+    public InterestSite getInterestSite(String name, String localization) throws NotFoundException {
+        InterestSite aux = new InterestSite(name,localization);
+        Optional<InterestSite> interestSite = interestSiteRepository.findById(aux.getId());
+        if (!interestSite.isPresent()) throw new NotFoundException(SITENOTDB);
+        return interestSite.get();
+    }
+
+    public void voteInterestSite(String interestSiteName, String interestSiteLocalization, String userEmail) throws NotFoundException, BadRequestException {
+        if (!userRepository.existsById(userEmail)) throw new NotFoundException(USERNOTDB);
+        InterestSite aux = new InterestSite(interestSiteName,interestSiteLocalization);
+        Optional<InterestSite> interestSite_opt = interestSiteRepository.findById(aux.getId());
+        if (!interestSite_opt.isPresent()) throw new NotFoundException(SITENOTDB);
+        InterestSite interestSite = interestSite_opt.get();
+        boolean found = false;
+        for (int i = 0; !found && i < interestSite.getVotes().size(); ++i) {
+            String email = interestSite.getVotes().get(i);
+            if (email.equals(userEmail)) found = true;
+        }
+        if (found) throw new BadRequestException("The user already voted this interest site");
+        interestSite.addVote(userEmail);
+        interestSiteRepository.save(interestSite);
+    }
+
+
+
+
+    /*
+    Test operations TODO remove this section in the future
+     */
 
     public void removeDataBase() {
         userRepository.deleteAll();
         mascotaRepository.deleteAll();
         eventoRepository.deleteAll();
+        interestSiteRepository.deleteAll();
     }
 
 

@@ -1,7 +1,8 @@
 package service.main.service;
 
-import service.main.entity.Evento;
-import service.main.entity.Mascota;
+import service.main.entity.Event;
+import service.main.entity.InterestSite;
+import service.main.entity.Pet;
 import service.main.entity.User;
 import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
@@ -34,36 +35,52 @@ public interface ServerService {
     Event operations
      */
 
-    public void creaEvento(DataEvento event) throws BadRequestException, NotFoundException;
+    public void creaEvento(DataEventUpdate event) throws BadRequestException, NotFoundException;
 
-    public List<Evento> findAllEventos();
+    public List<Event> findAllEventos();
 
-    public List<Evento> findEventsByCreator(String creatormail) throws NotFoundException;
+    public List<Event> findEventsByCreator(String creatormail) throws NotFoundException;
 
-    public List<Evento> findEventsByParticipant(String participantmail) throws NotFoundException;
+    public List<Event> findEventsByParticipant(String participantmail) throws NotFoundException;
 
-    public void updateEvento(String email, DataEventoUpdate evento) throws NotFoundException;
+    public void updateEvento(String email, DataEventUpdate evento) throws NotFoundException;
 
     public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException;
 
-    public void deleteEvento(DataEvento event) throws NotFoundException;
+    public void removeEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException;
+
+    public void deleteEvento(DataEvent event) throws NotFoundException;
 
 
     /*
     Pet operations
      */
 
-    public void creaMascota(DataMascotaUpdate mascota) throws BadRequestException, NotFoundException;
+    public void creaMascota(DataPetUpdate mascota) throws BadRequestException, NotFoundException;
 
-    public Mascota mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException;
+    public Pet mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
-    void updateMascota(String email, DataMascotaUpdate mascota) throws NotFoundException;
+    void updateMascota(String email, DataPetUpdate mascota) throws NotFoundException;
 
     public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
-    public List<Mascota> findAllMascotasByUser(String email) throws NotFoundException;
+    public List<Pet> findAllMascotasByUser(String email) throws NotFoundException;
 
     public void removeDataBase();
 
 
+    /*
+    Interest site operations
+     */
+
+    public void createInterestSite(DataInterestSite inputInterestSite) throws BadRequestException, NotFoundException;
+
+    public InterestSite getInterestSite(String name, String localization) throws NotFoundException;
+
+    public void voteInterestSite(String interestSiteName, String interestSiteLocalization, String userEmail) throws NotFoundException, BadRequestException;
+
+
+    public String getProfilePicture(String email) throws NotFoundException;
+
+    public void setProfilePicture(String email, String picture) throws NotFoundException;
 }

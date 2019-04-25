@@ -67,6 +67,7 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
     /*
     Confirm email operation
      */
+
     @Test
     public void EmailConfirmation() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"confirm_email_operation/input_register.json")))
@@ -81,6 +82,7 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
     /*
     Get user by email operation
      */
+
     @Test
     public void getUserByEmail() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getUserByEmail_operation/input_register.json")))

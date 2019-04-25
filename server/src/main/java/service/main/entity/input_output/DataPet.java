@@ -4,7 +4,7 @@ package service.main.entity.input_output;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "domain")
-public class DataMascota {
+public class DataPet {
 
     private String email;
     private String nombre;

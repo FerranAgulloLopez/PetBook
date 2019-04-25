@@ -12,7 +12,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Document(collection = "events")
-public class Evento implements Serializable {
+public class Event implements Serializable {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Id
@@ -27,15 +27,15 @@ public class Evento implements Serializable {
     private boolean publico;
     private List<String> participantes;
 
-    public Evento() {
+    public Event() {
     }
 
 
 
 
-    public Evento(  String creador,
-                    String localizacion,
-                    Date fecha)
+    public Event(String creador,
+                 String localizacion,
+                 Date fecha)
     {
 
         this.emailCreador = creador;
@@ -45,17 +45,17 @@ public class Evento implements Serializable {
         makeId();
     }
 
-    public Evento(User creador,
-                  String localizacion,
-                  Date fecha,
-                  String titulo,
-                  String descripcion,
-                  boolean publico)
+    public Event(User creador,
+                 String localizacion,
+                 Date fecha,
+                 String titulo,
+                 String descripcion,
+                 boolean publico)
     {
         this.emailCreador = creador.getEmail();
         this.localizacion = localizacion;
         this.fecha = fecha;
-        this.titulo = titulo;
+        this.setTitulo(titulo);
         this.descripcion = descripcion;
         this.publico = publico;
         this.participantes = new ArrayList<>();
@@ -64,12 +64,31 @@ public class Evento implements Serializable {
         makeId();
     }
 
-    public Evento(  String creador,
-                    String localizacion,
-                    Date fecha,
-                    String descripcion,
-                    boolean publico,
-                    List<String> participantes)
+    public Event(String emailCreador,
+                 String localizacion,
+                 Date fecha,
+                 String titulo,
+                 String descripcion,
+                 boolean publico)
+    {
+        this.emailCreador = emailCreador;
+        this.localizacion = localizacion;
+        this.fecha = fecha;
+        this.setTitulo(titulo);
+        this.descripcion = descripcion;
+        this.publico = publico;
+        this.participantes = new ArrayList<>();
+        participantes.add(emailCreador);
+
+        makeId();
+    }
+
+    public Event(String creador,
+                 String localizacion,
+                 Date fecha,
+                 String descripcion,
+                 boolean publico,
+                 List<String> participantes)
     {
 
         this.emailCreador = creador;
@@ -108,7 +127,15 @@ public class Evento implements Serializable {
     public void setParticipantes(List<String> participantes)     { this.participantes =  participantes; }
 
 
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
+    public boolean userParticipates(String usermail) {
+        return participantes.contains(usermail);
+    }
 
-
+    public void removeUser(String usermail) {
+        participantes.remove(usermail);
+    }
 }
