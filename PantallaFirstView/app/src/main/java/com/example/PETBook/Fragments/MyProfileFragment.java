@@ -1,14 +1,23 @@
 package com.example.PETBook.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.design.widget.TextInputLayout;
+import android.widget.Toast;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import com.example.PETBook.Conexion;
+import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONException;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +27,7 @@ import com.example.pantallafirstview.R;
  * Use the {@link MyProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyProfileFragment extends Fragment {
+public class MyProfileFragment extends Fragment implements AsyncResult {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -27,6 +36,15 @@ public class MyProfileFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    /* ATRIBUTOS   */
+    private View MyView;
+
+    private TextInputLayout textInputName;
+    private TextInputLayout textInputSurnames;
+    private TextInputLayout textInputMail;
+    private TextInputLayout textInputBirthday;
+    private TextInputLayout textInputPostalCode;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,8 +82,23 @@ public class MyProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_profile, container, false);
+        MyView = inflater.inflate(R.layout.fragment_my_profile, container, false);
+        // Set tittle to the fragment
+
+        textInputName      = (TextInputLayout) MyView.findViewById(R.id.nameTextInput);
+        textInputSurnames      = (TextInputLayout) MyView.findViewById(R.id.surnamesTextInput);
+        textInputMail      = (TextInputLayout) MyView.findViewById(R.id.mailTextInput);
+        textInputBirthday  = (TextInputLayout) MyView.findViewById(R.id.birthdayTextInput);
+        textInputPostalCode  = (TextInputLayout) MyView.findViewById(R.id.postalCodeTextInput);
+
+        Conexion con = new Conexion(MyProfileFragment.this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail(),"GET", null);
+
+        return MyView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,5 +138,28 @@ public class MyProfileFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void OnprocessFinish(JSONObject output) {
+        if (output != null) {
+            try {
+                int response = output.getInt("code");
+                if (response == 200) {
+                    textInputName.getEditText().setText(output.getString("firstName"));
+                    textInputSurnames.getEditText().setText(output.getString("secondName"));
+                    textInputMail.getEditText().setText(output.getString("email"));
+                    textInputBirthday.getEditText().setText(output.getString("dateOfBirth"));
+                    textInputPostalCode.getEditText().setText(output.getString("postalCode"));
+                    Toast.makeText(getActivity(), "SE VEEE", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "ERRORRRRRR", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(getActivity(), "El servidor no funciona", Toast.LENGTH_SHORT).show();
+        }
     }
 }

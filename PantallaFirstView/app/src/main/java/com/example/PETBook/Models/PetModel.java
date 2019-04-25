@@ -1,6 +1,8 @@
 package com.example.PETBook.Models;
 
-public class PetModel {
+import java.io.Serializable;
+
+public class PetModel implements Serializable {
 
     private String id;
     private String nombre;
@@ -13,17 +15,7 @@ public class PetModel {
     private String color;
     private String edad;
 
-    public PetModel(String id, String name, String especie, String raza, String sexo, String descripcion, String color, String edad){
-        this.id = id;
-        this.nombre = name;
-        this.especie = especie;
-        this.raza = raza;
-        this.sexo = sexo;
-        this.descripcion = descripcion;
-        this.edad = edad;
-        this.color = color;
 
-    }
     public String getId() {
         return id;
     }

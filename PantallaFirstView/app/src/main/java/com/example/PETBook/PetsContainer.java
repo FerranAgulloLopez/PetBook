@@ -1,16 +1,11 @@
 package com.example.PETBook;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.os.StrictMode;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -24,7 +19,6 @@ import android.view.View;
 
 import com.example.PETBook.Adapters.PetAdapters;
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.Fragments.PetInfoFragment;
 import com.example.PETBook.Models.PetModel;
 import com.example.pantallafirstview.R;
 
@@ -153,14 +147,14 @@ public class PetsContainer extends AppCompatActivity implements AsyncResult {
                 String descripcion = jsonObjectHijo.getString("descripcion");
                 String edad = jsonObjectHijo.getString("edad");
                 String color = jsonObjectHijo.getString("color");
-                pets.add(new PetModel(id, nombre, especie, raza, sexo, descripcion, color, edad));
+                //pets.add(new PetModel(id, nombre, especie, raza, sexo, descripcion, color, edad));
             } catch (JSONException e) {
                 Log.e("Parser JSON", e.toString());
             }
         }
 
 
-        mSectionsPagerAdapter = new PetAdapters(getSupportFragmentManager(), pets);
+       /* mSectionsPagerAdapter = new PetAdapters(getSupportFragmentManager(), pets);
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -173,6 +167,6 @@ public class PetsContainer extends AppCompatActivity implements AsyncResult {
                 startActivity(intent);
 
             }
-        });
+        });*/
     }
 }

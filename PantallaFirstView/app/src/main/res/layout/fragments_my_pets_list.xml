@@ -7,10 +7,9 @@
     tools:context="com.example.PETBook.Fragments.MyEventsFragment">
 
     <ListView
-        android:id="@+id/list_pets"
+        android:id="@+id/list_eventos"
         android:layout_width="wrap_content"
-        android:layout_height="659dp"
-        android:layout_marginTop="8dp"
+        android:layout_height="wrap_content"
         android:footerDividersEnabled="true"
         android:headerDividersEnabled="true"
         android:paddingLeft="0dp"
