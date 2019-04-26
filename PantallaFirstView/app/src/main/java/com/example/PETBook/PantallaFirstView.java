@@ -25,6 +25,7 @@ public class PantallaFirstView extends AppCompatActivity {
         if user was logged move directly to MainActivity
          */
         if (login != null) {
+            SingletonUsuario.setEmail(login);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();
