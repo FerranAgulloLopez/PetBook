@@ -99,7 +99,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             String[] Fecha = event.getFecha().split(" ");
             txtFecha.setText(Fecha[0]);
             txtHora.setText(Fecha[1]);
-            txtMiembros.setText(event.getMiembros().size() + " usuarios participarán en este evento");
+            txtMiembros.setText(String.format("%d usuario/s participarán en el evento",event.getMiembros().size()));
             txtCreador.setText("Creado por: " + event.getCreador());
         }
     }

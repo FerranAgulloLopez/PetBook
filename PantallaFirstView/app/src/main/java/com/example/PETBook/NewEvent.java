@@ -108,9 +108,8 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private void actualizarFecha(){
         String formatoFecha = "%02d/%02d/%02d";
-        inputFecha.setText(String.format(formatoFecha,calendario.get(Calendar.DAY_OF_MONTH),
-                1+calendario.get(Calendar.MONTH),
-                calendario.get(Calendar.YEAR)));
+        inputFecha.setText(String.format(formatoFecha,calendario.get(Calendar.YEAR),
+                1+calendario.get(Calendar.MONTH),calendario.get(Calendar.DAY_OF_MONTH)));
     }
 
     private void actualizarHora(){
