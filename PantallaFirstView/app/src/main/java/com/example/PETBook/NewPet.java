@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
@@ -130,7 +131,8 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
                 }
                 System.out.println(json.getInt("code") +"\n\n\n");
 
-                Intent intent = new Intent(this, PetsContainer.class);
+                Intent intent = new Intent(this, MyPetsFragment.class);
+                intent.putExtra("fragment","pets");
                 startActivity(intent);
             }
             else{

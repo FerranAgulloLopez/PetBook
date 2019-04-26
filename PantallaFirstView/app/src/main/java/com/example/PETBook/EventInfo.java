@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,8 +16,6 @@ import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 
 public class EventInfo extends AppCompatActivity implements AsyncResult {
 
@@ -48,7 +44,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
         txtCreador = (TextView) findViewById(R.id.textCreador);
 
 
-        editButton = (ImageButton) findViewById(R.id.imageButtonEdit);
+        editButton = (ImageButton) findViewById(R.id.EditPetButton);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

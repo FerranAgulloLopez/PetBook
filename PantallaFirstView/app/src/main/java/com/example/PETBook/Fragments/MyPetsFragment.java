@@ -7,7 +7,6 @@ import android.os.Bundle;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,42 +96,29 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
         // Inflate the layout for this fragment
 
 
-        View MyView =  inflater.inflate(R.layout.fragment_pets, container, false);
+        MyView =  inflater.inflate(R.layout.activity_pets, container, false);
 
         // Set tittle to the fragment
         getActivity().setTitle("Mis mascotas");
 
-
-
-
-        Toolbar toolbar = (Toolbar) MyView.findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
-        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        pets = new ArrayList<>();
-        // pets.add(new PetModel("idPet", "nom"));
-        //pets.add(new PetModel("idPet2", "nom2"));
-        //TODO: pets comes from DB
-
         SingletonUsuario su = SingletonUsuario.getInstance();
         String us = su.getEmail();
-
-
-
-        Conexion con = new Conexion(this);
+        Conexion con = new Conexion(MyPetsFragment.this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLPetsByUser/" + us,"GET", null);
-            lista = MyView.findViewById(R.id.list_pets);
-            lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    PetModel petmodel = pets.get(position);
-                    Intent intent = new Intent(getActivity(), PetInfo.class);
-                    intent.putExtra("pet", petmodel);
-                    startActivity(intent);
-                }
-            });
-        FloatingActionButton fab = MyView.findViewById(R.id.fab);
+
+
+        lista = MyView.findViewById(R.id.list_pets);
+        System.out.println("lista vacia");
+        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                PetModel petmodel = pets.get(position);
+                Intent intent = new Intent(getActivity(), PetInfo.class);
+                intent.putExtra("pet", petmodel);
+                startActivity(intent);
+            }
+        });
+        FloatingActionButton fab = MyView.findViewById(R.id.addPet);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -183,6 +169,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
         void onFragmentInteraction(Uri uri);
     }
 
+
     @Override
     public void OnprocessFinish(JSONObject json) {
         try {
@@ -199,7 +186,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
                     petModel.setRaza(jsonObjectHijo.getString("raza"));
                     petModel.setSexo(jsonObjectHijo.getString("sexo"));
                     petModel.setDescripcion(jsonObjectHijo.getString("descripcion"));
-                    petModel.setEdad(jsonObjectHijo.getString("edad"));
+                    petModel.setEdad(jsonObjectHijo.getInt("edad"));
                     petModel.setColor(jsonObjectHijo.getString("color"));
 
                     pets.add(petModel);

@@ -13,7 +13,7 @@ public class PetModel implements Serializable {
     private String descripcion;
     private String foto;
     private String color;
-    private String edad;
+    private Integer edad;
 
 
     public String getId() {
@@ -84,14 +84,14 @@ public class PetModel implements Serializable {
         return color;
     }
 
-    public String getEdad() {
+    public Integer getEdad() {
         return edad;
     }
     public void setColor(String color) {
         this.color = color;
     }
 
-    public void setEdad(String edad) {
+    public void setEdad(Integer edad) {
         this.edad = edad;
     }
 }
