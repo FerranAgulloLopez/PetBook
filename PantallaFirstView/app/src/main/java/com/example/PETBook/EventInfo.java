@@ -23,12 +23,7 @@ import java.util.ArrayList;
 
 public class EventInfo extends AppCompatActivity implements AsyncResult {
 
-    private String Titulo;
-    private String Descripcion;
-    private Integer Localizacion;
-    private String[] Fecha;
-    private ArrayList<String> Miembros;
-    private String Creador;
+    private EventModel event;
     private TextView txtTitle;
     private TextView txtDescription;
     private TextView txtLoc;
@@ -53,13 +48,15 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
         txtCreador = (TextView) findViewById(R.id.textCreador);
 
 
-        /*editButton = (Button) findViewById(R.id.buttonEditEvent);
+        editButton = (ImageButton) findViewById(R.id.imageButtonEdit);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editEvent();
+                Intent intent = new Intent(EventInfo.this,EditEvent.class);
+                intent.putExtra("event",event);
+                startActivity(intent);
             }
-        });*/
+        });
 
 
         deleteButton = (ImageButton) findViewById(R.id.imageButtonDelete);
@@ -94,26 +91,16 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
     private void recibirDatos(){
         Bundle datosRecibidos = this.getIntent().getExtras();
         if(datosRecibidos != null) {
-            EventModel e = (EventModel) datosRecibidos.getSerializable("event");
-            Titulo = e.getTitulo();
-            Descripcion = e.getDescripcion();
-            Localizacion = e.getLocalizacion();
-            Fecha = e.getFecha().split(" ");
-            Miembros = e.getMiembros();
-            Creador = e.getCreador();
+            event = (EventModel) datosRecibidos.getSerializable("event");
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
-            System.out.print(Titulo + "\n");
-            System.out.print(Descripcion + "\n");
-            System.out.print(Localizacion + "\n");
-            System.out.print(Fecha[0] + "\n");
-            System.out.print(Fecha[1] + "\n");
-            txtTitle.setText(Titulo);
-            txtDescription.setText(Descripcion);
-            txtLoc.setText(String.valueOf(Localizacion));
+            txtTitle.setText(event.getTitulo());
+            txtDescription.setText(event.getDescripcion());
+            txtLoc.setText(String.valueOf(event.getLocalizacion()));
+            String[] Fecha = event.getFecha().split(" ");
             txtFecha.setText(Fecha[0]);
             txtHora.setText(Fecha[1]);
-            txtMiembros.setText(Miembros.size() + " usuarios participarán en este evento");
-            txtCreador.setText("Creado por: " + Creador);
+            txtMiembros.setText(event.getMiembros().size() + " usuarios participarán en este evento");
+            txtCreador.setText("Creado por: " + event.getCreador());
         }
     }
 

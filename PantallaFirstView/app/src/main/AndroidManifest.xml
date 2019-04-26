@@ -21,7 +21,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name="com.example.PETBook.EventInfo"></activity>
+        <activity android:name="com.example.PETBook.EditEvent"></activity>
+        <activity android:name="com.example.PETBook.EventInfo" />
         <activity
             android:name="com.example.PETBook.MainActivity"
             android:label="@string/title_activity_main"
