@@ -86,6 +86,7 @@ public class MyProfileFragment extends Fragment implements AsyncResult {
         // Inflate the layout for this fragment
         MyView = inflater.inflate(R.layout.fragment_my_profile, container, false);
         // Set tittle to the fragment
+        getActivity().setTitle("Mi perfil");
 
         textInputName      = (TextInputLayout) MyView.findViewById(R.id.nameTextInput);
         textInputSurnames      = (TextInputLayout) MyView.findViewById(R.id.surnamesTextInput);
