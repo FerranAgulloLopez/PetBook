@@ -52,6 +52,17 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+    <string-array name="Type">
+        <item>Dog</item>
+        <item>Cat</item>
+        <item>Bird</item>
+        <item>Turtle</item>
+        <item>Horse</item>
+        <item>Duck</item>
+        <item>Hamster</item>
+        <item>Rabbit</item>
+        <item>Other</item>
+    </string-array>
     <string name="Sex">Sex</string>
     <string name="title_activity_new_event">NewEvent</string>
     <string name="title_activity_main">MainActivity</string>

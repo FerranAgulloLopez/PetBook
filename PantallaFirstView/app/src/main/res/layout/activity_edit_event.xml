@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:id="@+id/editTextTitle"
+            android:id="@+id/editNamePet"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -58,10 +58,10 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextTitle" />
+            app:layout_constraintTop_toBottomOf="@+id/editNamePet" />
 
         <EditText
-            android:id="@+id/editTextInfo"
+            android:id="@+id/editDescriptionPet"
             android:layout_width="378dp"
             android:layout_height="45dp"
             android:layout_marginStart="16dp"
@@ -93,10 +93,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextInfo" />
+            app:layout_constraintTop_toBottomOf="@+id/editDescriptionPet" />
 
         <EditText
-            android:id="@+id/editTextFecha"
+            android:id="@+id/editRacePet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -126,10 +126,10 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextFecha" />
+            app:layout_constraintTop_toBottomOf="@+id/editRacePet" />
 
         <EditText
-            android:id="@+id/editTextHora"
+            android:id="@+id/editEspeciePet"
             android:layout_width="159dp"
             android:layout_height="45dp"
             android:layout_marginStart="16dp"
@@ -159,10 +159,10 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextHora" />
+            app:layout_constraintTop_toBottomOf="@+id/editEspeciePet" />
 
         <EditText
-            android:id="@+id/editTextLoc"
+            android:id="@+id/editEdadPet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -191,7 +191,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageButtonCancelEdit"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextLoc"
+            app:layout_constraintTop_toBottomOf="@+id/editEdadPet"
             app:srcCompat="@drawable/exito" />
 
         <ImageButton
@@ -206,7 +206,7 @@
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editTextInfo"
+            app:layout_constraintTop_toBottomOf="@+id/editDescriptionPet"
             app:srcCompat="@drawable/no_editar" />
     </android.support.constraint.ConstraintLayout>
     </ScrollView>

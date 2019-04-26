@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,6 +43,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
     private TextView txtDescription;
     private ImageButton editButton;
     private ImageButton deleteButton;
+    private PetModel petModel;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -60,13 +62,15 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
 
 
 
-        /*editButton = (Button) findViewById(R.id.EditButtonPet);
+        editButton = (ImageButton) findViewById(R.id.EditPetButton);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editEvent();
+                Intent intent = new Intent(PetInfo.this,EditPet.class);
+                intent.putExtra("pet",petModel);
+                startActivity(intent);
             }
-        });*/
+        });
 
 
         deleteButton = (ImageButton) findViewById(R.id.DeletePetButton);

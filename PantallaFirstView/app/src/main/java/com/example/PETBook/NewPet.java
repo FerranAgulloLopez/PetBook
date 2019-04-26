@@ -25,7 +25,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
     private Spinner sexo;
     private EditText color;
     private EditText race;
-    private EditText especie;
+    private Spinner especie;
     private EditText description;
     private Button buttonAddPet;
     private TextView textNM;
@@ -83,7 +83,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
         sexoPet = sexo.getSelectedItem().toString();
         colorPet = color.getText().toString();
         racePet = race.getText().toString();
-        especiePet = especie.getText().toString();
+        especiePet = especie.getSelectedItem().toString();
         descPet = description.getText().toString();
 
         if (validateName()) {
@@ -131,7 +131,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
                 }
                 System.out.println(json.getInt("code") +"\n\n\n");
 
-                Intent intent = new Intent(this, MyPetsFragment.class);
+                Intent intent = new Intent(NewPet.this, MainActivity.class);
                 intent.putExtra("fragment","pets");
                 startActivity(intent);
             }

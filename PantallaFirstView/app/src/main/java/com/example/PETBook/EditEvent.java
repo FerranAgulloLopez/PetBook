@@ -42,10 +42,10 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
         setContentView(R.layout.activity_edit_event);
         Bundle eventEdit = getIntent().getExtras();
 
-        titulo = (EditText) findViewById(R.id.editTextTitle);
-        descripcion = (EditText) findViewById(R.id.editTextInfo);
+        titulo = (EditText) findViewById(R.id.editNamePet);
+        descripcion = (EditText) findViewById(R.id.editDescriptionPet);
 
-        fecha = (EditText) findViewById(R.id.editTextFecha);
+        fecha = (EditText) findViewById(R.id.editRacePet);
         fecha.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,7 +55,7 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
             }
         });
 
-        hora = (EditText) findViewById(R.id.editTextHora);
+        hora = (EditText) findViewById(R.id.editEspeciePet);
         hora.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,7 +64,7 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
             }
         });
 
-        loc = (EditText) findViewById(R.id.editTextLoc);
+        loc = (EditText) findViewById(R.id.editEdadPet);
 
         acceptEdit = (ImageButton) findViewById(R.id.imageButtonAcceptEdit);
         acceptEdit.setOnClickListener(new View.OnClickListener(){
