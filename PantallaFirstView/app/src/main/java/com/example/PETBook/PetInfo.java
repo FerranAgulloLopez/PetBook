@@ -2,6 +2,7 @@ package com.example.PETBook;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.EventModel;
@@ -48,17 +50,17 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pets_info);
 
-        textNombre = (TextView) findViewById(R.id.NombrePet);
-        textAge = (TextView) findViewById(R.id.edad);
-        textSex = (TextView) findViewById(R.id.sexo);
-        textType = (TextView) findViewById(R.id.type);
-        textColor = (TextView) findViewById(R.id.color);
-        textRace = (TextView) findViewById(R.id.raza);
-        txtDescription = (TextView) findViewById(R.id.descripcion);
+        textNombre = (TextView) findViewById(R.id.nombrePetInfo);
+        textAge = (TextView) findViewById(R.id.edadInfo);
+        textSex = (TextView) findViewById(R.id.sexoInfo);
+        textType = (TextView) findViewById(R.id.typeInfo);
+        textColor = (TextView) findViewById(R.id.colorInfo);
+        textRace = (TextView) findViewById(R.id.razaInfo);
+        txtDescription = (TextView) findViewById(R.id.descripcionInfo);
 
 
 
-        /*editButton = (Button) findViewById(R.id.buttonEditEvent);
+        /*editButton = (Button) findViewById(R.id.EditButtonPet);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,17 +69,17 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
         });*/
 
 
-        deleteButton = (ImageButton) findViewById(R.id.imageButtonDelete);
+        deleteButton = (ImageButton) findViewById(R.id.DeletePetButton);
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder error = new AlertDialog.Builder(PetInfo.this);
-                error.setMessage("Esta seguro que quiere eliminar el evento?")
+                error.setMessage("Esta seguro que quiere eliminar la mascota?")
                         .setCancelable(false)
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //deletePet();
+                                deletePet();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -88,22 +90,22 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
                         });
                 AlertDialog errorE = error.create();
                 // Titulo para el dialog
-                errorE.setTitle("Eliminar evento");
+                errorE.setTitle("Eliminar mascota");
                 errorE.show();
             }
         });
 
 
         recibirDatos();
-    }
 
+    }
     private void recibirDatos(){
         Bundle datosRecibidos = this.getIntent().getExtras();
         if(datosRecibidos != null) {
             PetModel petModel = (PetModel) datosRecibidos.getSerializable("pet");
             id = petModel.getId();
             name = petModel.getNombre();
-            age = petModel.getEdad();
+            age = petModel.getEdad().toString();
             sex = petModel.getSexo();
             type = petModel.getEspecie();
             color = petModel.getColor();
@@ -119,42 +121,51 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
             System.out.print(race + "\n");
             System.out.print(description + "\n");
             textNombre.setText(name);
+            System.out.print("textNombre bien");
+
             textAge.setText(age);
+            System.out.print("textAge bien");
+
             textSex.setText(sex);
+            System.out.print("textSex bien");
+
             textType.setText(type);
+            System.out.print("textType bien");
+
             textColor.setText(color);
+            System.out.print("textColor bien");
+
             textRace.setText(race);
-            txtDescription.setText(description);;
+            System.out.print("textRace bien");
+
+            txtDescription.setText(description);
+            System.out.print("textDescription bien");
+
         }
-    }/*
+    }
     private void deletePet(){
         SingletonUsuario su = SingletonUsuario.getInstance();
-        String localizacion = txtLoc.getText().toString();
-        String titulo = txtTitle.getText().toString();
-        String descripcion = txtDescription.getText().toString();
-        Boolean publico = true;
-        String Fecha = txtFecha.getText().toString() + "T" + txtHora.getText().toString() + ":00.000Z";
         String user = su.getEmail();
-
-        JSONObject jsonToSend = new JSONObject();
-        try {
-            jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion)/10); //cambiar cuando se implemente MAPS
-            jsonToSend.accumulate("descripcion", descripcion);
-            jsonToSend.accumulate("fecha", Fecha); //2019-05-24T19:13:00.000Z formato fecha
-            jsonToSend.accumulate("publico", publico);
-            jsonToSend.accumulate("radio", 0); //No se trata el valor por Google Maps
-            jsonToSend.accumulate("titulo", titulo);
-            jsonToSend.accumulate("userEmail", user);
-            System.out.print(jsonToSend);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        String nombrePet = textNombre.getText().toString();
 
         Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/DeleteEvento/", "DELETE", jsonToSend.toString());
-    }*/
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/DeletePet/" + user + "?nombreMascota=" + nombrePet, "DELETE", null);
+    }
     @Override
-    public void OnprocessFinish(JSONObject output) {
-
+    public void OnprocessFinish(JSONObject json) {
+        try {
+            if (json.getInt("code") == 200) {
+                System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
+                Toast.makeText(this, "Mascota correctamente eliminada", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(this, MainActivity.class);
+                intent.putExtra("fragment", "pets");
+                startActivity(intent);
+            } else {
+                System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
+                Toast.makeText(this, "El usuario no existe", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
