@@ -1,6 +1,7 @@
 package com.example.PETBook;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,6 +67,17 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                     SingletonUsuario.getInstance();
                     SingletonUsuario.setEmail(usuari.getText().toString());
                      System.out.println("Ha ido bien, codigo 200");
+
+
+                    /*
+                    Register that the user has logged in
+                     */
+                    SharedPreferences sharedPreferences = getSharedPreferences("credenciales", MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("login", usuari.getText().toString());
+                    editor.commit();
+
+
                     Intent intent = new Intent(this, MainActivity.class);
                     //intent.putExtra("fragment", "home");
                     startActivity(intent);

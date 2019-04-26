@@ -1,6 +1,7 @@
 package com.example.PETBook;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -153,6 +154,15 @@ public class MainActivity extends AppCompatActivity
                     .setPositiveButton("Si",new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int which){
+
+                            /*
+                            remove info of user logged in
+                             */
+                            SharedPreferences sharedPreferences = getSharedPreferences("credenciales", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.remove("login");
+                            editor.commit();
+
                             finish();
                         }
                     })
