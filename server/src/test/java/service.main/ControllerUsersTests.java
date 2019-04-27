@@ -135,4 +135,33 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
     public void updateUserByEmailNOTINDB() throws Exception {
         this.mockMvc.perform(post("/ServerRestAPI/update/noUser@petbook.com")).andDo(print()).andExpect(status().isNotFound());
     }
+
+
+    /*
+    Set profile picture
+     */
+
+    @Test
+    public void setMockMvc() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setProfilePicture_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/setPicture/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setProfilePicture_operation/input_picture.json")))
+                .andDo(print()).andExpect(status().isOk());
+    }
+
+
+    /*
+    Get profile picture
+     */
+
+    @Test
+    public void getProfilePicture() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getProfilePicture_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/setPicture/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getProfilePicture_operation/input_picture.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/getPicture/foo@mail.com"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"getProfilePicture_operation/output_getPicture.json")));
+    }
+
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import service.main.entity.Image;
 import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
@@ -34,7 +35,7 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "The user already exists")
     })
-    public ResponseEntity<?> registerUser(@ApiParam(value="A user with email and password", required = true) @RequestBody DataUser inputUser) {
+    public ResponseEntity<?> registerUser(@ApiParam(value="A user with email and password", required = true, example = "petbook@mail.com") @RequestBody DataUser inputUser) {
         try {
             serverService.RegisterUser(inputUser);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -140,10 +141,10 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> setPictureUser(@PathVariable String email, @RequestBody String picture)
+    public ResponseEntity<?> setPictureUser(@PathVariable String email, @RequestBody DataImage picture)
     {
         try {
-            serverService.setProfilePicture(email, picture);
+            serverService.setProfilePicture(email, picture.getImage());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {

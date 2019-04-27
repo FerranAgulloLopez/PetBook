@@ -107,13 +107,15 @@ public class ServerServiceImpl implements ServerService {
 
 
     @Override
-    public String getProfilePicture(String email) throws NotFoundException {
+    public DataImage getProfilePicture(String email) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
         if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
         else {
             String Picture = user.get().getFoto();
             if (Picture == null) throw new NotFoundException(NOTPICTURE);
-            return Picture;
+            DataImage image = new DataImage();
+            image.setImage(Picture);
+            return image;
         }
     }
 
@@ -122,7 +124,9 @@ public class ServerServiceImpl implements ServerService {
         Optional<User> user = userRepository.findById(email);
         if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
         else {
-            user.get().setFoto(picture);
+            User userToSave = user.get();
+            userToSave.setFoto(picture);
+            userRepository.save(userToSave);
         }
     }
 

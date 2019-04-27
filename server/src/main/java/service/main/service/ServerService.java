@@ -1,9 +1,6 @@
 package service.main.service;
 
-import service.main.entity.Event;
-import service.main.entity.InterestSite;
-import service.main.entity.Pet;
-import service.main.entity.User;
+import service.main.entity.*;
 import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
@@ -29,6 +26,10 @@ public interface ServerService {
     public User getUserByEmail(String email) throws NotFoundException;
 
     public void updateUserByEmail(String email, OutUpdateUserProfile user) throws NotFoundException;
+
+    public DataImage getProfilePicture(String email) throws NotFoundException;
+
+    public void setProfilePicture(String email, String picture) throws NotFoundException;
 
 
     /*
@@ -80,7 +81,5 @@ public interface ServerService {
     public void voteInterestSite(String interestSiteName, String interestSiteLocalization, String userEmail) throws NotFoundException, BadRequestException;
 
 
-    public String getProfilePicture(String email) throws NotFoundException;
 
-    public void setProfilePicture(String email, String picture) throws NotFoundException;
 }
