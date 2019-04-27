@@ -5,20 +5,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.Models.PetModel;
 import com.example.pantallafirstview.R;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class PetInfo extends AppCompatActivity implements AsyncResult {
@@ -67,7 +62,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PetInfo.this,EditPet.class);
-                intent.putExtra("pet",petModel);
+                intent.putExtra("pet", petModel);
                 startActivity(intent);
             }
         });
@@ -78,9 +73,9 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder error = new AlertDialog.Builder(PetInfo.this);
-                error.setMessage("Esta seguro que quiere eliminar la mascota?")
+                error.setMessage("Are you sure you want to delete this pet?")
                         .setCancelable(false)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 deletePet();
@@ -94,7 +89,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
                         });
                 AlertDialog errorE = error.create();
                 // Titulo para el dialog
-                errorE.setTitle("Eliminar mascota");
+                errorE.setTitle("Delete pet");
                 errorE.show();
             }
         });
@@ -106,7 +101,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
     private void recibirDatos(){
         Bundle datosRecibidos = this.getIntent().getExtras();
         if(datosRecibidos != null) {
-            PetModel petModel = (PetModel) datosRecibidos.getSerializable("pet");
+            petModel = (PetModel) datosRecibidos.getSerializable("pet");
             id = petModel.getId();
             name = petModel.getNombre();
             age = petModel.getEdad().toString();
@@ -160,13 +155,13 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
         try {
             if (json.getInt("code") == 200) {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
-                Toast.makeText(this, "Mascota correctamente eliminada", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Pet successfully deleted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("fragment", "pets");
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
-                Toast.makeText(this, "El usuario no existe", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "User doesn't exist", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -35,8 +35,8 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_event);
-        Bundle eventEdit = getIntent().getExtras();
+        setContentView(R.layout.activity_edit_pet);
+        Bundle petEdit = getIntent().getExtras();
 
         nombre = (EditText) findViewById(R.id.editNamePet);
         sexo = (Spinner) findViewById(R.id.editSexPet);
@@ -52,7 +52,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
             @Override
             public void onClick(View v){
                 AlertDialog.Builder edit = new AlertDialog.Builder(EditPet.this);
-                edit.setMessage("You want to confirm the data?")
+                edit.setMessage("Do you want to confirm the data?")
                         .setCancelable(false)
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
@@ -82,7 +82,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(EditPet.this,EventInfo.class);
+                                Intent intent = new Intent(EditPet.this,PetInfo.class);
                                 intent.putExtra("pet",petModel);
                                 startActivity(intent);
                             }
@@ -112,7 +112,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
             nombre.setText(petModel.getNombre());
             //sexo.setSelection;
             raza.setText(petModel.getRaza());
-            edad.setText(petModel.getEdad());
+            edad.setText(String.valueOf(petModel.getEdad()));
             color.setText(petModel.getColor());
             descripcion.setText(petModel.getDescripcion());
         }
@@ -141,7 +141,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
             }
 
             Conexion con = new Conexion(EditPet.this);
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/UpdatePet/", "PUT", jsonToSend.toString());
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/UpdatePet/" + su.getEmail(), "PUT", jsonToSend.toString());
         }
 
 
