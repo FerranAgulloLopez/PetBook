@@ -355,16 +355,17 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PutMapping(value = "/UpdatePet/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "UPDATE Pet", notes = "Updates the information of a pet. The Pet is identified by user email and name.",tags = "Pets")
+    @PutMapping(value = "/UpdatePet/{email}/{name}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "UPDATE Pet", notes = "Updates the information of a pet. The Pet is identified by user email and name. Updates everything except the user email",tags = "Pets")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The pet does not exist in the database"),
     })
     public ResponseEntity<?> updateMascota(@PathVariable String email,
+                                           @PathVariable String name,
                                            @ApiParam(value="New data of the pet", required = true) @RequestBody DataPetUpdate mascota)
     {
         try {
-            serverService.updateMascota(email, mascota);
+            serverService.updateMascota(email, name, mascota);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {

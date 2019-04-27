@@ -60,7 +60,7 @@ public interface ServerService {
 
     public Pet mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
-    void updateMascota(String email, DataPetUpdate mascota) throws NotFoundException;
+    void updateMascota(String email, String name, DataPetUpdate mascota) throws NotFoundException;
 
     public void deleteMascota(String emailDuenyo, String nombreMascota) throws NotFoundException;
 
