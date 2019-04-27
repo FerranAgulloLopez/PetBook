@@ -356,7 +356,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PutMapping(value = "/UpdatePet/{email}/{name}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "UPDATE Pet", notes = "Updates the information of a pet. The Pet is identified by user email and name. Updates everything except the user email",tags = "Pets")
+    @ApiOperation(value = "UPDATE Pet", notes = "Updates the information of a pet. The Pet is identified by the user email and the name given in the URL. The new data is given in DataPetUpdate(JSON). Updates everything except the user email",tags = "Pets")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The pet does not exist in the database"),
     })
