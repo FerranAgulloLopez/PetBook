@@ -107,13 +107,15 @@ public class ServerServiceImpl implements ServerService {
 
 
     @Override
-    public String getProfilePicture(String email) throws NotFoundException {
+    public DataImage getProfilePicture(String email) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
         if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
         else {
             String Picture = user.get().getFoto();
             if (Picture == null) throw new NotFoundException(NOTPICTURE);
-            return Picture;
+            DataImage image = new DataImage();
+            image.setImage(Picture);
+            return image;
         }
     }
 
@@ -122,7 +124,9 @@ public class ServerServiceImpl implements ServerService {
         Optional<User> user = userRepository.findById(email);
         if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
         else {
-            user.get().setFoto(picture);
+            User userToSave = user.get();
+            userToSave.setFoto(picture);
+            userRepository.save(userToSave);
         }
     }
 
@@ -161,9 +165,9 @@ public class ServerServiceImpl implements ServerService {
         Localization localizacion = new Localization(evento.getCoordenadas(),evento.getRadio());
 
         Event evento2 = new Event(evento.getUserEmail(), localizacion.getId(), evento.getFecha(), evento.getTitulo(), evento.getDescripcion(), evento.isPublico());
-        if(!eventoRepository.existsById(evento2.getId())) throw new NotFoundException(EVENTNOTDB);
-
         Optional<Event> optEvent = eventoRepository.findById(evento2.getId());
+        if(! optEvent.isPresent()) throw new NotFoundException(EVENTNOTDB);
+
         Event event3 = optEvent.get();
         event3.setDescripcion(evento2.getDescripcion());
         event3.setPublico(evento2.getPublico());
@@ -184,8 +188,8 @@ public class ServerServiceImpl implements ServerService {
         if(!userRepository.existsById(usermail)) throw new NotFoundException(USERNOTDB);
         Localization localizacion = new Localization(coordinates,radius);
         Event evento = new Event(creatormail,localizacion.getId(),fecha);
-        if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException(EVENTNOTDB);
         Optional<Event> optEvent =  eventoRepository.findById(evento.getId());
+        if(! optEvent.isPresent()) throw new NotFoundException(EVENTNOTDB);
         Event event = optEvent.get();
         if(! event.userParticipates(usermail)) throw new BadRequestException(USER_NOT_IN_EVENT);
         event.removeUser(usermail);
@@ -223,15 +227,25 @@ public class ServerServiceImpl implements ServerService {
         return pet.get();
     }
 
-    public void updateMascota(String email, DataPetUpdate mascota) throws NotFoundException {
+    public void updateMascota(String email, String name, DataPetUpdate inMascota) throws NotFoundException {
+        Pet mascota = new Pet(name, email);
+        String id = mascota.getId();
+        Optional<Pet> optPet = mascotaRepository.findById(id);
+        if(! optPet.isPresent()) throw new NotFoundException(PETNOTDB);
+        Pet pet = optPet.get();
 
-        Pet mascota2 = new Pet(mascota.getNombre(), email, mascota.getEspecie(), mascota.getRaza(),
-                                       mascota.getSexo(), mascota.getDescripcion(), mascota.getEdad(), mascota.getColor(), mascota.getFoto());
+        if(! name.equals(inMascota.getNombre() ) ) mascotaRepository.deleteById(id); // nombre cambia -->  id cambia.    Asi que hay que destruir la instancia para que no quede mascotas fantasmas
 
-        String id = mascota2.getId();
-        if(!mascotaRepository.existsById(id)) throw new NotFoundException(PETNOTDB);
-        mascotaRepository.deleteById(id);
-        mascotaRepository.save(mascota2);
+        pet.setColor(inMascota.getColor());
+        pet.setDescripcion(inMascota.getDescripcion());
+        pet.setEdad(inMascota.getEdad());
+        pet.setEspecie(inMascota.getEspecie());
+        pet.setFoto(inMascota.getFoto());
+        pet.setRaza(inMascota.getRaza());
+        pet.setSexo(inMascota.getSexo());
+        pet.setNombre(inMascota.getNombre());
+
+        mascotaRepository.save(pet);
     }
 
     public List<Pet> findAllMascotasByUser(String email) throws NotFoundException{

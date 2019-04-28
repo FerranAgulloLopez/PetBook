@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import service.main.entity.Image;
 import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
@@ -34,7 +35,7 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 400, message = "The user already exists")
     })
-    public ResponseEntity<?> registerUser(@ApiParam(value="A user with email and password", required = true) @RequestBody DataUser inputUser) {
+    public ResponseEntity<?> registerUser(@ApiParam(value="A user with email and password", required = true, example = "petbook@mail.com") @RequestBody DataUser inputUser) {
         try {
             serverService.RegisterUser(inputUser);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -140,10 +141,10 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> setPictureUser(@PathVariable String email, @RequestBody String picture)
+    public ResponseEntity<?> setPictureUser(@PathVariable String email, @RequestBody DataImage picture)
     {
         try {
-            serverService.setProfilePicture(email, picture);
+            serverService.setProfilePicture(email, picture.getImage());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {
@@ -355,16 +356,17 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PutMapping(value = "/UpdatePet/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "UPDATE Pet", notes = "Updates the information of a pet. The Pet is identified by user email and name.",tags = "Pets")
+    @PutMapping(value = "/UpdatePet/{email}/{name}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "UPDATE Pet", notes = "Updates the information of a pet. The Pet is identified by the user email and the name given in the URL. The new data is given in DataPetUpdate(JSON). Updates everything except the user email",tags = "Pets")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The pet does not exist in the database"),
     })
     public ResponseEntity<?> updateMascota(@PathVariable String email,
+                                           @PathVariable String name,
                                            @ApiParam(value="New data of the pet", required = true) @RequestBody DataPetUpdate mascota)
     {
         try {
-            serverService.updateMascota(email, mascota);
+            serverService.updateMascota(email, name, mascota);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {
