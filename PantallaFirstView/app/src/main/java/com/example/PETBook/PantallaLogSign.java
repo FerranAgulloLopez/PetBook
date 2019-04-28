@@ -36,6 +36,7 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
     public void signUp(View view) {
         Intent intent = new Intent(this, PantallaSignUp.class);
         startActivity(intent);
+        finish();
     }
 
     public void comprovarConta(View view) {
@@ -64,10 +65,11 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                 String success = json.getString("success");
                 String mail = json.getString("mailconfirmed");
                 if(success.equals("true")) {
-                    SingletonUsuario.getInstance();
-                    SingletonUsuario.setEmail(usuari.getText().toString());
-                     System.out.println("Ha ido bien, codigo 200");
 
+                    SingletonUsuario user = SingletonUsuario.getInstance();
+                    SingletonUsuario.setEmail(usuari.getText().toString());
+                    user.setProfilePicture(null);
+                    System.out.println("Ha ido bien, codigo 200");
 
                     /*
                     Register that the user has logged in
