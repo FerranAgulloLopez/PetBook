@@ -1,77 +1,46 @@
 package com.example.PETBook.Models;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.codec.binary.Base64;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 
-import java.io.File;
-import java.io.IOException;
+
+import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 
 public class Image implements Serializable {
 
-    private String imagen; // Imagen
 
-    //private double maxSizeAttributeJSON = 1024*16 - 1024*1; // Maximo de bytes por fila del JSON
+    private static Image instance = null;
 
-    File file;
-
-
-    public Image() {
-        setImagen(new String());
+    private Image() {
     }
 
-    public Image(String path) throws IOException {         // USAR ESTA FUNCION PARA LEER LAS FOTOS(PASANDO EL PATH DE LA FOTO)
-        setImagen(new String() );
-
-        File file = new File(path);
-        this.file = file;   // Guardar File
-        byte[] fileContent = FileUtils.readFileToByteArray(file);
-        String encodedString = Base64.encodeBase64URLSafeString(fileContent);
-
-        imagen = encodedString;
+    public static Image getInstance() {
+        if (instance == null) instance = new Image();
+        return instance;
     }
 
 
-
-    public String getEncodedString() {
-        return getImagen();
+    public Bitmap StringToBitMap(String encodedString){
+        try{
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap=BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        }catch(Exception e){
+            e.getMessage();
+            return null;
+        }
     }
 
-    public String getImagen() { return imagen;}
+    public String BitmapToString(Bitmap picture) {
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        // In case you want to compress your image, here it's at 40%
+        picture.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-    public void setImagen(String imagen) {
-        this.imagen = imagen;
+        return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
-
-    public byte[] getBytes() {                  // Conseguir la imagen en byte[]
-        return Base64.decodeBase64(imagen);
-    }
-
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile() {
-
-    }
-
-
-
-
-
-    @Override
-    public String toString() {
-        return getEncodedString();
-    }
-
-
-
-
-
-
-
-
 
 
 

@@ -1,8 +1,11 @@
 package com.example.PETBook;
 
+import android.graphics.Bitmap;
+
 public class SingletonUsuario {
 
     private static String Email;
+    private Bitmap profilePicture;
 
     private static SingletonUsuario ourInstance;
 
@@ -14,6 +17,14 @@ public class SingletonUsuario {
     }
 
     private SingletonUsuario() {
+    }
+
+    public Bitmap getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(Bitmap profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
     public String getEmail(){
