@@ -105,13 +105,14 @@ public class RestApiController {
     @PutMapping(value = "/update/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Update all the information of the user", notes = "Updates the dateOfBirth, firstName, secondName and the postalCode of an user given its email",tags = "User")
     @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "The user was successfully updated"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> updateUser(@PathVariable String email, @RequestBody OutUpdateUserProfile user)
     {
         try {
             serverService.updateUserByEmail(email,user);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
