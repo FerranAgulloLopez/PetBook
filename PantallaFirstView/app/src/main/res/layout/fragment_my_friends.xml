@@ -25,8 +25,11 @@
                 android:layout_marginTop="1dp"
                 android:layout_marginEnd="1dp"
                 android:layout_marginRight="1dp"
+                android:background="@drawable/borderbottom"
                 android:gravity="center"
                 android:text="MIS AMIGOS"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="normal|bold"
                 app:layout_constraintEnd_toStartOf="@+id/notificationsTextView"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -40,6 +43,7 @@
                 android:layout_marginRight="1dp"
                 android:gravity="center"
                 android:text="NOTIFICACIONES"
+                android:textStyle="normal|bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/myfriendsTextView"
                 app:layout_constraintTop_toTopOf="parent" />

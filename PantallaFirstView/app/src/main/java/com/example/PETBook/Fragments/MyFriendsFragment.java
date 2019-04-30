@@ -1,6 +1,7 @@
 package com.example.PETBook.Fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -104,10 +105,18 @@ public class MyFriendsFragment extends Fragment {
     }
 
     private void showMyFriends() {
+        textViewMyfriends.setBackgroundResource(R.drawable.borderbottom);
+        textViewMyfriends.setTextColor(Color.parseColor("#840705"));
+        textViewNotifications.setBackgroundResource(0);
+        textViewNotifications.setTextColor(Color.parseColor("#96989A"));
         textView6.setText("Aquí veré mis amigos");
     }
 
     private void showNotifications() {
+        textViewNotifications.setBackgroundResource(R.drawable.borderbottom);
+        textViewNotifications.setTextColor(Color.parseColor("#840705"));
+        textViewMyfriends.setBackgroundResource(0);
+        textViewMyfriends.setTextColor(Color.parseColor("#96989A"));
         textView6.setText("Aquí veré mis notificaciones");
     }
 
