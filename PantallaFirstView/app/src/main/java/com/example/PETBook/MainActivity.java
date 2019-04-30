@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import com.example.PETBook.Fragments.HomeFragment;
 import com.example.PETBook.Fragments.MyCalendarFragment;
 import com.example.PETBook.Fragments.MyEventsFragment;
+import com.example.PETBook.Fragments.MyFriendsFragment;
 import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.PETBook.Fragments.MyPostsFragment;
 import com.example.PETBook.Fragments.MyProfileFragment;
@@ -26,7 +27,7 @@ import com.example.pantallafirstview.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
                             , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener
-                            , MyProfileFragment.OnFragmentInteractionListener {
+                            , MyProfileFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,10 @@ public class MainActivity extends AppCompatActivity
             }
             else if(fragType.equals("profile")){
                 fragment = new MyProfileFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if(fragType.equals("friends")){
+                fragment = new MyFriendsFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if(fragType.equals("posts")){
@@ -134,8 +139,11 @@ public class MainActivity extends AppCompatActivity
             myFragment = new MyPetsFragment();
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_profile) {
-                myFragment = new MyProfileFragment();
-                fragmentSeleccionado = true;
+            myFragment = new MyProfileFragment();
+            fragmentSeleccionado = true;
+        } else if (id == R.id.nav_friends) {
+            myFragment = new MyFriendsFragment();
+            fragmentSeleccionado = true;
         } else if (id == R.id.nav_events) {
             myFragment = new MyEventsFragment();
             fragmentSeleccionado = true;
