@@ -1,5 +1,7 @@
 package service.main.service;
 
+import org.mockito.internal.matchers.Not;
+import org.omg.CORBA.NO_IMPLEMENT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
@@ -7,10 +9,7 @@ import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
-import service.main.repositories.EventRepository;
-import service.main.repositories.InterestSiteRepository;
-import service.main.repositories.PetRepository;
-import service.main.repositories.UserRepository;
+import service.main.repositories.*;
 import service.main.util.SendEmailTLS;
 
 import java.util.ArrayList;
@@ -27,6 +26,7 @@ public class ServerServiceImpl implements ServerService {
     private static final String SITENOTDB = "The interest site does not exist in the database";
     private static final String NOTPICTURE = "The user does not have profile picture in the database";
     private static final String USER_NOT_IN_EVENT = "The user does not participate in the event";
+    private static final String THREADNOTDB = "The forum thread does not exist in the database";
 
 
     private SendEmailTLS mailsender;
@@ -42,6 +42,11 @@ public class ServerServiceImpl implements ServerService {
 
     @Autowired
     private InterestSiteRepository interestSiteRepository;
+
+    @Autowired
+    private ForumThreadRepository forumThreadRepository;
+
+
 
     /*
     User operations
@@ -104,8 +109,6 @@ public class ServerServiceImpl implements ServerService {
         }
     }
 
-
-
     @Override
     public DataImage getProfilePicture(String email) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
@@ -129,6 +132,8 @@ public class ServerServiceImpl implements ServerService {
             userRepository.save(userToSave);
         }
     }
+
+
 
     /*
     Event operations
@@ -159,7 +164,6 @@ public class ServerServiceImpl implements ServerService {
         if(!userRepository.existsById(participantmail)) throw new NotFoundException(USERNOTDB);
         return eventoRepository.findByParticipantesInOrderByFecha(participantmail);
     }
-
 
     public void updateEvento(DataEventUpdate evento) throws NotFoundException {
         Localization localizacion = new Localization(evento.getCoordenadas(),evento.getRadio());
@@ -197,7 +201,6 @@ public class ServerServiceImpl implements ServerService {
         eventoRepository.save(event);
     }
 
-
     public void deleteEvento(DataEvent event) throws NotFoundException {
         Localization localizacion = new Localization(event.getCoordenadas(),event.getRadio());
 
@@ -205,6 +208,8 @@ public class ServerServiceImpl implements ServerService {
         if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException(EVENTNOTDB);
         eventoRepository.deleteById(evento.getId());
     }
+
+
 
     /*
     Pet operations
@@ -217,7 +222,6 @@ public class ServerServiceImpl implements ServerService {
         if(mascotaRepository.existsById(mascota.getId())) throw new BadRequestException("The pet already exists in the database");
         mascotaRepository.save(mascota);
     }
-
 
     public Pet mascota_findById(String emailDuenyo, String nombreMascota) throws NotFoundException {
         String id = nombreMascota+emailDuenyo;
@@ -267,6 +271,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
+
     /*
     Interest Site operations
      */
@@ -303,6 +308,56 @@ public class ServerServiceImpl implements ServerService {
 
 
 
+    /*
+    Forum operations
+     */
+
+    @Override
+    public List<ForumThread> getAllForumThreads() {
+        return forumThreadRepository.findAll();
+    }
+
+    @Override
+    public ForumThread getForumThread(String creatorMail, String title) throws NotFoundException {
+        ForumThread aux = new ForumThread(creatorMail,title);
+        Optional<ForumThread> forumThread_opt = forumThreadRepository.findById(aux.getId());
+        if (!forumThread_opt.isPresent()) throw new NotFoundException(THREADNOTDB);
+        return forumThread_opt.get();
+    }
+
+
+    /*public void createNewForumTopic(String topicName) throws BadRequestException {
+        if (ForumThread.getTopics().contains(topicName)) throw new BadRequestException("The topic already exists in the database");
+        ForumThread.addTopic(topicName);
+    }*/
+
+    @Override
+    public void createNewForumThread(DataForumThread dataForumThread) throws BadRequestException, NotFoundException {
+        if (!userRepository.existsById(dataForumThread.getCreatorMail())) throw new NotFoundException(USERNOTDB);
+        ForumThread forumThread = dataForumThread.toForum();
+        if (forumThreadRepository.existsById(forumThread.getId())) throw new BadRequestException("The forum thread already exists");
+        forumThreadRepository.save(forumThread);
+    }
+
+    @Override
+    public void deleteForumThread(String creatorMail, String title) throws NotFoundException {
+        ForumThread aux = new ForumThread(creatorMail,title);
+        if (!forumThreadRepository.existsById(aux.getId())) throw new NotFoundException(THREADNOTDB);
+        forumThreadRepository.deleteById(aux.getId());
+    }
+
+    @Override
+    public void addForumComment(String creatorMail, String title, DataForumComment dataForumComment) throws NotFoundException {
+        ForumThread aux = new ForumThread(creatorMail,title);
+        Optional<ForumThread> forumThread_opt = forumThreadRepository.findById(aux.getId());
+        if (!forumThread_opt.isPresent()) throw new NotFoundException(THREADNOTDB);
+        ForumThread forumThread = forumThread_opt.get();
+        forumThread.addComment(dataForumComment.toComment());
+        forumThreadRepository.save(forumThread);
+    }
+
+
+
 
     /*
     Test operations TODO remove this section in the future
@@ -313,6 +368,7 @@ public class ServerServiceImpl implements ServerService {
         mascotaRepository.deleteAll();
         eventoRepository.deleteAll();
         interestSiteRepository.deleteAll();
+        forumThreadRepository.deleteAll();
     }
 
 

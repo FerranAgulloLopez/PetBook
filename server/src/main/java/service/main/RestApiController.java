@@ -296,8 +296,9 @@ public class RestApiController {
     }
 
 
+
     /*
-    Pets operations
+    Pet operations
      */
 
     @CrossOrigin
@@ -395,6 +396,9 @@ public class RestApiController {
 
 
     }
+
+
+
     /*
     InterestSite operations
      */
@@ -456,6 +460,52 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+
+
+    /*
+    Forum operations
+     */
+
+    /*@CrossOrigin
+    @PostMapping(value = "/CreateNewForumTopic")
+    @ApiOperation(value = "Creates a mew topic", notes = "Adds a new topic to the database. A topic is a subject, theme, matter...", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The topic already exists in the database")
+
+    })
+    public ResponseEntity<?> createNewForumTopic(@ApiParam(value="The topic's name", required = true) @RequestParam("name") String topicName) {
+        try {
+            serverService.createNewForumTopic(topicName);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }*/
+
+    @CrossOrigin
+    @PostMapping(value = "/CreateNewForumThread")
+    @ApiOperation(value = "Creates a new forum thread", notes = "Creates a new forum thread.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The thread already exists in the database"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+
+    })
+    public ResponseEntity<?> createNewForumThread(@ApiParam(value="The thread parameters", required = true) @RequestBody DataForumThread dataForumThread) {
+        try {
+            serverService.createNewForumThread(dataForumThread);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
+
+
 
 
     /*

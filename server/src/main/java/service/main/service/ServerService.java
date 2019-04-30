@@ -11,6 +11,8 @@ import java.util.List;
 
 public interface ServerService {
 
+
+
     /*
     User operations
      */
@@ -30,6 +32,7 @@ public interface ServerService {
     public DataImage getProfilePicture(String email) throws NotFoundException;
 
     public void setProfilePicture(String email, String picture) throws NotFoundException;
+
 
 
     /*
@@ -53,6 +56,7 @@ public interface ServerService {
     public void deleteEvento(DataEvent event) throws NotFoundException;
 
 
+
     /*
     Pet operations
      */
@@ -70,6 +74,7 @@ public interface ServerService {
     public void removeDataBase();
 
 
+
     /*
     Interest site operations
      */
@@ -80,6 +85,23 @@ public interface ServerService {
 
     public void voteInterestSite(String interestSiteName, String interestSiteLocalization, String userEmail) throws NotFoundException, BadRequestException;
 
+
+
+    /*
+    Forum operations
+     */
+
+    /*public void createNewForumTopic(String topicName) throws BadRequestException;*/
+
+    public List<ForumThread> getAllForumThreads();
+
+    public ForumThread getForumThread(String creatorMail, String title) throws NotFoundException;
+
+    public void createNewForumThread(DataForumThread dataForumThread) throws BadRequestException, NotFoundException;
+
+    public void deleteForumThread(String creatorMail, String title) throws NotFoundException;
+
+    public void addForumComment(String creatorMail, String title, DataForumComment dataForumComment) throws NotFoundException;
 
 
 }
