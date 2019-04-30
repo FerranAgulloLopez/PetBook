@@ -3,10 +3,12 @@ package com.example.PETBook.Fragments;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.pantallafirstview.R;
 
@@ -30,6 +32,9 @@ public class MyFriendsFragment extends Fragment {
 
     /* ATRIBUTOS   */
     private View MyView;
+    private TextView textViewMyfriends;
+    private TextView textViewNotifications;
+    private TextView textView6;
 
     private OnFragmentInteractionListener mListener;
 
@@ -71,6 +76,23 @@ public class MyFriendsFragment extends Fragment {
         MyView = inflater.inflate(R.layout.fragment_my_friends, container, false);
         // Set tittle to the fragment
         getActivity().setTitle("Mis amigos");
+        textViewMyfriends      = (TextView) MyView.findViewById(R.id.myfriendsTextView);
+        textViewNotifications  = (TextView) MyView.findViewById(R.id.notificationsTextView);
+        textView6              = (TextView) MyView.findViewById(R.id.textView6);
+
+        textViewMyfriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMyFriends();
+            }
+        });
+
+        textViewNotifications.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showNotifications();
+            }
+        });
         return MyView;
     }
 
@@ -79,6 +101,14 @@ public class MyFriendsFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    private void showMyFriends() {
+        textView6.setText("Aquí veré mis amigos");
+    }
+
+    private void showNotifications() {
+        textView6.setText("Aquí veré mis notificaciones");
     }
 
     @Override
