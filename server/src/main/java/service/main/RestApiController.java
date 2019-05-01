@@ -224,6 +224,7 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
     @CrossOrigin
     @PostMapping(value = "/acceptFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Accept a friend request from another user", tags="User", notes = "The user identified by *email* accepts a friend request from the user identified by *friend*. Then, the to users are friends.")
@@ -247,6 +248,51 @@ public class RestApiController {
         }
     }
 
+    @CrossOrigin
+    @PostMapping(value = "/denyFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Denies a friend request from another user", tags="User", notes = "The user identified by *email* denies a friend request from the user identified by *friend*.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
+            @ApiResponse(code = 400, message = "The user *email* havent sent a friend request to the other user")
+    })
+
+    public ResponseEntity<?> denyFriendRequest(@PathVariable String email,
+                                                 @PathVariable String friend)
+    {
+        try {
+            serverService.denyFriendRequest(email, friend);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/Unfriend/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Unfriends users", tags="User", notes = "The user identified by *email* unfriends the user identified by *friend* and vice versa.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
+            @ApiResponse(code = 400, message = "The users are not friends")
+    })
+
+    public ResponseEntity<?> unfriendRequest(@PathVariable String email,
+                                               @PathVariable String friend)
+    {
+        try {
+            serverService.unfriendRequest(email, friend);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
     /*
