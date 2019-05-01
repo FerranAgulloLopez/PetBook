@@ -30,6 +30,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
     private EditText descripcion;
     private ImageButton acceptEditPet;
     private ImageButton cancelEditPet;
+    private String editedName;
 
 
     @Override
@@ -110,11 +111,13 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
             petModel = (PetModel) datosRecibidos.getSerializable("pet");
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
             nombre.setText(petModel.getNombre());
-            //sexo.setSelection;
+            /*sexo.setSelected(2);
+            especie.setText(petModel.getEspecie());*/
             raza.setText(petModel.getRaza());
             edad.setText(String.valueOf(petModel.getEdad()));
             color.setText(petModel.getColor());
             descripcion.setText(petModel.getDescripcion());
+            editedName = nombre.getText().toString();
         }
     }
 
@@ -126,6 +129,8 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
         String age = edad.getText().toString();
         String col = color.getText().toString();
         String desc = descripcion.getText().toString();
+        String esp = especie.getSelectedItem().toString();
+        String sex = sexo.getSelectedItem().toString();
 
             JSONObject jsonToSend = new JSONObject();
             try{
@@ -135,13 +140,23 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
                 jsonToSend.accumulate("email", su.getEmail());
                 jsonToSend.accumulate("nombre", name);
                 jsonToSend.accumulate("raza", race);
+                jsonToSend.accumulate("especie", esp);
+                jsonToSend.accumulate("sexo", sex);
+
                 System.out.print(jsonToSend);
             } catch (Exception e){
                 e.printStackTrace();
             }
 
             Conexion con = new Conexion(EditPet.this);
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/UpdatePet/" + su.getEmail(), "PUT", jsonToSend.toString());
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/UpdatePet/" + su.getEmail() + "/" + editedName, "PUT", jsonToSend.toString());
+            System.out.println(name);
+            System.out.println(race);
+            System.out.println(age);
+            System.out.println(col);
+            System.out.println(desc);
+            System.out.println(esp);
+            System.out.println(sex);
         }
 
 
@@ -158,6 +173,8 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
                 petModel.setEdad(Integer.parseInt(edad.getText().toString()));
                 petModel.setColor(color.getText().toString());
                 petModel.setDescripcion(descripcion.getText().toString());
+                petModel.setEspecie(especie.getSelectedItem().toString());
+                petModel.setSexo(sexo.getSelectedItem().toString());
 
                 Intent intent = new Intent(EditPet.this, PetInfo.class);
                 intent.putExtra("pet",petModel);

@@ -24,9 +24,16 @@
         android:hardwareAccelerated="false"
         android:usesCleartextTraffic="true">
         <activity android:name="com.example.PETBook.EditEvent"></activity>
-        <activity android:name="com.example.PETBook.EditPet"></activity>
+        <activity
+            android:name="com.example.PETBook.PetInfo"
+            android:label="@string/title_activity_pets"
+            android:parentActivityName="com.example.PETBook.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.PETBook.MainActivity" />
+        </activity>
         <activity android:name="com.example.PETBook.EventInfo" />
-        <activity android:name="com.example.PETBook.PetInfo" />
+        <activity android:name="com.example.PETBook.EditPet" />
 
         <activity
             android:name="com.example.PETBook.MainActivity"
@@ -53,7 +60,7 @@
         </activity>
         <activity
             android:name="com.example.PETBook.NewPet"
-            android:parentActivityName="com.example.PETBook.PetsContainer">
+            android:parentActivityName="com.example.PETBook.MainActivity">
 
             <!-- The meta-data tag is required if you support API level 15 and lower -->
             <meta-data
