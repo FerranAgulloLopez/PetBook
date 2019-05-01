@@ -1,1 +1,1 @@
-{"email":"foo@mail.com","firstName":"Miguel","secondName":"Salamero","dateOfBirth":"hoy","postalCode":"08001","mailconfirmed":false}
+{"email":"foo@mail.com","firstName":"Miguel","secondName":"Salamero","dateOfBirth":"hoy","postalCode":"08001","mailconfirmed":false,"friends":{"friends":[],"friendRequests":[]}}
