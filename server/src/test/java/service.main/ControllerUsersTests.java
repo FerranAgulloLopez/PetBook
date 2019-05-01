@@ -125,7 +125,7 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updateUserByEmail_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(put("/ServerRESTAPI/update/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updateUserByEmail_operation/input_updateUser.json")))
-                .andDo(print()).andExpect(status().isOk());
+                .andDo(print()).andExpect(status().isCreated());
         this.mockMvc.perform(get("/ServerRESTAPI/GetUser/foo@mail.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"updateUserByEmail_operation/output_getUser.json")));
     }

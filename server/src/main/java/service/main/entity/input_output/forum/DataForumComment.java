@@ -1,4 +1,4 @@
-package service.main.entity.input_output;
+package service.main.entity.input_output.forum;
 
 import service.main.entity.ForumComment;
 

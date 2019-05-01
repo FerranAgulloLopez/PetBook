@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import service.main.exception.NotFoundException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class ForumThread implements Serializable {
     private String id;
     private String creatorMail;
     private Date creationDate;
+    private Date updateDate;
     private String title;
     private String description;
     private String topic;
@@ -74,6 +76,14 @@ public class ForumThread implements Serializable {
         return topic;
     }
 
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public List<ForumComment> getComments() {
+        return comments;
+    }
+
     /*
     Set
      */
@@ -98,6 +108,10 @@ public class ForumThread implements Serializable {
         this.topic = topic;
     }
 
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
     /*
     Auxiliary operations
      */
@@ -112,5 +126,18 @@ public class ForumThread implements Serializable {
 
     public void addComment(ForumComment comment) {
         this.comments.add(comment);
+    }
+
+    public ForumComment findComment(String commentId) {
+        ForumComment forumComment = null;
+        boolean found = false;
+        for (int i = 0; !found && i < comments.size(); ++i) {
+            ForumComment comment = comments.get(i);
+            if (comment.getId().equals(commentId)) {
+                forumComment = comment;
+                found = true;
+            }
+        }
+        return forumComment;
     }
 }

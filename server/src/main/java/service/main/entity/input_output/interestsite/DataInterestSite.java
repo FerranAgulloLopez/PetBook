@@ -1,4 +1,4 @@
-package service.main.entity.input_output;
+package service.main.entity.input_output.interestsite;
 
 import service.main.entity.InterestSite;
 

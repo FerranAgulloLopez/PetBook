@@ -1,21 +1,27 @@
 package service.main.service;
 
-import org.mockito.internal.matchers.Not;
-import org.omg.CORBA.NO_IMPLEMENT;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import service.main.entity.*;
-import service.main.entity.input_output.*;
+import service.main.entity.input_output.event.DataEvent;
+import service.main.entity.input_output.event.DataEventUpdate;
+import service.main.entity.input_output.forum.DataForumComment;
+import service.main.entity.input_output.forum.DataForumCommentUpdate;
+import service.main.entity.input_output.forum.DataForumThread;
+import service.main.entity.input_output.forum.DataForumThreadUpdate;
+import service.main.entity.input_output.image.DataImage;
+import service.main.entity.input_output.interestsite.DataInterestSite;
+import service.main.entity.input_output.pet.DataPetUpdate;
+import service.main.entity.input_output.user.DataUser;
+import service.main.entity.input_output.user.OutLogin;
+import service.main.entity.input_output.user.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.*;
 import service.main.util.SendEmailTLS;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service("serverService")
 public class ServerServiceImpl implements ServerService {
@@ -314,17 +320,13 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public List<ForumThread> getAllForumThreads() {
-        return forumThreadRepository.findAll();
+        return forumThreadRepository.findAllByOrderByTopicAscCreationDateDesc();
     }
 
     @Override
     public ForumThread getForumThread(String creatorMail, String title) throws NotFoundException {
-        ForumThread aux = new ForumThread(creatorMail,title);
-        Optional<ForumThread> forumThread_opt = forumThreadRepository.findById(aux.getId());
-        if (!forumThread_opt.isPresent()) throw new NotFoundException(THREADNOTDB);
-        return forumThread_opt.get();
+        return auxGetForumThread(creatorMail,title);
     }
-
 
     /*public void createNewForumTopic(String topicName) throws BadRequestException {
         if (ForumThread.getTopics().contains(topicName)) throw new BadRequestException("The topic already exists in the database");
@@ -335,7 +337,15 @@ public class ServerServiceImpl implements ServerService {
     public void createNewForumThread(DataForumThread dataForumThread) throws BadRequestException, NotFoundException {
         if (!userRepository.existsById(dataForumThread.getCreatorMail())) throw new NotFoundException(USERNOTDB);
         ForumThread forumThread = dataForumThread.toForum();
-        if (forumThreadRepository.existsById(forumThread.getId())) throw new BadRequestException("The forum thread already exists");
+        if (forumThreadRepository.existsById(forumThread.getId())) throw new BadRequestException("The forum thread already exists in the database");
+        forumThreadRepository.save(forumThread);
+    }
+
+    @Override
+    public void updateForumThread(String creatorMail, String title, DataForumThreadUpdate dataForumThreadUpdate) throws NotFoundException {
+        ForumThread forumThread = auxGetForumThread(creatorMail,title);
+        forumThread.setDescription(dataForumThreadUpdate.getDescription());
+        forumThread.setUpdateDate(dataForumThreadUpdate.getUpdateDate());
         forumThreadRepository.save(forumThread);
     }
 
@@ -347,16 +357,55 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public void addForumComment(String creatorMail, String title, DataForumComment dataForumComment) throws NotFoundException {
-        ForumThread aux = new ForumThread(creatorMail,title);
-        Optional<ForumThread> forumThread_opt = forumThreadRepository.findById(aux.getId());
-        if (!forumThread_opt.isPresent()) throw new NotFoundException(THREADNOTDB);
-        ForumThread forumThread = forumThread_opt.get();
+    public List<ForumComment> getAllThreadComments(String creatorMail, String title) throws NotFoundException {
+        ForumThread forumThread = auxGetForumThread(creatorMail,title);
+        List<ForumComment> comments = forumThread.getComments();
+        comments.sort(Comparator.comparing(ForumComment::getCreationDate));
+        return comments;
+    }
+
+    @Override
+    public void createForumComment(String creatorMail, String title, DataForumComment dataForumComment) throws NotFoundException, BadRequestException {
+        ForumComment aux = new ForumComment(dataForumComment.getCreatorMail(),dataForumComment.getCreationDate());
+        if (forumThreadRepository.existsByCommentsContaining(aux.getId())) throw new BadRequestException("The forum comment already exists in the database");
+        ForumThread forumThread = auxGetForumThread(creatorMail,title);
         forumThread.addComment(dataForumComment.toComment());
         forumThreadRepository.save(forumThread);
     }
 
+    @Override
+    public void updateForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException {
+        ForumThread forumThread = auxGetForumThread(threadCreatorMail, threadTitle);
+        ForumComment aux = new ForumComment(commentCreatorMail,commentCreationDate);
+        ForumComment forumComment = forumThread.findComment(aux.getId());
+        if (forumComment == null) throw new NotFoundException("The forum comment does not exist in the database");
+        forumComment.setUpdateDate(dataForumCommentUpdate.getUpdateDate());
+        forumComment.setDescription(dataForumCommentUpdate.getDescription());
+        forumThreadRepository.save(forumThread);
+    }
 
+    @Override
+    public void deleteForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate) throws NotFoundException {
+        ForumThread forumThread = auxGetForumThread(threadCreatorMail, threadTitle);
+        ForumComment aux = new ForumComment(commentCreatorMail,commentCreationDate);
+        ForumComment forumComment = forumThread.findComment(aux.getId());
+        if (forumComment == null) throw new NotFoundException("The forum comment does not exist in the database");
+        forumThread.getComments().remove(forumComment);
+        forumThreadRepository.save(forumThread);
+    }
+
+
+
+    /*
+    Auxiliary operations
+     */
+
+    private ForumThread auxGetForumThread(String creatorMail, String title) throws NotFoundException {
+        ForumThread aux = new ForumThread(creatorMail,title);
+        Optional<ForumThread> forumThread_opt = forumThreadRepository.findById(aux.getId());
+        if (!forumThread_opt.isPresent()) throw new NotFoundException(THREADNOTDB);
+        return forumThread_opt.get();
+    }
 
 
     /*
