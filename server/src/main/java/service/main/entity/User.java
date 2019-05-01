@@ -3,7 +3,6 @@ package service.main.entity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import service.main.util.PBKDF2Hasher;
@@ -34,6 +33,7 @@ public class User implements Serializable {
                             // Para conseguir la foto, pasar a Base64(byte[]) y luego convertir a file.
                             // File   -> byte[] -> String[]
                             // String[] -> byte[] -> File
+    private Friend friends; // Amigos tanto los confirmados como lo que solicitan serlo.
 
 
     public User() {}
@@ -41,6 +41,8 @@ public class User implements Serializable {
     public User(String email, String password) {
         this.email = email;
         this.password = hasher.hash(password.toCharArray());
+
+        friends = new Friend();
     }
 
     public User(String email, String password, String firstName, String secondName, String dateOfBirth, String postalCode, boolean mailconfirmed, String foto) {
@@ -52,7 +54,11 @@ public class User implements Serializable {
         this.postalCode = postalCode;
         this.mailconfirmed = mailconfirmed;
         this.foto = foto;
+
+        friends = new Friend();
+
     }
+
 
     public User(String email, String password, String firstName, String secondName, String dateOfBirth, String postalCode, boolean mailconfirmed) {
         this.email = email;
@@ -62,7 +68,10 @@ public class User implements Serializable {
         this.dateOfBirth = dateOfBirth;
         this.postalCode = postalCode;
         this.mailconfirmed = mailconfirmed;
+
+        friends = new Friend();
     }
+
 
 
     /*
@@ -97,6 +106,8 @@ public class User implements Serializable {
 
     public String getFoto() { return foto; }
 
+    public Friend getFriends() { return friends; }
+
 
 
     /*
@@ -129,7 +140,37 @@ public class User implements Serializable {
 
     public void setFoto(String foto) { this.foto = foto; }
 
+    public void setFriends(Friend friends) { this.friends = friends; }
 
+
+
+    /*
+    Friends
+     */
+
+    public void addFriend(String friend) {
+        friends.addFriend(friend);
+    }
+
+    public void removeFriend(String friend) {
+        friends.removeFriend(friend);
+    }
+
+    public boolean isFriend(String friend)  {
+        return friends.isFriend(friend);
+    }
+
+    public void addFriendRequest(String friend) {
+        friends.addFriendRequest(friend);
+    }
+
+    public void removeFriendRequest(String friend) {
+        friends.removeFriendRequest(friend);
+    }
+
+    public boolean beenRequestedToBeFriendBy(String friend)  {
+        return friends.beenRequestedToBeFriendBy(friend);
+    }
 
 
     /*

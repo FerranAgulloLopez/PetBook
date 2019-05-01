@@ -44,6 +44,16 @@ public interface ServerService {
 
     public void setProfilePicture(String email, String picture) throws NotFoundException;
 
+    /*
+    Friends operations
+     */
+    List<User> getFriends(String emailUser) throws NotFoundException;
+    List<User> getFriendsRequests(String emailUser) throws NotFoundException; // Gets the users who made a request to the user identified by *email*
+
+
+    void sendFriendRequest(String emailUser, String emailRequested) throws NotFoundException, BadRequestException;
+    public void acceptFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
+
 
 
     /*
