@@ -3,16 +3,28 @@ package service.main;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.main.entity.Image;
-import service.main.entity.input_output.*;
+import service.main.entity.input_output.event.DataEvent;
+import service.main.entity.input_output.event.DataEventUpdate;
+import service.main.entity.input_output.forum.DataForumComment;
+import service.main.entity.input_output.forum.DataForumCommentUpdate;
+import service.main.entity.input_output.forum.DataForumThread;
+import service.main.entity.input_output.forum.DataForumThreadUpdate;
+import service.main.entity.input_output.image.DataImage;
+import service.main.entity.input_output.interestsite.DataInterestSite;
+import service.main.entity.input_output.pet.DataPetUpdate;
+import service.main.entity.input_output.user.DataUser;
+import service.main.entity.input_output.user.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.service.ServerService;
+
+import java.util.Date;
 
 
 @RestController
@@ -105,13 +117,14 @@ public class RestApiController {
     @PutMapping(value = "/update/{email}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Update all the information of the user", notes = "Updates the dateOfBirth, firstName, secondName and the postalCode of an user given its email",tags = "User")
     @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "The user was successfully updated"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> updateUser(@PathVariable String email, @RequestBody OutUpdateUserProfile user)
     {
         try {
             serverService.updateUserByEmail(email,user);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -295,8 +308,9 @@ public class RestApiController {
     }
 
 
+
     /*
-    Pets operations
+    Pet operations
      */
 
     @CrossOrigin
@@ -394,6 +408,9 @@ public class RestApiController {
 
 
     }
+
+
+
     /*
     InterestSite operations
      */
@@ -455,6 +472,197 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+
+
+    /*
+    Forum operations
+     */
+
+    /*@CrossOrigin
+    @PostMapping(value = "/CreateNewForumTopic")
+    @ApiOperation(value = "Creates a mew topic", notes = "Adds a new topic to the database. A topic is a subject, theme, matter...", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The topic already exists in the database")
+
+    })
+    public ResponseEntity<?> createNewForumTopic(@ApiParam(value="The topic's name", required = true) @RequestParam("name") String topicName) {
+        try {
+            serverService.createNewForumTopic(topicName);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }*/
+
+    @CrossOrigin
+    @GetMapping(value = "/forum/GetAllForumThreads")
+    @ApiOperation(value = "Returns all forum threads", notes = "Returns all the forum threads ordered by creation date and category.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok")
+
+    })
+    public ResponseEntity<?> getAllForumThreads() {
+        return new ResponseEntity<>(serverService.getAllForumThreads(),HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/forum/GetForumThread")
+    @ApiOperation(value = "Returns a forum thread", notes = "Returns a forum thread.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
+
+    })
+    public ResponseEntity<?> getForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
+                                            @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title) {
+        try {
+            return new ResponseEntity<>(serverService.getForumThread(creatorEmail,title),HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/forum/CreateNewForumThread")
+    @ApiOperation(value = "Creates a new forum thread", notes = "Creates a new forum thread.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The forum thread already exists in the database"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+
+    })
+    public ResponseEntity<?> createNewForumThread(@ApiParam(value="The thread parameters", required = true) @RequestBody DataForumThread dataForumThread) {
+        try {
+            serverService.createNewForumThread(dataForumThread);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PutMapping(value = "/forum/UpdateForumThread")
+    @ApiOperation(value = "Updates a forum thread", notes = "Updates a forum thread.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
+
+    })
+    public ResponseEntity<?> updateForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
+                                               @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title,
+                                               @ApiParam(value="The thread parameters to update", required = true) @RequestBody DataForumThreadUpdate dataForumThreadUpdate) {
+        try {
+            serverService.updateForumThread(creatorEmail,title,dataForumThreadUpdate);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping(value = "/forum/DeleteForumThread")
+    @ApiOperation(value = "Deletes a forum thread", notes = "Deletes a forum thread.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
+
+    })
+    public ResponseEntity<?> deleteForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
+                                               @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title) {
+        try {
+            serverService.deleteForumThread(creatorEmail,title);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/forum/GetAllThreadComments")
+    @ApiOperation(value = "Returns all the comments of a forum thread", notes = "Returns all the comments of a forum thread ordered by the creation date.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
+
+    })
+    public ResponseEntity<?> getAllThreadComments(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
+                                               @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title) {
+        try {
+            return new ResponseEntity<>(serverService.getAllThreadComments(creatorEmail,title),HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/forum/CreateNewForumComment")
+    @ApiOperation(value = "Creates a new forum comment", notes = "Creates a new forum comment in a specified thread.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The forum comment already exists in the database"),
+            @ApiResponse(code = 404, message = "The forum thread does not exist in the database"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+
+    })
+    public ResponseEntity<?> createForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
+                                                @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title,
+                                                @ApiParam(value="The comment parameters", required = true) @RequestBody DataForumComment dataForumComment) {
+        try {
+            serverService.createForumComment(creatorEmail,title,dataForumComment);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PutMapping(value = "/forum/UpdateForumComment")
+    @ApiOperation(value = "Updates a forum comment", notes = "Updates a forum comment in a specified thread.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The forum thread does not exist in the database"),
+            @ApiResponse(code = 404, message = "The forum comment does not exist in the database")
+
+    })
+    public ResponseEntity<?> updateForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("threadCreatorMail") String threadCreatorEmail,
+                                                @ApiParam(value="The thread's title", required = true) @RequestParam("threadTitle") String threadTitle,
+                                                @ApiParam(value="The comment's creator email", required = true) @RequestParam("commentCreatorMail") String commentCreatorEmail,
+                                                @ApiParam(value="The comment's creation date", required = true) @RequestParam("commentCreationDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date commentCreationDate,
+                                                @ApiParam(value="The comment parameters", required = true) @RequestBody DataForumCommentUpdate dataForumCommentUpdate) {
+        try {
+            serverService.updateForumComment(threadCreatorEmail,threadTitle,commentCreatorEmail,commentCreationDate,dataForumCommentUpdate);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping(value = "/forum/DeleteForumComment")
+    @ApiOperation(value = "Deletes a forum comment", notes = "Deletes a forum comment in a specified thread.", tags="Forum")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The forum thread does not exist in the database"),
+            @ApiResponse(code = 404, message = "The forum comment does not exist in the database")
+
+    })
+    public ResponseEntity<?> deleteForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("threadCreatorMail") String threadCreatorEmail,
+                                                @ApiParam(value="The thread's title", required = true) @RequestParam("threadTitle") String threadTitle,
+                                                @ApiParam(value="The comment's creator email", required = true) @RequestParam("commentCreatorMail") String commentCreatorEmail,
+                                                @ApiParam(value="The comment's creation date", required = true) @RequestParam("commentCreationDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date commentCreationDate) {
+        try {
+            serverService.deleteForumComment(threadCreatorEmail,threadTitle,commentCreatorEmail,commentCreationDate);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
     /*

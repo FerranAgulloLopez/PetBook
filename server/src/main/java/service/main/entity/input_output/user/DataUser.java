@@ -1,4 +1,4 @@
-package service.main.entity.input_output;
+package service.main.entity.input_output.user;
 
 import io.swagger.annotations.ApiModelProperty;
 import service.main.entity.User;

@@ -9,3 +9,6 @@
   
 - name: run jenkins image
   shell: docker run   -u root   --rm   -d   -p 8080:8080 -p 9999:9999 -v jenkins-data:/var/jenkins_home   -v /var/run/docker.sock:/var/run/docker.sock   --name jenkins   jenkinsci/blueocean
+  
+- name: run sonar qube image
+  shell: docker run -d --name sonarqube -p 9000:9000 sonarqube
