@@ -13,6 +13,10 @@
             android:icon="@drawable/pets"
             android:title="Mi perfil" />
         <item
+            android:id="@+id/nav_friends"
+            android:icon="@drawable/participantes"
+            android:title="Mis amigos" />
+        <item
             android:id="@+id/nav_pets"
             android:icon="@drawable/pets"
             android:title="Mis mascotas" />

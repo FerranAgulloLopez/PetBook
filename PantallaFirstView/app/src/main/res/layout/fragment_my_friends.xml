@@ -1,0 +1,63 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.PETBook.Fragments.MyFriendsFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true">
+            <!-- TODO: Update blank fragment layout -->
+
+            <TextView
+                android:id="@+id/myfriendsTextView"
+                android:layout_width="208dp"
+                android:layout_height="55dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="1dp"
+                android:layout_marginRight="1dp"
+                android:background="@drawable/borderbottom"
+                android:gravity="center"
+                android:text="MIS AMIGOS"
+                android:textColor="@color/colorPrimaryDark"
+                android:textStyle="normal|bold"
+                app:layout_constraintEnd_toStartOf="@+id/notificationsTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/notificationsTextView"
+                android:layout_width="208dp"
+                android:layout_height="55dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="1dp"
+                android:layout_marginRight="1dp"
+                android:gravity="center"
+                android:text="NOTIFICACIONES"
+                android:textStyle="normal|bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/myfriendsTextView"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="231dp"
+                android:layout_height="123dp"
+                android:gravity="center"
+                android:text="Aquí veré mis amigos"
+                tools:layout_editor_absoluteX="113dp"
+                tools:layout_editor_absoluteY="160dp" />
+
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</FrameLayout>
