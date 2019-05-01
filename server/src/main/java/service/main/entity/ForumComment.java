@@ -1,10 +1,11 @@
 package service.main.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Comparator;
 import java.util.Date;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ForumComment {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -13,6 +14,8 @@ public class ForumComment {
     private Date creationDate;
     private Date updateDate;
     private String description;
+
+    public ForumComment() {}
 
     public ForumComment(String creatorMail, Date creationDate) {
         this.creatorMail = creatorMail;
@@ -80,16 +83,5 @@ public class ForumComment {
 
     private void makeId() {
         this.id = creatorMail + creationDate.getTime();
-    }
-
-    public static Comparator<ForumComment> getCommentComparator() {
-        return new Comparator<ForumComment>() {
-            @Override
-            public int compare(ForumComment a, ForumComment b) {
-                if (a.getCreationDate().getTime() > b.getCreationDate().getTime()) return 1;
-                else if (a.getCreationDate().getTime() < b.getCreationDate().getTime()) return -1;
-                else return 0;
-            }
-        };
     }
 }

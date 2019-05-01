@@ -3,6 +3,7 @@ package service.main;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -513,7 +514,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> getForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorEmail") String creatorEmail,
+    public ResponseEntity<?> getForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
                                             @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title) {
         try {
             return new ResponseEntity<>(serverService.getForumThread(creatorEmail,title),HttpStatus.OK);
@@ -527,7 +528,7 @@ public class RestApiController {
     @ApiOperation(value = "Creates a new forum thread", notes = "Creates a new forum thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 400, message = "The thread already exists in the database"),
+            @ApiResponse(code = 400, message = "The forum thread already exists in the database"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
 
     })
@@ -550,7 +551,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> updateForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorEmail") String creatorEmail,
+    public ResponseEntity<?> updateForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
                                                @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title,
                                                @ApiParam(value="The thread parameters to update", required = true) @RequestBody DataForumThreadUpdate dataForumThreadUpdate) {
         try {
@@ -569,7 +570,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> deleteForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorEmail") String creatorEmail,
+    public ResponseEntity<?> deleteForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
                                                @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title) {
         try {
             serverService.deleteForumThread(creatorEmail,title);
@@ -580,14 +581,14 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PutMapping(value = "/forum/GetAllThreadComments")
+    @GetMapping(value = "/forum/GetAllThreadComments")
     @ApiOperation(value = "Returns all the comments of a forum thread", notes = "Returns all the comments of a forum thread ordered by the creation date.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> getAllThreadComments(@ApiParam(value="The creator email", required = true) @RequestParam("creatorEmail") String creatorEmail,
+    public ResponseEntity<?> getAllThreadComments(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
                                                @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title) {
         try {
             return new ResponseEntity<>(serverService.getAllThreadComments(creatorEmail,title),HttpStatus.OK);
@@ -597,15 +598,16 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/forum/CreateForumComment")
+    @PostMapping(value = "/forum/CreateNewForumComment")
     @ApiOperation(value = "Creates a new forum comment", notes = "Creates a new forum comment in a specified thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 400, message = "The forum comment already exists in the database"),
-            @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
+            @ApiResponse(code = 404, message = "The forum thread does not exist in the database"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
 
     })
-    public ResponseEntity<?> createForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("creatorEmail") String creatorEmail,
+    public ResponseEntity<?> createForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
                                                 @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title,
                                                 @ApiParam(value="The comment parameters", required = true) @RequestBody DataForumComment dataForumComment) {
         try {
@@ -619,7 +621,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/forum/UpdateForumComment")
+    @PutMapping(value = "/forum/UpdateForumComment")
     @ApiOperation(value = "Updates a forum comment", notes = "Updates a forum comment in a specified thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -627,10 +629,10 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum comment does not exist in the database")
 
     })
-    public ResponseEntity<?> updateForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("threadCreatorEmail") String threadCreatorEmail,
+    public ResponseEntity<?> updateForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("threadCreatorMail") String threadCreatorEmail,
                                                 @ApiParam(value="The thread's title", required = true) @RequestParam("threadTitle") String threadTitle,
-                                                @ApiParam(value="The comment's creator email", required = true) @RequestParam("commentCreatorEmail") String commentCreatorEmail,
-                                                @ApiParam(value="The comment's creation date", required = true) @RequestParam("commentCreationDate") Date commentCreationDate,
+                                                @ApiParam(value="The comment's creator email", required = true) @RequestParam("commentCreatorMail") String commentCreatorEmail,
+                                                @ApiParam(value="The comment's creation date", required = true) @RequestParam("commentCreationDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date commentCreationDate,
                                                 @ApiParam(value="The comment parameters", required = true) @RequestBody DataForumCommentUpdate dataForumCommentUpdate) {
         try {
             serverService.updateForumComment(threadCreatorEmail,threadTitle,commentCreatorEmail,commentCreationDate,dataForumCommentUpdate);
@@ -641,7 +643,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/forum/DeleteForumComment")
+    @DeleteMapping(value = "/forum/DeleteForumComment")
     @ApiOperation(value = "Deletes a forum comment", notes = "Deletes a forum comment in a specified thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -649,10 +651,10 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum comment does not exist in the database")
 
     })
-    public ResponseEntity<?> deleteForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("threadCreatorEmail") String threadCreatorEmail,
+    public ResponseEntity<?> deleteForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("threadCreatorMail") String threadCreatorEmail,
                                                 @ApiParam(value="The thread's title", required = true) @RequestParam("threadTitle") String threadTitle,
-                                                @ApiParam(value="The comment's creator email", required = true) @RequestParam("commentCreatorEmail") String commentCreatorEmail,
-                                                @ApiParam(value="The comment's creation date", required = true) @RequestParam("commentCreationDate") Date commentCreationDate) {
+                                                @ApiParam(value="The comment's creator email", required = true) @RequestParam("commentCreatorMail") String commentCreatorEmail,
+                                                @ApiParam(value="The comment's creation date", required = true) @RequestParam("commentCreationDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date commentCreationDate) {
         try {
             serverService.deleteForumComment(threadCreatorEmail,threadTitle,commentCreatorEmail,commentCreationDate);
             return new ResponseEntity<>(HttpStatus.OK);

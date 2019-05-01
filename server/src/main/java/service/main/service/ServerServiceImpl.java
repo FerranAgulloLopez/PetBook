@@ -366,9 +366,11 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public void createForumComment(String creatorMail, String title, DataForumComment dataForumComment) throws NotFoundException, BadRequestException {
+        if (!userRepository.existsById(dataForumComment.getCreatorMail())) throw new NotFoundException(USERNOTDB);
         ForumComment aux = new ForumComment(dataForumComment.getCreatorMail(),dataForumComment.getCreationDate());
-        if (forumThreadRepository.existsByCommentsContaining(aux.getId())) throw new BadRequestException("The forum comment already exists in the database");
         ForumThread forumThread = auxGetForumThread(creatorMail,title);
+        ForumComment forumComment = forumThread.findComment(aux.getId());
+        if (forumComment != null) throw new BadRequestException("The forum comment already exists in the database");
         forumThread.addComment(dataForumComment.toComment());
         forumThreadRepository.save(forumThread);
     }

@@ -28,6 +28,10 @@ public class ForumThread implements Serializable {
     private String topic;
     private List<ForumComment> comments;
 
+    public ForumThread() {
+        this.comments = new ArrayList<>();
+    }
+
     public ForumThread(String creatorMail, String title) {
         this.creatorMail = creatorMail;
         this.title = title;
@@ -90,6 +94,7 @@ public class ForumThread implements Serializable {
 
     public void setCreatorMail(String creatorMail) {
         this.creatorMail = creatorMail;
+        makeId();
     }
 
     public void setCreationDate(Date creationDate) {
@@ -98,6 +103,7 @@ public class ForumThread implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+        makeId();
     }
 
     public void setDescription(String description) {
