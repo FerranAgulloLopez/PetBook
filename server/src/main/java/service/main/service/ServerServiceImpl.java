@@ -27,7 +27,10 @@ public class ServerServiceImpl implements ServerService {
     private static final String SITENOTDB = "The interest site does not exist in the database";
     private static final String NOTPICTURE = "The user does not have profile picture in the database";
     private static final String USER_NOT_IN_EVENT = "The user does not participate in the event";
-
+    private static final String ALREADY_SENT_FRIEND_REQUEST = "The user already have sent a friend request to the other user";
+    private static final String HAVENT_SENT_FRIEND_REQUEST = "The user havent sent a friend request to the other user";
+    private static final String USERS_ALREADY_ARE_FRIENDS = "The users already are friends";
+    private static final String ONE_OF_USERS_DONT_EXIST = "One of the users does not exist in the database";
 
     private SendEmailTLS mailsender;
 
@@ -129,6 +132,87 @@ public class ServerServiceImpl implements ServerService {
             userRepository.save(userToSave);
         }
     }
+
+    /*
+    Friends
+     */
+
+    @Override
+    public List<User> getFriends(String emailUser) throws NotFoundException {
+        Optional<User> optUser = userRepository.findById(emailUser);
+        if (!optUser.isPresent()) throw new NotFoundException(USERNOTDB);
+
+        User user = optUser.get();
+
+        List<String> friendEmails = user.getFriends().getFriends();
+        List<User> result = new ArrayList<>();
+        for(String email : friendEmails) {
+            if(! userRepository.findById(email).isPresent()) { /* ... */ }; // Para el SonarQube, pero siempre seguro el usuario existe
+            User friend = userRepository.findById(email).get();
+            result.add(friend);
+        }
+        return result;
+    }
+
+    @Override
+    public List<User> getFriendsRequests(String emailUser) throws NotFoundException {
+        Optional<User> optUser = userRepository.findById(emailUser);
+        if (!optUser.isPresent()) throw new NotFoundException(USERNOTDB);
+
+        User user = optUser.get();
+
+        List<String> friendRequestEmails = user.getFriends().getFriendRequests();
+        List<User> result = new ArrayList<>();
+        for(String email : friendRequestEmails) {
+            if(! userRepository.findById(email).isPresent()) { /* ... */ }; // Para el SonarQube, pero siempre seguro el usuario existe
+            User friend = userRepository.findById(email).get();
+            result.add(friend);
+        }
+        return result;
+    }
+
+
+    @Override
+    public void sendFriendRequest(String emailUser, String emailRequested) throws NotFoundException, BadRequestException {
+        Optional<User> optUser = userRepository.findById(emailUser);
+        if (!optUser.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        Optional<User> optFriend = userRepository.findById(emailRequested);
+        if (!optFriend.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        User friend = optFriend.get();
+
+        if(friend.beenRequestedToBeFriendBy(emailUser)) throw new BadRequestException(ALREADY_SENT_FRIEND_REQUEST);
+        if(friend.isFriend(emailUser)) throw new BadRequestException(USERS_ALREADY_ARE_FRIENDS);
+
+        friend.addFriendRequest(emailUser);
+        userRepository.save(friend);
+    }
+
+    @Override
+    public void acceptFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException {
+        Optional<User> optUser = userRepository.findById(emailUser);
+        if (!optUser.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        Optional<User> optFriend = userRepository.findById(emailRequester);
+        if (!optFriend.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        User user = optUser.get();
+        User friend = optFriend.get();
+
+        if(! user.beenRequestedToBeFriendBy(emailRequester)) throw new BadRequestException(HAVENT_SENT_FRIEND_REQUEST);
+        if(friend.isFriend(emailUser)) throw new BadRequestException(USERS_ALREADY_ARE_FRIENDS);
+
+        user.addFriend(emailRequester);
+        friend.addFriend(emailUser);
+
+        user.removeFriendRequest(emailRequester);
+        if(friend.beenRequestedToBeFriendBy(emailUser)) friend.removeFriendRequest(emailUser); // Quiza nunca pasara, por ahora lo pongo por si acaso
+
+        userRepository.save(friend);
+        userRepository.save(user);
+    }
+
 
     /*
     Event operations

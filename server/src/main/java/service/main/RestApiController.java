@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import service.main.entity.Image;
 import service.main.entity.input_output.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
@@ -153,7 +152,87 @@ public class RestApiController {
         }
     }
 
+    /*
+    Friends operations
 
+     */
+
+    @CrossOrigin
+    @GetMapping(value = "/GetUserFriends/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its email. " +
+            "Specifically gives the friends by the user identified by the email given in the path", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+    })
+    public ResponseEntity<?> getFriends(@PathVariable String email) {
+        try {
+            return new ResponseEntity<>(serverService.getFriends(email), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/GetUserFriendsRequests/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its email. " +
+            "Specifically gives the friends requests received by the user identified by the email given in the path", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+    })
+    public ResponseEntity<?> getFriendsRequests(@PathVariable String email) {
+        try {
+            return new ResponseEntity<>(serverService.getFriendsRequests(email), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @CrossOrigin
+    @PostMapping(value = "/sendFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Send a friend request to another user", tags="User", notes = "The user identified by *email* sends a friend request to the user identified by *friend* .")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
+            @ApiResponse(code = 400, message = "The user already have sent a friend request to the other user OR The users already are friends")
+    })
+    public ResponseEntity<?> sendFriendRequest(@PathVariable String email,
+                                               @PathVariable String friend)
+    {
+        try {
+            serverService.sendFriendRequest(email, friend);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @CrossOrigin
+    @PostMapping(value = "/acceptFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Accept a friend request from another user", tags="User", notes = "The user identified by *email* accepts a friend request from the user identified by *friend*. Then, the to users are friends.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
+            @ApiResponse(code = 400, message = "The users already are friends OR The user *email* havent sent a friend request to the other user")
+    })
+
+    public ResponseEntity<?> acceptFriendRequest(@PathVariable String email,
+                                                 @PathVariable String friend)
+    {
+        try {
+            serverService.acceptFriendRequest(email, friend);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 
