@@ -103,7 +103,7 @@ public class Event implements Serializable {
 
 
     private void makeId() {
-        id = emailCreador + " " + localizacion + fecha.toString();
+        id = emailCreador + " " + localizacion + fecha.getTime();
     }
 
 

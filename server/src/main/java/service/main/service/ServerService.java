@@ -1,7 +1,18 @@
 package service.main.service;
 
 import service.main.entity.*;
-import service.main.entity.input_output.*;
+import service.main.entity.input_output.event.DataEvent;
+import service.main.entity.input_output.event.DataEventUpdate;
+import service.main.entity.input_output.forum.DataForumComment;
+import service.main.entity.input_output.forum.DataForumCommentUpdate;
+import service.main.entity.input_output.forum.DataForumThread;
+import service.main.entity.input_output.forum.DataForumThreadUpdate;
+import service.main.entity.input_output.image.DataImage;
+import service.main.entity.input_output.interestsite.DataInterestSite;
+import service.main.entity.input_output.pet.DataPetUpdate;
+import service.main.entity.input_output.user.DataUser;
+import service.main.entity.input_output.user.OutLogin;
+import service.main.entity.input_output.user.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
@@ -10,6 +21,8 @@ import java.util.Date;
 import java.util.List;
 
 public interface ServerService {
+
+
 
     /*
     User operations
@@ -42,6 +55,7 @@ public interface ServerService {
     public void acceptFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
 
 
+
     /*
     Event operations
      */
@@ -63,6 +77,7 @@ public interface ServerService {
     public void deleteEvento(DataEvent event) throws NotFoundException;
 
 
+
     /*
     Pet operations
      */
@@ -80,6 +95,7 @@ public interface ServerService {
     public void removeDataBase();
 
 
+
     /*
     Interest site operations
      */
@@ -90,6 +106,31 @@ public interface ServerService {
 
     public void voteInterestSite(String interestSiteName, String interestSiteLocalization, String userEmail) throws NotFoundException, BadRequestException;
 
+
+
+    /*
+    Forum operations
+     */
+
+    /*public void createNewForumTopic(String topicName) throws BadRequestException;*/
+
+    public List<ForumThread> getAllForumThreads();
+
+    public ForumThread getForumThread(String creatorMail, String title) throws NotFoundException;
+
+    public void createNewForumThread(DataForumThread dataForumThread) throws BadRequestException, NotFoundException;
+
+    public void updateForumThread(String creatorMail, String title, DataForumThreadUpdate dataForumThreadUpdate) throws NotFoundException;
+
+    public void deleteForumThread(String creatorMail, String title) throws NotFoundException;
+
+    public List<ForumComment> getAllThreadComments(String creatorMail, String title) throws NotFoundException;
+
+    public void createForumComment(String creatorMail, String title, DataForumComment dataForumComment) throws NotFoundException, BadRequestException;
+
+    public void updateForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException;
+
+    public void deleteForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate) throws NotFoundException;
 
 
 }
