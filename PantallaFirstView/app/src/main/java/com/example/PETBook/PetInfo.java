@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,7 +40,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
     private ImageButton editButton;
     private ImageButton deleteButton;
     private PetModel petModel;
-
+    private ImageView fotoPet;
     /**
      * Returns a new instance of this fragment for the given section
      * number.
