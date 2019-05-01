@@ -49,7 +49,7 @@ public class PetAdapters extends BaseAdapter {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.pets_design,null);
         }
-        TextView nombre = (TextView) convertView.findViewById(R.id.nombrePet);
+        TextView nombre = (TextView) convertView.findViewById(R.id.nombreForo);
         TextView especie = (TextView) convertView.findViewById(R.id.Especie);
         TextView edad = (TextView) convertView.findViewById(R.id.edad);
 

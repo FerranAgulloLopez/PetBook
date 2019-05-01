@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.PETBook.Fragments.ForumFragment;
 import com.example.PETBook.Fragments.HomeFragment;
 import com.example.PETBook.Fragments.MyCalendarFragment;
 import com.example.PETBook.Fragments.MyEventsFragment;
@@ -27,7 +28,7 @@ import com.example.pantallafirstview.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
                             , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener
-                            , MyProfileFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener {
+                            , MyProfileFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,10 @@ public class MainActivity extends AppCompatActivity
                 fragment = new MyCalendarFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
+            else if (fragType.equals("forum")){
+                fragment = new ForumFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
             else {
                 fragment = new HomeFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
@@ -116,9 +121,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -153,6 +158,8 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_chat) {
 
         } else if (id == R.id.nav_forum) {
+            myFragment = new ForumFragment();
+            fragmentSeleccionado = true;
 
         } else if (id == R.id.nav_logout) {
             //salir a la ventana de log in
