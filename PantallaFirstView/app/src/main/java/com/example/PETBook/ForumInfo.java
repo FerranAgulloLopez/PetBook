@@ -1,32 +1,26 @@
 package com.example.PETBook;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.Models.EventModel;
+import com.example.PETBook.Models.ForumModel;
 import com.example.pantallafirstview.R;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ForumInfo extends AppCompatActivity implements AsyncResult {
 
-    private EventModel event;
-    private TextView txtTitle;
-    private TextView txtDescription;
-    private TextView txtLoc;
-    private TextView txtFecha;
-    private TextView txtHora;
-    private TextView txtMiembros;
-    private TextView txtCreador;
+    private ForumModel forumModel;
+    private TextView forumName;
+    private TextView forumCreator;
+    private TextView forumDataCreation;
+    private TextView forumDescription;
+
     private ImageButton editButton;
     private ImageButton deleteButton;
 
@@ -34,16 +28,13 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hilo_forum);
+
+        forumName = findViewById(R.id.nombreForoInfo);
+        forumCreator = findViewById(R.id.nombreCreadorForum);
+        forumDataCreation = findViewById(R.id.dataCreacioForum);
+        forumDescription = findViewById(R.id.descripcionForoInfo);
+
 /*
-        txtTitle = (TextView) findViewById(R.id.textTitulo);
-        txtDescription = (TextView) findViewById(R.id.textDesc);
-        txtLoc = (TextView) findViewById(R.id.textLoc);
-        txtFecha = (TextView) findViewById(R.id.textFecha);
-        txtHora = (TextView) findViewById(R.id.textHora);
-        txtMiembros = (TextView) findViewById(R.id.textNumPart);
-        txtCreador = (TextView) findViewById(R.id.textCreador);
-
-
         editButton = (ImageButton) findViewById(R.id.EditPetButton);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,28 +70,25 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                 errorE.show();
             }
         });
+*/
 
-
-        recibirDatos();*/
+        recibirDatos();
     }
 
-   /* private void recibirDatos(){
+    private void recibirDatos(){
         Bundle datosRecibidos = this.getIntent().getExtras();
         if(datosRecibidos != null) {
-            event = (EventModel) datosRecibidos.getSerializable("event");
+            forumModel = (ForumModel) datosRecibidos.getSerializable("forum");
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
-            txtTitle.setText(event.getTitulo());
-            txtDescription.setText(event.getDescripcion());
-            txtLoc.setText(String.valueOf(event.getLocalizacion()));
-            String[] Fecha = event.getFecha().split(" ");
-            txtFecha.setText(Fecha[0]);
-            txtHora.setText(Fecha[1]);
-            txtMiembros.setText(String.format("%d usuario/s participarán en el evento",event.getMiembros().size()));
-            txtCreador.setText("Creado por: " + event.getCreador());
+            forumName.setText(forumModel.getTitle());
+            forumCreator.setText(forumModel.getCreatorMail());
+            forumDataCreation.setText(forumModel.getCreationDate());
+            forumDescription.setText(forumModel.getDescription());
+
         }
     }
 
-    private void deleteEvent(){
+    /*private void deleteEvent(){
         SingletonUsuario su = SingletonUsuario.getInstance();
         String localizacion = txtLoc.getText().toString();
         String titulo = txtTitle.getText().toString();

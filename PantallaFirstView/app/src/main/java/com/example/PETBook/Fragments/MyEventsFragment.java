@@ -125,7 +125,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
     private String transformacionFechaHora(String fechaHora){
         Integer fin = 0;
         String result = fechaHora.replace("T", " ");
-        result = result.replace(":00.000+0000", "");
+        result = result.replace(":00.000+0000", " ");
         return result;
     }
 

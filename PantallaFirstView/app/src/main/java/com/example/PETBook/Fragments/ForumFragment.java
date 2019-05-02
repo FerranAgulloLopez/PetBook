@@ -132,7 +132,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
         result = result.replace(":00.000+0000", "");
         return result;
     }
-    
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

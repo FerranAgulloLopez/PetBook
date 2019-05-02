@@ -8,7 +8,6 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.example.PETBook.Models.CommentForumModel;
-import com.example.PETBook.Models.ForumModel;
 import com.example.pantallafirstview.R;
 
 import java.util.ArrayList;

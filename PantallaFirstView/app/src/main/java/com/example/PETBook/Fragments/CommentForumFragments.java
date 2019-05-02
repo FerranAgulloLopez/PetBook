@@ -103,7 +103,7 @@ public class CommentForumFragments extends Fragment implements AsyncResult {
         Conexion con = new Conexion(CommentForumFragments.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
 
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/GetAllForumThreads" ,"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/GetForumThread?creatorMail=A&title=Foro%20de%20pruba" ,"GET", null);
 
         lista = MyView.findViewById(R.id.list_comments_forum);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,7 +130,6 @@ public class CommentForumFragments extends Fragment implements AsyncResult {
     private String transformacionFechaHora(String fechaHora){
         Integer fin = 0;
         String result = fechaHora.replace("T", " ");
-        result = result.replace(":00.000+0000", "");
         return result;
     }
 

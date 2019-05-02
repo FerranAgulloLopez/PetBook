@@ -50,7 +50,7 @@ public class ForumAdapter extends BaseAdapter {
         TextView creadorForum = (TextView) convertView.findViewById(R.id.nombreCreadorForum);
 
         nombreForum.setText(forumList.get(position).getTitle());
-        //numberMessages.setText(forumList.get(position).getComments().size());
+        numberMessages.setText(String.format("%d",forumList.get(position).getComments().size()));
         dataCreacionForum.setText(forumList.get(position).getCreationDate());
         creadorForum.setText(forumList.get(position).getCreatorMail());
         return convertView;
