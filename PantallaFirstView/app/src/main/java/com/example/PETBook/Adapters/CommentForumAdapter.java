@@ -7,17 +7,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.PETBook.Models.CommentForumModel;
 import com.example.PETBook.Models.ForumModel;
 import com.example.pantallafirstview.R;
 
 import java.util.ArrayList;
 
-public class ForumAdapter extends BaseAdapter {
+public class CommentForumAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<ForumModel> forumList;
+    private ArrayList<CommentForumModel> forumList;
 
-    public ForumAdapter (Context context, ArrayList<ForumModel> array){
+    public CommentForumAdapter (Context context, ArrayList<CommentForumModel> array){
         this.context = context;
         forumList = array;
     }
@@ -42,17 +43,19 @@ public class ForumAdapter extends BaseAdapter {
 
         if(convertView == null){
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.forum_design,null);
+            convertView = layoutInflater.inflate(R.layout.activity_hilo_forum,null);
         }
-        TextView nombreForum = (TextView) convertView.findViewById(R.id.nombreForo);
-        TextView numberMessages = (TextView) convertView.findViewById(R.id.numberMessagesForum);
-        TextView dataCreacionForum = (TextView) convertView.findViewById(R.id.dataCreacioForum);
-        TextView creadorForum = (TextView) convertView.findViewById(R.id.nombreCreadorForum);
 
-        nombreForum.setText(forumList.get(position).getTitle());
-        //numberMessages.setText(forumList.get(position).getComments().size());
+        TextView nombreForo = (TextView) convertView.findViewById(R.id.nombreForo);
+        TextView creadorForo = (TextView) convertView.findViewById(R.id.nombreCreadorForum);
+        TextView dataCreacionForum = (TextView) convertView.findViewById(R.id.dataCreacioForum);
+        TextView descripcionForum = (TextView) convertView.findViewById(R.id.descripcionForo);
+
+        //nombreForo.setText(forumList.get(position).get());
+        creadorForo.setText(forumList.get(position).getCreatorMail());
         dataCreacionForum.setText(forumList.get(position).getCreationDate());
-        creadorForum.setText(forumList.get(position).getCreatorMail());
+        descripcionForum.setText(forumList.get(position).getDescription());
+
         return convertView;
     }
 }

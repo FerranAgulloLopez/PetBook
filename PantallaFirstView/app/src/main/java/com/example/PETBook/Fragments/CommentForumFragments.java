@@ -12,12 +12,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.PETBook.Adapters.CommentForumAdapter;
 import com.example.PETBook.Adapters.EventAdapter;
 import com.example.PETBook.Adapters.ForumAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EventInfo;
 import com.example.PETBook.ForumInfo;
+import com.example.PETBook.Models.CommentForumModel;
 import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.Models.ForumModel;
 import com.example.PETBook.NewEvent;
@@ -39,7 +41,7 @@ import java.util.List;
  * Use the {@link MyEventsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForumFragment extends Fragment implements AsyncResult {
+public class CommentForumFragments extends Fragment implements AsyncResult {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,11 +54,11 @@ public class ForumFragment extends Fragment implements AsyncResult {
 
     private View MyView;
     private ListView lista;
-    private ForumAdapter forumAdapter;
-    private ArrayList<ForumModel> forumModel;
+    private CommentForumAdapter commentForumAdapter;
+    private ArrayList<CommentForumModel> commentForumModel;
     private OnFragmentInteractionListener mListener;
 
-    public ForumFragment() {
+    public CommentForumFragments() {
         // Required empty public constructor
     }
 
@@ -69,8 +71,8 @@ public class ForumFragment extends Fragment implements AsyncResult {
      * @return A new instance of fragment ForumFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ForumFragment newInstance(String param1, String param2) {
-        ForumFragment fragment = new ForumFragment();
+    public static CommentForumFragments newInstance(String param1, String param2) {
+        CommentForumFragments fragment = new CommentForumFragments();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -92,24 +94,24 @@ public class ForumFragment extends Fragment implements AsyncResult {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        MyView =  inflater.inflate(R.layout.activity_forum_list, container, false);
+        MyView =  inflater.inflate(R.layout.activity_hilo_forum, container, false);
 
         // Set tittle to the fragment
-        getActivity().setTitle("Forum");
+        getActivity().setTitle("Comments");
 
 
-        Conexion con = new Conexion(ForumFragment.this);
+        Conexion con = new Conexion(CommentForumFragments.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
 
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/GetAllForumThreads" ,"GET", null);
 
-        lista = MyView.findViewById(R.id.list_forums);
+        lista = MyView.findViewById(R.id.list_comments_forum);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ForumModel forumSeleccionado = forumModel.get(position);
+                CommentForumModel commentsForumSeleccionado = commentForumModel.get(position);
                 Intent intent = new Intent(getActivity(), ForumInfo.class);
-                intent.putExtra("forum", forumSeleccionado);
+                intent.putExtra("comments", commentsForumSeleccionado);
                 startActivity(intent);
             }
         });
@@ -117,8 +119,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), NewForum.class);
-                startActivity(intent);
+
             }
         });
 
@@ -132,7 +133,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
         result = result.replace(":00.000+0000", "");
         return result;
     }
-    
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -179,26 +180,19 @@ public class ForumFragment extends Fragment implements AsyncResult {
     public void OnprocessFinish(JSONObject json) {
         try{
             if(json.getInt("code") == 200){
-                forumModel = new ArrayList<>();
+                commentForumModel = new ArrayList<>();
                 JSONArray jsonArray = json.getJSONArray("array");
                 for(int i = 0; i < jsonArray.length(); ++i){
                     JSONObject forum = jsonArray.getJSONObject(i);
-                    ForumModel f = new ForumModel();
-                    f.setCreationDate(transformacionFechaHora(forum.getString("creationDate")));
-                    f.setCreatorMail(forum.getString("creatorMail"));
-                    f.setDescription(forum.getString("description"));
-                    f.setTitle(forum.getString("title"));
-                    JSONArray c = forum.getJSONArray("comments");
-                    ArrayList<String> comments = new ArrayList<String>();
-                    for(int j = 0; j < c.length(); ++j){
-                        comments.add(c.getString(j));
-                    }
-                    f.setComments(comments);
-                    forumModel.add(f);
+                    CommentForumModel cf = new CommentForumModel();
+                    cf.setCreationDate(transformacionFechaHora(forum.getString("creationDate")));
+                    cf.setCreatorMail(forum.getString("creatorMail"));
+                    cf.setDescription(forum.getString("description"));
+                    commentForumModel.add(cf);
                 }
-                forumAdapter = new ForumAdapter(getActivity(), forumModel);
+                commentForumAdapter = new CommentForumAdapter(getActivity(), commentForumModel);
                 lista = (ListView) MyView.findViewById(R.id.list_forums);
-                lista.setAdapter(forumAdapter);
+                lista.setAdapter(commentForumAdapter);
                 System.out.print(json.getInt("code") + " se muestran correctamente la lista de foros\n");
             }
             else{

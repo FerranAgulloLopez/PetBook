@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/nombreForo"
+            android:id="@+id/nombrePetDesign"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
             android:text="nombre1"
