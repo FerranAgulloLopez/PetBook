@@ -585,7 +585,6 @@ public class ServerServiceImpl implements ServerService {
 
 
         try {
-            String androidFcmKey="AAAAuaJvcA0:APA91bHRJoG3XEPJ3KR_xgbIzZV8CEhfwV_fdqGlpk3Af36nJW7Rklp6IgbPja89NpVR3GWUA9lXDzTpIFi71PWiUVzB_0cUEyPtE0K4Dg7nGjsx10-jMEQ6WjKM8RbZSV_Wmu0oZX0O";
             String androidFcmUrl="https://fcm.googleapis.com/fcm/send";
 
             RestTemplate restTemplate = new RestTemplate();
