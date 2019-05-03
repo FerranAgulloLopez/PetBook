@@ -51,8 +51,11 @@ public interface ServerService {
     List<User> getFriendsRequests(String emailUser) throws NotFoundException; // Gets the users who made a request to the user identified by *email*
 
 
-    void sendFriendRequest(String emailUser, String emailRequested) throws NotFoundException, BadRequestException;
+    public void sendFriendRequest(String emailUser, String emailRequested) throws NotFoundException, BadRequestException;
     public void acceptFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
+    public void denyFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
+
+    public void unfriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
 
 
 
@@ -131,6 +134,5 @@ public interface ServerService {
     public void updateForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException;
 
     public void deleteForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate) throws NotFoundException;
-
 
 }

@@ -38,6 +38,7 @@ public class ServerServiceImpl implements ServerService {
     private static final String USERS_ALREADY_ARE_FRIENDS = "The users already are friends";
     private static final String ONE_OF_USERS_DONT_EXIST = "One of the users does not exist in the database";
     private static final String THREADNOTDB = "The forum thread does not exist in the database";
+    private static final String  USERS_ARE_NOT_FRIENDS = "The users are not friends";
 
 
     private SendEmailTLS mailsender;
@@ -162,9 +163,11 @@ public class ServerServiceImpl implements ServerService {
         List<String> friendEmails = user.getFriends().getFriends();
         List<User> result = new ArrayList<>();
         for(String email : friendEmails) {
-            if(! userRepository.findById(email).isPresent()) { /* ... */ }; // Para el SonarQube, pero siempre seguro el usuario existe
-            User friend = userRepository.findById(email).get();
-            result.add(friend);
+            if (!userRepository.findById(email).isPresent()) { /* ... */ }  // Para el SonarQube, pero siempre seguro el usuario existe
+            else {
+                User friend = userRepository.findById(email).get();
+                result.add(friend);
+            }
         }
         return result;
     }
@@ -179,9 +182,11 @@ public class ServerServiceImpl implements ServerService {
         List<String> friendRequestEmails = user.getFriends().getFriendRequests();
         List<User> result = new ArrayList<>();
         for(String email : friendRequestEmails) {
-            if(! userRepository.findById(email).isPresent()) { /* ... */ }; // Para el SonarQube, pero siempre seguro el usuario existe
-            User friend = userRepository.findById(email).get();
-            result.add(friend);
+            if (!userRepository.findById(email).isPresent()) { /* ... */ }  // Para el SonarQube, pero siempre seguro el usuario existe
+            else {
+                User friend = userRepository.findById(email).get();
+                result.add(friend);
+            }
         }
         return result;
     }
@@ -228,6 +233,49 @@ public class ServerServiceImpl implements ServerService {
         userRepository.save(user);
     }
 
+
+
+    @Override
+    public void denyFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException {
+        Optional<User> optUser = userRepository.findById(emailUser);
+        if (!optUser.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        Optional<User> optFriend = userRepository.findById(emailRequester);
+        if (!optFriend.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        User user = optUser.get();
+        User friend = optFriend.get();
+
+        if(! user.beenRequestedToBeFriendBy(emailRequester)) throw new BadRequestException(HAVENT_SENT_FRIEND_REQUEST);
+
+        user.removeFriendRequest(emailRequester);
+        if(friend.beenRequestedToBeFriendBy(emailUser)) friend.removeFriendRequest(emailUser); // Quiza nunca pasara, por ahora lo pongo por si acaso
+
+        userRepository.save(friend);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void unfriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException {
+        Optional<User> optUser = userRepository.findById(emailUser);
+        if (!optUser.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        Optional<User> optFriend = userRepository.findById(emailRequester);
+        if (!optFriend.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        User user = optUser.get();
+        User friend = optFriend.get();
+
+        if(! friend.isFriend(emailUser)) throw new BadRequestException(USERS_ARE_NOT_FRIENDS);
+        if(! user.isFriend(emailRequester)) throw new BadRequestException(USERS_ARE_NOT_FRIENDS); // Solo es necesario comprobar uno
+
+
+        user.removeFriend(emailRequester);
+        friend.removeFriend(emailUser);
+
+        userRepository.save(friend);
+        userRepository.save(user);
+    }
 
     /*
     Event operations
