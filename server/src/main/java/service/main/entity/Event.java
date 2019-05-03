@@ -1,8 +1,8 @@
 package service.main.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -14,128 +14,127 @@ import java.util.List;
 @Document(collection = "events")
 public class Event implements Serializable {
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Transient
+    public static final String SEQUENCE_NAME = "events_sequence";
+
     @Id
-    private String id;
+    private long id;
+    private String creatorMail;
+    private Localization localization;
+    private Date date;
+    private String title;
+    private String description;
+    private boolean isPublic;
+    private List<String> participants;
 
-    private String emailCreador;
-    private String localizacion;
-    private Date fecha;
+    public Event() {}
 
-    private String titulo;
-    private String descripcion;
-    private boolean publico;
-    private List<String> participantes;
-
-    public Event() {
-    }
-
-
-
-
-    public Event(String creador,
-                 String localizacion,
-                 Date fecha)
+    public Event(String creatorMail,
+                 Localization localization,
+                 Date date,
+                 String title,
+                 String description,
+                 boolean isPublic)
     {
-
-        this.emailCreador = creador;
-        this.localizacion = localizacion;
-        this.fecha = fecha;
-
-        makeId();
-    }
-
-    public Event(User creador,
-                 String localizacion,
-                 Date fecha,
-                 String titulo,
-                 String descripcion,
-                 boolean publico)
-    {
-        this.emailCreador = creador.getEmail();
-        this.localizacion = localizacion;
-        this.fecha = fecha;
-        this.setTitulo(titulo);
-        this.descripcion = descripcion;
-        this.publico = publico;
-        this.participantes = new ArrayList<>();
-        participantes.add(creador.getEmail());
-
-        makeId();
-    }
-
-    public Event(String emailCreador,
-                 String localizacion,
-                 Date fecha,
-                 String titulo,
-                 String descripcion,
-                 boolean publico)
-    {
-        this.emailCreador = emailCreador;
-        this.localizacion = localizacion;
-        this.fecha = fecha;
-        this.setTitulo(titulo);
-        this.descripcion = descripcion;
-        this.publico = publico;
-        this.participantes = new ArrayList<>();
-        participantes.add(emailCreador);
-
-        makeId();
-    }
-
-    public Event(String creador,
-                 String localizacion,
-                 Date fecha,
-                 String descripcion,
-                 boolean publico,
-                 List<String> participantes)
-    {
-
-        this.emailCreador = creador;
-        this.localizacion = localizacion;
-        this.fecha = fecha;
-        makeId();
-
-        this.setDescripcion(descripcion);
-        this.setPublico(publico);
-        this.setParticipantes(participantes);
+        this.creatorMail = creatorMail;
+        this.localization = localization;
+        this.date = date;
+        this.title = title;
+        this.description = description;
+        this.isPublic = isPublic;
+        this.participants = new ArrayList<>();
+        participants.add(creatorMail);
     }
 
 
-    private void makeId() {
-        id = emailCreador + " " + localizacion + fecha.getTime();
+    /*
+    Get
+     */
+
+    public long getId() {
+        return id;
+    }
+
+    public String getCreatorMail() {
+        return creatorMail;
+    }
+
+    public Localization getLocalization() {
+        return localization;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public List<String> getParticipants() {
+        return participants;
     }
 
 
-    public String getId()                       { return id; }
-    public String getCreador()                    { return emailCreador; }
-    public String getLocalizacion()             { return localizacion; }
-    public Date getFecha()                     { return fecha; }
-    public String getTitulo() {
-        return titulo;
-    }
-    public String getDescripcion()              { return descripcion; }
-    public Boolean getPublico()                 { return publico; }
-    public List<String> getParticipantes()   { return participantes; }
+    /*
+    Set
+     */
 
-
-    public void setCreador(String creador)                            { this.emailCreador = creador; makeId(); }
-    public void setLocalizacion(String localizacion)                { this.localizacion = localizacion; makeId(); }
-    public void setFecha(Date fecha)                               { this.fecha = fecha; makeId(); }
-    public void setDescripcion(String descripcion)                  { this.descripcion = descripcion; }
-    public void setPublico(Boolean publico)                         { this.publico = publico; }
-    public void setParticipantes(List<String> participantes)     { this.participantes =  participantes; }
-
-
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public boolean userParticipates(String usermail) {
-        return participantes.contains(usermail);
+    public void setCreatorMail(String creatorMail) {
+        this.creatorMail = creatorMail;
     }
 
-    public void removeUser(String usermail) {
-        participantes.remove(usermail);
+    public void setLocalization(Localization localization) {
+        this.localization = localization;
     }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public void setParticipants(List<String> participants) {
+        this.participants = participants;
+    }
+
+
+    /*
+    Auxiliary operations
+     */
+
+    public boolean userParticipates(String userMail) {
+        return participants.contains(userMail);
+    }
+
+    public void addParticipant(String participantMail) {
+        participants.add(participantMail);
+    }
+
+    public void removePaticipant(String userMail) {
+        participants.remove(userMail);
+    }
+
 }

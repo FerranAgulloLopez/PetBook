@@ -4,46 +4,45 @@ import java.io.Serializable;
 
 public class Localization implements Serializable {
 
-    private String id;
+    private String address;
+    private double latitude;
+    private double longitude;
 
-    private int coordenadas;
-    private int radio;
+    public Localization() {}
 
-    public Localization() {
-        this.coordenadas = 0;
-        this.radio = 0;
-        makeId();
-    }
-
-    public Localization(int coordenadas, int radio) {
-        this.coordenadas = coordenadas;
-        this.radio = radio;
-        makeId();
-    }
-
-
-    private void makeId() {
-        id = "" + coordenadas + radio;
-    }
-
-
-    public String getId() { return id; }
-    public int getCoordenadas() { return coordenadas; }
-    public int getRadio() { return radio; }
-
-
-    public void setRadio(int radio) {
-        this.radio = radio;
-        makeId();
-    }
-    public void setCoordenadas(int coordenadas) {
-        this.coordenadas = coordenadas;
-        makeId();
+    public Localization(String address, double latitude, double longitude) {
+        this.address = address;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
 
 
+    /*
+    Get
+     */
 
+    public String getAddress() {
+        return address;
+    }
 
+    public double getLatitude() {
+        return latitude;
+    }
 
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setLatitude(int latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(int longitude) {
+        this.longitude = longitude;
+    }
 }

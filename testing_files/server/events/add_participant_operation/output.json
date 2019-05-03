@@ -1,1 +1,1 @@
-[{"localizacion":"00","fecha":"2019-04-16T19:46:03.437+0000","publico":false,"participantes":["a@a.com","b@a.com"],"creador":"a@a.com"}]
+[{"id":1,"creatorMail":"a@a.com","localization":{"address":"Road 12","latitude":100.0,"longitude":50.0},"date":"2019-04-16T19:46:03.437+0000","title":"A little chat","description":"something","participants":["a@a.com","b@a.com"],"public":true}]
