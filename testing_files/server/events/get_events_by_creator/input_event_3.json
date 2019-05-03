@@ -1,0 +1,12 @@
+{
+  "creatorMail": "user2@mail.com",
+  "date": "2019-04-16T19:46:03.437Z",
+  "title": "A little chat",
+  "description": "something",
+  "isPublic": true,
+  "localization": {
+    "address": "Road 10",
+    "latitude": "100",
+    "longitude": "50"
+  }
+}

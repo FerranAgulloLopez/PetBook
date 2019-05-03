@@ -1,44 +1,30 @@
 package service.main.entity.input_output.event;
 
-        import java.io.Serializable;
-        import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.io.Serializable;
 
 public class DataEventUpdate implements Serializable {
 
-    private String userEmail;
-    private Date fecha;
-    private int coordenadas;
-    private int radio;
+    private String title;
+    private String description;
+    @JsonProperty
+    private boolean isPublic;
 
-    private String titulo;
-    private String descripcion;
-    private boolean publico;
 
-    public String getUserEmail() {
-        return userEmail;
+    /*
+    Get
+     */
+
+    public String getTitle() {
+        return title;
     }
 
-    public Date getFecha() {
-        return fecha;
+    public String getDescription() {
+        return description;
     }
 
-    public Integer getCoordenadas() {
-        return coordenadas;
-    }
-
-    public Integer getRadio() {
-        return radio;
-    }
-
-    public String getTitulo() {
-        return titulo;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public boolean isPublico() {
-        return publico;
+    public boolean isPublic() {
+        return isPublic;
     }
 }

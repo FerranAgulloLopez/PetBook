@@ -24,6 +24,7 @@ import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.*;
+import service.main.services.SequenceGeneratorService;
 import service.main.util.SendEmailTLS;
 
 import java.util.*;
@@ -51,7 +52,7 @@ public class ServerServiceImpl implements ServerService {
     private UserRepository userRepository;
 
     @Autowired
-    private EventRepository eventoRepository;
+    private EventRepository eventRepository;
 
     @Autowired
     private PetRepository mascotaRepository;
@@ -62,6 +63,8 @@ public class ServerServiceImpl implements ServerService {
     @Autowired
     private ForumThreadRepository forumThreadRepository;
 
+    @Autowired
+    private SequenceGeneratorService sequenceGeneratorService;
 
 
     /*
@@ -294,74 +297,68 @@ public class ServerServiceImpl implements ServerService {
     Event operations
      */
 
-    public void creaEvento(DataEventUpdate inputEvent) throws BadRequestException, NotFoundException {
-
-        String usermail = inputEvent.getUserEmail();
-        Optional<User> user = userRepository.findById(usermail);
-        if(!user.isPresent()) throw new NotFoundException(USERNOTDB);
-
-        Localization localizacion = new Localization(inputEvent.getCoordenadas(),inputEvent.getRadio());
-        Event event = new Event(user.get(),localizacion.getId(),inputEvent.getFecha(),inputEvent.getTitulo(),inputEvent.getDescripcion(),inputEvent.isPublico());
-        if(eventoRepository.existsById(event.getId())) throw new BadRequestException("The event already exists in the database");
-        eventoRepository.save(event);
+    @Override
+    public Event createEvent(DataEvent inputEvent) throws BadRequestException, NotFoundException {
+        if (!userRepository.existsById(inputEvent.getCreatorMail())) throw new NotFoundException(USERNOTDB);
+        Event event = inputEvent.toEvent();
+        String creatorMail = event.getCreatorMail();
+        Date date = event.getDate();
+        String address = event.getLocalization().getAddress();
+        double longitude = event.getLocalization().getLongitude();
+        double latitude = event.getLocalization().getLatitude();
+        if (eventRepository.existsByCreatorMailAndDateAndLocalization_AddressAndLocalization_LongitudeAndLocalization_Latitude(creatorMail,date,address,longitude,latitude)) throw new BadRequestException("The event already exists in the database");
+        eventRepository.save(event);
+        return event;
     }
 
-    public List<Event> findAllEventos() {
-        return eventoRepository.findAll();
+    @Override
+    public List<Event> findAllEvents() {
+        return eventRepository.findAll();
     }
 
-    public List<Event> findEventsByCreator(String creatormail) throws NotFoundException {
-        if(!userRepository.existsById(creatormail)) throw new NotFoundException(USERNOTDB);
-        return eventoRepository.findByemailCreador(creatormail);
+    @Override
+    public List<Event> findEventsByCreator(String creatorMail) throws NotFoundException {
+        if (!userRepository.existsById(creatorMail)) throw new NotFoundException(USERNOTDB);
+        return eventRepository.findByCreatorMail(creatorMail);
     }
 
-    public List<Event> findEventsByParticipant(String participantmail) throws NotFoundException {
-        if(!userRepository.existsById(participantmail)) throw new NotFoundException(USERNOTDB);
-        return eventoRepository.findByParticipantesInOrderByFecha(participantmail);
+    @Override
+    public List<Event> findEventsByParticipant(String participantMail) throws NotFoundException {
+        if (!userRepository.existsById(participantMail)) throw new NotFoundException(USERNOTDB);
+        return eventRepository.findByParticipantsInOrderByDate(participantMail);
     }
 
-    public void updateEvento(DataEventUpdate evento) throws NotFoundException {
-        Localization localizacion = new Localization(evento.getCoordenadas(),evento.getRadio());
-
-        Event evento2 = new Event(evento.getUserEmail(), localizacion.getId(), evento.getFecha(), evento.getTitulo(), evento.getDescripcion(), evento.isPublico());
-        Optional<Event> optEvent = eventoRepository.findById(evento2.getId());
-        if(! optEvent.isPresent()) throw new NotFoundException(EVENTNOTDB);
-
-        Event event3 = optEvent.get();
-        event3.setDescripcion(evento2.getDescripcion());
-        event3.setPublico(evento2.getPublico());
-        event3.setTitulo(evento2.getTitulo());
-        eventoRepository.save(event3);
+    @Override
+    public Event updateEvent(long eventId, DataEventUpdate inputEvent) throws NotFoundException {
+        Event event = auxGetEvent(eventId);
+        event.setTitle(inputEvent.getTitle());
+        event.setDescription(inputEvent.getDescription());
+        event.setPublic(inputEvent.isPublic());
+        eventRepository.save(event);
+        return event;
     }
 
-    public void addEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException {
-        if(!userRepository.existsById(usermail)) throw new NotFoundException(USERNOTDB);
-        Localization localizacion = new Localization(coordinates,radius);
-        Event event = new Event(creatormail,localizacion.getId(),fecha);
-        if(!eventoRepository.existsById(event.getId())) throw new NotFoundException(EVENTNOTDB);
-
-        eventoRepository.addParticipant(usermail,event.getId());
+    @Override
+    public void addEventParticipant(long eventId, String userMail) throws NotFoundException, BadRequestException {
+        if (!userRepository.existsById(userMail)) throw new NotFoundException(USERNOTDB);
+        Event event = auxGetEvent(eventId);
+        if (event.userParticipates(userMail)) throw new BadRequestException("The user already participates in the even");
+        event.addParticipant(userMail);
+        eventRepository.save(event);
     }
 
-    public void removeEventParticipant(String usermail, String creatormail, int coordinates, int radius, Date fecha) throws NotFoundException, BadRequestException {
-        if(!userRepository.existsById(usermail)) throw new NotFoundException(USERNOTDB);
-        Localization localizacion = new Localization(coordinates,radius);
-        Event evento = new Event(creatormail,localizacion.getId(),fecha);
-        Optional<Event> optEvent =  eventoRepository.findById(evento.getId());
-        if(! optEvent.isPresent()) throw new NotFoundException(EVENTNOTDB);
-        Event event = optEvent.get();
-        if(! event.userParticipates(usermail)) throw new BadRequestException(USER_NOT_IN_EVENT);
-        event.removeUser(usermail);
-
-        eventoRepository.save(event);
+    @Override
+    public void removeEventParticipant(long eventId, String userMail) throws NotFoundException, BadRequestException {
+        if (!userRepository.existsById(userMail)) throw new NotFoundException(USERNOTDB);
+        Event event = auxGetEvent(eventId);
+        if (!event.userParticipates(userMail)) throw new BadRequestException(USER_NOT_IN_EVENT);
+        event.removePaticipant(userMail);
+        eventRepository.save(event);
     }
 
-    public void deleteEvento(DataEvent event) throws NotFoundException {
-        Localization localizacion = new Localization(event.getCoordenadas(),event.getRadio());
-
-        Event evento = new Event(event.getUserEmail(), localizacion.getId(), event.getFecha());
-        if(!eventoRepository.existsById(evento.getId())) throw new NotFoundException(EVENTNOTDB);
-        eventoRepository.deleteById(evento.getId());
+    public void deleteEvent(long eventId) throws NotFoundException {
+        if(!eventRepository.existsById(eventId)) throw new NotFoundException(EVENTNOTDB);
+        eventRepository.deleteById(eventId);
     }
 
 
@@ -554,6 +551,12 @@ public class ServerServiceImpl implements ServerService {
     Auxiliary operations
      */
 
+    private Event auxGetEvent(long eventId) throws NotFoundException {
+        Optional<Event> optionalEvent = eventRepository.findById(eventId);
+        if (!optionalEvent.isPresent()) throw new NotFoundException(EVENTNOTDB);
+        return optionalEvent.get();
+    }
+
     private ForumThread auxGetForumThread(String creatorMail, String title) throws NotFoundException {
         ForumThread aux = new ForumThread(creatorMail,title);
         Optional<ForumThread> forumThread_opt = forumThreadRepository.findById(aux.getId());
@@ -569,9 +572,11 @@ public class ServerServiceImpl implements ServerService {
     public void removeDataBase() {
         userRepository.deleteAll();
         mascotaRepository.deleteAll();
-        eventoRepository.deleteAll();
+        eventRepository.deleteAll();
         interestSiteRepository.deleteAll();
         forumThreadRepository.deleteAll();
+        sequenceGeneratorService.deleteSequence(Event.SEQUENCE_NAME);
+
     }
 
 

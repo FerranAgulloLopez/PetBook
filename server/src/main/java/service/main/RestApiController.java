@@ -130,7 +130,6 @@ public class RestApiController {
         }
     }
 
-
     @CrossOrigin
     @GetMapping(value = "/getPicture/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get the profile picture of the user identified by email", tags="User")
@@ -319,16 +318,15 @@ public class RestApiController {
      */
 
     @CrossOrigin
-    @PostMapping(value = "/CreateEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Creates an Event", notes = "Stores an event in the database", tags = "Events")
+    @PostMapping(value = "/events/CreateEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Creates an event", notes = "Stores an event in the database", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The event already exists in the database")
     })
-    public ResponseEntity<?> creaEvento(@ApiParam(value="event", required = true) @RequestBody DataEventUpdate evento) {
+    public ResponseEntity<?> createEvent(@ApiParam(value="event", required = true) @RequestBody DataEvent event) {
         try {
-            serverService.creaEvento(evento);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(serverService.createEvent(event),HttpStatus.OK);
         } catch(BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (NotFoundException e) {
@@ -338,21 +336,20 @@ public class RestApiController {
 
 
     @CrossOrigin
-    @GetMapping(value = "/getALLEvents", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "GET ALL Evento", notes = "Gets all the events from the database", tags = "Events")
-    public ResponseEntity<?> getAllEventos()
+    @GetMapping(value = "/events/GetAllEvents", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get all events", notes = "Gets all the events from the database", tags = "Events")
+    public ResponseEntity<?> getAllEvents()
     {
-        return new ResponseEntity<>(serverService.findAllEventos(),HttpStatus.OK);
-
+        return new ResponseEntity<>(serverService.findAllEvents(),HttpStatus.OK);
     }
 
     @CrossOrigin
-    @GetMapping(value = "/getEventsByCreator", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/events/GetEventsByCreator", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all the events of a specific creator", notes = "Returns all the events of the input mail creator.", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> getEventsByCreator(@ApiParam(value="Creator's email", required = true, example = "petbook@mail.com") @RequestParam("email") String email)
+    public ResponseEntity<?> getEventsByCreator(@ApiParam(value="Creator's email", required = true, example = "petbook@mail.com") @RequestParam("mail") String email)
     {
         try {
             return new ResponseEntity<>(serverService.findEventsByCreator(email), HttpStatus.OK);
@@ -362,12 +359,12 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @GetMapping(value = "/getEventsByParticipant", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/events/GetEventsByParticipant", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all events where the input user participates", notes = "Returns all events where the input user participates. The result is ordered by the date of the event ", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> getEventsByParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("email") String email)
+    public ResponseEntity<?> getEventsByParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("mail") String email)
     {
         try {
             return new ResponseEntity<>(serverService.findEventsByParticipant(email), HttpStatus.OK);
@@ -377,16 +374,16 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PutMapping(value = "/UpdateEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/events/UpdateEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "UPDATE Event", notes = "Updates an event. Updates only descripcion, publico and titulo. An Event is identified by any, coordenadas, dia, hora, mes, radio.", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The event does not exist in the database")
     })
-    public ResponseEntity<?> updateEvento(@ApiParam(value="event", required = true) @RequestBody DataEventUpdate evento)
+    public ResponseEntity<?> updateEvent(@ApiParam(value="Event's id", required = true, example = "4") @RequestParam("eventId") long eventId,
+                                        @ApiParam(value="Updated parameters", required = true) @RequestBody DataEventUpdate event)
     {
         try {
-            serverService.updateEvento(evento);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(serverService.updateEvent(eventId,event),HttpStatus.OK);
         }
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -395,17 +392,17 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/addEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/events/AddEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a user to an event", notes = "Adds a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user or the event does not exist in the database"),
             @ApiResponse(code = 400, message = "The user already participates in the event")
     })
-    public ResponseEntity<?> addEventParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantemail") String usermail,
-                                                 @ApiParam(value="event", required = true) @RequestBody DataEvent evento)
+    public ResponseEntity<?> addEventParticipant(@ApiParam(value="Event's id", required = true, example = "4") @RequestParam("eventId") long eventId,
+                                                 @ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantMail") String usermail)
     {
         try {
-            serverService.addEventParticipant(usermail,evento.getUserEmail(),evento.getCoordenadas(),evento.getRadio(),evento.getFecha());
+            serverService.addEventParticipant(eventId,usermail);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -415,17 +412,17 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/removeEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/events/DeleteEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Removes a user to an event", notes = "Removes a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user or the event does not exist in the database"),
             @ApiResponse(code = 400, message = "The user does not participate in the event")
     })
-    public ResponseEntity<?> removeEventParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantemail") String usermail,
-                                                    @ApiParam(value="event", required = true) @RequestBody DataEvent evento)
+    public ResponseEntity<?> removeEventParticipant(@ApiParam(value="Event's id", required = true, example = "4") @RequestParam("eventId") long eventId,
+                                                    @ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("participantMail") String usermail)
     {
         try {
-            serverService.removeEventParticipant(usermail,evento.getUserEmail(),evento.getCoordenadas(),evento.getRadio(),evento.getFecha());
+            serverService.removeEventParticipant(eventId,usermail);
             return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -436,15 +433,15 @@ public class RestApiController {
 
 
     @CrossOrigin
-    @DeleteMapping(value = "/DeleteEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/events/DeleteEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "DELETE Event", notes = "Deletes an event", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The event does not exist in the database")
     })
-    public ResponseEntity<?> deleteEvento(@ApiParam(value="Event", required = true) @RequestBody DataEvent event)
+    public ResponseEntity<?> deleteEvent(@ApiParam(value="Event's id", required = true, example = "4") @RequestParam("eventId") long eventId)
     {
         try {
-            serverService.deleteEvento(event);
+            serverService.deleteEvent(eventId);
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {

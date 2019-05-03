@@ -1,5 +1,6 @@
 package service.main;
 
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -37,22 +39,24 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
      */
 
     @Test
-    public void creaYgetALLEvento() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_register.json")))
+    public void createEvent() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"create_event_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_crea_evento.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"create_event_operation/input_event_1.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLEvents"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"crea_evento_operation/output_crea_evento.json")));
+        this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"create_event_operation/input_event_2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/events/GetAllEvents"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"create_event_operation/output.json")));
     }
 
     @Test
-    public void creaEventoPeroJaExisteix() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_register.json")))
+    public void createEventAlreadyExists() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"create_event_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_crea_evento.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"create_event_operation/input_event_1.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"crea_evento_operation/input_crea_evento.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"create_event_operation/input_event_1.json")))
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
@@ -61,48 +65,49 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
      */
 
     @Test
-    public void getEventByCreator() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_bycreator/input_register_first_user.json")))
+    public void getEventsByCreator() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_creator/input_register_first_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_bycreator/input_register_second_user.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_creator/input_register_second_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_bycreator/input_create_first_event.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_creator/input_event_1.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_bycreator/input_create_second_event.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_creator/input_event_2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_bycreator/input_create_third_event.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_creator/input_event_3.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getEventsByCreator").param("email","a@a.com"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "get_events_bycreator/output.json")));
+        this.mockMvc.perform(get("/ServerRESTAPI/events/GetEventsByCreator").param("mail","user@mail.com"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "get_events_by_creator/output.json")));
     }
 
     @Test
-    public void getEventByCreatorNOTINDB() throws Exception {
-        this.mockMvc.perform(get("/ServerRESTAPI/getEventsByCreator").param("email","a@a.com"))
+    public void getEventsByCreatorUserDoesNotExist() throws Exception {
+        this.mockMvc.perform(get("/ServerRESTAPI/events/GetEventsByCreator").param("mail","a@a.com"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
-    public void getEventByParticipant() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_byparticipant/input_register_first_user.json")))
+    public void getEventsByParticipant() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_participant/input_register_first_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_byparticipant/input_register_second_user.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_participant/input_register_second_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_byparticipant/input_create_first_event.json")))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_participant/input_event_1.json")))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+        String eventId = aux_getEventId(result);
+        this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_participant/input_event_2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_byparticipant/input_create_second_event.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_by_participant/input_event_3.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_events_byparticipant/input_create_third_event.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/events/AddEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId",eventId).param("participantMail","b@a.com"))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"get_events_byparticipant/input_add_participant.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getEventsByParticipant").param("email","b@a.com"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "get_events_byparticipant/output.json")));
+        this.mockMvc.perform(get("/ServerRESTAPI/events/GetEventsByParticipant").param("mail","b@a.com"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "get_events_by_participant/output.json")));
     }
 
     @Test
-    public void getEventByParticipantNOTINDB() throws Exception {
-        this.mockMvc.perform(get("/ServerRESTAPI/getEventsByParticipant").param("email","b@a.com"))
+    public void getEventsByParticipantUserDoesNotExist() throws Exception {
+        this.mockMvc.perform(get("/ServerRESTAPI/events/GetEventsByParticipant").param("mail","b@a.com"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
@@ -111,22 +116,21 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
      */
 
     @Test
-    public void updateEvento() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_evento_operation/input_register.json")))
+    public void updateEvent() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_event_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_evento_operation/input_crea_evento.json")))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_event_operation/input_event.json")))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+        String eventId = aux_getEventId(result);
+        this.mockMvc.perform(put("/ServerRESTAPI/events/UpdateEvent").param("eventId",eventId).contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_event_operation/input_update.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLEvents"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"update_evento_operation/output_getAll_evento.json")));
-        this.mockMvc.perform(put("/ServerRESTAPI/UpdateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_evento_operation/input_update_evento.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLEvents"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "update_evento_operation/output_update_evento.json")));
+        this.mockMvc.perform(get("/ServerRESTAPI/events/GetAllEvents"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "update_event_operation/output.json")));
     }
 
     @Test
-    public void updateEventoPeroNoExisteix() throws Exception {
-        this.mockMvc.perform(put("/ServerRESTAPI/UpdateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_evento_operation/input_update_evento.json")))
+    public void updateEventDoesNotExist() throws Exception {
+        this.mockMvc.perform(put("/ServerRESTAPI/events/UpdateEvent").param("eventId","4").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"update_event_operation/input_update.json")))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
@@ -140,39 +144,46 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_register_second_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_create_event.json")))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_event.json")))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+        String eventId = aux_getEventId(result);
+        this.mockMvc.perform(post("/ServerRESTAPI/events/AddEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId",eventId).param("participantMail","b@a.com"))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLEvents"))
+        this.mockMvc.perform(get("/ServerRESTAPI/events/GetAllEvents"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "add_participant_operation/output.json")));
     }
 
     @Test
-    public void addParticipantNOTINDBEVENT() throws Exception {
+    public void addParticipantEventDoesNotExist() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_register_second_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId","4").param("participantMail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
-    public void addParticipantNOTINDBUSER() throws Exception {
+    public void addParticipantUserDoesNotExist() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_register_first_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_create_event.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_event.json")))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+        String eventId = aux_getEventId(result);
+        this.mockMvc.perform(post("/ServerRESTAPI/events/AddEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId",eventId).param("participantMail","b@a.com"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
-    public void addParticipantREPEATED() throws Exception {
+    public void addParticipantAlreadyExists() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_register_first_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_create_event.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_register_second_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","a@a.com").content(read_file(path+"add_participant_operation/input_add_participant.json")))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"add_participant_operation/input_event.json")))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+        String eventId = aux_getEventId(result);
+        this.mockMvc.perform(post("/ServerRESTAPI/events/AddEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId",eventId).param("participantMail","b@a.com"))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/events/AddEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId",eventId).param("participantMail","b@a.com"))
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
@@ -183,51 +194,51 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
      */
 
     @Test
-    public void removeParticipant() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"remove_participant_operation/input_register_first_user.json")))
+    public void deleteEventParticipant() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_participant_operation/input_register_first_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"remove_participant_operation/input_register_second_user.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_participant_operation/input_register_second_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"remove_participant_operation/input_create_event.json")))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_participant_operation/input_event.json")))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+        String eventId = aux_getEventId(result);
+        this.mockMvc.perform(post("/ServerRESTAPI/events/AddEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId",eventId).param("participantMail","b@a.com"))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/addEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"remove_participant_operation/input_add_participant.json")))
+        this.mockMvc.perform(delete("/ServerRESTAPI/events/DeleteEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId",eventId).param("participantMail","b@a.com"))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLEvents"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "remove_participant_operation/output.json")));
-
-        this.mockMvc.perform(post("/ServerRESTAPI/removeEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"remove_participant_operation/input_remove_participant.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLEvents"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "remove_participant_operation/output2.json")));
+        this.mockMvc.perform(get("/ServerRESTAPI/events/GetAllEvents"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "delete_participant_operation/output.json")));
     }
 
     @Test
-    public void removeParticipantNOTINDBEVENT() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"remove_participant_operation/input_register_second_user.json")))
+    public void deleteEventParticipantEventDoesNotExist() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_participant_operation/input_register_second_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/removeEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"remove_participant_operation/input_add_participant.json")))
+        this.mockMvc.perform(delete("/ServerRESTAPI/events/DeleteEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId","5").param("participantMail","b@a.com"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
-    public void removeParticipantNOTINDBUSER() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"remove_participant_operation/input_register_first_user.json")))
+    public void deleteEventParticipantUserDoesNotExist() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_participant_operation/input_register_first_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"remove_participant_operation/input_create_event.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/removeEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"remove_participant_operation/input_add_participant.json")))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_participant_operation/input_event.json")))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+        String eventId = aux_getEventId(result);
+        this.mockMvc.perform(delete("/ServerRESTAPI/events/DeleteEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId",eventId).param("participantMail","b@a.com"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
     @Test
-    public void removeParticipantUSER_NOT_IN_EVENT() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"remove_participant_operation/input_register_first_user.json")))
+    public void deleteEventParticipantUserDoesNotParticipateInTheEvent() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_participant_operation/input_register_first_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"remove_participant_operation/input_register_second_user.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_participant_operation/input_register_second_user.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"remove_participant_operation/input_create_event.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/removeEventParticipant").contentType(MediaType.APPLICATION_JSON).param("participantemail","b@a.com").content(read_file(path+"remove_participant_operation/input_remove_participant.json")))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_participant_operation/input_event.json")))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+        String eventId = aux_getEventId(result);
+        this.mockMvc.perform(delete("/ServerRESTAPI/events/DeleteEventParticipant").contentType(MediaType.APPLICATION_JSON).param("eventId",eventId).param("participantMail","b@a.com"))
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
@@ -237,24 +248,35 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
      */
 
     @Test
-    public void deleteEvento() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_evento_operation/input_register.json")))
+    public void deleteEvent() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_event_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_evento_operation/input_crea_evento.json")))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/events/CreateEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_event_operation/input_event.json")))
+                .andDo(print()).andExpect(status().isOk()).andReturn();
+        String eventId = aux_getEventId(result);
+        this.mockMvc.perform(delete("/ServerRESTAPI/events/DeleteEvent").param("eventId",eventId).contentType(MediaType.APPLICATION_JSON))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLEvents"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"delete_evento_operation/output_getAll_evento.json")));
-        this.mockMvc.perform(delete("/ServerRESTAPI/DeleteEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_evento_operation/input_delete_evento.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/getALLEvents"))
-                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "delete_evento_operation/output_delete_evento.json")));
+        this.mockMvc.perform(get("/ServerRESTAPI/events/GetAllEvents"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "delete_event_operation/output.json")));
 
     }
 
     @Test
-    public void deleteEventoPeroNoExisteix() throws Exception {
-        this.mockMvc.perform(delete("/ServerRESTAPI/DeleteEvent").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_evento_operation/input_delete_evento.json")))
+    public void deleteEventDoesNotExist() throws Exception {
+        this.mockMvc.perform(delete("/ServerRESTAPI/events/DeleteEvent").contentType(MediaType.APPLICATION_JSON).param("eventId","4"))
                 .andDo(print()).andExpect(status().isNotFound());
+    }
+
+
+    /*
+    Auxiliary operations
+     */
+
+    private String aux_getEventId(MvcResult result) throws Exception {
+        String content = result.getResponse().getContentAsString();
+        JSONObject json = new JSONObject(content);
+        Long id = json.getLong("id");
+        return id.toString();
     }
 
 }
