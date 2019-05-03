@@ -51,6 +51,7 @@ public class ForumAdapter extends BaseAdapter {
 
         nombreForum.setText(forumList.get(position).getTitle());
         numberMessages.setText(String.format("%d",forumList.get(position).getComments().size()));
+        System.out.println(forumList.get(position).getComments().size());
         dataCreacionForum.setText(forumList.get(position).getCreationDate());
         creadorForum.setText(forumList.get(position).getCreatorMail());
         return convertView;

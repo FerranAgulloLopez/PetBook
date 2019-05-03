@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="99dp"
+        android:layout_height="79dp"
         android:layout_marginTop="10dp"
         android:orientation="vertical">
 
@@ -26,15 +26,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="dataComment"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/descripcionComment"
             android:layout_width="373dp"
             android:layout_height="38dp"
             android:text="descripcionComment"
-            android:textSize="12sp"
+            android:textSize="13sp"
             android:textStyle="bold" />
     </LinearLayout>
 

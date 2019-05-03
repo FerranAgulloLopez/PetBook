@@ -131,7 +131,8 @@ public class ForumFragment extends Fragment implements AsyncResult {
     private String transformacionFechaHora(String fechaHora){
         Integer fin = 0;
         String result = fechaHora.replace("T", " ");
-        result = result.replace(":00.000+0000", "");
+        result = result.replace("+0000", " ");
+        System.out.println(result.split("."));
         return result;
     }
 
@@ -207,8 +208,8 @@ public class ForumFragment extends Fragment implements AsyncResult {
                 forumAdapter = new ForumAdapter(getActivity(), forumModel);
                 lista = (ListView) MyView.findViewById(R.id.list_forums);
                 lista.setAdapter(forumAdapter);
-                System.out.println(forumModel.get(2).getTitle());
-                System.out.println(forumModel.get(2).getComments().get(1).getDescription());
+                /*System.out.println(forumModel.get(2).getTitle());
+                System.out.println(forumModel.get(2).getComments().get(1).getDescription());*/
                 System.out.print(json.getInt("code") + " se muestran correctamente la lista de foros\n");
             }
             else{

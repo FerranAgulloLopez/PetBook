@@ -1,10 +1,13 @@
 package com.example.PETBook;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,212 +25,133 @@ import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 
 public class NewForum extends AppCompatActivity implements AsyncResult {
 
-    private TextInputLayout Localizacion;
-    private TextInputLayout Fecha;
-    private TextInputLayout Hora;
-    private TextInputLayout Titulo;
-    private EditText inputFecha;
-    private EditText inputHora;
-    private EditText inputDescripcion;
 
-    private Button addEventButton;
-    private RadioButton publicButton;
+    private TextInputLayout inputForumTitle;
+    private TextInputLayout inputForumTopic;
+    private TextInputLayout inputForumDescription;
 
-    Calendar calendario = Calendar.getInstance();
+    private Button addForumButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_forum);
-/*
-        Localizacion = (TextInputLayout) findViewById(R.id.Localizacion);
-        Fecha = (TextInputLayout) findViewById(R.id.Fecha);
-        Hora = (TextInputLayout) findViewById(R.id.Hora);
-        Titulo = (TextInputLayout) findViewById(R.id.Titulo);
 
-
-        addEventButton = (Button) findViewById(R.id.addEventButton);
-        publicButton = (RadioButton) findViewById(R.id.PublicRadioButton);
-
-        inputDescripcion = (EditText) findViewById(R.id.editDescripcion);
-
-        inputFecha = (EditText) findViewById(R.id.editFecha);
-        inputFecha.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new DatePickerDialog(NewForum.this, date, calendario.get(Calendar.YEAR),
-                        calendario.get(Calendar.MONTH),
-                        calendario.get(Calendar.DAY_OF_MONTH)).show();
-            }
-        });
-
-        inputHora = (EditText) findViewById(R.id.editHora);
-        inputHora.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new TimePickerDialog(NewForum.this, time, calendario.get(Calendar.HOUR_OF_DAY),
-                        calendario.get(Calendar.MINUTE),true).show();
-            }
-        });
-
-        addEventButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createEvent();
-            }
-        });*/
+        inputForumTitle = findViewById(R.id.ForumTitle);
+        inputForumTopic = findViewById(R.id.ForumTopic);
+        inputForumDescription = findViewById(R.id.Description);
     }
 
-    /*DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-        @Override
-        public void onDateSet(DatePicker view, int year, int monthOfYear,
-                              int dayOfMonth) {
-            // TODO Auto-generated method stub
-            calendario.set(Calendar.YEAR, year);
-            calendario.set(Calendar.MONTH, monthOfYear);
-            calendario.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            actualizarFecha();
-        }
-
-    };
-
-    TimePickerDialog.OnTimeSetListener time = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            calendario.set(Calendar.HOUR_OF_DAY,hourOfDay);
-            calendario.set(Calendar.MINUTE,minute);
-            actualizarHora();
-        }
-    };
-
-    private void actualizarFecha(){
-        String formatoFecha = "%02d/%02d/%02d";
-        inputFecha.setText(String.format(formatoFecha,calendario.get(Calendar.YEAR),
-                1+calendario.get(Calendar.MONTH),calendario.get(Calendar.DAY_OF_MONTH)));
+    @TargetApi(Build.VERSION_CODES.O)
+    private String crearFechaActual() {
+        LocalDateTime ahora= LocalDateTime.now();
+        String año = String.valueOf(ahora.getYear());
+        String mes = String.valueOf(ahora.getMonthValue());
+        String dia = String.valueOf(ahora.getDayOfMonth());
+        String hora = String.valueOf(ahora.getHour());
+        String minutos = String.valueOf(ahora.getMinute());
+        String segundos = String.valueOf(ahora.getSecond());
+        if(ahora.getMonthValue() < 10) mes = "0" + mes;
+        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
+        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
+        System.out.println(fechaRetorno);
+        return fechaRetorno;
     }
 
-    private void actualizarHora(){
-        String formatoHora = "%02d:%02d";
-        inputHora.setText(String.format(formatoHora,
-                calendario.get(Calendar.HOUR_OF_DAY),
-                calendario.get(Calendar.MINUTE)));
-    }
 
-    private boolean validateLocation(String loc){
-        if(loc.isEmpty()) {
-            Localizacion.setError("Campo obligatorio");
-            return false;
-        }
-        else {
-            Localizacion.setErrorEnabled(false);
-            return true;
-        }
-    }
-
-    private boolean validateFecha(String date){
-        if(date.isEmpty()) {
-            Fecha.setError("Campo obligatorio");
-            return false;
-        }
-        else {
-            Fecha.setErrorEnabled(false);
-            return true;
-        }
-    }
-
-    private boolean validateHora(String hora){
-        if(hora.isEmpty()) {
-            Hora.setError("Campo obligatorio");
-            return false;
-        }
-        else {
-            Hora.setErrorEnabled(false);
-            return true;
-        }
-    }
-
-    private boolean validateTitulo(String titulo){
+    private boolean validateTitle(String titulo) {
         if(titulo.isEmpty()){
-            Titulo.setError("Campo obligatorio");
+            inputForumTitle.setError("Required field");
             return false;
         }
         else{
-            Titulo.setErrorEnabled(false);
+            inputForumTitle.setErrorEnabled(false);
             return true;
         }
     }
-
-    private String transformacionFechaHora(){
-        String fecha = String.format("%04d-%02d-%02d",calendario.get(Calendar.YEAR),
-                (calendario.get(Calendar.MONTH)+1),calendario.get(Calendar.DAY_OF_MONTH));
-        String hora = inputHora.getText().toString();
-        return fecha + "T" + hora + ":00.000Z";
+    private boolean validateTopic(String topic) {
+        if(topic.isEmpty()){
+            inputForumTopic.setError("Required field");
+            return false;
+        }
+        else{
+            inputForumTopic.setErrorEnabled(false);
+            return true;
+        }
     }
-
-    private void createEvent(){
+    private boolean validateDescription(String description) {
+        if(description.isEmpty()){
+            inputForumDescription.setError("Required field");
+            return false;
+        }
+        else{
+            inputForumDescription.setErrorEnabled(false);
+            return true;
+        }
+    }
+    public void addNewForum(View view) throws JSONException{
         SingletonUsuario su = SingletonUsuario.getInstance();
 
-        String localizacion = Localizacion.getEditText().getText().toString();
-        String titulo = Titulo.getEditText().getText().toString();
-        String descripcion = inputDescripcion.getText().toString();
-        Integer radio = 0;
+        String titulo = inputForumTitle.getEditText().getText().toString();
+        String topic = inputForumTopic.getEditText().getText().toString();
+        String descripcion = inputForumDescription.getEditText().getText().toString();
+
         String user = su.getEmail();
-        boolean pubOpriv = publicButton.isChecked();
+        //boolean pubOpriv = publicButton.isChecked();
 
-
-        boolean isValidTitulo = validateTitulo(titulo);
-        boolean isValidLoc = validateLocation(localizacion);
-        boolean isValidFecha = validateFecha(inputFecha.getText().toString());
-        boolean isValidHora = validateHora(inputHora.getText().toString());
-
-        if(isValidTitulo && isValidLoc && isValidFecha && isValidHora) {
-            String fechaHora = transformacionFechaHora();
+        boolean validTitle = validateTitle(titulo);
+        boolean validTopic = validateTopic(topic);
+        boolean validDescription = validateDescription(descripcion);
+        String fechaHora = crearFechaActual();
+        if (validTitle && validTopic && validDescription) {
             JSONObject jsonToSend = new JSONObject();
             try {
-                jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion));
-                jsonToSend.accumulate("descripcion", descripcion);
-                jsonToSend.accumulate("fecha", fechaHora); //2019-05-24T19:13:00.000Z formato fecha
-                jsonToSend.accumulate("publico", pubOpriv);
-                jsonToSend.accumulate("radio", 0); //No se trata el valor por Google Maps
-                jsonToSend.accumulate("titulo", titulo);
-                jsonToSend.accumulate("userEmail", user);
-                System.out.print(jsonToSend);
+                jsonToSend.accumulate("creationDate", fechaHora);
+                jsonToSend.accumulate("creatorMail", user);
+                jsonToSend.accumulate("description", descripcion);
+                jsonToSend.accumulate("title", titulo);
+                jsonToSend.accumulate("topic", topic);
+                System.out.println(jsonToSend);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
-            /* Nueva conexion llamando a la funcion del server
+            // Nueva conexion llamando a la funcion del server
 
             Conexion con = new Conexion(this);
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreateEvent/", "POST", jsonToSend.toString());
-
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/CreateNewForumThread", "POST", jsonToSend.toString());
 
         }
+    }
 
 
 
-    }*/
 
     @Override
     public void OnprocessFinish(JSONObject json) {
-/*
+
         try {
             if (json.getInt("code") == 200) {
-                System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
-                Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
+                System.out.println(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
+                Toast.makeText(this, "Forum successfully created", Toast.LENGTH_SHORT).show();
                 Bundle enviar = new Bundle();
                 Intent intent = new Intent(this, MainActivity.class);
-                enviar.putString("fragment","events");
+                enviar.putString("fragment","forum");
                 intent.putExtras(enviar);
                 startActivity(intent);
-            } else {
-                System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
+            }
+            else {
+                System.out.println(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
                 AlertDialog.Builder error = new AlertDialog.Builder(NewForum.this);
                 error.setMessage("Evento existente con los mismos datos")
                         .setCancelable(false)
@@ -243,7 +167,7 @@ public class NewForum extends AppCompatActivity implements AsyncResult {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
     }
 }
 
