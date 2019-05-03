@@ -44,6 +44,8 @@ public interface ServerService {
 
     public void setProfilePicture(String email, String picture) throws NotFoundException;
 
+    public void setTokenFirebase(String email, String token) throws NotFoundException;
+
     /*
     Friends operations
      */
@@ -135,4 +137,6 @@ public interface ServerService {
 
     public void deleteForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate) throws NotFoundException;
 
+
+    public void sendTestNotifications();
 }

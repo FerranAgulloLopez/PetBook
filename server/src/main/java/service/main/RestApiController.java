@@ -93,7 +93,6 @@ public class RestApiController {
     }
 
 
-
     /*
     Profile operations
      */
@@ -164,6 +163,26 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+
+    @CrossOrigin
+    @PostMapping(value = "/token", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Set the token  of Firebase of the user identified by email", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+    })
+    public ResponseEntity<?> setTokenFirebase(@ApiParam(value = "email") @RequestParam String email,
+                                              @ApiParam(value = "token") @RequestParam String token)
+    {
+        try {
+            serverService.setTokenFirebase(email, token);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
 
     /*
     Friends operations
@@ -804,6 +823,18 @@ public class RestApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+
+
+    @CrossOrigin
+    @PostMapping(value = "/notification")
+    @ApiOperation(value = "Send a test notification", notes = "Sends teste notification.",tags="Testing")
+    @ApiResponses(value = {
+    })
+    public ResponseEntity<?> testNotification() {
+        serverService.sendTestNotifications();
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
 
 
 
