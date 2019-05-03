@@ -1,6 +1,7 @@
 package com.example.PETBook.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,9 +10,22 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.PETBook.Adapters.FriendAdapter;
+import com.example.PETBook.Conexion;
+import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.EventInfo;
+import com.example.PETBook.Models.FriendModel;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,7 +35,7 @@ import com.example.pantallafirstview.R;
  * Use the {@link MyFriendsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyFriendsFragment extends Fragment {
+public class MyFriendsFragment extends Fragment implements AsyncResult {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -36,7 +50,9 @@ public class MyFriendsFragment extends Fragment {
     private TextView textViewMyfriends;
     private TextView textViewNotifications;
     private TextView textView6;
-
+    private ListView lista;
+    private FriendAdapter friendsUser;
+    private ArrayList<FriendModel> model;
     private OnFragmentInteractionListener mListener;
 
     public MyFriendsFragment() {
@@ -81,6 +97,11 @@ public class MyFriendsFragment extends Fragment {
         textViewNotifications  = (TextView) MyView.findViewById(R.id.notificationsTextView);
         textView6              = (TextView) MyView.findViewById(R.id.textView6);
 
+        Conexion con = new Conexion(MyFriendsFragment.this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUserFriends/" + su.getEmail(),"GET", null);
+
         textViewMyfriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,6 +115,8 @@ public class MyFriendsFragment extends Fragment {
                 showNotifications();
             }
         });
+
+
         return MyView;
     }
 
@@ -110,6 +133,12 @@ public class MyFriendsFragment extends Fragment {
         textViewNotifications.setBackgroundResource(0);
         textViewNotifications.setTextColor(Color.parseColor("#96989A"));
         textView6.setText("Aquí veré mis amigos");
+
+        /*
+        Conexion con = new Conexion(MyFriendsFragment.this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUserFriends/" + su.getEmail(),"GET", null);*/
     }
 
     private void showNotifications() {
@@ -118,6 +147,8 @@ public class MyFriendsFragment extends Fragment {
         textViewMyfriends.setBackgroundResource(0);
         textViewMyfriends.setTextColor(Color.parseColor("#96989A"));
         textView6.setText("Aquí veré mis notificaciones");
+        Intent intent = new Intent(getActivity(), MyFriendRequestsFragment.class);
+        startActivity(intent);
     }
 
     @Override
@@ -150,5 +181,32 @@ public class MyFriendsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void OnprocessFinish(JSONObject json) {
+        try{
+            if(json.getInt("code") == 200){
+                model = new ArrayList<>();
+                JSONArray jsonArray = json.getJSONArray("array");
+                for(int i = 0; i < jsonArray.length(); ++i){
+                    JSONObject evento = jsonArray.getJSONObject(i);
+                    FriendModel e = new FriendModel();
+                    e.setName(evento.getString("firstName"));
+                    e.setSurnames(evento.getString("secondName"));
+                    model.add(e);
+                }
+                friendsUser = new FriendAdapter(getActivity(), model);
+                lista = (ListView) MyView.findViewById(R.id.list_friends);
+                lista.setAdapter(friendsUser);
+                System.out.print(json.getInt("code") + " se muestran correctamente la lista de amigos\n");
+            }
+            else{
+                System.out.print("El sistema no logra mostrar la lista de amigos del usuario\n");
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
