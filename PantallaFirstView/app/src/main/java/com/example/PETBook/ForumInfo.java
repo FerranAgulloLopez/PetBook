@@ -4,14 +4,20 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.PETBook.Adapters.CommentForumAdapter;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Models.CommentForumModel;
 import com.example.PETBook.Models.ForumModel;
 import com.example.pantallafirstview.R;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class ForumInfo extends AppCompatActivity implements AsyncResult {
 
@@ -20,6 +26,11 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
     private TextView forumCreator;
     private TextView forumDataCreation;
     private TextView forumDescription;
+    private ListView listCommentsForum;
+    private String nameForum;
+    private String creatorForum;
+    private CommentForumAdapter commentForumAdapter;
+    private ArrayList<CommentForumModel> commentForumModel;
 
     private ImageButton editButton;
     private ImageButton deleteButton;
@@ -33,6 +44,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
         forumCreator = findViewById(R.id.nombreCreadorForum);
         forumDataCreation = findViewById(R.id.dataCreacioForum);
         forumDescription = findViewById(R.id.descripcionForoInfo);
+
 
 /*
         editButton = (ImageButton) findViewById(R.id.EditPetButton);
@@ -73,6 +85,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
 */
 
         recibirDatos();
+
     }
 
     private void recibirDatos(){
@@ -80,12 +93,25 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
         if(datosRecibidos != null) {
             forumModel = (ForumModel) datosRecibidos.getSerializable("forum");
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
-            forumName.setText(forumModel.getTitle());
+
+
             forumCreator.setText(forumModel.getCreatorMail());
             forumDataCreation.setText(forumModel.getCreationDate());
             forumDescription.setText(forumModel.getDescription());
+            forumName.setText(forumModel.getTitle());
 
+            creatorForum = forumModel.getCreatorMail();
+            nameForum = forumModel.getTitle();
+            commentForumModel = forumModel.getComments();
+            //mostrarComments();
         }
+    }
+    private void mostrarComments(){
+        /*Conexion con = new Conexion(this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetAllThreadComments?creatorMail=" + creatorForum + "&title=" + nameForum, "GET", null);*/
+
+        commentForumAdapter = new CommentForumAdapter(this, commentForumModel);
+        listCommentsForum.setAdapter(commentForumAdapter);
     }
 
     /*private void deleteEvent(){
@@ -115,6 +141,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/DeleteEvent/", "DELETE", jsonToSend.toString());
     }
 */
+
     @Override
     public void OnprocessFinish(JSONObject json) {
 
@@ -123,7 +150,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
                 Toast.makeText(this, "Evento correctamente eliminado", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("fragment", "events");
+                intent.putExtra("fragment", "forum");
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");

@@ -103,9 +103,9 @@ public class CommentForumFragments extends Fragment implements AsyncResult {
         Conexion con = new Conexion(CommentForumFragments.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
 
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/GetForumThread?creatorMail=A&title=Foro%20de%20pruba" ,"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/GetForumThread?creatorMail="  ,"GET", null);
 
-        lista = MyView.findViewById(R.id.list_comments_forum);
+        /*lista = MyView.findViewById(R.id.list_comments_forum);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -114,7 +114,7 @@ public class CommentForumFragments extends Fragment implements AsyncResult {
                 intent.putExtra("comments", commentsForumSeleccionado);
                 startActivity(intent);
             }
-        });
+        });*/
         FloatingActionButton fab = MyView.findViewById(R.id.addForum);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

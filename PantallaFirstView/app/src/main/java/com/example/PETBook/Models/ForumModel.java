@@ -1,5 +1,7 @@
 package com.example.PETBook.Models;
 
+import org.w3c.dom.Comment;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -9,7 +11,7 @@ public class ForumModel implements Serializable {
     private String description;
     private String title;
     private String topic;
-    private ArrayList<String> comments;
+    private ArrayList<CommentForumModel> comments;
 
 
 
@@ -53,11 +55,11 @@ public class ForumModel implements Serializable {
         this.topic = topic;
     }
 
-    public ArrayList<String> getComments() {
+    public ArrayList<CommentForumModel> getComments() {
         return comments;
     }
 
-    public void setComments(ArrayList<String> comments) {
+    public void setComments(ArrayList<CommentForumModel> comments) {
         this.comments = comments;
     }
 }

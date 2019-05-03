@@ -18,6 +18,7 @@ import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EventInfo;
 import com.example.PETBook.ForumInfo;
+import com.example.PETBook.Models.CommentForumModel;
 import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.Models.ForumModel;
 import com.example.PETBook.NewEvent;
@@ -27,6 +28,7 @@ import com.example.pantallafirstview.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -181,6 +183,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
             if(json.getInt("code") == 200){
                 forumModel = new ArrayList<>();
                 JSONArray jsonArray = json.getJSONArray("array");
+                ArrayList<CommentForumModel> comments = new ArrayList<CommentForumModel>();
                 for(int i = 0; i < jsonArray.length(); ++i){
                     JSONObject forum = jsonArray.getJSONObject(i);
                     ForumModel f = new ForumModel();
@@ -189,16 +192,23 @@ public class ForumFragment extends Fragment implements AsyncResult {
                     f.setDescription(forum.getString("description"));
                     f.setTitle(forum.getString("title"));
                     JSONArray c = forum.getJSONArray("comments");
-                    ArrayList<String> comments = new ArrayList<String>();
                     for(int j = 0; j < c.length(); ++j){
-                        comments.add(c.getString(j));
+                        JSONObject com = c.getJSONObject(j);
+                        CommentForumModel cfm = new CommentForumModel();
+                        cfm.setCreatorMail(com.getString("creatorMail"));
+                        cfm.setCreationDate(transformacionFechaHora(com.getString("creationDate")));
+                        cfm.setDescription(com.getString("description"));
+                        comments.add(cfm);
                     }
+
                     f.setComments(comments);
                     forumModel.add(f);
                 }
                 forumAdapter = new ForumAdapter(getActivity(), forumModel);
                 lista = (ListView) MyView.findViewById(R.id.list_forums);
                 lista.setAdapter(forumAdapter);
+                System.out.println(forumModel.get(2).getTitle());
+                System.out.println(forumModel.get(2).getComments().get(1).getDescription());
                 System.out.print(json.getInt("code") + " se muestran correctamente la lista de foros\n");
             }
             else{
