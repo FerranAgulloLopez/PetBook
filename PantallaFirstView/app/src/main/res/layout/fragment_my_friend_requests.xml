@@ -26,7 +26,7 @@
                 android:layout_marginRight="1dp"
                 android:background="@drawable/borderbottom"
                 android:gravity="center"
-                android:text="MIS AMIGOS"
+                android:text="TARDE"
                 android:textColor="@color/colorPrimaryDark"
                 android:textStyle="normal|bold"
                 app:layout_constraintEnd_toStartOf="@+id/notificationsTextView"

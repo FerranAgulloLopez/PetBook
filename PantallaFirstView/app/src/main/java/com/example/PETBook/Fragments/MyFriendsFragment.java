@@ -5,14 +5,19 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.PETBook.Fragments.MyFriendRequestsFragment;
+
+import com.example.PETBook.Adapters.ViewPagerFriendAdapter;
 import com.example.PETBook.Adapters.FriendAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
@@ -53,6 +58,13 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
     private ListView lista;
     private FriendAdapter friendsUser;
     private ArrayList<FriendModel> model;
+
+    private TabLayout tabLayout;
+    private ViewPager vpContenido;
+    private ViewPagerFriendAdapter adapter;
+    private ArrayList<Fragment> friends_fragments;
+    private ArrayList<String> titles_fragments;
+
     private OnFragmentInteractionListener mListener;
 
     public MyFriendsFragment() {
@@ -86,38 +98,50 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
         }
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        MyView = inflater.inflate(R.layout.fragment_my_friends, container, false);
+        if (MyView == null) {
+            MyView = inflater.inflate(R.layout.fragment_my_friends, container, false);
+        }
+        tabLayout = (TabLayout) MyView.findViewById(R.id.tlTab1);
+        vpContenido =  (ViewPager) MyView.findViewById(R.id.vpContenido1);
+
+        loadFragments();
+        loadTitles();
+        viewPagerEnTabLayout();
+
         // Set tittle to the fragment
-        getActivity().setTitle("Mis amigos");
-        textViewMyfriends      = (TextView) MyView.findViewById(R.id.myfriendsTextView);
-        textViewNotifications  = (TextView) MyView.findViewById(R.id.notificationsTextView);
-        textView6              = (TextView) MyView.findViewById(R.id.textView6);
+        getActivity().setTitle("FRIENDS");
 
-        Conexion con = new Conexion(MyFriendsFragment.this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
-
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUserFriends/" + su.getEmail(),"GET", null);
-
-        textViewMyfriends.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showMyFriends();
-            }
-        });
-
-        textViewNotifications.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showNotifications();
-            }
-        });
 
 
         return MyView;
+    }
+
+    public void loadFragments() {
+        friends_fragments = new ArrayList<>();
+        friends_fragments.add(new MyFriendSuggestionsFragment());
+        friends_fragments.add(new MyFriendsAcceptedFragment());
+        friends_fragments.add(new MyFriendRequestsFragment());
+
+    }
+
+
+    public void loadTitles() {
+        titles_fragments = new ArrayList<>();
+        titles_fragments.add("SUGGESTIONS");
+        titles_fragments.add("FRIENDS");
+        titles_fragments.add("REQUESTS");
+    }
+
+    private void viewPagerEnTabLayout() {
+        adapter = new ViewPagerFriendAdapter(getChildFragmentManager(),friends_fragments,titles_fragments);
+        vpContenido.setAdapter(adapter);
+        tabLayout.setupWithViewPager(vpContenido);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -127,29 +151,7 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
         }
     }
 
-    private void showMyFriends() {
-        textViewMyfriends.setBackgroundResource(R.drawable.borderbottom);
-        textViewMyfriends.setTextColor(Color.parseColor("#840705"));
-        textViewNotifications.setBackgroundResource(0);
-        textViewNotifications.setTextColor(Color.parseColor("#96989A"));
-        textView6.setText("Aquí veré mis amigos");
 
-        /*
-        Conexion con = new Conexion(MyFriendsFragment.this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
-
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUserFriends/" + su.getEmail(),"GET", null);*/
-    }
-
-    private void showNotifications() {
-        textViewNotifications.setBackgroundResource(R.drawable.borderbottom);
-        textViewNotifications.setTextColor(Color.parseColor("#840705"));
-        textViewMyfriends.setBackgroundResource(0);
-        textViewMyfriends.setTextColor(Color.parseColor("#96989A"));
-        textView6.setText("Aquí veré mis notificaciones");
-        Intent intent = new Intent(getActivity(), MyFriendRequestsFragment.class);
-        startActivity(intent);
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -185,6 +187,7 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
 
     @Override
     public void OnprocessFinish(JSONObject json) {
+        /*
         try{
             if(json.getInt("code") == 200){
                 model = new ArrayList<>();
@@ -207,6 +210,6 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
         } catch (Exception e){
             e.printStackTrace();
         }
-
+        */
     }
 }
