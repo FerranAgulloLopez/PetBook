@@ -273,7 +273,6 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The user *email* havent sent a friend request to the other user")
     })
-
     public ResponseEntity<?> denyFriendRequest(@PathVariable String email,
                                                  @PathVariable String friend)
     {
@@ -309,6 +308,45 @@ public class RestApiController {
         }
         catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/GetUsersFriendSuggestion/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Gets users to suggest", tags="User", notes = "Suggests users that live in the same region as the user given")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "The user does not exist in the database"),
+            @ApiResponse(code = 400, message = "The user has not a postal code")
+    })
+
+    public ResponseEntity<?> GetUsersFriendSuggestion(@PathVariable String email)
+    {
+        try {
+            return new ResponseEntity<>(serverService.GetUsersFriendSuggestion(email), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+        catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/deleteFriendSuggestion/{email}/{emailSuggested}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Deletes a friend suggestion", tags="User", notes = "The user identified by *email* deletes a friend suggestion of the user identified by *emailSuggested*.")
+    @ApiResponses(value = {
+            @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
+    })
+    public ResponseEntity<?> deleteFriendSuggestion(@PathVariable String email,
+                                                    @PathVariable String emailSuggested)
+    {
+        try {
+            serverService.deleteFriendSuggestion(email, emailSuggested);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

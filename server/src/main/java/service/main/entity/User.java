@@ -179,6 +179,20 @@ public class User implements Serializable {
         return friends.beenRequestedToBeFriendBy(friend);
     }
 
+     /*
+    Friends Suggestion
+     */
+
+    public void addRejectedUserSuggestion(String userEmail) {
+        friends.addRejectedUserSuggestion(userEmail);
+    }
+
+    public void removeRejectedUserSuggestion(String userEmail) {
+        friends.removeRejectedUserSuggestion(userEmail);
+    }
+
+    public boolean rejectedFriendSuggestionOf(String userEmail)  { return friends.rejectedFriendSuggestionOf(userEmail); }
+
 
     /*
     Auxiliary operations

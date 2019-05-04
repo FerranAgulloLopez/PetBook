@@ -79,7 +79,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
     }
 
     @Test
-    public void sendFriendRequest_AND_USERT_DONT_EXIST() throws Exception {
+    public void sendFriendRequest_AND_USER_DONT_EXIST() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
@@ -135,7 +135,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
     }
 
     @Test
-    public void acceptFriendRequest_AND_USERT_DONT_EXIST() throws Exception {
+    public void acceptFriendRequest_AND_USER_DONT_EXIST() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com/foo@main.com2"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
@@ -178,7 +178,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
 
 
     @Test
-    public void denyFriendRequest_AND_USERT_DONT_EXIST() throws Exception {
+    public void denyFriendRequest_AND_USER_DONT_EXIST() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/denyFriendRequest/foo@main.com/foo@main.com2"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
@@ -220,8 +220,96 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
     }
 
     @Test
-    public void unfriend_AND_USERT_DONT_EXIST() throws Exception {
+    public void unfriend_AND_USER_DONT_EXIST() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com/foo@main.com2"))
+                .andDo(print()).andExpect(status().isNotFound());
+    }
+
+
+
+    /*
+    Friends :    GetUsersFriendSuggestion
+     */
+
+
+    @Test
+    public void  GetUsersFriendSuggestion() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register3.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+                .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_get_UsersSuggested.json")));
+    }
+
+
+    @Test
+    public void GetUsersFriendSuggestion_AND_NO_USER_HAS_SAME_POSTALCODE_AS_USER() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register3.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com3"))
+                .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_get_UsersSuggested2.json")));
+    }
+
+    @Test
+    public void GetUsersFriendSuggestion_AND_SOME_USER_BEEN_REJECTED_AS_A_SUGESTION() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register3.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+                .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_get_UsersSuggested.json")));
+        this.mockMvc.perform(post("/ServerRESTAPI/deleteFriendSuggestion/foo@main.com/foo@main.com2"))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+                .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_get_UsersSuggested2.json")));
+    }
+
+    @Test
+    public void GetUsersFriendSuggestion_AND_USER_HASNT_POSTALCODE() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register4.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com4"))
+                .andDo(print()).andExpect(status().isBadRequest());    }
+
+    @Test
+    public void GetUsersFriendSuggestion_AND_USER_DONT_EXIST() throws Exception {
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com4"))
+                .andDo(print()).andExpect(status().isNotFound());
+    }
+
+
+
+    /*
+    Friends :    deleteFriendSuggestion
+     */
+
+    @Test
+    public void deleteFriendSuggestion() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_Friend_Suggestion_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_Friend_Suggestion_operation/input_register2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+                .andDo(print()).andExpect(content().string(read_file_raw(path+"delete_Friend_Suggestion_operation/output2.json")));
+        this.mockMvc.perform(post("/ServerRESTAPI/deleteFriendSuggestion/foo@main.com/foo@main.com2"))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+                .andDo(print()).andExpect(content().string(read_file_raw(path+"delete_Friend_Suggestion_operation/output.json")));
+    }
+
+
+    @Test
+    public void deleteFriendSuggestion_AND_USER_DONT_EXIST() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/deleteFriendSuggestion/foo@main.com/foo@main.com2"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 

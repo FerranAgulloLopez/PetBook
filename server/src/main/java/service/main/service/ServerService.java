@@ -46,6 +46,7 @@ public interface ServerService {
 
     public void setTokenFirebase(String email, String token) throws NotFoundException;
 
+
     /*
     Friends operations
      */
@@ -58,6 +59,10 @@ public interface ServerService {
     public void denyFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
 
     public void unfriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
+
+    public List<User> GetUsersFriendSuggestion(String email) throws NotFoundException, BadRequestException;
+    public void deleteFriendSuggestion(String emailUser, String emailSuggested) throws NotFoundException;
+
 
 
 

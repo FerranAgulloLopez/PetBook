@@ -43,7 +43,8 @@ public class ServerServiceImpl implements ServerService {
     private static final String USERS_ALREADY_ARE_FRIENDS = "The users already are friends";
     private static final String ONE_OF_USERS_DONT_EXIST = "One of the users does not exist in the database";
     private static final String THREADNOTDB = "The forum thread does not exist in the database";
-    private static final String  USERS_ARE_NOT_FRIENDS = "The users are not friends";
+    private static final String USERS_ARE_NOT_FRIENDS = "The users are not friends";
+    private static final String USER_HASNT_POSTAL_CODE = "The user has not a postal code";
 
 
     private SendEmailTLS mailsender;
@@ -288,6 +289,54 @@ public class ServerServiceImpl implements ServerService {
 
         user.removeFriend(emailRequester);
         friend.removeFriend(emailUser);
+
+        userRepository.save(friend);
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<User> GetUsersFriendSuggestion(String email) throws NotFoundException, BadRequestException {
+        Optional<User> optUser = userRepository.findById(email);
+        if (!optUser.isPresent()) throw new NotFoundException(USERNOTDB);
+
+        User user = optUser.get();
+        if(user.getPostalCode() == null) throw new BadRequestException(USER_HASNT_POSTAL_CODE);
+
+        List<User> allUsersWithSamePostalCode= userRepository.findByPostalCode(user.getPostalCode());
+
+        List<Integer> elementosAEliminar = new ArrayList<>();
+        for(int i = 0; i < allUsersWithSamePostalCode.size(); ++i) { // Removes the users that got rejected as suggestion by the user in the past
+            User u = allUsersWithSamePostalCode.get(i);
+            if(user.rejectedFriendSuggestionOf(u.getEmail())) {
+                elementosAEliminar.add(i);
+            }
+            if(user.getEmail().equals(u.getEmail())) {
+                elementosAEliminar.add(i);
+            }
+        }
+
+        int size = elementosAEliminar.size();
+        for(int i = 0; i < size; ++i) {
+            int indice = elementosAEliminar.get(i) - i; // restar i porque el vector va perdiendo elementos
+            allUsersWithSamePostalCode.remove(indice);
+        }
+
+        return allUsersWithSamePostalCode;
+    }
+
+    @Override
+    public void deleteFriendSuggestion(String emailUser, String emailSuggested) throws NotFoundException {
+        Optional<User> optUser = userRepository.findById(emailUser);
+        if (!optUser.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        Optional<User> optFriend = userRepository.findById(emailSuggested);
+        if (!optFriend.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        User user = optUser.get();
+        User friend = optFriend.get();
+
+        user.addRejectedUserSuggestion(emailSuggested);
+        friend.addRejectedUserSuggestion(emailUser);
 
         userRepository.save(friend);
         userRepository.save(user);
@@ -589,7 +638,7 @@ public class ServerServiceImpl implements ServerService {
 
             RestTemplate restTemplate = new RestTemplate();
             HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.set("Authorization", "key=" + androidFcmKey);
+            //httpHeaders.set("Authorization", "key=" + androidFcmKey);
             httpHeaders.set("Content-Type", "application/json");
             JSONObject msg = new JSONObject();
             JSONObject json = new JSONObject();
