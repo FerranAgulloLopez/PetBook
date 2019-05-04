@@ -1,12 +1,19 @@
 package com.example.PETBook;
 
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -21,11 +28,14 @@ import com.example.PETBook.Models.ForumModel;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -41,9 +51,8 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
     private String creatorForum;
     private CommentForumAdapter commentForumAdapter;
     private ArrayList<CommentForumModel> commentForumModel;
-
-    private ImageButton editButton;
-    private ImageButton deleteButton;
+    private ImageButton addButton;
+    private TextInputLayout descriptionComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +64,17 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
         forumDataCreation = findViewById(R.id.dataCreacioForum);
         forumDescription = findViewById(R.id.descripcionForoInfo);
         listCommentsForum = findViewById(R.id.list_comments_forum);
+        descriptionComment = findViewById(R.id.Comment);
 
         recibirDatos();
 
+        addButton = (ImageButton) findViewById(R.id.addComment);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addComment();
+            }
+        });
     }
 
     private void recibirDatos(){
@@ -71,6 +88,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
             forumDataCreation.setText(forumModel.getCreationDate());
             forumDescription.setText(forumModel.getDescription());
             forumName.setText(forumModel.getTitle());
+
 
             creatorForum = forumModel.getCreatorMail();
             nameForum = forumModel.getTitle();
@@ -88,11 +106,63 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
 
         return result;
     }
-
+    @TargetApi(Build.VERSION_CODES.O)
+    private String crearFechaActual() {
+        LocalDateTime ahora= LocalDateTime.now();
+        String año = String.valueOf(ahora.getYear());
+        String mes = String.valueOf(ahora.getMonthValue());
+        String dia = String.valueOf(ahora.getDayOfMonth());
+        String hora = String.valueOf(ahora.getHour());
+        String minutos = String.valueOf(ahora.getMinute());
+        String segundos = String.valueOf(ahora.getSecond());
+        if(ahora.getMonthValue() < 10) mes = "0" + mes;
+        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
+        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
+        System.out.println(fechaRetorno);
+        return fechaRetorno;
+    }
     private void mostrarComments(){
         Conexion con = new Conexion(this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/GetAllThreadComments?creatorMail=" + creatorForum + "&title=" + tranformacionStringAURL(nameForum) , "GET", null);
-        System.out.println("conexion bien hecha");
+        System.out.println("conexion mostrar comments bien hecha");
+    }
+    private boolean validarComment(String comment){
+        if(comment.isEmpty()){
+            descriptionComment.setError("Required field");
+            return false;
+        }
+        else{
+            descriptionComment.setErrorEnabled(false);
+            return true;
+        }
+    }
+
+    private void addComment(){
+        System.out.println("Comienzo add comment llego bien");
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        String creatorComment = su.getEmail();
+        String creationDate = crearFechaActual();
+        String description = descriptionComment.getEditText().getText().toString();
+
+        boolean isValidComment = validarComment(description);
+        if(isValidComment) {
+              JSONObject jsonToSend = new JSONObject();
+            try {
+                jsonToSend.accumulate("creationDate", creationDate);
+                jsonToSend.accumulate("creatorMail", creatorComment);
+                jsonToSend.accumulate("description", description);
+                System.out.println(jsonToSend);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Conexion con = new Conexion(this);
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/CreateNewForumComment?creatorMail=" + creatorForum + "&title=" + tranformacionStringAURL(nameForum), "POST", jsonToSend.toString());
+            System.out.println("conexion add comment bien hecha");
+            finish();
+            startActivity(getIntent());
+        }
+
+
     }
 
     @Override
