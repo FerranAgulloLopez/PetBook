@@ -3,6 +3,7 @@ package com.example.PETBook.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -64,6 +65,7 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
     private ViewPagerFriendAdapter adapter;
     private ArrayList<Fragment> friends_fragments;
     private ArrayList<String> titles_fragments;
+    private int[] tabIcons = {R.drawable.ic_menu_gallery,R.drawable.ic_menu_manage,R.drawable.ic_menu_gallery};
 
     private OnFragmentInteractionListener mListener;
 
@@ -141,7 +143,38 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
     private void viewPagerEnTabLayout() {
         adapter = new ViewPagerFriendAdapter(getChildFragmentManager(),friends_fragments,titles_fragments);
         vpContenido.setAdapter(adapter);
+        vpContenido.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setupWithViewPager(vpContenido);
+        tabIcons();
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                iconColor(tab, "#3b5998");
+               // adapter.notifyDataSetChanged();
+               // vpContenido.setCurrentItem(tab.getPosition());
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                iconColor(tab, "#E0E0E0");
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+    }
+
+    private void tabIcons() {
+        for (int i = 0; i < 3; i++) {
+            tabLayout.getTabAt(i).setIcon(tabIcons[i]);
+        }
+    }
+
+    private void iconColor(TabLayout.Tab tab, String nuevoColor) {
+        tab.getIcon().setColorFilter(Color.parseColor(nuevoColor), PorterDuff.Mode.SRC_IN);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
