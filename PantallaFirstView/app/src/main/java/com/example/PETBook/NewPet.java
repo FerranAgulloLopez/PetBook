@@ -1,21 +1,28 @@
 package com.example.PETBook;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Fragments.MyPetsFragment;
+import com.example.PETBook.Models.Image;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 public class NewPet extends AppCompatActivity implements AsyncResult {
 
@@ -29,6 +36,8 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
     private EditText description;
     private Button buttonAddPet;
     private TextView textNM;
+    private ImageView imageProfile;
+
 
 
     String nombrePet;
@@ -38,6 +47,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
     String racePet;
     String especiePet;
     String descPet;
+    String fotoPet;
 
 
     private String usuario;
@@ -61,6 +71,18 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
         description = findViewById(R.id.Observations);
         buttonAddPet = findViewById(R.id.buttonAddPet);
         textNM = findViewById(R.id.textNM);
+        imageProfile = findViewById(R.id.Imatge);
+
+
+
+        findViewById(R.id.Imatge).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, 1);
+            }
+        });
+
 
     }
 
@@ -99,10 +121,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
                 jsonToSend.accumulate("especie", especiePet);
                 jsonToSend.accumulate("raza", racePet);
                 jsonToSend.accumulate("sexo", sexoPet);
-
-                //jsonToSend.accumulate("foto", fotoPet);
-
-
+                jsonToSend.accumulate("foto", fotoPet);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -147,6 +166,28 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
                 e1.printStackTrace();
             }
 
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                Uri returnUri = data.getData();
+                Bitmap bitmapImage = null;
+                try {
+                    bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), returnUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                imageProfile.setImageBitmap(bitmapImage);
+
+                Image imageConversor = Image.getInstance();
+                fotoPet = imageConversor.BitmapToString(bitmapImage);
+
+            }
         }
 
     }

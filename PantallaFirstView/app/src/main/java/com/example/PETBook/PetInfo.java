@@ -3,6 +3,7 @@ package com.example.PETBook;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.PetModel;
 import com.example.pantallafirstview.R;
 
@@ -55,6 +57,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
         textColor = (TextView) findViewById(R.id.colorInfo);
         textRace = (TextView) findViewById(R.id.razaInfo);
         txtDescription = (TextView) findViewById(R.id.descripcionInfo);
+        fotoPet = findViewById(R.id.fotoPet);
 
 
 
@@ -111,6 +114,15 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
             color = petModel.getColor();
             race = petModel.getRaza();
             description = petModel.getDescripcion();
+
+            // Convert string to Bitmap
+            Image imagenConversor = Image.getInstance();
+            Bitmap profileImage = imagenConversor.StringToBitMap(petModel.getFoto());
+
+            fotoPet.setImageBitmap(profileImage);
+
+
+
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
             System.out.print(id + "\n");
             System.out.print(name + "\n");
