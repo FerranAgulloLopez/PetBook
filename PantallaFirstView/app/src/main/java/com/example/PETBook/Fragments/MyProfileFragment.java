@@ -152,9 +152,8 @@ public class MyProfileFragment extends Fragment implements AsyncResult {
                     textInputMail.getEditText().setText(output.getString("email"));
                     textInputBirthday.getEditText().setText(output.getString("dateOfBirth"));
                     textInputPostalCode.getEditText().setText(output.getString("postalCode"));
-                    Toast.makeText(getActivity(), "SE VEEE", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getActivity(), "ERRORRRRRR", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
