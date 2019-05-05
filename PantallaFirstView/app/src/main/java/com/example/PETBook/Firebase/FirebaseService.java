@@ -108,6 +108,7 @@ public class FirebaseService extends FirebaseMessagingService  {
 
     public void sendRegistrationToServer(String token) {
 
+        Conexion
 
 
 
