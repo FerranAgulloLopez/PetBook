@@ -64,17 +64,6 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
         textNM = findViewById(R.id.textNM);
 
 
-
-        try {
-            FireMessage f = new FireMessage("PRUEBAAAAA", "TEST MESSAGEEEEEEEEEEEEEEEEE");
-
-            String fireBaseToken="cozGHNBytyU:APA91bEaJSlSVj6oDGC6h4VWUEaavxdVh3LX8CQ5xHInfuzqsQK83nXdA5DrB-xLN6SIToRthD3PTD_nfzfDPJsgOWsK-B1t9hMKcxZcUJUt5mhAwe95oC4uxq_Mmev9WOLDdE-UkCo7";
-            f.sendToToken(fireBaseToken);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
 

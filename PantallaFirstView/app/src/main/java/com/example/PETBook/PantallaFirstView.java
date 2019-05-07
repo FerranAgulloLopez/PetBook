@@ -24,7 +24,7 @@ public class PantallaFirstView extends AppCompatActivity {
 
 
 
-        System.out.println("FCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCMMMMMMMMMMMMMMMMMMMMM");
+        System.out.println("!!!!!!!!!!!! TOKEN FCM !!!!!!!!!!!!!!!");
         Log.d("Firebase", "token " + FirebaseInstanceId.getInstance().getToken());
 
 

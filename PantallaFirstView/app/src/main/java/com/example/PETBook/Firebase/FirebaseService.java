@@ -8,16 +8,21 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.util.Log;
 
 
+import com.example.PETBook.Conexion;
+import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.MainActivity;
 import com.example.PETBook.PantallaLogSign;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class FirebaseService extends FirebaseMessagingService  {
+public class FirebaseService extends FirebaseMessagingService implements AsyncResult {
 
     String TAG = "Mensajes Firebase: ";
     NotificationCompat.Builder mybuilder;
@@ -37,38 +42,30 @@ public class FirebaseService extends FirebaseMessagingService  {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
+
+        System.out.println("!!!!!!!!!!!! TOKEN FCM !!!!!!!!!!!!!!!");
+        Log.d("Firebase", "token " + FirebaseInstanceId.getInstance().getToken());
         sendRegistrationToServer(token);
     }
 
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // ...
 
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
+
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
-        // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-
         }
 
-        // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
 
-        // Also if you intend on generating your own notifications as a result of a received FCM
-        // message, here is where that should be initiated. See sendNotification method below.
-
-
-
 
 
         // Notifications
-
         // Create an explicit intent for an Activity in your app
 
         SharedPreferences sharedPreferences = getSharedPreferences("credenciales", MODE_PRIVATE);
@@ -101,16 +98,41 @@ public class FirebaseService extends FirebaseMessagingService  {
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(myNofiticationId, mybuilder.build());
 
-
-
     }
 
 
     public void sendRegistrationToServer(String token) {
 
 
+        SingletonUsuario user = SingletonUsuario.getInstance();
 
+        Conexion con = new Conexion(this);
+        JSONObject jsonToSend = new JSONObject();
+        try {
+            jsonToSend.accumulate("token", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/token/" + user.getEmail(), "POST", jsonToSend.toString());
 
     }
 
+    @Override
+    public void OnprocessFinish(JSONObject output) {
+
+        try {
+            if(output.getInt("code")==200) {
+                System.out.println("New token to server");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+            try {
+                System.out.println(output.getInt("code") +"\n\n\n");
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+
+        }
+
+    }
 }
