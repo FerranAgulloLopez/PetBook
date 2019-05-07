@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Firebase.FireMessage;
 import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.pantallafirstview.R;
 
@@ -61,6 +62,18 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
         description = findViewById(R.id.Observations);
         buttonAddPet = findViewById(R.id.buttonAddPet);
         textNM = findViewById(R.id.textNM);
+
+
+
+        try {
+            FireMessage f = new FireMessage("PRUEBAAAAA", "TEST MESSAGEEEEEEEEEEEEEEEEE");
+
+            String fireBaseToken="cozGHNBytyU:APA91bEaJSlSVj6oDGC6h4VWUEaavxdVh3LX8CQ5xHInfuzqsQK83nXdA5DrB-xLN6SIToRthD3PTD_nfzfDPJsgOWsK-B1t9hMKcxZcUJUt5mhAwe95oC4uxq_Mmev9WOLDdE-UkCo7";
+            f.sendToToken(fireBaseToken);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
