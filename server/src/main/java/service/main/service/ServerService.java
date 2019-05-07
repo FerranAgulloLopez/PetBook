@@ -143,5 +143,5 @@ public interface ServerService {
     public void deleteForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate) throws NotFoundException;
 
 
-    public void sendTestNotifications();
+    public void sendTestNotifications(String token);
 }

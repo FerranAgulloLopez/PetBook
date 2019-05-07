@@ -173,7 +173,7 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
     public void setTokenFirebase() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setToken_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/token").contentType(MediaType.APPLICATION_JSON).param("email","foo@mail.com").param("token", "11111"))
+        this.mockMvc.perform(post("/ServerRESTAPI/token/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setToken_operation/input_token.json")))
                 .andDo(print()).andExpect(status().isOk());
     }
 

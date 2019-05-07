@@ -17,6 +17,7 @@ import service.main.entity.input_output.forum.DataForumThreadUpdate;
 import service.main.entity.input_output.image.DataImage;
 import service.main.entity.input_output.interestsite.DataInterestSite;
 import service.main.entity.input_output.pet.DataPetUpdate;
+import service.main.entity.input_output.user.DataTokenFCM;
 import service.main.entity.input_output.user.DataUser;
 import service.main.entity.input_output.user.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
@@ -165,22 +166,23 @@ public class RestApiController {
 
 
     @CrossOrigin
-    @PostMapping(value = "/token", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/token/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Set the token  of Firebase of the user identified by email", tags="User")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> setTokenFirebase(@ApiParam(value = "email") @RequestParam String email,
-                                              @ApiParam(value = "token") @RequestParam String token)
+    public ResponseEntity<?> setTokenFirebase(@PathVariable String email, @RequestBody DataTokenFCM token)
     {
         try {
-            serverService.setTokenFirebase(email, token);
+            serverService.setTokenFirebase(email, token.getToken());
             return new ResponseEntity<>(HttpStatus.OK);
         }
         catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
+
+
 
 
     /*
@@ -865,8 +867,8 @@ public class RestApiController {
     @ApiOperation(value = "Send a test notification", notes = "Sends teste notification.",tags="Testing")
     @ApiResponses(value = {
     })
-    public ResponseEntity<?> testNotification() {
-        serverService.sendTestNotifications();
+    public ResponseEntity<?> testNotification(@ApiParam(value="token", required = true) @RequestParam("token") String token) {
+        serverService.sendTestNotifications(token);
         return new ResponseEntity<>(HttpStatus.OK);
 
     }

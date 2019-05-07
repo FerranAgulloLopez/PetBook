@@ -24,6 +24,7 @@ import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.*;
+import service.main.services.FireMessage;
 import service.main.services.SequenceGeneratorService;
 import service.main.util.SendEmailTLS;
 
@@ -160,7 +161,7 @@ public class ServerServiceImpl implements ServerService {
         else {
             User userToSave = user.get();
             userToSave.setTokenFirebase(token);
-            System.out.println("TOKEEEN: " + userToSave.getTokenFirebase());
+            System.out.println("TOKEN: " + userToSave.getTokenFirebase());
             userRepository.save(userToSave);
         }
     }
@@ -630,44 +631,19 @@ public class ServerServiceImpl implements ServerService {
 
 
     @Override
-    public void sendTestNotifications() {
+    public void sendTestNotifications(String token) {
 
+        //TO SINGLE DEVICE
 
         try {
-            String androidFcmKey="AAAAuaJvcA0:APA91bHRJoG3XEPJ3KR_xgbIzZV8CEhfwV_fdqGlpk3Af36nJW7Rklp6IgbPja89NpVR3GWUA9lXDzTpIFi71PWiUVzB_0cUEyPtE0K4Dg7nGjsx10-jMEQ6WjKM8RbZSV_Wmu0oZX0O";
-            String androidFcmUrl="https://fcm.googleapis.com/fcm/send";
+            FireMessage f = new FireMessage("PRUEABA", "TEST NOTIFICATION FROM SERVER");
 
-            RestTemplate restTemplate = new RestTemplate();
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.set("Authorization", "key=" + androidFcmKey);
-            httpHeaders.set("Content-Type", "application/json");
-            JSONObject msg = new JSONObject();
-            JSONObject json = new JSONObject();
+            //String fireBaseToken= token;
+            f.sendToToken(token);
 
-            msg.put("title", "PetBook");
-            msg.put("body", "PruebaServer");
-            msg.put("notificationType", "Test");
-
-            json.put("data", msg);
-            Optional<User> userTest = userRepository.findById("m@m.com");
-
-            if (userTest.isPresent()) {
-
-                User user = userTest.get();
-                json.put("to", user.getTokenFirebase());
-
-                HttpEntity<String> httpEntity = new HttpEntity<String>(json.toString(), httpHeaders);
-                String response = restTemplate.postForObject(androidFcmUrl, httpEntity, String.class);
-                System.out.println(response);
-            }
-
-        } catch (JSONException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
-
-
 
 }
