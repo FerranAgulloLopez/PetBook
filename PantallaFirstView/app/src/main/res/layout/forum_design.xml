@@ -60,14 +60,14 @@
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/dataCreacioForum"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/dataCreacioForum"
-        android:layout_width="243dp"
-        android:layout_height="21dp"
+        android:layout_width="130dp"
+        android:layout_height="23dp"
         android:layout_marginTop="56dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"

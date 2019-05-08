@@ -5,9 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.PETBook.Models.CommentForumModel;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
 import java.util.ArrayList;
@@ -16,6 +18,8 @@ public class CommentForumAdapter extends BaseAdapter {
 
     private Context context;
     private ArrayList<CommentForumModel> forumList;
+    /*private ImageButton editCommentButton;
+    private ImageButton deleteCommentButton;*/
 
     public CommentForumAdapter (Context context, ArrayList<CommentForumModel> array){
         this.context = context;
@@ -63,12 +67,24 @@ public class CommentForumAdapter extends BaseAdapter {
         TextView userCreatorComment = convertView.findViewById(R.id.userCreatorComment);
         TextView dataComment = convertView.findViewById(R.id.dataComment);
         TextView descripcioComment = convertView.findViewById(R.id.descripcionComment);
+        /*editCommentButton = convertView.findViewById(R.id.editCommentButton);
+        deleteCommentButton = convertView.findViewById(R.id.deleteCommentButton);
 
+        SingletonUsuario su = SingletonUsuario.getInstance();
+*/
         userCreatorComment.setText(forumList.get(position).getCreatorMail());
         dataComment.setText(forumList.get(position).getCreationDate());
         descripcioComment.setText(forumList.get(position).getDescription());
-
-
+/*
+        if(userCreatorComment.equals(su.getEmail())){
+            editCommentButton.setVisibility(View.VISIBLE);
+            deleteCommentButton.setVisibility(View.VISIBLE);
+        }
+        else{
+            editCommentButton.setVisibility(View.INVISIBLE);
+            deleteCommentButton.setVisibility(View.INVISIBLE);
+        }
+*/
         return convertView;
     }
 }

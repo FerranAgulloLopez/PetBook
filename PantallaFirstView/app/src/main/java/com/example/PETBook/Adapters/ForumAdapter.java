@@ -7,12 +7,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.PETBook.Conexion;
+import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.ForumModel;
 import com.example.pantallafirstview.R;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
-public class ForumAdapter extends BaseAdapter {
+public class ForumAdapter extends BaseAdapter{
 
     private Context context;
     private ArrayList<ForumModel> forumList;
@@ -50,10 +54,12 @@ public class ForumAdapter extends BaseAdapter {
         TextView creadorForum = (TextView) convertView.findViewById(R.id.nombreCreadorForum);
 
         nombreForum.setText(forumList.get(position).getTitle());
-        numberMessages.setText(String.format("%d",forumList.get(position).getComments().size()));
-        System.out.println(forumList.get(position).getComments().size());
+        numberMessages.setText(String.format("%d", forumList.get(position).getComments().size()));
+        System.out.println(forumList.get(position).getComments().get(position).getTamaño());
         dataCreacionForum.setText(forumList.get(position).getCreationDate());
         creadorForum.setText(forumList.get(position).getCreatorMail());
         return convertView;
     }
+
+
 }

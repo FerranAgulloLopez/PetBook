@@ -199,6 +199,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
                         cfm.setCreatorMail(com.getString("creatorMail"));
                         cfm.setCreationDate(transformacionFechaHora(com.getString("creationDate")));
                         cfm.setDescription(com.getString("description"));
+                        cfm.setTamaño(c.length());
                         comments.add(cfm);
                     }
 

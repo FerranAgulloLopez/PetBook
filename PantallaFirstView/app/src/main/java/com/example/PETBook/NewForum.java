@@ -153,7 +153,7 @@ public class NewForum extends AppCompatActivity implements AsyncResult {
             else {
                 System.out.println(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
                 AlertDialog.Builder error = new AlertDialog.Builder(NewForum.this);
-                error.setMessage("Evento existente con los mismos datos")
+                error.setMessage("There is already a forum with the same Title")
                         .setCancelable(false)
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
@@ -162,7 +162,7 @@ public class NewForum extends AppCompatActivity implements AsyncResult {
                             }
                         });
                 AlertDialog errorE = error.create();
-                errorE.setTitle("Evento existente");
+                errorE.setTitle("Existent forum");
                 errorE.show();
             }
         } catch (Exception e) {
