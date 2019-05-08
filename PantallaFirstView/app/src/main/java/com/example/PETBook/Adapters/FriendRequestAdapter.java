@@ -1,6 +1,7 @@
 package com.example.PETBook.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.SingletonUsuario;
 import com.example.PETBook.Models.FriendRequestModel;
+import com.example.PETBook.UserInfo;
 import com.example.pantallafirstview.R;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +26,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
 
     private Context context;
     private ArrayList<FriendRequestModel> user_friends_requests;
+    private String tipoConexion;
 
     FriendRequestModel friendRequest;
 
@@ -56,7 +59,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
         }
 
         final FriendRequestModel friend = user_friends_requests.get(position);
-        friendRequest = friend;
+
 
         TextView inputFullName = (TextView) convertView.findViewById(R.id.fullNameInput);
         inputFullName.setText(friend.getName() + " " + friend.getSurnames());
@@ -65,23 +68,23 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
             @Override
             public void onClick(View v) {
                 Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigoo", Toast.LENGTH_SHORT).show();
-                /*
-                Intent intent = new Intent(v.getContext(), FriendRequestInfo.class);
+
+                Intent intent = new Intent(v.getContext(), UserInfo.class);
                 intent.putExtra("friendRequestSelected", friend);
-                v.getContext().startActivity(intent);*/
+                v.getContext().startActivity(intent);
             }
         });
 
         ImageView imageProfile = (ImageView) convertView.findViewById(R.id.imageView);
-        
+
         imageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigoo", Toast.LENGTH_SHORT).show();
-                /*
-                Intent intent = new Intent(v.getContext(), FriendRequestInfo.class);
+
+                Intent intent = new Intent(v.getContext(), UserInfo.class);
                 intent.putExtra("friendRequestSelected", friend);
-                v.getContext().startActivity(intent);*/
+                v.getContext().startActivity(intent);
             }
         });
 
@@ -93,14 +96,20 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                friendRequest = friend;
+                tipoConexion = "acceptRequest";
+                SingletonUsuario su = SingletonUsuario.getInstance();
+                /* Nueva conexion llamando a la funcion del server */
+                Conexion con = new Conexion(FriendRequestAdapter.this);
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/acceptFriendRequest/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
             }
         });
 
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                friendRequest = friend;
+                tipoConexion = "denyRequest";
                 SingletonUsuario su = SingletonUsuario.getInstance();
                 /* Nueva conexion llamando a la funcion del server */
                 Conexion con = new Conexion(FriendRequestAdapter.this);
@@ -115,22 +124,38 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
     @Override
     public void OnprocessFinish(JSONObject output) {
         if (output != null) {
-            try {
-                int response = output.getInt("code");
-                if (response == 200) {                    
-                    user_friends_requests.remove(friendRequest);
-                    FriendRequestAdapter.this.notifyDataSetChanged();
-                    Toast.makeText(this.context, "ELIMINADO", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this.context, "ERRORRRRRR", Toast.LENGTH_SHORT).show();
+            if(tipoConexion.equals("acceptRequest")) {
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200) {
+                        user_friends_requests.remove(friendRequest);
+                        FriendRequestAdapter.this.notifyDataSetChanged();
+                        Toast.makeText(this.context, "ACEPTADO", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this.context, "ERRORRRRRR", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } else if(tipoConexion.equals("denyRequest")) {
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200) {
+                        user_friends_requests.remove(friendRequest);
+                        FriendRequestAdapter.this.notifyDataSetChanged();
+                        Toast.makeText(this.context, "ELIMINADO", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this.context, "ERRORRRRRR", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
+
         } else {
-            /*
+
             Toast toast = Toast.makeText(this.context, "El server no funciona", Toast.LENGTH_LONG);
-            toast.show();*/
+            toast.show();
         }
 
     }
