@@ -142,7 +142,7 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
      */
 
     @Test
-    public void setMockMvc() throws Exception {
+    public void setProfilePicture() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setProfilePicture_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/setPicture/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setProfilePicture_operation/input_picture.json")))
@@ -163,5 +163,20 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
         this.mockMvc.perform(get("/ServerRESTAPI/getPicture/foo@mail.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"getProfilePicture_operation/output_getPicture.json")));
     }
+
+
+        /*
+    Set token firebase
+     */
+
+    @Test
+    public void setTokenFirebase() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setToken_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/token/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setToken_operation/input_token.json")))
+                .andDo(print()).andExpect(status().isOk());
+    }
+
+
 
 }

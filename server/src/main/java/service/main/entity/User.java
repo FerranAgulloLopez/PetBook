@@ -34,6 +34,7 @@ public class User implements Serializable {
                             // File   -> byte[] -> String[]
                             // String[] -> byte[] -> File
     private Friend friends; // Amigos tanto los confirmados como lo que solicitan serlo.
+    private String tokenFirebase;
 
 
     public User() {}
@@ -108,6 +109,9 @@ public class User implements Serializable {
 
     public Friend getFriends() { return friends; }
 
+    public String getTokenFirebase() {
+        return tokenFirebase;
+    }
 
 
     /*
@@ -142,6 +146,9 @@ public class User implements Serializable {
 
     public void setFriends(Friend friends) { this.friends = friends; }
 
+    public void setTokenFirebase(String tokenFirebase) {
+        this.tokenFirebase = tokenFirebase;
+    }
 
 
     /*
@@ -172,6 +179,20 @@ public class User implements Serializable {
         return friends.beenRequestedToBeFriendBy(friend);
     }
 
+     /*
+    Friends Suggestion
+     */
+
+    public void addRejectedUserSuggestion(String userEmail) {
+        friends.addRejectedUserSuggestion(userEmail);
+    }
+
+    public void removeRejectedUserSuggestion(String userEmail) {
+        friends.removeRejectedUserSuggestion(userEmail);
+    }
+
+    public boolean rejectedFriendSuggestionOf(String userEmail)  { return friends.rejectedFriendSuggestionOf(userEmail); }
+
 
     /*
     Auxiliary operations
@@ -180,4 +201,7 @@ public class User implements Serializable {
     public boolean checkPassword(String password_to_check) {
         return hasher.checkPassword(password_to_check.toCharArray(),password);
     }
+
+
+
 }

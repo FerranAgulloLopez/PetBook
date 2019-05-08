@@ -1,7 +1,12 @@
 package service.main.service;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import service.main.entity.*;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
@@ -19,6 +24,7 @@ import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.*;
+import service.main.services.FireMessage;
 import service.main.services.SequenceGeneratorService;
 import service.main.util.SendEmailTLS;
 
@@ -38,7 +44,8 @@ public class ServerServiceImpl implements ServerService {
     private static final String USERS_ALREADY_ARE_FRIENDS = "The users already are friends";
     private static final String ONE_OF_USERS_DONT_EXIST = "One of the users does not exist in the database";
     private static final String THREADNOTDB = "The forum thread does not exist in the database";
-    private static final String  USERS_ARE_NOT_FRIENDS = "The users are not friends";
+    private static final String USERS_ARE_NOT_FRIENDS = "The users are not friends";
+    private static final String USER_HASNT_POSTAL_CODE = "The user has not a postal code";
 
 
     private SendEmailTLS mailsender;
@@ -147,6 +154,17 @@ public class ServerServiceImpl implements ServerService {
         }
     }
 
+    @Override
+    public void setTokenFirebase(String email, String token) throws NotFoundException {
+        Optional<User> user = userRepository.findById(email);
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+        else {
+            User userToSave = user.get();
+            userToSave.setTokenFirebase(token);
+            System.out.println("TOKEN: " + userToSave.getTokenFirebase());
+            userRepository.save(userToSave);
+        }
+    }
 
 
     /*
@@ -272,6 +290,54 @@ public class ServerServiceImpl implements ServerService {
 
         user.removeFriend(emailRequester);
         friend.removeFriend(emailUser);
+
+        userRepository.save(friend);
+        userRepository.save(user);
+    }
+
+    @Override
+    public List<User> GetUsersFriendSuggestion(String email) throws NotFoundException, BadRequestException {
+        Optional<User> optUser = userRepository.findById(email);
+        if (!optUser.isPresent()) throw new NotFoundException(USERNOTDB);
+
+        User user = optUser.get();
+        if(user.getPostalCode() == null) throw new BadRequestException(USER_HASNT_POSTAL_CODE);
+
+        List<User> allUsersWithSamePostalCode= userRepository.findByPostalCode(user.getPostalCode());
+
+        List<Integer> elementosAEliminar = new ArrayList<>();
+        for(int i = 0; i < allUsersWithSamePostalCode.size(); ++i) { // Removes the users that got rejected as suggestion by the user in the past
+            User u = allUsersWithSamePostalCode.get(i);
+            if(user.rejectedFriendSuggestionOf(u.getEmail())) {
+                elementosAEliminar.add(i);
+            }
+            if(user.getEmail().equals(u.getEmail())) {
+                elementosAEliminar.add(i);
+            }
+        }
+
+        int size = elementosAEliminar.size();
+        for(int i = 0; i < size; ++i) {
+            int indice = elementosAEliminar.get(i) - i; // restar i porque el vector va perdiendo elementos
+            allUsersWithSamePostalCode.remove(indice);
+        }
+
+        return allUsersWithSamePostalCode;
+    }
+
+    @Override
+    public void deleteFriendSuggestion(String emailUser, String emailSuggested) throws NotFoundException {
+        Optional<User> optUser = userRepository.findById(emailUser);
+        if (!optUser.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        Optional<User> optFriend = userRepository.findById(emailSuggested);
+        if (!optFriend.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
+
+        User user = optUser.get();
+        User friend = optFriend.get();
+
+        user.addRejectedUserSuggestion(emailSuggested);
+        friend.addRejectedUserSuggestion(emailUser);
 
         userRepository.save(friend);
         userRepository.save(user);
@@ -528,6 +594,9 @@ public class ServerServiceImpl implements ServerService {
 
 
 
+
+
+
     /*
     Auxiliary operations
      */
@@ -561,5 +630,20 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
+    @Override
+    public void sendTestNotifications(String token) {
+
+        //TO SINGLE DEVICE
+
+        try {
+            FireMessage f = new FireMessage("PRUEABA", "TEST NOTIFICATION FROM SERVER");
+
+            //String fireBaseToken= token;
+            f.sendToToken(token);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }
