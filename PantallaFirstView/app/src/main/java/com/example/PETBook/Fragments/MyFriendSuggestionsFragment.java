@@ -44,7 +44,7 @@ public class MyFriendSuggestionsFragment extends Fragment implements AsyncResult
         Conexion con = new Conexion(MyFriendSuggestionsFragment.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
 
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUserFriends/" + su.getEmail(),"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUsersFriendSuggestion/" + su.getEmail(),"GET", null);
         return convertView;
     }
 
@@ -56,10 +56,11 @@ public class MyFriendSuggestionsFragment extends Fragment implements AsyncResult
                 model = new ArrayList<>();
                 JSONArray jsonArray = json.getJSONArray("array");
                 for(int i = 0; i < jsonArray.length(); ++i){
-                    JSONObject evento = jsonArray.getJSONObject(i);
+                    JSONObject friend = jsonArray.getJSONObject(i);
                     FriendModel e = new FriendModel();
-                    e.setName(evento.getString("firstName"));
-                    e.setSurnames(evento.getString("secondName"));
+                    e.setName(friend.getString("firstName"));
+                    e.setSurnames(friend.getString("secondName"));
+                    e.setEmail (friend.getString("email"));
                     model.add(e);
                 }
                 friendsUser = new FriendAdapter(getActivity(), model);

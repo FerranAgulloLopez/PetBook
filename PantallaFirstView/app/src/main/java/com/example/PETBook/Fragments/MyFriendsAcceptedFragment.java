@@ -60,10 +60,11 @@ public class MyFriendsAcceptedFragment extends Fragment implements AsyncResult {
                 model = new ArrayList<>();
                 JSONArray jsonArray = json.getJSONArray("array");
                 for(int i = 0; i < jsonArray.length(); ++i){
-                    JSONObject evento = jsonArray.getJSONObject(i);
+                    JSONObject friend = jsonArray.getJSONObject(i);
                     FriendModel e = new FriendModel();
-                    e.setName(evento.getString("firstName"));
-                    e.setSurnames(evento.getString("secondName"));
+                    e.setName(friend.getString("firstName"));
+                    e.setSurnames(friend.getString("secondName"));
+                    e.setEmail (friend.getString("email"));
                     model.add(e);
                 }
                 friendsUser = new FriendAdapter(getActivity(), model);

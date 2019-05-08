@@ -143,6 +143,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                     if (response == 200) {
                         user_friends_requests.remove(friendRequest);
                         FriendRequestAdapter.this.notifyDataSetChanged();
+
                         Toast.makeText(this.context, "ELIMINADO", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this.context, "ERRORRRRRR", Toast.LENGTH_SHORT).show();
