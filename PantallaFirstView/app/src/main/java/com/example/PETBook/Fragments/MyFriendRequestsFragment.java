@@ -83,6 +83,7 @@ public class MyFriendRequestsFragment extends Fragment implements AsyncResult {
                     FriendRequestModel e = new FriendRequestModel();
                     e.setName(evento.getString("firstName"));
                     e.setSurnames(evento.getString("secondName"));
+                    e.setEmail (evento.getString("email"));
                     model.add(e);
                 }
                 friendsRequestsUser = new FriendRequestAdapter(getActivity(), model);
