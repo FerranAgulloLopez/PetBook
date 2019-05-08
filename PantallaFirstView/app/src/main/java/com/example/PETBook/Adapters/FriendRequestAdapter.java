@@ -64,7 +64,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
         inputFullName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigoo", Toast.LENGTH_SHORT).show();
                 /*
                 Intent intent = new Intent(v.getContext(), FriendRequestInfo.class);
                 intent.putExtra("friendRequestSelected", friend);
@@ -77,7 +77,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
         imageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigo", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigoo", Toast.LENGTH_SHORT).show();
                 /*
                 Intent intent = new Intent(v.getContext(), FriendRequestInfo.class);
                 intent.putExtra("friendRequestSelected", friend);

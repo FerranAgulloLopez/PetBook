@@ -89,7 +89,6 @@ public class MyFriendRequestsFragment extends Fragment implements AsyncResult {
                 friendsRequestsUser = new FriendRequestAdapter(getActivity(), model);
                 lista = (ListView) MyView.findViewById(R.id.list_friends_requests);
                 lista.setAdapter(friendsRequestsUser);
-                System.out.print(json.getInt("code") + " se muestran correctamente la lista de solicitudes de amigos\n");
             }
             else{
                 System.out.print("El sistema no logra mostrar la lista de solicitudes de amigos del usuario\n");
