@@ -58,7 +58,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/ConfirmLogin", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/ConfirmLogin", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.",tags="LogIn")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")

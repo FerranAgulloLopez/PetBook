@@ -35,6 +35,7 @@ public class User implements Serializable {
                             // String[] -> byte[] -> File
     private Friend friends; // Amigos tanto los confirmados como lo que solicitan serlo.
     private String tokenFirebase;
+    private String role = "USER";
 
 
     public User() {}
@@ -113,6 +114,9 @@ public class User implements Serializable {
         return tokenFirebase;
     }
 
+    public String getRole() {
+        return role;
+    }
 
     /*
     Set
