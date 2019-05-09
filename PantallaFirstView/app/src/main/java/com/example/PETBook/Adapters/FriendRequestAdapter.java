@@ -130,9 +130,9 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                     if (response == 200) {
                         user_friends_requests.remove(friendRequest);
                         FriendRequestAdapter.this.notifyDataSetChanged();
-                        Toast.makeText(this.context, "ACEPTADO", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this.context, "Friend request accepted successfully.", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this.context, "ERRORRRRRR", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -144,9 +144,9 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                         user_friends_requests.remove(friendRequest);
                         FriendRequestAdapter.this.notifyDataSetChanged();
 
-                        Toast.makeText(this.context, "ELIMINADO", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this.context, "Friend request rejected successfully.", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(this.context, "ERRORRRRRR", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -155,7 +155,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
 
         } else {
 
-            Toast toast = Toast.makeText(this.context, "El server no funciona", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(this.context, "The server does not work.", Toast.LENGTH_LONG);
             toast.show();
         }
 
