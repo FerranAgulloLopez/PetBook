@@ -116,7 +116,7 @@ public class FriendSuggestionAdapter extends BaseAdapter implements AsyncResult 
                         user_friends_suggestions.remove(friendSuggestion);
                         FriendSuggestionAdapter.this.notifyDataSetChanged();
 
-                        Toast.makeText(this.context, "Friend request successfully deleted.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this.context, "Suggested user deleted successfully..", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }
