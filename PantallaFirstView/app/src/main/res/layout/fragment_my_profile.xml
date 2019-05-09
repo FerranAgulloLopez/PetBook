@@ -161,7 +161,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <Button
-                android:id="@+id/signInButton"
+                android:id="@+id/editProfileButton"
                 android:layout_width="538dp"
                 android:layout_height="48dp"
                 android:layout_marginStart="16dp"

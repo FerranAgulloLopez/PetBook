@@ -3,6 +3,7 @@ package com.example.PETBook.Fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
+import android.widget.Button;
 import android.widget.Toast;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,6 +46,9 @@ public class MyProfileFragment extends Fragment implements AsyncResult {
     private TextInputLayout textInputMail;
     private TextInputLayout textInputBirthday;
     private TextInputLayout textInputPostalCode;
+
+    private Button buttonEditProfile;
+    private String tipoConexion;
 
     private OnFragmentInteractionListener mListener;
 
@@ -94,10 +98,23 @@ public class MyProfileFragment extends Fragment implements AsyncResult {
         textInputBirthday  = (TextInputLayout) MyView.findViewById(R.id.birthdayTextInput);
         textInputPostalCode  = (TextInputLayout) MyView.findViewById(R.id.postalCodeTextInput);
 
+
+
+        tipoConexion = "getUser";
         Conexion con = new Conexion(MyProfileFragment.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
 
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail(),"GET", null);
+
+
+        buttonEditProfile = (Button) MyView.findViewById(R.id.editProfileButton);
+
+        buttonEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editProfile();
+            }
+        });
 
         return MyView;
     }
@@ -141,25 +158,61 @@ public class MyProfileFragment extends Fragment implements AsyncResult {
         void onFragmentInteraction(Uri uri);
     }
 
+    private void editProfile() {
+        tipoConexion = "updateUser";
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        String name = textInputName.getEditText().getText().toString().trim();
+        String surnames = textInputSurnames.getEditText().getText().toString().trim();
+        String birthday = textInputBirthday.getEditText().getText().toString().trim();
+        String postalCode = textInputPostalCode.getEditText().getText().toString().trim();
+
+        JSONObject jsonToSend = new JSONObject();
+        try{
+            jsonToSend.accumulate("firstName", name);
+            jsonToSend.accumulate("secondName", surnames);
+            jsonToSend.accumulate("dateOfBirth", birthday);
+            jsonToSend.accumulate("postalCode", postalCode);
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        Conexion con = new Conexion(MyProfileFragment.this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/update/" + su.getEmail(), "PUT", jsonToSend.toString());
+    }
+
     @Override
     public void OnprocessFinish(JSONObject output) {
         if (output != null) {
-            try {
-                int response = output.getInt("code");
-                if (response == 200) {
-                    textInputName.getEditText().setText(output.getString("firstName"));
-                    textInputSurnames.getEditText().setText(output.getString("secondName"));
-                    textInputMail.getEditText().setText(output.getString("email"));
-                    textInputBirthday.getEditText().setText(output.getString("dateOfBirth"));
-                    textInputPostalCode.getEditText().setText(output.getString("postalCode"));
-                } else {
-                    Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
+            if(tipoConexion.equals("getUser")) {
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200) {
+                        textInputName.getEditText().setText(output.getString("firstName"));
+                        textInputSurnames.getEditText().setText(output.getString("secondName"));
+                        textInputMail.getEditText().setText(output.getString("email"));
+                        textInputBirthday.getEditText().setText(output.getString("dateOfBirth"));
+                        textInputPostalCode.getEditText().setText(output.getString("postalCode"));
+                    } else {
+                        Toast.makeText(getActivity(), "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } else if(tipoConexion.equals("updateUser")) {
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200 && response == 201) {
+                        Toast.makeText(getActivity(), "User updated succesfully.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         } else {
-            Toast.makeText(getActivity(), "El servidor no funciona", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "The server does not work.", Toast.LENGTH_SHORT).show();
         }
     }
 }
