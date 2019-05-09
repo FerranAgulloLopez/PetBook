@@ -17,6 +17,7 @@ import service.main.exception.BadRequestException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public interface ServerService {
     User operations
      */
 
-    public OutLogin ConfirmLogin(String email, String password) throws NotFoundException;
+    public OutLogin ConfirmLogin(String email, String password, HttpServletResponse response) throws NotFoundException;
 
     public void ConfirmEmail(String email) throws NotFoundException;
 

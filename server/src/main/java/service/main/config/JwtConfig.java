@@ -8,8 +8,8 @@ public class JwtConfig {
 
     private String LoginUri = "/ServerRESTAPI/ConfirmLogin";
 
-    @Value("${security.jwt.header:Authorization}")
-    private String header;
+    //@Value("${security.jwt.header:Authorization}")
+    private String header = "Authorization";
 
     //@Value("${security.jwt.prefix:Bearer }")
     private String prefix= "Bearer ";

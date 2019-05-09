@@ -35,6 +35,7 @@ public class User implements Serializable {
                             // String[] -> byte[] -> File
     private Friend friends; // Amigos tanto los confirmados como lo que solicitan serlo.
     private String tokenFirebase;
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String role = "USER";
 
 

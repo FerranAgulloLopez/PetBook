@@ -25,6 +25,7 @@ import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.service.ServerService;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 
@@ -63,10 +64,10 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> confirmLogin(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
+    public ResponseEntity<?> confirmLogin(HttpServletResponse response, @ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
                                           @ApiParam(value="Password introduced", required = true, example = "1234") @RequestParam String password) {
         try {
-            return new ResponseEntity<>(serverService.ConfirmLogin(email,password),HttpStatus.OK);
+            return new ResponseEntity<>(serverService.ConfirmLogin(email,password,response),HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         }

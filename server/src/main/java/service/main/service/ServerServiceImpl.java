@@ -33,6 +33,7 @@ import service.main.services.FireMessage;
 import service.main.services.SequenceGeneratorService;
 import service.main.util.SendEmailTLS;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,11 +80,12 @@ public class ServerServiceImpl implements ServerService {
     User operations
      */
 
-    public OutLogin ConfirmLogin(String email, String password) throws NotFoundException {
+    public OutLogin ConfirmLogin(String email, String password, HttpServletResponse response) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
         if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
         boolean result = user.get().checkPassword(password);
-        return new OutLogin(result,user.get().isMailconfirmed(),generateJWTToken(user.get()));
+        generateJWTToken(user.get(), response);
+        return new OutLogin(result,user.get().isMailconfirmed());
     }
 
     public void RegisterUser(DataUser inputUser) throws BadRequestException {
@@ -607,11 +609,11 @@ public class ServerServiceImpl implements ServerService {
     Auxiliary operations
      */
 
-    private String generateJWTToken(User user) {
+    private void generateJWTToken(User user,HttpServletResponse response) {
         JwtConfig jwtConfig = new JwtConfig();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + user.getRole());
         Long now = System.currentTimeMillis();
-        return Jwts.builder()
+        String token = Jwts.builder()
                 .setSubject(user.getEmail())
                 // Convert to list of strings.
                 // This is important because it affects the way we get them back in the Gateway.
@@ -621,6 +623,7 @@ public class ServerServiceImpl implements ServerService {
                 .setExpiration(new java.sql.Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
                 .compact();
+        response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
     }
 
     private Event auxGetEvent(long eventId) throws NotFoundException {
