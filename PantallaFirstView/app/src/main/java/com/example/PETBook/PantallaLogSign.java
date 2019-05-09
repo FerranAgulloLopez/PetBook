@@ -68,6 +68,8 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
 
                     SingletonUsuario user = SingletonUsuario.getInstance();
                     SingletonUsuario.setEmail(usuari.getText().toString());
+                    String token = json.getString("token");
+                    user.setJwtToken(token);
                     user.setProfilePicture(null);
                     System.out.println("Ha ido bien, codigo 200");
 
@@ -77,6 +79,7 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                     SharedPreferences sharedPreferences = getSharedPreferences("credenciales", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("login", usuari.getText().toString());
+                    editor.putString("jwtToken", token);
                     editor.commit();
 
 

@@ -19,13 +19,16 @@ public class PantallaFirstView extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("credenciales", MODE_PRIVATE);
 
         String login = sharedPreferences.getString("login",null);
+        String token = sharedPreferences.getString("jwtToken", null);
 
 
         /*
         if user was logged move directly to MainActivity
          */
         if (login != null) {
+            SingletonUsuario user = SingletonUsuario.getInstance();
             SingletonUsuario.setEmail(login);
+            if (token != null) user.setJwtToken(token);
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
             finish();

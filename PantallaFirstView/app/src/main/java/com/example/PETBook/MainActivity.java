@@ -176,6 +176,7 @@ public class MainActivity extends AppCompatActivity
                             SharedPreferences sharedPreferences = getSharedPreferences("credenciales", MODE_PRIVATE);
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.remove("login");
+                            editor.remove("jwtToken");
                             editor.commit();
 
                             finish();
