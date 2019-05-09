@@ -5,17 +5,29 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.PETBook.Conexion;
+import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Models.FriendRequestModel;
 import com.example.PETBook.Models.FriendSuggestionModel;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class FriendSuggestionAdapter extends BaseAdapter {
+public class FriendSuggestionAdapter extends BaseAdapter implements AsyncResult {
 
     private Context context;
     private ArrayList<FriendSuggestionModel> user_friends_suggestions;
+    private String tipoConexion;
+
+    FriendSuggestionModel friendSuggestion;
 
     public FriendSuggestionAdapter(Context context, ArrayList<FriendSuggestionModel> array){
         this.context = context;
@@ -44,11 +56,80 @@ public class FriendSuggestionAdapter extends BaseAdapter {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.friend_suggestion_design,null);
         }
+
+        final FriendSuggestionModel friend = user_friends_suggestions.get(position);
+
         TextView inputFullName = (TextView) convertView.findViewById(R.id.fullNameInput);
 
         inputFullName.setText(user_friends_suggestions.get(position).getName() +" " + user_friends_suggestions.get(position).getSurnames());
+
+        Button addButton = (Button) convertView.findViewById(R.id.addButton);
+        Button removeButton = (Button) convertView.findViewById(R.id.removeButton);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                friendSuggestion = friend;
+                tipoConexion = "sendRequest";
+                SingletonUsuario su = SingletonUsuario.getInstance();
+                /* Nueva conexion llamando a la funcion del server */
+                Conexion con = new Conexion(FriendSuggestionAdapter.this);
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/sendFriendRequest/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+            }
+        });
+
+        removeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                friendSuggestion = friend;
+                tipoConexion = "deleteSuggestion";
+                SingletonUsuario su = SingletonUsuario.getInstance();
+                /* Nueva conexion llamando a la funcion del server */
+                Conexion con = new Conexion(FriendSuggestionAdapter.this);
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/deleteFriendSuggestion/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+
+            }
+        });
+
         return convertView;
     }
 
+    public void OnprocessFinish(JSONObject output) {
+        if (output != null) {
+            if(tipoConexion.equals("sendRequest")) {
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200) {
+                        user_friends_suggestions.remove(friendSuggestion);
+                        FriendSuggestionAdapter.this.notifyDataSetChanged();
+                        Toast.makeText(this.context, "Friend request sent successfully.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else if(tipoConexion.equals("deleteSuggestion")) {
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200) {
+                        user_friends_suggestions.remove(friendSuggestion);
+                        FriendSuggestionAdapter.this.notifyDataSetChanged();
+
+                        Toast.makeText(this.context, "Friend request successfully deleted.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } else {
+
+            Toast toast = Toast.makeText(this.context, "The server does not work.", Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
 
 }
