@@ -68,7 +68,7 @@ public class MyFriendsAcceptedFragment extends Fragment implements AsyncResult {
                     model.add(e);
                 }
                 friendsUser = new FriendAdapter(getActivity(), model);
-                lista = (ListView) convertView.findViewById(R.id.list_friends1);
+                lista = (ListView) convertView.findViewById(R.id.list_friends_accepted);
                 lista.setAdapter(friendsUser);
                 System.out.print(json.getInt("code") + " se muestran correctamente la lista de amigos\n");
             }

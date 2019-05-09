@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.example.PETBook.Adapters.FriendAdapter;
+import com.example.PETBook.Adapters.FriendSuggestionAdapter;
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.Models.FriendModel;
+import com.example.PETBook.Models.FriendSuggestionModel;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
@@ -24,9 +24,9 @@ import java.util.ArrayList;
 public class MyFriendSuggestionsFragment extends Fragment implements AsyncResult {
 
     private View convertView;
-    private ArrayList<FriendModel> model;
+    private ArrayList<FriendSuggestionModel> model;
     private ListView lista;
-    private FriendAdapter friendsUser;
+    private FriendSuggestionAdapter friendsSuggestionsUser;
 
     public MyFriendSuggestionsFragment() {
         // Required empty public constructor
@@ -57,15 +57,15 @@ public class MyFriendSuggestionsFragment extends Fragment implements AsyncResult
                 JSONArray jsonArray = json.getJSONArray("array");
                 for(int i = 0; i < jsonArray.length(); ++i){
                     JSONObject friend = jsonArray.getJSONObject(i);
-                    FriendModel e = new FriendModel();
+                    FriendSuggestionModel e = new FriendSuggestionModel();
                     e.setName(friend.getString("firstName"));
                     e.setSurnames(friend.getString("secondName"));
                     e.setEmail (friend.getString("email"));
                     model.add(e);
                 }
-                friendsUser = new FriendAdapter(getActivity(), model);
-                lista = (ListView) convertView.findViewById(R.id.list_friends1);
-                lista.setAdapter(friendsUser);
+                friendsSuggestionsUser = new FriendSuggestionAdapter(getActivity(), model);
+                lista = (ListView) convertView.findViewById(R.id.list_friends_suggestions);
+                lista.setAdapter(friendsSuggestionsUser);
                 System.out.print(json.getInt("code") + " se muestran correctamente la lista de amigos\n");
             }
             else{
