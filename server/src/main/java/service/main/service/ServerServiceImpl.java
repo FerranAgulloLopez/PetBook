@@ -321,10 +321,16 @@ public class ServerServiceImpl implements ServerService {
         List<Integer> elementosAEliminar = new ArrayList<>();
         for(int i = 0; i < allUsersWithSamePostalCode.size(); ++i) { // Removes the users that got rejected as suggestion by the user in the past
             User u = allUsersWithSamePostalCode.get(i);
-            if(user.rejectedFriendSuggestionOf(u.getEmail())) {
+            if(user.rejectedFriendSuggestionOf(u.getEmail())) { // Si rechazo el sugerimiento
                 elementosAEliminar.add(i);
             }
-            if(user.getEmail().equals(u.getEmail())) {
+            if(user.getEmail().equals(u.getEmail())) {          // Se quita a si mismo
+                elementosAEliminar.add(i);
+            }
+            if(u.beenRequestedToBeFriendBy(user.getEmail())) {  // El usuario sugerido tiene una solicitud pendiente por parte de *user*
+                elementosAEliminar.add(i);
+            }
+            if(u.isFriend(user.getEmail())) {  // Si ya son amigos se quita de sugeridos
                 elementosAEliminar.add(i);
             }
         }
