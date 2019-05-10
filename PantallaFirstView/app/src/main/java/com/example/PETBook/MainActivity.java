@@ -20,6 +20,7 @@ import com.example.PETBook.Fragments.HomeFragment;
 import com.example.PETBook.Fragments.MyCalendarFragment;
 import com.example.PETBook.Fragments.MyEventsFragment;
 import com.example.PETBook.Fragments.MyFriendsFragment;
+import com.example.PETBook.Fragments.MyMapFragment;
 import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.PETBook.Fragments.MyPostsFragment;
 import com.example.PETBook.Fragments.MyProfileFragment;
@@ -80,6 +81,10 @@ public class MainActivity extends AppCompatActivity
             }
             else if (fragType.equals("forum")){
                 fragment = new ForumFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if (fragType.equals("mapa")){
+                fragment = new MyMapFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else {
@@ -161,6 +166,9 @@ public class MainActivity extends AppCompatActivity
             myFragment = new ForumFragment();
             fragmentSeleccionado = true;
 
+        } else if (id == R.id.nav_map){
+            myFragment = new MyMapFragment();
+            fragmentSeleccionado = true;
         } else if (id == R.id.nav_logout) {
             //salir a la ventana de log in
             AlertDialog.Builder exit = new AlertDialog.Builder(MainActivity.this);

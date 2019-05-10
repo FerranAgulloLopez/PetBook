@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <supports-screens
         android:largeScreens="true"
@@ -15,15 +20,15 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="PETBook"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:largeHeap="true"
-        android:hardwareAccelerated="false"
         android:usesCleartextTraffic="true">
-        <activity android:name="com.example.PETBook.EditEvent"></activity>
+        <activity android:name="com.example.PETBook.EditEvent" />
         <activity
             android:name="com.example.PETBook.PetInfo"
             android:label="@string/title_activity_pets"
@@ -35,7 +40,6 @@
         <activity android:name="com.example.PETBook.EventInfo" />
         <activity android:name="com.example.PETBook.ForumInfo" />
         <activity android:name="com.example.PETBook.EditPet" />
-
         <activity
             android:name="com.example.PETBook.MainActivity"
             android:label="@string/title_activity_main"
@@ -51,7 +55,6 @@
         </activity>
         <activity android:name="com.example.PETBook.NewEvent" />
         <activity android:name="com.example.PETBook.NewForum" />
-
         <activity
             android:name="com.example.PETBook.PetsContainer"
             android:label="@string/title_activity_pets"
