@@ -188,7 +188,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
                     petModel.setDescripcion(jsonObjectHijo.getString("descripcion"));
                     petModel.setEdad(jsonObjectHijo.getInt("edad"));
                     petModel.setColor(jsonObjectHijo.getString("color"));
-                    //petModel.setFoto(jsonObjectHijo.getString("foto"));
+                    petModel.setFoto(jsonObjectHijo.getString("foto"));
 
                     pets.add(petModel);
 
