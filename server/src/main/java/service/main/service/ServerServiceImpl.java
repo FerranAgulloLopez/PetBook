@@ -194,9 +194,9 @@ public class ServerServiceImpl implements ServerService {
         List<String> friendEmails = user.getFriends().getFriends();
         List<User> result = new ArrayList<>();
         for(String email : friendEmails) {
-            if (!userRepository.findById(email).isPresent()) { /* ... */ }  // Para el SonarQube, pero siempre seguro el usuario existe
-            else {
-                User friend = userRepository.findById(email).get();
+            Optional<User> optUs = userRepository.findById(email);
+            if(optUs.isPresent()) {
+                User friend = optUs.get();
                 result.add(friend);
             }
         }
@@ -213,9 +213,9 @@ public class ServerServiceImpl implements ServerService {
         List<String> friendRequestEmails = user.getFriends().getFriendRequests();
         List<User> result = new ArrayList<>();
         for(String email : friendRequestEmails) {
-            if (!userRepository.findById(email).isPresent()) { /* ... */ }  // Para el SonarQube, pero siempre seguro el usuario existe
-            else {
-                User friend = userRepository.findById(email).get();
+            Optional<User> optUs = userRepository.findById(email);
+            if(optUs.isPresent()) {
+                User friend = optUs.get();
                 result.add(friend);
             }
         }
