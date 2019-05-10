@@ -1,11 +1,14 @@
 package service.main.entity.input_output.user;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class OutUpdateUserProfile {
 
     private String firstName;
     private String secondName;
     private String dateOfBirth;
     private String postalCode;
+    private String password;
 
 
     public OutUpdateUserProfile() {}
@@ -26,6 +29,9 @@ public class OutUpdateUserProfile {
         return  this.postalCode;
     }
 
+    public String getPassword() {
+        return password;
+    }
 
 
     public void setFirstName(String firstName) {
@@ -42,5 +48,9 @@ public class OutUpdateUserProfile {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
