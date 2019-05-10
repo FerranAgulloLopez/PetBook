@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 public class SingletonUsuario {
 
     private static String Email;
+    private String jwtToken;
     private Bitmap profilePicture;
 
     private static SingletonUsuario ourInstance;
@@ -23,6 +24,10 @@ public class SingletonUsuario {
         return profilePicture;
     }
 
+    public String getJwtToken() {
+        return this.jwtToken;
+    }
+
     public void setProfilePicture(Bitmap profilePicture) {
         this.profilePicture = profilePicture;
     }
@@ -33,5 +38,9 @@ public class SingletonUsuario {
 
     public static void setEmail(String email){
         Email = email;
+    }
+
+    public void setJwtToken(String jwtToken) {
+        this.jwtToken = jwtToken;
     }
 }
