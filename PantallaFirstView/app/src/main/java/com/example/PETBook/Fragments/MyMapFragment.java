@@ -7,14 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Models.EventModel;
 import com.example.pantallafirstview.BuildConfig;
 import com.example.pantallafirstview.R;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
+
+import java.util.ArrayList;
 
 public class MyMapFragment extends Fragment implements AsyncResult {
 
@@ -32,6 +36,7 @@ public class MyMapFragment extends Fragment implements AsyncResult {
 
     private MapView myOpenMapView;
     private MapController myMapController;
+    private ArrayList<EventModel> AllEvents;
 
     public MyMapFragment() {
         // Required empty public constructor
@@ -85,8 +90,45 @@ public class MyMapFragment extends Fragment implements AsyncResult {
         return MyView;
     }
 
+    private String transformacionFechaHora(String fechaHora){
+        Integer fin = 0;
+        String result = fechaHora.replace("T", " ");
+        result = result.replace(":00.000+0000", " ");
+        return result;
+    }
+
     @Override
-    public void OnprocessFinish(JSONObject json){
+    public void OnprocessFinish(JSONObject output){
+        if (output != null){
+            try{
+                int response = output.getInt("code");
+                if (response == 200){
+                    AllEvents = new ArrayList<>();
+                    JSONArray jsonArray = output.getJSONArray("array");
+                    for(int i = 0; i < jsonArray.length(); ++i){
+                        JSONObject evento = jsonArray.getJSONObject(i);
+                        EventModel e = new EventModel();
+                        e.setTitulo(evento.getString("title"));
+                        e.setDescripcion(evento.getString("description"));
+                        e.setFecha(transformacionFechaHora(evento.getString("date")));
+                        JSONObject loc = evento.getJSONObject("localization");
+                        e.setDireccion(loc.getString("address"));
+                        e.setCoordenadas(loc.getDouble("longitude"),loc.getDouble("latitude"));
+                        e.setPublico(evento.getBoolean("public"));
+                        JSONArray m = evento.getJSONArray("participants");
+                        ArrayList<String> miembros = new ArrayList<String>();
+                        for(int j = 0; j < m.length(); ++j){
+                            miembros.add(m.getString(j));
+                        }
+                        e.setMiembros(miembros);
+                        e.setCreador(evento.getString("creatorMail"));
+                        AllEvents.add(e);
+                    }
+                }
+            } catch (Exception e){
+                    e.printStackTrace();
+            }
+        }
 
     }
 }

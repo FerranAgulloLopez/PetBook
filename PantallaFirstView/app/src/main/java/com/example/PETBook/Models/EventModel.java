@@ -1,12 +1,15 @@
 package com.example.PETBook.Models;
 
+import android.util.Pair;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class EventModel implements Serializable {
 
 
-    private Integer localizacion;
+    private String direccion;
+    private Pair<Double, Double> Coordenadas;
     private String fecha;
     private String titulo;
     private String descripcion;
@@ -28,9 +31,15 @@ public class EventModel implements Serializable {
 
     public String getTitulo() { return titulo; }
 
-    public void setLocalizacion(Integer localizacion){ this.localizacion = localizacion; }
+    public void setDireccion(String direccion){ this.direccion = direccion; }
 
-    public Integer getLocalizacion(){ return localizacion;}
+    public String getDireccion(){ return direccion; }
+
+    public void setCoordenadas(Double Long, Double Lat){
+        Coordenadas = new Pair<>(Long,Lat);
+    }
+
+    public Pair<Double,Double> getCoordenadas() { return Coordenadas; }
 
     public void setDescripcion(String descripcion){ this.descripcion = descripcion; }
 

@@ -97,7 +97,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
         Conexion con = new Conexion(MyEventsFragment.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
 
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getEventsByCreator?email=" + su.getEmail(),"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByCreator?mail=" + su.getEmail(),"GET", null);
 
         lista = MyView.findViewById(R.id.list_eventos);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -180,18 +180,20 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                 for(int i = 0; i < jsonArray.length(); ++i){
                     JSONObject evento = jsonArray.getJSONObject(i);
                     EventModel e = new EventModel();
-                    e.setTitulo(evento.getString("titulo"));
-                    e.setDescripcion(evento.getString("descripcion"));
-                    e.setFecha(transformacionFechaHora(evento.getString("fecha")));
-                    e.setLocalizacion(evento.getInt("localizacion"));
-                    e.setPublico(evento.getBoolean("publico"));
-                    JSONArray m = evento.getJSONArray("participantes");
+                    e.setTitulo(evento.getString("title"));
+                    e.setDescripcion(evento.getString("description"));
+                    e.setFecha(transformacionFechaHora(evento.getString("date")));
+                    JSONObject loc = evento.getJSONObject("localization");
+                    e.setDireccion(loc.getString("address"));
+                    e.setCoordenadas(loc.getDouble("longitude"),loc.getDouble("latitude"));
+                    e.setPublico(evento.getBoolean("public"));
+                    JSONArray m = evento.getJSONArray("participants");
                     ArrayList<String> miembros = new ArrayList<String>();
                     for(int j = 0; j < m.length(); ++j){
                         miembros.add(m.getString(j));
                     }
                     e.setMiembros(miembros);
-                    e.setCreador(evento.getString("creador"));
+                    e.setCreador(evento.getString("creatorMail"));
                     model.add(e);
                 }
                 eventosUser = new EventAdapter(getActivity(), model);

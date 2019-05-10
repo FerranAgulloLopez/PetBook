@@ -172,7 +172,7 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
             titulo.setText(event.getTitulo());
             descripcion.setText(event.getDescripcion());
-            loc.setText(String.valueOf(event.getLocalizacion()));
+            loc.setText(String.valueOf(event.getDireccion()));
             String[] Fecha = event.getFecha().split(" ");
             fecha.setText(Fecha[0]);
             hora.setText(Fecha[1]);
@@ -238,7 +238,7 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
                 event.setTitulo(titulo.getText().toString());
                 event.setDescripcion(descripcion.getText().toString());
                 event.setFecha(fecha.getText().toString() + " " + hora.getText().toString());
-                event.setLocalizacion(Integer.parseInt(loc.getText().toString()));
+                event.setDireccion(loc.getText().toString());
                 Intent intent = new Intent(EditEvent.this, EventInfo.class);
                 intent.putExtra("event",event);
                 startActivity(intent);

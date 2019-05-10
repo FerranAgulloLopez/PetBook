@@ -91,7 +91,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
             txtTitle.setText(event.getTitulo());
             txtDescription.setText(event.getDescripcion());
-            txtLoc.setText(String.valueOf(event.getLocalizacion()));
+            txtLoc.setText(String.valueOf(event.getDireccion()));
             String[] Fecha = event.getFecha().split(" ");
             txtFecha.setText(Fecha[0]);
             txtHora.setText(Fecha[1]);
