@@ -194,7 +194,7 @@ public class RestApiController {
     @CrossOrigin
     @GetMapping(value = "/GetUserFriends/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its email. " +
-            "Specifically gives the friends by the user identified by the email given in the path", tags="User")
+            "Specifically gives the friends by the user identified by the email given in the path", tags="Friends")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
@@ -210,7 +210,7 @@ public class RestApiController {
     @CrossOrigin
     @GetMapping(value = "/GetUserFriendsRequests/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its email. " +
-            "Specifically gives the friends requests received by the user identified by the email given in the path", tags="User")
+            "Specifically gives the friends requests received by the user identified by the email given in the path", tags="Friends")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
@@ -226,7 +226,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/sendFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Send a friend request to another user", tags="User", notes = "The user identified by *email* sends a friend request to the user identified by *friend* .")
+    @ApiOperation(value = "Send a friend request to another user", tags="Friends", notes = "The user identified by *email* sends a friend request to the user identified by *friend* .")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The user already have sent a friend request to the other user OR The users already are friends")
@@ -248,7 +248,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/acceptFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Accept a friend request from another user", tags="User", notes = "The user identified by *email* accepts a friend request from the user identified by *friend*. Then, the to users are friends.")
+    @ApiOperation(value = "Accept a friend request from another user", tags="Friends", notes = "The user identified by *email* accepts a friend request from the user identified by *friend*. Then, the to users are friends.")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The users already are friends OR The user *email* havent sent a friend request to the other user")
@@ -271,7 +271,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/denyFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Denies a friend request from another user", tags="User", notes = "The user identified by *email* denies a friend request from the user identified by *friend*.")
+    @ApiOperation(value = "Denies a friend request from another user", tags="Friends", notes = "The user identified by *email* denies a friend request from the user identified by *friend*.")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The user *email* havent sent a friend request to the other user")
@@ -293,7 +293,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/Unfriend/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Unfriends users", tags="User", notes = "The user identified by *email* unfriends the user identified by *friend* and vice versa.")
+    @ApiOperation(value = "Unfriends users", tags="Friends", notes = "The user identified by *email* unfriends the user identified by *friend* and vice versa.")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The users are not friends")
@@ -316,7 +316,7 @@ public class RestApiController {
 
     @CrossOrigin
     @GetMapping(value = "/GetUsersFriendSuggestion/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Gets users to suggest", tags="User", notes = "Suggests users that live in the same region as the user given")
+    @ApiOperation(value = "Gets users to suggest", tags="Friends", notes = "Suggests users that live in the same region as the user given")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The user has not a postal code")
@@ -337,7 +337,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/deleteFriendSuggestion/{email}/{emailSuggested}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Deletes a friend suggestion", tags="User", notes = "The user identified by *email* deletes a friend suggestion of the user identified by *emailSuggested*.")
+    @ApiOperation(value = "Deletes a friend suggestion", tags="Friends", notes = "The user identified by *email* deletes a friend suggestion of the user identified by *emailSuggested*.")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
     })
