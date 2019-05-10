@@ -1,14 +1,21 @@
 package com.example.PETBook.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.PETBook.Conexion;
+import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
+
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,7 +25,7 @@ import com.example.pantallafirstview.R;
  * Use the {@link MyCalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyCalendarFragment extends Fragment {
+public class MyCalendarFragment extends Fragment  implements AsyncResult {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -68,6 +75,42 @@ public class MyCalendarFragment extends Fragment {
 
         getActivity().setTitle("Mi calendario");
 
+           /*
+        Show dialog to inform user that does not have email confirmed
+         */
+        AlertDialog.Builder emailConfirmedDialog = new AlertDialog.Builder(getActivity());
+        emailConfirmedDialog.setMessage("Confirme su correo para acceder a todas las funciones de PetBook")
+                .setCancelable(true)
+                .setPositiveButton("Reenviar correo de confirmación",new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which){
+
+                        /*
+                        sends confirmation mail to the user's email
+                         */
+                        SingletonUsuario user = SingletonUsuario.getInstance();
+                        Conexion conexion = new Conexion(MyCalendarFragment.this);
+                        conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/SendConfirmationEmail?email=" + user.getEmail(), "POST", null);
+                        dialog.cancel();
+
+
+                    }
+                })
+                .setNegativeButton("Más adelante",new DialogInterface.OnClickListener(){
+                    @Override
+                    public void onClick(DialogInterface dialog, int which){
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog dialog = emailConfirmedDialog.create();
+        dialog.setTitle("Confirmación del correo");
+        dialog.show();
+
+
+
+
+
+
         return inflater.inflate(R.layout.activity_my_calendar, container, false);
     }
 
@@ -93,6 +136,11 @@ public class MyCalendarFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void OnprocessFinish(JSONObject output) {
+
     }
 
     /**
