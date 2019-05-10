@@ -1,12 +1,17 @@
 package service.main.service;
 
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import service.main.config.JwtConfig;
 import service.main.entity.*;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
@@ -28,7 +33,9 @@ import service.main.services.FireMessage;
 import service.main.services.SequenceGeneratorService;
 import service.main.util.SendEmailTLS;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service("serverService")
 public class ServerServiceImpl implements ServerService {
@@ -73,10 +80,11 @@ public class ServerServiceImpl implements ServerService {
     User operations
      */
 
-    public OutLogin ConfirmLogin(String email, String password) throws NotFoundException {
+    public OutLogin ConfirmLogin(String email, String password, HttpServletResponse response) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
         if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
         boolean result = user.get().checkPassword(password);
+        generateJWTToken(user.get(), response);
         return new OutLogin(result,user.get().isMailconfirmed());
     }
 
@@ -126,6 +134,11 @@ public class ServerServiceImpl implements ServerService {
             user.setSecondName(userUpdated.getSecondName());
             user.setDateOfBirth(userUpdated.getDateOfBirth());
             user.setPostalCode(userUpdated.getPostalCode());
+            if (userUpdated.getPassword() != null) {
+                user.setPassword(userUpdated.getPassword());
+                System.out.println("cambiado");
+            }
+            System.out.println(userUpdated.getPassword());
             userRepository.save(user);
         }
     }
@@ -600,6 +613,23 @@ public class ServerServiceImpl implements ServerService {
     /*
     Auxiliary operations
      */
+
+    private void generateJWTToken(User user,HttpServletResponse response) {
+        JwtConfig jwtConfig = new JwtConfig();
+        List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + user.getRole());
+        Long now = System.currentTimeMillis();
+        String token = Jwts.builder()
+                .setSubject(user.getEmail())
+                // Convert to list of strings.
+                // This is important because it affects the way we get them back in the Gateway.
+                .claim("authorities", grantedAuthorities.stream()
+                        .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .setIssuedAt(new java.sql.Date(now))
+                .setExpiration(new java.sql.Date(now + jwtConfig.getExpiration() * 1000))  // in milliseconds
+                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecret().getBytes())
+                .compact();
+        response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
+    }
 
     private Event auxGetEvent(long eventId) throws NotFoundException {
         Optional<Event> optionalEvent = eventRepository.findById(eventId);

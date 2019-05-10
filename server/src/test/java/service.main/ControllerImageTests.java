@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import service.main.entity.Image;
 
@@ -17,6 +18,7 @@ import static junit.framework.TestCase.assertTrue;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@WithMockUser(username = "test", password = "test", roles = "USER")
 public class ControllerImageTests {
 
     private String path = "../testing_files/Fotos/";
