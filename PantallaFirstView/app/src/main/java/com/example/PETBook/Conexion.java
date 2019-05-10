@@ -52,7 +52,8 @@ public class Conexion extends AsyncTask<String, Void, JSONObject> {
 
         try {
             urlConnection = (HttpURLConnection) url.openConnection();
-            urlConnection.setRequestProperty("Authorization",SingletonUsuario.getInstance().getJwtToken());
+            String token = SingletonUsuario.getInstance().getJwtToken();
+            if (token != null) urlConnection.setRequestProperty("Authorization",token);
             urlConnection.setRequestMethod(Metodo);
             urlConnection.setRequestProperty("Content-Type", "application/json");
 
@@ -65,9 +66,6 @@ public class Conexion extends AsyncTask<String, Void, JSONObject> {
                 wr.write(JsonString);
                 wr.flush();
             }
-
-            String token = urlConnection.getHeaderField("Authorization");
-            if (token != null) result.put("token",token);
 
 
             Integer nume = urlConnection.getResponseCode();
@@ -88,6 +86,8 @@ public class Conexion extends AsyncTask<String, Void, JSONObject> {
                 }
             }
             result.put("code",nume);
+            token = urlConnection.getHeaderField("Authorization");
+            if (token != null) result.put("token",token);
 
 
 
