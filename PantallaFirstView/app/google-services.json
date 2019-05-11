@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "797294161933",
+    "firebase_url": "https://petbook-3177b.firebaseio.com",
+    "project_id": "petbook-3177b",
+    "storage_bucket": "petbook-3177b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:797294161933:android:44576aee65ae86a6",
+        "android_client_info": {
+          "package_name": "com.example.pantallafirstview"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "797294161933-9quimank3vltotd226bj5h9p12garg8a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pantallafirstview",
+            "certificate_hash": "2e018b8361eb90ea6dea88311164391a6ac91b2e"
+          }
+        },
+        {
+          "client_id": "797294161933-1e40ff9an8ja66g72jstrpf2k837sr5i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDoMDqAG-zTuGzT_aIMUZPSM0bCPrVqYs8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "797294161933-1e40ff9an8ja66g72jstrpf2k837sr5i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
