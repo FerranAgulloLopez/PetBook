@@ -58,10 +58,10 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
 
-
+/*
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
+*/
 
 
         // First fragment to display (de momento HomeFragment -perfil-)

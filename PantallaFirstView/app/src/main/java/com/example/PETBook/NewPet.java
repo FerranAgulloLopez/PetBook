@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.Firebase.FireMessage;
 import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.PETBook.Models.Image;
 import com.example.pantallafirstview.R;
