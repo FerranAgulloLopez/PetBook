@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.example.pantallafirstview.R;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class PantallaFirstView extends AppCompatActivity {
 
@@ -20,6 +22,12 @@ public class PantallaFirstView extends AppCompatActivity {
 
         String login = sharedPreferences.getString("login",null);
         String token = sharedPreferences.getString("jwtToken", null);
+
+
+
+        System.out.println("!!!!!!!!!!!! TOKEN FCM !!!!!!!!!!!!!!!");
+        Log.d("Firebase", "token " + FirebaseInstanceId.getInstance().getToken());
+
 
 
         /*
