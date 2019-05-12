@@ -37,7 +37,7 @@ public class PantallaFirstView extends AppCompatActivity {
             SingletonUsuario user = SingletonUsuario.getInstance();
             SingletonUsuario.setEmail(login);
             if (token != null) user.setJwtToken(token);
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, Chat.class);
             startActivity(intent);
             finish();
         }
