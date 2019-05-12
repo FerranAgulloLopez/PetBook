@@ -2,6 +2,8 @@ package com.example.PETBook.Fragments;
 
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +12,12 @@ import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.EventModel;
 import com.example.pantallafirstview.BuildConfig;
 import com.example.pantallafirstview.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -20,7 +28,7 @@ import org.osmdroid.views.MapView;
 
 import java.util.ArrayList;
 
-public class MyMapFragment extends Fragment implements AsyncResult {
+public class MyMapFragment extends Fragment implements OnMapReadyCallback, AsyncResult {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,6 +42,9 @@ public class MyMapFragment extends Fragment implements AsyncResult {
     /* ATRIBUTOS   */
     private View MyView;
 
+    private GoogleMap mMap;
+    SupportMapFragment mapFragment;
+    private LatLng madrid = new LatLng(40.4893538, -3.6827461);
     private MapView myOpenMapView;
     private MapController myMapController;
     private ArrayList<EventModel> AllEvents;
@@ -76,17 +87,14 @@ public class MyMapFragment extends Fragment implements AsyncResult {
         MyView = inflater.inflate(R.layout.activity_map2, container, false);
         // Set tittle to the fragment
         getActivity().setTitle("Mapa");
-        GeoPoint madrid = new GeoPoint(40.416775,-3.70379);
-
-        myOpenMapView = (MapView) MyView.findViewById(R.id.openmapview);
-        myOpenMapView.setBuiltInZoomControls(true);
-        myMapController = (MapController) myOpenMapView.getController();
-        myMapController.setCenter(madrid);
-        myMapController.setZoom(6);
-
-        myOpenMapView.setMultiTouchControls(true);
-
-        OpenStreetMapTileProviderConstants.setUserAgentValue(BuildConfig.APPLICATION_ID);
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        if (mapFragment == null){
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction ft =  fm.beginTransaction();
+            mapFragment = SupportMapFragment.newInstance();
+            ft.replace(R.id.map, mapFragment).commit();
+        }
+        mapFragment.getMapAsync(this);
         return MyView;
     }
 
@@ -96,6 +104,7 @@ public class MyMapFragment extends Fragment implements AsyncResult {
         result = result.replace(":00.000+0000", " ");
         return result;
     }
+
 
     @Override
     public void OnprocessFinish(JSONObject output){
@@ -130,5 +139,11 @@ public class MyMapFragment extends Fragment implements AsyncResult {
             }
         }
 
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(madrid));
     }
 }
