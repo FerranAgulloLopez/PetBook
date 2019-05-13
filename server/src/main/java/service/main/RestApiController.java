@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
@@ -21,6 +22,7 @@ import service.main.entity.input_output.user.DataTokenFCM;
 import service.main.entity.input_output.user.DataUser;
 import service.main.entity.input_output.user.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
+import service.main.exception.ForbiddenException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.service.ServerService;
@@ -60,7 +62,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/ConfirmLogin", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.",tags="LogIn")
+    @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.",tags="User")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
@@ -75,7 +77,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/SendConfirmationEmail")
-    @ApiOperation(value = "Send a confirmation email", notes = "Sends to the specified user an email with the instructions to verify it.",tags="LogIn")
+    @ApiOperation(value = "Send a confirmation email", notes = "Sends to the specified user an email with the instructions to verify it.",tags="User")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The user has already verified his email"),
@@ -194,7 +196,7 @@ public class RestApiController {
     @CrossOrigin
     @GetMapping(value = "/GetUserFriends/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its email. " +
-            "Specifically gives the friends by the user identified by the email given in the path", tags="User")
+            "Specifically gives the friends by the user identified by the email given in the path", tags="Friends")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
@@ -210,7 +212,7 @@ public class RestApiController {
     @CrossOrigin
     @GetMapping(value = "/GetUserFriendsRequests/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its email. " +
-            "Specifically gives the friends requests received by the user identified by the email given in the path", tags="User")
+            "Specifically gives the friends requests received by the user identified by the email given in the path", tags="Friends")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
@@ -226,7 +228,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/sendFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Send a friend request to another user", tags="User", notes = "The user identified by *email* sends a friend request to the user identified by *friend* .")
+    @ApiOperation(value = "Send a friend request to another user", tags="Friends", notes = "The user identified by *email* sends a friend request to the user identified by *friend* .")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The user already have sent a friend request to the other user OR The users already are friends")
@@ -248,7 +250,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/acceptFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Accept a friend request from another user", tags="User", notes = "The user identified by *email* accepts a friend request from the user identified by *friend*. Then, the to users are friends.")
+    @ApiOperation(value = "Accept a friend request from another user", tags="Friends", notes = "The user identified by *email* accepts a friend request from the user identified by *friend*. Then, the to users are friends.")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The users already are friends OR The user *email* havent sent a friend request to the other user")
@@ -271,7 +273,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/denyFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Denies a friend request from another user", tags="User", notes = "The user identified by *email* denies a friend request from the user identified by *friend*.")
+    @ApiOperation(value = "Denies a friend request from another user", tags="Friends", notes = "The user identified by *email* denies a friend request from the user identified by *friend*.")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The user *email* havent sent a friend request to the other user")
@@ -293,7 +295,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/Unfriend/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Unfriends users", tags="User", notes = "The user identified by *email* unfriends the user identified by *friend* and vice versa.")
+    @ApiOperation(value = "Unfriends users", tags="Friends", notes = "The user identified by *email* unfriends the user identified by *friend* and vice versa.")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The users are not friends")
@@ -316,7 +318,7 @@ public class RestApiController {
 
     @CrossOrigin
     @GetMapping(value = "/GetUsersFriendSuggestion/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Gets users to suggest", tags="User", notes = "Suggests users that live in the same region as the user given")
+    @ApiOperation(value = "Gets users to suggest", tags="Friends", notes = "Suggests users that live in the same region as the user given")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The user has not a postal code")
@@ -337,7 +339,7 @@ public class RestApiController {
 
     @CrossOrigin
     @PostMapping(value = "/deleteFriendSuggestion/{email}/{emailSuggested}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Deletes a friend suggestion", tags="User", notes = "The user identified by *email* deletes a friend suggestion of the user identified by *emailSuggested*.")
+    @ApiOperation(value = "Deletes a friend suggestion", tags="Friends", notes = "The user identified by *email* deletes a friend suggestion of the user identified by *emailSuggested*.")
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
     })
@@ -541,7 +543,7 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
     })
-    public ResponseEntity<?> getAllMascotasByUser(@PathVariable String email) throws Exception
+    public ResponseEntity<?> getAllMascotasByUser(@PathVariable String email)
     {
         try {
             return new ResponseEntity<>(serverService.findAllMascotasByUser(email),HttpStatus.OK);
@@ -697,10 +699,9 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> getForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
-                                            @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title) {
+    public ResponseEntity<?> getForumThread(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId) {
         try {
-            return new ResponseEntity<>(serverService.getForumThread(creatorEmail,title),HttpStatus.OK);
+            return new ResponseEntity<>(serverService.getForumThread(threadId),HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -711,8 +712,7 @@ public class RestApiController {
     @ApiOperation(value = "Creates a new forum thread", notes = "Creates a new forum thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 400, message = "The forum thread already exists in the database"),
-            @ApiResponse(code = 404, message = "The user does not exist in the database")
+            @ApiResponse(code = 400, message = "The forum thread already exists in the database")
 
     })
     public ResponseEntity<?> createNewForumThread(@ApiParam(value="The thread parameters", required = true) @RequestBody DataForumThread dataForumThread) {
@@ -721,8 +721,6 @@ public class RestApiController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
@@ -731,17 +729,19 @@ public class RestApiController {
     @ApiOperation(value = "Updates a forum thread", notes = "Updates a forum thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 401, message = "Only the creator user has privileges to modify a forum thread"),
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> updateForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
-                                               @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title,
+    public ResponseEntity<?> updateForumThread(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId,
                                                @ApiParam(value="The thread parameters to update", required = true) @RequestBody DataForumThreadUpdate dataForumThreadUpdate) {
         try {
-            serverService.updateForumThread(creatorEmail,title,dataForumThreadUpdate);
+            serverService.updateForumThread(threadId,dataForumThreadUpdate);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 
@@ -750,16 +750,18 @@ public class RestApiController {
     @ApiOperation(value = "Deletes a forum thread", notes = "Deletes a forum thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 401, message = "Only the creator user has privileges to delete a forum thread"),
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> deleteForumThread(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
-                                               @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title) {
+    public ResponseEntity<?> deleteForumThread(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId) {
         try {
-            serverService.deleteForumThread(creatorEmail,title);
+            serverService.deleteForumThread(threadId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 
@@ -771,10 +773,9 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> getAllThreadComments(@ApiParam(value="The creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
-                                               @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title) {
+    public ResponseEntity<?> getAllThreadComments(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId) {
         try {
-            return new ResponseEntity<>(serverService.getAllThreadComments(creatorEmail,title),HttpStatus.OK);
+            return new ResponseEntity<>(serverService.getAllThreadComments(threadId),HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -785,19 +786,14 @@ public class RestApiController {
     @ApiOperation(value = "Creates a new forum comment", notes = "Creates a new forum comment in a specified thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 400, message = "The forum comment already exists in the database"),
-            @ApiResponse(code = 404, message = "The forum thread does not exist in the database"),
-            @ApiResponse(code = 404, message = "The user does not exist in the database")
+            @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> createForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("creatorMail") String creatorEmail,
-                                                @ApiParam(value="The thread's title", required = true) @RequestParam("title") String title,
+    public ResponseEntity<?> createForumComment(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId,
                                                 @ApiParam(value="The comment parameters", required = true) @RequestBody DataForumComment dataForumComment) {
         try {
-            serverService.createForumComment(creatorEmail,title,dataForumComment);
+            serverService.createForumComment(threadId,dataForumComment);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (BadRequestException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -808,20 +804,21 @@ public class RestApiController {
     @ApiOperation(value = "Updates a forum comment", notes = "Updates a forum comment in a specified thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 401, message = "Only the creator user has privileges to modify a forum comment"),
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database"),
             @ApiResponse(code = 404, message = "The forum comment does not exist in the database")
 
     })
-    public ResponseEntity<?> updateForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("threadCreatorMail") String threadCreatorEmail,
-                                                @ApiParam(value="The thread's title", required = true) @RequestParam("threadTitle") String threadTitle,
-                                                @ApiParam(value="The comment's creator email", required = true) @RequestParam("commentCreatorMail") String commentCreatorEmail,
-                                                @ApiParam(value="The comment's creation date", required = true) @RequestParam("commentCreationDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date commentCreationDate,
+    public ResponseEntity<?> updateForumComment(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId,
+                                                @ApiParam(value="The comment's identifier", required = true) @RequestParam("commentId") long commentId,
                                                 @ApiParam(value="The comment parameters", required = true) @RequestBody DataForumCommentUpdate dataForumCommentUpdate) {
         try {
-            serverService.updateForumComment(threadCreatorEmail,threadTitle,commentCreatorEmail,commentCreationDate,dataForumCommentUpdate);
+            serverService.updateForumComment(threadId,commentId,dataForumCommentUpdate);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 
@@ -830,19 +827,20 @@ public class RestApiController {
     @ApiOperation(value = "Deletes a forum comment", notes = "Deletes a forum comment in a specified thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 401, message = "Only the creator user has privileges to delete a forum comment"),
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database"),
             @ApiResponse(code = 404, message = "The forum comment does not exist in the database")
 
     })
-    public ResponseEntity<?> deleteForumComment(@ApiParam(value="The thread's creator email", required = true) @RequestParam("threadCreatorMail") String threadCreatorEmail,
-                                                @ApiParam(value="The thread's title", required = true) @RequestParam("threadTitle") String threadTitle,
-                                                @ApiParam(value="The comment's creator email", required = true) @RequestParam("commentCreatorMail") String commentCreatorEmail,
-                                                @ApiParam(value="The comment's creation date", required = true) @RequestParam("commentCreationDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date commentCreationDate) {
+    public ResponseEntity<?> deleteForumComment(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId,
+                                                @ApiParam(value="The comment's identifier", required = true) @RequestParam("commentId") long commentId) {
         try {
-            serverService.deleteForumComment(threadCreatorEmail,threadTitle,commentCreatorEmail,commentCreationDate);
+            serverService.deleteForumComment(threadId,commentId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 

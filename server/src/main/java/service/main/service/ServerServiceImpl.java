@@ -2,15 +2,15 @@ package service.main.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import service.main.config.JwtConfig;
 import service.main.entity.*;
 import service.main.entity.input_output.event.DataEvent;
@@ -26,6 +26,7 @@ import service.main.entity.input_output.user.DataUser;
 import service.main.entity.input_output.user.OutLogin;
 import service.main.entity.input_output.user.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
+import service.main.exception.ForbiddenException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.*;
@@ -194,9 +195,9 @@ public class ServerServiceImpl implements ServerService {
         List<String> friendEmails = user.getFriends().getFriends();
         List<User> result = new ArrayList<>();
         for(String email : friendEmails) {
-            if (!userRepository.findById(email).isPresent()) { /* ... */ }  // Para el SonarQube, pero siempre seguro el usuario existe
-            else {
-                User friend = userRepository.findById(email).get();
+            Optional<User> optUs = userRepository.findById(email);
+            if(optUs.isPresent()) {
+                User friend = optUs.get();
                 result.add(friend);
             }
         }
@@ -213,9 +214,9 @@ public class ServerServiceImpl implements ServerService {
         List<String> friendRequestEmails = user.getFriends().getFriendRequests();
         List<User> result = new ArrayList<>();
         for(String email : friendRequestEmails) {
-            if (!userRepository.findById(email).isPresent()) { /* ... */ }  // Para el SonarQube, pero siempre seguro el usuario existe
-            else {
-                User friend = userRepository.findById(email).get();
+            Optional<User> optUs = userRepository.findById(email);
+            if(optUs.isPresent()) {
+                User friend = optUs.get();
                 result.add(friend);
             }
         }
@@ -321,10 +322,16 @@ public class ServerServiceImpl implements ServerService {
         List<Integer> elementosAEliminar = new ArrayList<>();
         for(int i = 0; i < allUsersWithSamePostalCode.size(); ++i) { // Removes the users that got rejected as suggestion by the user in the past
             User u = allUsersWithSamePostalCode.get(i);
-            if(user.rejectedFriendSuggestionOf(u.getEmail())) {
+            if(user.rejectedFriendSuggestionOf(u.getEmail())) { // Si rechazo el sugerimiento
                 elementosAEliminar.add(i);
             }
-            if(user.getEmail().equals(u.getEmail())) {
+            if(user.getEmail().equals(u.getEmail())) {          // Se quita a si mismo
+                elementosAEliminar.add(i);
+            }
+            if(u.beenRequestedToBeFriendBy(user.getEmail())) {  // El usuario sugerido tiene una solicitud pendiente por parte de *user*
+                elementosAEliminar.add(i);
+            }
+            if(u.isFriend(user.getEmail())) {  // Si ya son amigos se quita de sugeridos
                 elementosAEliminar.add(i);
             }
         }
@@ -533,74 +540,73 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public ForumThread getForumThread(String creatorMail, String title) throws NotFoundException {
-        return auxGetForumThread(creatorMail,title);
+    public ForumThread getForumThread(long threadId) throws NotFoundException {
+        return auxGetForumThread(threadId);
     }
 
-    /*public void createNewForumTopic(String topicName) throws BadRequestException {
-        if (ForumThread.getTopics().contains(topicName)) throw new BadRequestException("The topic already exists in the database");
-        ForumThread.addTopic(topicName);
-    }*/
-
     @Override
-    public void createNewForumThread(DataForumThread dataForumThread) throws BadRequestException, NotFoundException {
-        if (!userRepository.existsById(dataForumThread.getCreatorMail())) throw new NotFoundException(USERNOTDB);
-        ForumThread forumThread = dataForumThread.toForum();
-        if (forumThreadRepository.existsById(forumThread.getId())) throw new BadRequestException("The forum thread already exists in the database");
+    public void createNewForumThread(DataForumThread dataForumThread) throws BadRequestException {
+        String userMail = getLoggedUserMail();
+        if (forumThreadRepository.existsByCreatorMailAndTitle(userMail, dataForumThread.getTitle())) throw new BadRequestException("The forum thread already exists in the database");
+        ForumThread forumThread = new ForumThread(userMail,dataForumThread.getCreationDate(),dataForumThread.getTitle(),dataForumThread.getDescription(),dataForumThread.getTopic());
         forumThreadRepository.save(forumThread);
     }
 
     @Override
-    public void updateForumThread(String creatorMail, String title, DataForumThreadUpdate dataForumThreadUpdate) throws NotFoundException {
-        ForumThread forumThread = auxGetForumThread(creatorMail,title);
+    public void updateForumThread(long threadId, DataForumThreadUpdate dataForumThreadUpdate) throws NotFoundException, ForbiddenException {
+        String userMail = getLoggedUserMail();
+        ForumThread forumThread = auxGetForumThread(threadId);
+        if (!forumThread.getCreatorMail().equals(userMail)) throw new ForbiddenException("Only the creator user has privileges to modify a thread");
         forumThread.setDescription(dataForumThreadUpdate.getDescription());
         forumThread.setUpdateDate(dataForumThreadUpdate.getUpdateDate());
         forumThreadRepository.save(forumThread);
     }
 
     @Override
-    public void deleteForumThread(String creatorMail, String title) throws NotFoundException {
-        ForumThread aux = new ForumThread(creatorMail,title);
-        if (!forumThreadRepository.existsById(aux.getId())) throw new NotFoundException(THREADNOTDB);
-        forumThreadRepository.deleteById(aux.getId());
+    public void deleteForumThread(long threadId) throws NotFoundException, ForbiddenException {
+        String userMail = getLoggedUserMail();
+        ForumThread forumThread = auxGetForumThread(threadId);
+        if (!forumThread.getCreatorMail().equals(userMail)) throw new ForbiddenException("Only the creator user has privileges to delete a forum thread");
+        forumThreadRepository.deleteById(threadId);
     }
 
     @Override
-    public List<ForumComment> getAllThreadComments(String creatorMail, String title) throws NotFoundException {
-        ForumThread forumThread = auxGetForumThread(creatorMail,title);
+    public List<ForumComment> getAllThreadComments(long threadId) throws NotFoundException {
+        ForumThread forumThread = auxGetForumThread(threadId);
         List<ForumComment> comments = forumThread.getComments();
         comments.sort(Comparator.comparing(ForumComment::getCreationDate));
         return comments;
     }
 
     @Override
-    public void createForumComment(String creatorMail, String title, DataForumComment dataForumComment) throws NotFoundException, BadRequestException {
-        if (!userRepository.existsById(dataForumComment.getCreatorMail())) throw new NotFoundException(USERNOTDB);
-        ForumComment aux = new ForumComment(dataForumComment.getCreatorMail(),dataForumComment.getCreationDate());
-        ForumThread forumThread = auxGetForumThread(creatorMail,title);
-        ForumComment forumComment = forumThread.findComment(aux.getId());
-        if (forumComment != null) throw new BadRequestException("The forum comment already exists in the database");
-        forumThread.addComment(dataForumComment.toComment());
+    public void createForumComment(long threadId, DataForumComment dataForumComment) throws NotFoundException {
+        String userMail = getLoggedUserMail();
+        ForumThread forumThread = auxGetForumThread(threadId);
+        ForumComment forumComment = new ForumComment(userMail,dataForumComment.getCreationDate(),dataForumComment.getDescription());
+        forumComment.setId(sequenceGeneratorService.generateSequence(ForumComment.SEQUENCE_NAME));
+        forumThread.addComment(forumComment);
         forumThreadRepository.save(forumThread);
     }
 
     @Override
-    public void updateForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException {
-        ForumThread forumThread = auxGetForumThread(threadCreatorMail, threadTitle);
-        ForumComment aux = new ForumComment(commentCreatorMail,commentCreationDate);
-        ForumComment forumComment = forumThread.findComment(aux.getId());
+    public void updateForumComment(long threadId, long commentId, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException, ForbiddenException {
+        String userMail = getLoggedUserMail();
+        ForumThread forumThread = auxGetForumThread(threadId);
+        ForumComment forumComment = forumThread.findComment(commentId);
         if (forumComment == null) throw new NotFoundException("The forum comment does not exist in the database");
+        if (!forumComment.getCreatorMail().equals(userMail)) throw new ForbiddenException("Only the creator user has privileges to modify a forum comment");
         forumComment.setUpdateDate(dataForumCommentUpdate.getUpdateDate());
         forumComment.setDescription(dataForumCommentUpdate.getDescription());
         forumThreadRepository.save(forumThread);
     }
 
     @Override
-    public void deleteForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate) throws NotFoundException {
-        ForumThread forumThread = auxGetForumThread(threadCreatorMail, threadTitle);
-        ForumComment aux = new ForumComment(commentCreatorMail,commentCreationDate);
-        ForumComment forumComment = forumThread.findComment(aux.getId());
+    public void deleteForumComment(long threadId, long commentId) throws NotFoundException, ForbiddenException {
+        String userMail = getLoggedUserMail();
+        ForumThread forumThread = auxGetForumThread(threadId);
+        ForumComment forumComment = forumThread.findComment(commentId);
         if (forumComment == null) throw new NotFoundException("The forum comment does not exist in the database");
+        if (!forumComment.getCreatorMail().equals(userMail)) throw new ForbiddenException("Only the creator user has privileges to delete a forum comment");
         forumThread.getComments().remove(forumComment);
         forumThreadRepository.save(forumThread);
     }
@@ -613,6 +619,11 @@ public class ServerServiceImpl implements ServerService {
     /*
     Auxiliary operations
      */
+
+    private String getLoggedUserMail() {
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
+    }
 
     private void generateJWTToken(User user,HttpServletResponse response) {
         JwtConfig jwtConfig = new JwtConfig();
@@ -637,9 +648,8 @@ public class ServerServiceImpl implements ServerService {
         return optionalEvent.get();
     }
 
-    private ForumThread auxGetForumThread(String creatorMail, String title) throws NotFoundException {
-        ForumThread aux = new ForumThread(creatorMail,title);
-        Optional<ForumThread> forumThread_opt = forumThreadRepository.findById(aux.getId());
+    private ForumThread auxGetForumThread(long threadId) throws NotFoundException {
+        Optional<ForumThread> forumThread_opt = forumThreadRepository.findById(threadId);
         if (!forumThread_opt.isPresent()) throw new NotFoundException(THREADNOTDB);
         return forumThread_opt.get();
     }
@@ -656,6 +666,8 @@ public class ServerServiceImpl implements ServerService {
         interestSiteRepository.deleteAll();
         forumThreadRepository.deleteAll();
         sequenceGeneratorService.deleteSequence(Event.SEQUENCE_NAME);
+        sequenceGeneratorService.deleteSequence(ForumThread.SEQUENCE_NAME);
+        sequenceGeneratorService.deleteSequence(ForumComment.SEQUENCE_NAME);
 
     }
 

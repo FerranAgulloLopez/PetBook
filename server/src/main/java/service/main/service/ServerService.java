@@ -1,5 +1,6 @@
 package service.main.service;
 
+import org.springframework.security.core.Authentication;
 import service.main.entity.*;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
@@ -14,6 +15,7 @@ import service.main.entity.input_output.user.DataUser;
 import service.main.entity.input_output.user.OutLogin;
 import service.main.entity.input_output.user.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
+import service.main.exception.ForbiddenException;
 import service.main.exception.InternalErrorException;
 import service.main.exception.NotFoundException;
 
@@ -127,22 +129,26 @@ public interface ServerService {
 
     public List<ForumThread> getAllForumThreads();
 
-    public ForumThread getForumThread(String creatorMail, String title) throws NotFoundException;
+    public ForumThread getForumThread(long threadId) throws NotFoundException;
 
-    public void createNewForumThread(DataForumThread dataForumThread) throws BadRequestException, NotFoundException;
+    public void createNewForumThread(DataForumThread dataForumThread) throws BadRequestException;
 
-    public void updateForumThread(String creatorMail, String title, DataForumThreadUpdate dataForumThreadUpdate) throws NotFoundException;
+    public void updateForumThread(long threadId, DataForumThreadUpdate dataForumThreadUpdate) throws NotFoundException, ForbiddenException;
 
-    public void deleteForumThread(String creatorMail, String title) throws NotFoundException;
+    public void deleteForumThread(long threadId) throws NotFoundException, ForbiddenException;
 
-    public List<ForumComment> getAllThreadComments(String creatorMail, String title) throws NotFoundException;
+    public List<ForumComment> getAllThreadComments(long threadId) throws NotFoundException;
 
-    public void createForumComment(String creatorMail, String title, DataForumComment dataForumComment) throws NotFoundException, BadRequestException;
+    public void createForumComment(long threadId, DataForumComment dataForumComment) throws NotFoundException;
 
-    public void updateForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException;
+    public void updateForumComment(long threadId, long commentId, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException, ForbiddenException;
 
-    public void deleteForumComment(String threadCreatorMail, String threadTitle, String commentCreatorMail, Date commentCreationDate) throws NotFoundException;
+    public void deleteForumComment(long threadId, long commentId) throws NotFoundException, ForbiddenException;
 
+
+    /*
+    Notifications
+     */
 
     public void sendTestNotifications(String token);
 }

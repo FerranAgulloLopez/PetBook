@@ -3,6 +3,7 @@ package service.main.entity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 import service.main.exception.NotFoundException;
 
@@ -15,11 +16,11 @@ import java.util.List;
 @Document(collection = "forums")
 public class ForumThread implements Serializable {
 
-    //private static List<String> topics = new ArrayList<>();
+    @Transient
+    public static final String SEQUENCE_NAME = "forumThread_sequence";
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Id
-    private String id;
+    private long id;
     private String creatorMail;
     private Date creationDate;
     private Date updateDate;
@@ -32,12 +33,6 @@ public class ForumThread implements Serializable {
         this.comments = new ArrayList<>();
     }
 
-    public ForumThread(String creatorMail, String title) {
-        this.creatorMail = creatorMail;
-        this.title = title;
-        makeId();
-    }
-
     public ForumThread(String creatorMail, Date creationDate, String title, String description, String topic) {
         this.creatorMail = creatorMail;
         this.creationDate = creationDate;
@@ -45,18 +40,14 @@ public class ForumThread implements Serializable {
         this.description = description;
         this.topic = topic;
         this.comments = new ArrayList<>();
-        makeId();
     }
+
 
     /*
     Get
      */
 
-    /*public static List<String> getTopics() {
-        return topics;
-    }*/
-
-    public String getId() {
+    public long getId() {
         return id;
     }
 
@@ -88,13 +79,17 @@ public class ForumThread implements Serializable {
         return comments;
     }
 
+
     /*
     Set
      */
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void setCreatorMail(String creatorMail) {
         this.creatorMail = creatorMail;
-        makeId();
     }
 
     public void setCreationDate(Date creationDate) {
@@ -103,7 +98,6 @@ public class ForumThread implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-        makeId();
     }
 
     public void setDescription(String description) {
@@ -118,28 +112,21 @@ public class ForumThread implements Serializable {
         this.updateDate = updateDate;
     }
 
+
     /*
     Auxiliary operations
      */
-
-    /*public static void addTopic(String topic) {
-        topics.add(topic);
-    }*/
-
-    private void makeId() {
-        this.id = creatorMail + title;
-    }
 
     public void addComment(ForumComment comment) {
         this.comments.add(comment);
     }
 
-    public ForumComment findComment(String commentId) {
+    public ForumComment findComment(long commentId) {
         ForumComment forumComment = null;
         boolean found = false;
         for (int i = 0; !found && i < comments.size(); ++i) {
             ForumComment comment = comments.get(i);
-            if (comment.getId().equals(commentId)) {
+            if (comment.getId() == commentId) {
                 forumComment = comment;
                 found = true;
             }

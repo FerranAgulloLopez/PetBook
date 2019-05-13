@@ -2,32 +2,27 @@ package service.main.entity;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.data.annotation.Transient;
+import service.main.services.SequenceGeneratorService;
 
 import java.util.Date;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ForumComment {
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String id;
+    @Transient
+    public static final String SEQUENCE_NAME = "forumComments_sequence";
+
+    private long id;
     private String creatorMail;
     private Date creationDate;
     private Date updateDate;
     private String description;
 
-    public ForumComment() {}
-
-    public ForumComment(String creatorMail, Date creationDate) {
-        this.creatorMail = creatorMail;
-        this.creationDate = creationDate;
-        makeId();
-    }
-
     public ForumComment(String creatorMail, Date creationDate, String description) {
         this.creatorMail = creatorMail;
         this.creationDate = creationDate;
         this.description = description;
-        makeId();
     }
 
 
@@ -35,7 +30,7 @@ public class ForumComment {
     Get
      */
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
@@ -60,6 +55,10 @@ public class ForumComment {
     Set
      */
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public void setCreatorMail(String creatorMail) {
         this.creatorMail = creatorMail;
     }
@@ -81,7 +80,5 @@ public class ForumComment {
     Auxiliary operations
      */
 
-    private void makeId() {
-        this.id = creatorMail + creationDate.getTime();
-    }
+
 }

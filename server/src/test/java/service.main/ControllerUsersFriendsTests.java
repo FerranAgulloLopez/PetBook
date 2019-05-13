@@ -247,6 +247,40 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
     }
 
 
+
+    @Test
+    public void GetUsersFriendSuggestion_AND_ALREADY_beenRequestedToBeFriendBy_OTHER_USER() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "get_users_friend_suggestion_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "get_users_friend_suggestion_operation/input_register2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+                .andDo(print()).andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+                .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_empty.json")));
+
+    }
+
+
+    @Test
+    public void GetUsersFriendSuggestion_AND_isFriend_WITH_ANOTHER_USER() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com2/foo@main.com"))
+                .andDo(print()).andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+                .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_empty.json")));
+
+    }
+
+
+
     @Test
     public void GetUsersFriendSuggestion_AND_NO_USER_HAS_SAME_POSTALCODE_AS_USER() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register.json")))

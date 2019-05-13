@@ -7,7 +7,6 @@ import java.util.Date;
 
 public class DataForumComment implements Serializable {
 
-    private String creatorMail;
     private Date creationDate;
     private String description;
 
@@ -15,10 +14,6 @@ public class DataForumComment implements Serializable {
     /*
     Get
      */
-
-    public String getCreatorMail() {
-        return creatorMail;
-    }
 
     public Date getCreationDate() {
         return creationDate;
@@ -33,9 +28,6 @@ public class DataForumComment implements Serializable {
     Auxiliary operations
      */
 
-    public ForumComment toComment() {
-        return new ForumComment(creatorMail,creationDate,description);
-    }
 
 
 }
