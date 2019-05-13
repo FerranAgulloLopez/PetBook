@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -93,7 +94,9 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
     public void EmailConfirmation() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"confirm_email_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/mailconfirmation/petbook@main.com"))
+        MvcResult result = this.mockMvc.perform(post("/ServerRESTAPI/ConfirmLogin").param("email", "petbook@main.com").param("password", "believe_on_me")).andReturn();
+        String token = getJwtToken(result);
+        this.mockMvc.perform(get("/mailConfirmation/"+token))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(get("/ServerRESTAPI/GetUser/petbook@main.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"confirm_email_operation/output_confirm_email.json")));
@@ -167,7 +170,7 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
     }
 
 
-        /*
+    /*
     Set token firebase
      */
 
@@ -178,6 +181,16 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
         this.mockMvc.perform(post("/ServerRESTAPI/token/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setToken_operation/input_token.json")))
                 .andDo(print()).andExpect(status().isOk());
     }
+
+    /*
+    Auxiliary operations
+     */
+
+    private String getJwtToken(MvcResult result) {
+        String token = result.getResponse().getHeader("Authorization");
+        return token.replaceAll("Bearer ", "");
+    }
+
 
 
 

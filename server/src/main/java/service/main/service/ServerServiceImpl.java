@@ -2,12 +2,9 @@ package service.main.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -27,13 +24,14 @@ import service.main.entity.input_output.user.OutLogin;
 import service.main.entity.input_output.user.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
 import service.main.exception.ForbiddenException;
-import service.main.exception.InternalErrorException;
+import service.main.exception.InternalServerErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.*;
 import service.main.services.FireMessage;
 import service.main.services.SequenceGeneratorService;
 import service.main.util.SendEmailTLS;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -81,6 +79,7 @@ public class ServerServiceImpl implements ServerService {
     User operations
      */
 
+    @Override
     public OutLogin ConfirmLogin(String email, String password, HttpServletResponse response) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
         if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
@@ -89,12 +88,14 @@ public class ServerServiceImpl implements ServerService {
         return new OutLogin(result,user.get().isMailconfirmed());
     }
 
+    @Override
     public void RegisterUser(DataUser inputUser) throws BadRequestException {
         Optional<User> userToCheck = userRepository.findById(inputUser.getEmail());
         if (userToCheck.isPresent()) throw new BadRequestException("The user already exists");
         userRepository.save(inputUser.toUser());
     }
 
+    @Override
     public void ConfirmEmail(String email) throws NotFoundException {
         Optional<User> user = userRepository.findById(email);
         if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
@@ -102,23 +103,29 @@ public class ServerServiceImpl implements ServerService {
         userRepository.save(user.get());
     }
 
-    public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException {
-        Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+    @Override
+    public void SendConfirmationEmail(HttpServletRequest request) throws BadRequestException, InternalServerErrorException {
+        String userMail = getLoggedUserMail();
+        Optional<User> user = userRepository.findById(userMail);
+        if (!user.isPresent()) throw new InternalServerErrorException("Error while loading user from the database");
         if (user.get().isMailconfirmed()) throw new BadRequestException("The user has already verified his email");
-        sendEmail(email);
+        JwtConfig config = new JwtConfig();
+        String token = request.getHeader(config.getHeader());
+        token = token.replaceAll(config.getPrefix(),"");
+        sendEmail(userMail,token);
     }
 
-    private void sendEmail(String mail) throws InternalErrorException {
+    private void sendEmail(String mail, String token) throws InternalServerErrorException {
         if (mailsender == null) mailsender = new SendEmailTLS();
         String subject = "Petbook confirmation email";
-        String text = "Hello. You've received this email because your email address was used for registering into Petbook application. " +
-                "Please follow this link to confirm email address http://10.4.41.146:9999/mailconfirmation/" + mail + ". If you click the " +
+        String text = "<p>Hello.</p><p> You've received this email because your email address was used for registering into Petbook application. " +
+                "Please follow this <a href=\"http://10.4.41.146:9999/mailConfirmation/" + token + "\">link</a> to confirm your email address. If you click the " +
                 "link and it appears to be broken, please copy and paste it " +
-                "into a new browser window. If you aren't able to access the link, please contact us via petbookasesores@gmail.com.";
+                "into a new browser window. If you aren't able to access the link, please contact us via petbookasesores@gmail.com.</p>";
         mailsender.sendEmail(mail,subject,text);
     }
 
+    @Override
     public User getUserByEmail(String email) throws NotFoundException {
         Optional<User> userToReturn = userRepository.findById(email);
         if (!userToReturn.isPresent()) throw new NotFoundException(USERNOTDB);
@@ -126,6 +133,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
+    @Override
     public void updateUserByEmail(String email, OutUpdateUserProfile userUpdated) throws NotFoundException {
         Optional<User> userToUpdate = userRepository.findById(email);
         if (!userToUpdate.isPresent()) throw new NotFoundException(USERNOTDB);
@@ -620,9 +628,16 @@ public class ServerServiceImpl implements ServerService {
     Auxiliary operations
      */
 
-    private String getLoggedUserMail() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userDetails.getUsername();
+    public String getLoggedUserMail() {
+        Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userMail;
+        try {
+             userMail = (String) user;
+        } catch (Exception e) {
+            UserDetails userDetails = (UserDetails) user;
+            userMail = userDetails.getUsername();
+        }
+        return userMail;
     }
 
     private void generateJWTToken(User user,HttpServletResponse response) {

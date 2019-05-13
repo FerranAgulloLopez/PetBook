@@ -3,11 +3,9 @@ package service.main;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
@@ -23,12 +21,12 @@ import service.main.entity.input_output.user.DataUser;
 import service.main.entity.input_output.user.OutUpdateUserProfile;
 import service.main.exception.BadRequestException;
 import service.main.exception.ForbiddenException;
-import service.main.exception.InternalErrorException;
+import service.main.exception.InternalServerErrorException;
 import service.main.exception.NotFoundException;
 import service.main.service.ServerService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 
 
 @RestController
@@ -49,9 +47,10 @@ public class RestApiController {
     @PostMapping(value = "/RegisterUser", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "User Registration", notes = "Saves a new user to the database. It receives the user's email and password", tags="User")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 400, message = "The user already exists")
     })
-    public ResponseEntity<?> registerUser(@ApiParam(value="A user with email and password", required = true, example = "petbook@mail.com") @RequestBody DataUser inputUser) {
+    public ResponseEntity registerUser(@ApiParam(value="A user with email and password", required = true, example = "petbook@mail.com") @RequestBody DataUser inputUser) {
         try {
             serverService.RegisterUser(inputUser);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -64,9 +63,10 @@ public class RestApiController {
     @PostMapping(value = "/ConfirmLogin", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Login Conformation", notes = "Checks if the password received as parameter is equal to the user's password. Also it returns a boolean whether the user has not confirmed his email.",tags="User")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> confirmLogin(HttpServletResponse response, @ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
+    public ResponseEntity confirmLogin(HttpServletResponse response, @ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email,
                                           @ApiParam(value="Password introduced", required = true, example = "1234") @RequestParam String password) {
         try {
             return new ResponseEntity<>(serverService.ConfirmLogin(email,password,response),HttpStatus.OK);
@@ -79,19 +79,18 @@ public class RestApiController {
     @PostMapping(value = "/SendConfirmationEmail")
     @ApiOperation(value = "Send a confirmation email", notes = "Sends to the specified user an email with the instructions to verify it.",tags="User")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The user has already verified his email"),
             @ApiResponse(code = 500, message = "Error while sending a new email")
     })
-    public ResponseEntity<?> confirmationEmail(@ApiParam(value="User's email", required = true, example = "petbook@mail.com") @RequestParam String email) {
+    public ResponseEntity confirmationEmail(HttpServletRequest request) {
         try {
-            serverService.SendConfirmationEmail(email);
+            serverService.SendConfirmationEmail(request);
             return new ResponseEntity<>(HttpStatus.OK);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
-        } catch (InternalErrorException e) {
+        } catch (InternalServerErrorException e) {
             return new ResponseEntity<>(e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -105,9 +104,10 @@ public class RestApiController {
     @GetMapping(value = "/GetUser/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get user by email", notes = "Get all the information of an user by its email", tags="User")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> infoUser(@PathVariable String email) {
+    public ResponseEntity infoUser(@PathVariable String email) {
         try {
             return new ResponseEntity<>(serverService.getUserByEmail(email), HttpStatus.OK);
         }
@@ -138,6 +138,7 @@ public class RestApiController {
     @GetMapping(value = "/getPicture/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get the profile picture of the user identified by email", tags="User")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database or does not have profile picture")
     })
     public ResponseEntity<?> getPictureUser(@PathVariable String email) {
@@ -154,6 +155,7 @@ public class RestApiController {
     @PostMapping(value = "/setPicture/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Set the profile picture of the user identified by email", tags="User")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> setPictureUser(@PathVariable String email, @RequestBody DataImage picture)
@@ -172,6 +174,7 @@ public class RestApiController {
     @PostMapping(value = "/token/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Set the token  of Firebase of the user identified by email", tags="User")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> setTokenFirebase(@PathVariable String email, @RequestBody DataTokenFCM token)
@@ -198,6 +201,7 @@ public class RestApiController {
     @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its email. " +
             "Specifically gives the friends by the user identified by the email given in the path", tags="Friends")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> getFriends(@PathVariable String email) {
@@ -214,6 +218,7 @@ public class RestApiController {
     @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its email. " +
             "Specifically gives the friends requests received by the user identified by the email given in the path", tags="Friends")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> getFriendsRequests(@PathVariable String email) {
@@ -230,6 +235,7 @@ public class RestApiController {
     @PostMapping(value = "/sendFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Send a friend request to another user", tags="Friends", notes = "The user identified by *email* sends a friend request to the user identified by *friend* .")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The user already have sent a friend request to the other user OR The users already are friends")
     })
@@ -252,6 +258,7 @@ public class RestApiController {
     @PostMapping(value = "/acceptFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Accept a friend request from another user", tags="Friends", notes = "The user identified by *email* accepts a friend request from the user identified by *friend*. Then, the to users are friends.")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The users already are friends OR The user *email* havent sent a friend request to the other user")
     })
@@ -275,6 +282,7 @@ public class RestApiController {
     @PostMapping(value = "/denyFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Denies a friend request from another user", tags="Friends", notes = "The user identified by *email* denies a friend request from the user identified by *friend*.")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The user *email* havent sent a friend request to the other user")
     })
@@ -297,6 +305,7 @@ public class RestApiController {
     @PostMapping(value = "/Unfriend/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Unfriends users", tags="Friends", notes = "The user identified by *email* unfriends the user identified by *friend* and vice versa.")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The users are not friends")
     })
@@ -320,6 +329,7 @@ public class RestApiController {
     @GetMapping(value = "/GetUsersFriendSuggestion/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Gets users to suggest", tags="Friends", notes = "Suggests users that live in the same region as the user given")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The user has not a postal code")
     })
@@ -341,6 +351,7 @@ public class RestApiController {
     @PostMapping(value = "/deleteFriendSuggestion/{email}/{emailSuggested}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Deletes a friend suggestion", tags="Friends", notes = "The user identified by *email* deletes a friend suggestion of the user identified by *emailSuggested*.")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
     })
     public ResponseEntity<?> deleteFriendSuggestion(@PathVariable String email,
@@ -364,6 +375,7 @@ public class RestApiController {
     @PostMapping(value = "/events/CreateEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Creates an event", notes = "Stores an event in the database", tags = "Events")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The event already exists in the database")
     })
@@ -390,6 +402,7 @@ public class RestApiController {
     @GetMapping(value = "/events/GetEventsByCreator", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get all the events of a specific creator", notes = "Returns all the events of the input mail creator.", tags = "Events")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> getEventsByCreator(@ApiParam(value="Creator's email", required = true, example = "petbook@mail.com") @RequestParam("mail") String email)
@@ -405,6 +418,7 @@ public class RestApiController {
     @GetMapping(value = "/events/GetEventsByParticipant", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all events where the input user participates", notes = "Returns all events where the input user participates. The result is ordered by the date of the event ", tags = "Events")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> getEventsByParticipant(@ApiParam(value="Participant's email", required = true, example = "petbook@mail.com") @RequestParam("mail") String email)
@@ -420,6 +434,7 @@ public class RestApiController {
     @PutMapping(value = "/events/UpdateEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "UPDATE Event", notes = "Updates an event. Updates only descripcion, publico and titulo. An Event is identified by any, coordenadas, dia, hora, mes, radio.", tags = "Events")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The event does not exist in the database")
     })
     public ResponseEntity<?> updateEvent(@ApiParam(value="Event's id", required = true, example = "4") @RequestParam("eventId") long eventId,
@@ -438,6 +453,7 @@ public class RestApiController {
     @PostMapping(value = "/events/AddEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Adds a user to an event", notes = "Adds a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user or the event does not exist in the database"),
             @ApiResponse(code = 400, message = "The user already participates in the event")
     })
@@ -458,6 +474,7 @@ public class RestApiController {
     @DeleteMapping(value = "/events/DeleteEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Removes a user to an event", notes = "Removes a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user or the event does not exist in the database"),
             @ApiResponse(code = 400, message = "The user does not participate in the event")
     })
@@ -479,6 +496,7 @@ public class RestApiController {
     @DeleteMapping(value = "/events/DeleteEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "DELETE Event", notes = "Deletes an event", tags = "Events")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The event does not exist in the database")
     })
     public ResponseEntity<?> deleteEvent(@ApiParam(value="Event's id", required = true, example = "4") @RequestParam("eventId") long eventId)
@@ -502,6 +520,7 @@ public class RestApiController {
     @PostMapping(value = "/CreatePet", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Create Pet", notes = "Stores a pet in the database.", tags = "Pets")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 400, message = "The pet already exists in the database")
     })
@@ -523,6 +542,7 @@ public class RestApiController {
     @GetMapping(value = "/GetPet/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "GET Pet", notes = "Gets a pet identified by email and name ", tags = "Pets")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user or the pet does not exist in the database"),
     })
     public ResponseEntity<?> getMascota(@PathVariable String email,
@@ -541,6 +561,7 @@ public class RestApiController {
     @GetMapping(value = "/getALLPetsByUser/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "GET all the Pets of a user", notes = "GET all the Pets of a user identified by email", tags = "Pets")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
     })
     public ResponseEntity<?> getAllMascotasByUser(@PathVariable String email)
@@ -558,6 +579,7 @@ public class RestApiController {
     @PutMapping(value = "/UpdatePet/{email}/{name}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "UPDATE Pet", notes = "Updates the information of a pet. The Pet is identified by the user email and the name given in the URL. The new data is given in DataPetUpdate(JSON). Updates everything except the user email",tags = "Pets")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The pet does not exist in the database"),
     })
     public ResponseEntity<?> updateMascota(@PathVariable String email,
@@ -578,6 +600,7 @@ public class RestApiController {
     @DeleteMapping(value = "/DeletePet/{email}")
     @ApiOperation(value = "DELETE Pet", notes = "Deletes a pet ", tags = "Pets")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The pet does not exist in the database"),
     })
     public ResponseEntity<?> deleteMascota(@PathVariable String email,
@@ -605,6 +628,7 @@ public class RestApiController {
     @ApiOperation(value = "Suggest a new interest site", notes = "Saves a new interest site to the database. It receives a json with the necessary parameters: name, localization, description, type and the " +
             "creator's email.", tags="Interest Sites")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 400, message = "The interest site already exists"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
 
@@ -624,6 +648,7 @@ public class RestApiController {
     @GetMapping(value = "/GetInterestSite", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get one interest site", notes = "Get the interest site identified by the specified name and localization.", tags="Interest Sites")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The interest site does not exist in the database")
     })
     public ResponseEntity<?> getInterestSite(@ApiParam(value="Name of the interest site", required = true, example = "Goddard Veterinary") @RequestParam("name") String name,
@@ -640,6 +665,7 @@ public class RestApiController {
     @PostMapping(value = "/VoteInterestSite")
     @ApiOperation(value = "Vote a interest site", notes = "Votes a interest site. A interest site with more than five votes is accepted.", tags="Interest Sites")
     @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 400, message = "The user already voted this interest site"),
             @ApiResponse(code = 404, message = "The user does not exist in the database"),
             @ApiResponse(code = 404, message = "The interest site does not exist in the database")
