@@ -1,6 +1,5 @@
 package service.main.service;
 
-import org.springframework.security.core.Authentication;
 import service.main.entity.*;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
@@ -11,16 +10,14 @@ import service.main.entity.input_output.forum.DataForumThreadUpdate;
 import service.main.entity.input_output.image.DataImage;
 import service.main.entity.input_output.interestsite.DataInterestSite;
 import service.main.entity.input_output.pet.DataPetUpdate;
-import service.main.entity.input_output.user.DataUser;
-import service.main.entity.input_output.user.OutLogin;
-import service.main.entity.input_output.user.OutUpdateUserProfile;
+import service.main.entity.input_output.user.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.ForbiddenException;
-import service.main.exception.InternalErrorException;
+import service.main.exception.InternalServerErrorException;
 import service.main.exception.NotFoundException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.List;
 
 public interface ServerService {
@@ -35,7 +32,7 @@ public interface ServerService {
 
     public void ConfirmEmail(String email) throws NotFoundException;
 
-    public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException;
+    public void SendConfirmationEmail(HttpServletRequest request) throws BadRequestException, InternalServerErrorException;
 
     public void RegisterUser(DataUser inputUser) throws BadRequestException;
 
@@ -50,20 +47,39 @@ public interface ServerService {
     public void setTokenFirebase(String email, String token) throws NotFoundException;
 
 
+
+    /*
+    Wall Post operations
+     */
+
+    public List<WallPost> getUserWallPosts(String userMail) throws NotFoundException;
+
+    public void createWallPost(DataWallPost dataWallPost) throws InternalServerErrorException, BadRequestException;
+
+    public void updateWallPost(long wallPostId, DataWallPostUpdate dataWallPostUpdate) throws NotFoundException, InternalServerErrorException, BadRequestException;
+
+    public void deleteWallPost(long wallPostId) throws NotFoundException, InternalServerErrorException;
+
+
+
     /*
     Friends operations
      */
+
     List<User> getFriends(String emailUser) throws NotFoundException;
+
     List<User> getFriendsRequests(String emailUser) throws NotFoundException; // Gets the users who made a request to the user identified by *email*
 
-
     public void sendFriendRequest(String emailUser, String emailRequested) throws NotFoundException, BadRequestException;
+
     public void acceptFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
+
     public void denyFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
 
     public void unfriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException;
 
     public List<User> GetUsersFriendSuggestion(String email) throws NotFoundException, BadRequestException;
+
     public void deleteFriendSuggestion(String emailUser, String emailSuggested) throws NotFoundException;
 
 

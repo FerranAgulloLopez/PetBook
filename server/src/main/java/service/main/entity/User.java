@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import service.main.util.PBKDF2Hasher;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @ApiModel(value = "User", description = "An application user")
@@ -35,15 +37,20 @@ public class User implements Serializable {
                             // String[] -> byte[] -> File
     private Friend friends; // Amigos tanto los confirmados como lo que solicitan serlo.
     private String tokenFirebase;
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
+    private List<WallPost> wallPosts;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String role = "USER";
 
 
-    public User() {}
+    public User() {
+        this.wallPosts = new ArrayList<>();
+    }
 
     public User(String email, String password) {
         this.email = email;
         this.password = hasher.hash(password.toCharArray());
+        this.wallPosts = new ArrayList<>();
 
         friends = new Friend();
     }
@@ -57,11 +64,11 @@ public class User implements Serializable {
         this.postalCode = postalCode;
         this.mailconfirmed = mailconfirmed;
         this.foto = foto;
+        this.wallPosts = new ArrayList<>();
 
         friends = new Friend();
 
     }
-
 
     public User(String email, String password, String firstName, String secondName, String dateOfBirth, String postalCode, boolean mailconfirmed) {
         this.email = email;
@@ -71,6 +78,7 @@ public class User implements Serializable {
         this.dateOfBirth = dateOfBirth;
         this.postalCode = postalCode;
         this.mailconfirmed = mailconfirmed;
+        this.wallPosts = new ArrayList<>();
 
         friends = new Friend();
     }
@@ -119,6 +127,10 @@ public class User implements Serializable {
         return role;
     }
 
+    public List<WallPost> getWallPosts() {
+        return wallPosts;
+    }
+
     /*
     Set
      */
@@ -155,6 +167,9 @@ public class User implements Serializable {
         this.tokenFirebase = tokenFirebase;
     }
 
+    public void setWallPosts(List<WallPost> wallPosts) {
+        this.wallPosts = wallPosts;
+    }
 
     /*
     Friends
@@ -184,6 +199,7 @@ public class User implements Serializable {
         return friends.beenRequestedToBeFriendBy(friend);
     }
 
+
      /*
     Friends Suggestion
      */
@@ -199,12 +215,40 @@ public class User implements Serializable {
     public boolean rejectedFriendSuggestionOf(String userEmail)  { return friends.rejectedFriendSuggestionOf(userEmail); }
 
 
+
     /*
     Auxiliary operations
      */
 
     public boolean checkPassword(String password_to_check) {
         return hasher.checkPassword(password_to_check.toCharArray(),password);
+    }
+
+    public void addWallPost(WallPost wallPost) {
+        this.wallPosts.add(wallPost);
+    }
+
+    public boolean deleteWallPost(long wallPostId) {
+        boolean found = false;
+        for (int i = 0; !found && i < wallPosts.size(); ++i) {
+            if (wallPosts.get(i).getId() == wallPostId) {
+                found = true;
+                wallPosts.remove(i);
+            }
+        }
+        return found;
+    }
+
+    public WallPost findWallPost(long wallPostId) {
+        boolean found = false;
+        WallPost result = null;
+        for (int i = 0; !found && i < wallPosts.size(); ++i) {
+            if (wallPosts.get(i).getId() == wallPostId) {
+                found = true;
+                result = wallPosts.get(i);
+            }
+        }
+        return result;
     }
 
 

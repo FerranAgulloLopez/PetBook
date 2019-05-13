@@ -2,12 +2,9 @@ package service.main.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -22,18 +19,17 @@ import service.main.entity.input_output.forum.DataForumThreadUpdate;
 import service.main.entity.input_output.image.DataImage;
 import service.main.entity.input_output.interestsite.DataInterestSite;
 import service.main.entity.input_output.pet.DataPetUpdate;
-import service.main.entity.input_output.user.DataUser;
-import service.main.entity.input_output.user.OutLogin;
-import service.main.entity.input_output.user.OutUpdateUserProfile;
+import service.main.entity.input_output.user.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.ForbiddenException;
-import service.main.exception.InternalErrorException;
+import service.main.exception.InternalServerErrorException;
 import service.main.exception.NotFoundException;
 import service.main.repositories.*;
 import service.main.services.FireMessage;
 import service.main.services.SequenceGeneratorService;
 import service.main.util.SendEmailTLS;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -81,104 +77,155 @@ public class ServerServiceImpl implements ServerService {
     User operations
      */
 
+    @Override
     public OutLogin ConfirmLogin(String email, String password, HttpServletResponse response) throws NotFoundException {
-        Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
-        boolean result = user.get().checkPassword(password);
-        generateJWTToken(user.get(), response);
-        return new OutLogin(result,user.get().isMailconfirmed());
+        User user = auxGetUser(email);
+        boolean result = user.checkPassword(password);
+        generateJWTToken(user, response);
+        return new OutLogin(result,user.isMailconfirmed());
     }
 
+    @Override
     public void RegisterUser(DataUser inputUser) throws BadRequestException {
         Optional<User> userToCheck = userRepository.findById(inputUser.getEmail());
         if (userToCheck.isPresent()) throw new BadRequestException("The user already exists");
         userRepository.save(inputUser.toUser());
     }
 
+    @Override
     public void ConfirmEmail(String email) throws NotFoundException {
-        Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
-        user.get().setMailconfirmed(true);
-        userRepository.save(user.get());
+        User user = auxGetUser(email);
+        user.setMailconfirmed(true);
+        userRepository.save(user);
     }
 
-    public void SendConfirmationEmail(String email) throws NotFoundException, BadRequestException, InternalErrorException {
-        Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+    @Override
+    public void SendConfirmationEmail(HttpServletRequest request) throws BadRequestException, InternalServerErrorException {
+        String userMail = getLoggedUserMail();
+        Optional<User> user = userRepository.findById(userMail);
+        if (!user.isPresent()) throw new InternalServerErrorException("Error while loading user from the database");
         if (user.get().isMailconfirmed()) throw new BadRequestException("The user has already verified his email");
-        sendEmail(email);
+        JwtConfig config = new JwtConfig();
+        String token = request.getHeader(config.getHeader());
+        token = token.replaceAll(config.getPrefix(),"");
+        sendEmail(userMail,token);
     }
 
-    private void sendEmail(String mail) throws InternalErrorException {
+    private void sendEmail(String mail, String token) throws InternalServerErrorException {
         if (mailsender == null) mailsender = new SendEmailTLS();
         String subject = "Petbook confirmation email";
-        String text = "Hello. You've received this email because your email address was used for registering into Petbook application. " +
-                "Please follow this link to confirm email address http://10.4.41.146:9999/mailconfirmation/" + mail + ". If you click the " +
+        String text = "<p>Hello.</p><p> You've received this email because your email address was used for registering into Petbook application. " +
+                "Please follow this <a href=\"http://10.4.41.146:9999/mailConfirmation/" + token + "\">link</a> to confirm your email address. If you click the " +
                 "link and it appears to be broken, please copy and paste it " +
-                "into a new browser window. If you aren't able to access the link, please contact us via petbookasesores@gmail.com.";
+                "into a new browser window. If you aren't able to access the link, please contact us via petbookasesores@gmail.com.</p>";
         mailsender.sendEmail(mail,subject,text);
     }
 
+    @Override
     public User getUserByEmail(String email) throws NotFoundException {
-        Optional<User> userToReturn = userRepository.findById(email);
-        if (!userToReturn.isPresent()) throw new NotFoundException(USERNOTDB);
-        else return userToReturn.get();
+        return auxGetUser(email);
     }
 
 
+    @Override
     public void updateUserByEmail(String email, OutUpdateUserProfile userUpdated) throws NotFoundException {
-        Optional<User> userToUpdate = userRepository.findById(email);
-        if (!userToUpdate.isPresent()) throw new NotFoundException(USERNOTDB);
-        else {
-            User user = userToUpdate.get();
-            user.setFirstName(userUpdated.getFirstName());
-            user.setSecondName(userUpdated.getSecondName());
-            user.setDateOfBirth(userUpdated.getDateOfBirth());
-            user.setPostalCode(userUpdated.getPostalCode());
-            if (userUpdated.getPassword() != null) {
-                user.setPassword(userUpdated.getPassword());
-                System.out.println("cambiado");
-            }
-            System.out.println(userUpdated.getPassword());
-            userRepository.save(user);
+        User user = auxGetUser(email);
+        user.setFirstName(userUpdated.getFirstName());
+        user.setSecondName(userUpdated.getSecondName());
+        user.setDateOfBirth(userUpdated.getDateOfBirth());
+        user.setPostalCode(userUpdated.getPostalCode());
+        if (userUpdated.getPassword() != null) {
+            user.setPassword(userUpdated.getPassword());
+            System.out.println("cambiado");
         }
+        System.out.println(userUpdated.getPassword());
+        userRepository.save(user);
     }
 
     @Override
     public DataImage getProfilePicture(String email) throws NotFoundException {
-        Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
-        else {
-            String Picture = user.get().getFoto();
-            if (Picture == null) throw new NotFoundException(NOTPICTURE);
-            DataImage image = new DataImage();
-            image.setImage(Picture);
-            return image;
-        }
+        User user = auxGetUser(email);
+        String Picture = user.getFoto();
+        if (Picture == null) throw new NotFoundException(NOTPICTURE);
+        DataImage image = new DataImage();
+        image.setImage(Picture);
+        return image;
     }
 
     @Override
     public void setProfilePicture(String email, String picture) throws NotFoundException {
-        Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
-        else {
-            User userToSave = user.get();
-            userToSave.setFoto(picture);
-            userRepository.save(userToSave);
-        }
+        User user = auxGetUser(email);
+        user.setFoto(picture);
+        userRepository.save(user);
     }
 
     @Override
     public void setTokenFirebase(String email, String token) throws NotFoundException {
-        Optional<User> user = userRepository.findById(email);
-        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
-        else {
-            User userToSave = user.get();
-            userToSave.setTokenFirebase(token);
-            System.out.println("TOKEN: " + userToSave.getTokenFirebase());
-            userRepository.save(userToSave);
-        }
+        User user = auxGetUser(email);
+        user.setTokenFirebase(token);
+        System.out.println("TOKEN: " + user.getTokenFirebase());
+        userRepository.save(user);
     }
+
+
+
+    /*
+    WallPosts
+     */
+
+    @Override
+    public List<WallPost> getUserWallPosts(String userMail) throws NotFoundException {
+        User user = auxGetUser(userMail);
+        return user.getWallPosts();
+    }
+
+    @Override
+    public void createWallPost(DataWallPost dataWallPost) throws InternalServerErrorException, BadRequestException {
+        String userMail = getLoggedUserMail();
+        User user;
+        try {
+            user = auxGetUser(userMail);
+        } catch (NotFoundException e) {
+            throw new InternalServerErrorException("Error while loading user from the database");
+        }
+        if (!dataWallPost.isOk()) throw new BadRequestException("The input data is not well formed");
+        WallPost wallPost = new WallPost(dataWallPost.getDescription(),dataWallPost.getCreationDate(),null);
+        wallPost.setId(sequenceGeneratorService.generateSequence(WallPost.SEQUENCE_NAME));
+        user.addWallPost(wallPost);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void updateWallPost(long wallPostId, DataWallPostUpdate dataWallPostUpdate) throws NotFoundException, InternalServerErrorException, BadRequestException {
+        String userMail = getLoggedUserMail();
+        User user;
+        try {
+            user = auxGetUser(userMail);
+        } catch (NotFoundException e) {
+            throw new InternalServerErrorException("Error while loading user from the database");
+        }
+        WallPost wallPost = user.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        if (!dataWallPostUpdate.isOk()) throw new BadRequestException("The input data is not well formed");
+        wallPost.setDescription(dataWallPostUpdate.getDescription());
+        wallPost.setUpdateDate(dataWallPostUpdate.getUpdateDate());
+        userRepository.save(user);
+    }
+
+    @Override
+    public void deleteWallPost(long wallPostId) throws NotFoundException, InternalServerErrorException {
+        String userMail = getLoggedUserMail();
+        User user;
+        try {
+            user = auxGetUser(userMail);
+        } catch (NotFoundException e) {
+            throw new InternalServerErrorException("Error while loading user from the database");
+        }
+        boolean found = user.deleteWallPost(wallPostId);
+        if (!found) throw new NotFoundException("The user has not a wall post with this id");
+        userRepository.save(user);
+    }
+
 
 
     /*
@@ -620,9 +667,16 @@ public class ServerServiceImpl implements ServerService {
     Auxiliary operations
      */
 
-    private String getLoggedUserMail() {
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userDetails.getUsername();
+    public String getLoggedUserMail() {
+        Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userMail;
+        try {
+             userMail = (String) user;
+        } catch (Exception e) {
+            UserDetails userDetails = (UserDetails) user;
+            userMail = userDetails.getUsername();
+        }
+        return userMail;
     }
 
     private void generateJWTToken(User user,HttpServletResponse response) {
@@ -654,6 +708,12 @@ public class ServerServiceImpl implements ServerService {
         return forumThread_opt.get();
     }
 
+    private User auxGetUser(String userMail) throws NotFoundException {
+        Optional<User> user = userRepository.findById(userMail);
+        if (!user.isPresent()) throw new NotFoundException(USERNOTDB);
+        return user.get();
+    }
+
 
     /*
     Test operations TODO remove this section in the future
@@ -668,6 +728,7 @@ public class ServerServiceImpl implements ServerService {
         sequenceGeneratorService.deleteSequence(Event.SEQUENCE_NAME);
         sequenceGeneratorService.deleteSequence(ForumThread.SEQUENCE_NAME);
         sequenceGeneratorService.deleteSequence(ForumComment.SEQUENCE_NAME);
+        sequenceGeneratorService.deleteSequence(WallPost.SEQUENCE_NAME);
 
     }
 

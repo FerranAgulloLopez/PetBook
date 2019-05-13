@@ -1,25 +1,25 @@
 package service.main.util;
 
 import org.json.JSONObject;
-import service.main.exception.InternalErrorException;
+import service.main.exception.InternalServerErrorException;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.Properties;
 
 public class SendEmailTLS {
 
     private static String pathConfigFile = "../config_files/mail_info.json";
     private static String username;
+    private static String name;
     private static String password;
 
     private static final Properties prop = new Properties();
 
-    public SendEmailTLS() throws InternalErrorException {
+    public SendEmailTLS() throws InternalServerErrorException {
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.auth", "true");
@@ -27,7 +27,7 @@ public class SendEmailTLS {
         loadMailInfo();
     }
 
-    public void sendEmail(String mail, String subject, String content) throws InternalErrorException {
+    public void sendEmail(String mail, String subject, String content) throws InternalServerErrorException {
 
         try {
             Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
@@ -37,21 +37,21 @@ public class SendEmailTLS {
             });
 
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(username));
+            message.setFrom(new InternetAddress(name));
             message.setRecipients(
                     Message.RecipientType.TO,
                     InternetAddress.parse(mail)
             );
             message.setSubject(subject);
-            message.setText(content);
+            message.setContent(content, "text/html; charset=utf-8");
             Transport.send(message);
 
         } catch (Exception e) {
-            throw new InternalErrorException("Error while sending a new email");
+            throw new InternalServerErrorException("Error while sending a new email");
         }
     }
 
-    private void loadMailInfo() throws InternalErrorException {
+    private void loadMailInfo() throws InternalServerErrorException {
         try(FileReader fileReader = new FileReader(pathConfigFile);
             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
@@ -64,12 +64,13 @@ public class SendEmailTLS {
 
             JSONObject jsonObject = new JSONObject(data);
             username = jsonObject.getString("username");
+            name = jsonObject.getString("name");
             password = jsonObject.getString("password");
 
-            if (username == null || password == null) throw new InternalErrorException("");
+            if (username == null || password == null || name == null) throw new InternalServerErrorException("");
 
         } catch (Exception e) {
-            throw new InternalErrorException("Error while loading email configuration file");
+            throw new InternalServerErrorException("Error while loading email configuration file");
         }
 
     }
