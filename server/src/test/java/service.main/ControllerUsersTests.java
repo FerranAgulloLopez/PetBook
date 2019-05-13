@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(username = "test", password = "test", roles = "USER")
+@WithMockUser(username = "a@a.com", password = "test", roles = "USER")
 public class ControllerUsersTests extends ControllerIntegrationTests {
 
     @Autowired
@@ -181,6 +181,113 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
         this.mockMvc.perform(post("/ServerRESTAPI/token/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"setToken_operation/input_token.json")))
                 .andDo(print()).andExpect(status().isOk());
     }
+
+
+    /*
+    Get wall posts
+     */
+
+    @Test
+    public void getUserWallPosts() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/get_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/get_operation/input_post_1.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/get_operation/input_post_2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/users/a@a.com/WallPosts"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"wallPosts/get_operation/output.json")));
+    }
+
+    /*
+    Create wall post
+     */
+
+    @Test
+    public void createWallPost() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/create_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/create_operation/input_post.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/users/a@a.com/WallPosts"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"wallPosts/create_operation/output.json")));
+    }
+
+    @Test
+    public void createWallPostMalformed() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/create_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/create_operation/input_post_malformed_1.json")))
+                .andDo(print()).andExpect(status().isBadRequest());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/create_operation/input_post_malformed_2.json")))
+                .andDo(print()).andExpect(status().isBadRequest());
+    }
+
+    /*
+    Update wall post
+     */
+
+    @Test
+    public void updateWallPost() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_post_1.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_post_2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(put("/ServerRESTAPI/users/WallPosts").param("wallPostId", "2").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_update.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/users/a@a.com/WallPosts"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"wallPosts/update_operation/output.json")));
+    }
+
+    @Test
+    public void updateWallPostNotExist() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(put("/ServerRESTAPI/users/WallPosts").param("wallPostId", "1").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_update.json")))
+                .andDo(print()).andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void updateWallPostMalformed() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_post_1.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(put("/ServerRESTAPI/users/WallPosts").param("wallPostId", "1").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_update_1.json")))
+                .andDo(print()).andExpect(status().isBadRequest());
+        this.mockMvc.perform(put("/ServerRESTAPI/users/WallPosts").param("wallPostId", "1").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/update_operation/input_update_2.json")))
+                .andDo(print()).andExpect(status().isBadRequest());
+    }
+
+
+    /*
+    Delete wall post
+     */
+
+    @Test
+    public void deleteWallPost() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/delete_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/delete_operation/input_post.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(delete("/ServerRESTAPI/users/WallPosts").param("wallPostId", "1"))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/users/a@a.com/WallPosts"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"wallPosts/delete_operation/output.json")));
+    }
+
+    @Test
+    public void deleteWallPostNotExist() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"wallPosts/delete_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(delete("/ServerRESTAPI/users/WallPosts").param("wallPostId", "1"))
+                .andDo(print()).andExpect(status().isNotFound());
+    }
+
+
+
 
     /*
     Auxiliary operations

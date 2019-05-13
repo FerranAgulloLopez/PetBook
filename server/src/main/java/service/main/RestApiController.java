@@ -16,9 +16,7 @@ import service.main.entity.input_output.forum.DataForumThreadUpdate;
 import service.main.entity.input_output.image.DataImage;
 import service.main.entity.input_output.interestsite.DataInterestSite;
 import service.main.entity.input_output.pet.DataPetUpdate;
-import service.main.entity.input_output.user.DataTokenFCM;
-import service.main.entity.input_output.user.DataUser;
-import service.main.entity.input_output.user.OutUpdateUserProfile;
+import service.main.entity.input_output.user.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.ForbiddenException;
 import service.main.exception.InternalServerErrorException;
@@ -870,6 +868,81 @@ public class RestApiController {
         }
     }
 
+    @CrossOrigin
+    @GetMapping(value = "/users/{userMail}/WallPosts")
+    @ApiOperation(value = "Returns all the user's wall posts", notes = "Returns all the user's wall posts.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The user has not a wall post with this id")
+    })
+    public ResponseEntity<?> getUserWallPosts(@ApiParam(value="User's email", required = true) @PathVariable("userMail") String userMail) {
+        try {
+            return new ResponseEntity<>(serverService.getUserWallPosts(userMail),HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/WallPosts")
+    @ApiOperation(value = "Creates a wall post", notes = "Creates a new wall post to the corresponding user in the token.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The input data is not well formed")
+    })
+    public ResponseEntity<?> createWallPost(@ApiParam(value="The wall post parameters", required = true) @RequestBody DataWallPost dataWallPost) {
+        try {
+            serverService.createWallPost(dataWallPost);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (InternalServerErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @CrossOrigin
+    @PutMapping(value = "/users/WallPosts")
+    @ApiOperation(value = "Updates a wall post", notes = "Updates a wall post corresponding to the token's user.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The input data is not well formed"),
+            @ApiResponse(code = 404, message = "The user has not a wall post with this id")
+    })
+    public ResponseEntity<?> updateWallPost(@ApiParam(value="The post's identifier", required = true) @RequestParam("wallPostId") long wallPostId,
+                                            @ApiParam(value="The wall post parameters", required = true) @RequestBody DataWallPostUpdate dataWallPostUpdate) {
+        try {
+            serverService.updateWallPost(wallPostId,dataWallPostUpdate);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InternalServerErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping(value = "/users/WallPosts")
+    @ApiOperation(value = "Deletes a wall post", notes = "Deletes a wall post", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The user has not a wall post with this id")
+    })
+    public ResponseEntity<?> deleteWallPost(@ApiParam(value="The post's identifier", required = true) @RequestParam("wallPostId") long wallPostId) {
+        try {
+            serverService.deleteWallPost(wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InternalServerErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 
 
     /*
@@ -897,7 +970,5 @@ public class RestApiController {
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
-
-
 
 }

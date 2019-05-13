@@ -10,9 +10,7 @@ import service.main.entity.input_output.forum.DataForumThreadUpdate;
 import service.main.entity.input_output.image.DataImage;
 import service.main.entity.input_output.interestsite.DataInterestSite;
 import service.main.entity.input_output.pet.DataPetUpdate;
-import service.main.entity.input_output.user.DataUser;
-import service.main.entity.input_output.user.OutLogin;
-import service.main.entity.input_output.user.OutUpdateUserProfile;
+import service.main.entity.input_output.user.*;
 import service.main.exception.BadRequestException;
 import service.main.exception.ForbiddenException;
 import service.main.exception.InternalServerErrorException;
@@ -47,6 +45,21 @@ public interface ServerService {
     public void setProfilePicture(String email, String picture) throws NotFoundException;
 
     public void setTokenFirebase(String email, String token) throws NotFoundException;
+
+
+
+    /*
+    Wall Post operations
+     */
+
+    public List<WallPost> getUserWallPosts(String userMail) throws NotFoundException;
+
+    public void createWallPost(DataWallPost dataWallPost) throws InternalServerErrorException, BadRequestException;
+
+    public void updateWallPost(long wallPostId, DataWallPostUpdate dataWallPostUpdate) throws NotFoundException, InternalServerErrorException, BadRequestException;
+
+    public void deleteWallPost(long wallPostId) throws NotFoundException, InternalServerErrorException;
+
 
 
     /*
