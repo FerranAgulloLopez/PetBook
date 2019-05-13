@@ -7,7 +7,6 @@ import java.util.Date;
 
 public class DataForumThread implements Serializable {
 
-    private String creatorMail;
     private Date creationDate;
     private String title;
     private String description;
@@ -17,10 +16,6 @@ public class DataForumThread implements Serializable {
     /*
     Get
      */
-
-    public String getCreatorMail() {
-        return creatorMail;
-    }
 
     public Date getCreationDate() {
         return creationDate;
@@ -43,7 +38,4 @@ public class DataForumThread implements Serializable {
     Auxiliary operations
      */
 
-    public ForumThread toForum() {
-        return new ForumThread(creatorMail,creationDate,title,description,topic);
-    }
 }
