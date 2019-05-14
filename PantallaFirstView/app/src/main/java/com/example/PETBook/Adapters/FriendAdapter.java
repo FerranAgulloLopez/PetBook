@@ -1,6 +1,8 @@
 package com.example.PETBook.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,12 +69,28 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                friendAccepted = friend;
-                SingletonUsuario su = SingletonUsuario.getInstance();
-                /* Nueva conexion llamando a la funcion del server */
-                Conexion con = new Conexion(FriendAdapter.this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/Unfriend/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
-
+                AlertDialog.Builder error = new AlertDialog.Builder(FriendAdapter.this.context);
+                error.setMessage("Are you sure you want to remove the friend?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                friendAccepted = friend;
+                                SingletonUsuario su = SingletonUsuario.getInstance();
+                                /* Nueva conexion llamando a la funcion del server */
+                                Conexion con = new Conexion(FriendAdapter.this);
+                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/Unfriend/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog errorE = error.create();
+                errorE.setTitle("Remove Friend");
+                errorE.show();
             }
         });
         return convertView;
