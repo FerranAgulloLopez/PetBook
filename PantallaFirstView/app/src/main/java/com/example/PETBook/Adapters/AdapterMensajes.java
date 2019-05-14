@@ -8,8 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.PETBook.HolderMensaje;
-import com.example.PETBook.Models.Mensaje;
+import com.bumptech.glide.Glide;
+import com.example.PETBook.Holders.HolderMensaje;
+import com.example.PETBook.Models.Logic.MensajeLogic;
 import com.example.pantallafirstview.R;
 
 import java.util.ArrayList;
@@ -18,14 +19,14 @@ import java.util.List;
 public class AdapterMensajes extends RecyclerView.Adapter<HolderMensaje> {
 
 
-    private List<Mensaje> listMensaje = new ArrayList<>();
+    private List<MensajeLogic> listMensaje = new ArrayList<>();
     private Context c;
 
     public AdapterMensajes(Context c) {
         this.c = c;
     }
 
-    public void addMensaje(Mensaje m){
+    public void addMensaje(MensajeLogic m){
         listMensaje.add(m);
         notifyItemInserted(listMensaje.size());
     }
@@ -40,9 +41,29 @@ public class AdapterMensajes extends RecyclerView.Adapter<HolderMensaje> {
 
     @Override
     public void onBindViewHolder(@NonNull HolderMensaje holder, int position) {
-        holder.getNombre().setText(listMensaje.get(position).getNombre());
-        holder.getMensaje().setText(listMensaje.get(position).getMensaje());
 
+        MensajeLogic mensajeLogic = listMensaje.get(position);
+
+        holder.getNombre().setText(mensajeLogic.getEmailCreador());
+        holder.getMensaje().setText(mensajeLogic.getMensaje().getMensaje());
+
+        if (mensajeLogic.getMensaje().isContineFoto()) {
+            holder.getFotoMensaje().setVisibility(View.VISIBLE);
+            holder.getMensaje().setVisibility(View.VISIBLE);
+            Glide.with(c).load(mensajeLogic.getMensaje().getUrlFoto()).into(holder.getFotoMensaje());
+        }
+        else {
+            holder.getFotoMensaje().setVisibility(View.GONE);
+            holder.getMensaje().setVisibility(View.VISIBLE);
+        }
+
+        /*
+        Poner foto de perfil
+         */
+
+        //Glide.with(c).load(urlFotoPerfil).into(holder.getFotoMensajePerfil());
+
+        holder.getHora().setText(mensajeLogic.fechaDeCreacionDelMensaje());
 
     }
 

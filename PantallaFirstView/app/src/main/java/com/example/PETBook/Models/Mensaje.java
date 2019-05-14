@@ -1,25 +1,21 @@
 package com.example.PETBook.Models;
 
+import com.google.firebase.database.ServerValue;
+
 public class Mensaje {
 
     private String mensaje;
-    private String nombre;
-    private String fotoPerfil;
-    private String type_mensaje;
-    private String hora;
+    private String urlFoto;
+    private boolean contineFoto;
+    private String emailCreador;
+    private Object createdTimestamp;
 
 
     public Mensaje() {
+        createdTimestamp = ServerValue.TIMESTAMP;
     }
 
 
-    public Mensaje(String mensaje, String nombre, String fotoPerfil, String type_mensaje, String hora) {
-        this.mensaje = mensaje;
-        this.nombre = nombre;
-        this.fotoPerfil = fotoPerfil;
-        this.type_mensaje = type_mensaje;
-        this.hora = hora;
-    }
 
 
     public String getMensaje() {
@@ -30,35 +26,32 @@ public class Mensaje {
         this.mensaje = mensaje;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getUrlFoto() {
+        return urlFoto;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setUrlFoto(String urlFoto) {
+        this.urlFoto = urlFoto;
     }
 
-    public String getFotoPerfil() {
-        return fotoPerfil;
+    public boolean isContineFoto() {
+        return contineFoto;
     }
 
-    public void setFotoPerfil(String fotoPerfil) {
-        this.fotoPerfil = fotoPerfil;
+    public void setContineFoto(boolean contineFoto) {
+        this.contineFoto = contineFoto;
     }
 
-    public String getType_mensaje() {
-        return type_mensaje;
+    public String getEmailCreador() {
+        return emailCreador;
     }
 
-    public void setType_mensaje(String type_mensaje) {
-        this.type_mensaje = type_mensaje;
+    public void setEmailCreador(String emailCreador) {
+        this.emailCreador = emailCreador;
     }
 
-    public String getHora() {
-        return hora;
-    }
 
-    public void setHora(String hora) {
-        this.hora = hora;
+    public Object getCreatedTimestamp() {
+        return createdTimestamp;
     }
 }

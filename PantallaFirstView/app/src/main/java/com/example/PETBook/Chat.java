@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.PETBook.Adapters.AdapterMensajes;
+import com.example.PETBook.Models.Logic.MensajeLogic;
 import com.example.PETBook.Models.Mensaje;
 import com.example.pantallafirstview.R;
 import com.google.firebase.database.ChildEventListener;
@@ -73,8 +74,17 @@ public class Chat extends AppCompatActivity {
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                databaseReference.push().setValue(new Mensaje(txtMensaje.getText().toString(), nombre.getText().toString(),"","1", "00:00"));
-                txtMensaje.setText("");
+                String mensajeToSend = txtMensaje.getText().toString();
+                if (!mensajeToSend.isEmpty()) {
+                    SingletonUsuario user = SingletonUsuario.getInstance();
+                    Mensaje mensaje = new Mensaje();
+                    mensaje.setMensaje(mensajeToSend);
+                    //mensaje.setUrlFoto();
+                    mensaje.setContineFoto(false);
+                    mensaje.setEmailCreador(user.getEmail());
+                    databaseReference.push().setValue(mensaje);
+                    txtMensaje.setText("");
+                }
             }
         });
 
@@ -91,7 +101,8 @@ public class Chat extends AppCompatActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 Mensaje m = dataSnapshot.getValue(Mensaje.class);
-                adapter.addMensaje(m);
+                MensajeLogic mensaje = new MensajeLogic(dataSnapshot.getKey(), m);
+                adapter.addMensaje(mensaje);
             }
 
             @Override

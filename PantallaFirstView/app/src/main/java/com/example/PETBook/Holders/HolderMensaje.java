@@ -1,4 +1,4 @@
-package com.example.PETBook;
+package com.example.PETBook.Holders;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
