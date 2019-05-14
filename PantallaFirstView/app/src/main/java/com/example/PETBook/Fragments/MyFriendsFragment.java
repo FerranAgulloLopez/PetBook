@@ -145,7 +145,16 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
         vpContenido.setAdapter(adapter);
         vpContenido.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setupWithViewPager(vpContenido);
-        TabLayout.Tab tab = tabLayout.getTabAt(1);
+
+        int position;
+        Bundle bundle = this.getArguments();
+
+        if (bundle != null) {
+            position = bundle.getInt("index_tl");
+        } else {
+            position = 0;
+        }
+        TabLayout.Tab tab = tabLayout.getTabAt(position);
         tab.select();
         tabIcons();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

@@ -2,6 +2,7 @@ package com.example.PETBook.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -135,6 +136,9 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                         FriendRequestAdapter.this.notifyDataSetChanged();
                         AppCompatActivity activity = (AppCompatActivity) this.context;
                         Fragment fragment = new MyFriendsFragment();
+                        Bundle args = new Bundle();
+                        args.putInt("index_tl",2);
+                        fragment.setArguments(args);
                         activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
                         Toast.makeText(this.context, "Friend request accepted successfully.", Toast.LENGTH_SHORT).show();
                     } else {
