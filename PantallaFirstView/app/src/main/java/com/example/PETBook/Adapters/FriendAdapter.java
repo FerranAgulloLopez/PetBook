@@ -3,6 +3,9 @@ package com.example.PETBook.Adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Fragments.MyFriendsFragment;
 import com.example.PETBook.Models.FriendModel;
 import com.example.PETBook.Models.FriendSuggestionModel;
 import com.example.PETBook.SingletonUsuario;
@@ -103,6 +107,12 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
                 if (response == 200) {
                     user_friends.remove(friendAccepted);
                     FriendAdapter.this.notifyDataSetChanged();
+                    AppCompatActivity activity = (AppCompatActivity) this.context;
+                    Fragment fragment = new MyFriendsFragment();
+                    Bundle args = new Bundle();
+                    args.putInt("index_tl",1);
+                    fragment.setArguments(args);
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
                     Toast.makeText(this.context, "Friend removed successfully.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();

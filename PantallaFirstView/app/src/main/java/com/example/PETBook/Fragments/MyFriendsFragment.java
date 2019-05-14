@@ -117,7 +117,7 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
         viewPagerEnTabLayout();
 
         // Set tittle to the fragment
-        getActivity().setTitle("FRIENDS");
+        getActivity().setTitle("Friends");
 
 
 

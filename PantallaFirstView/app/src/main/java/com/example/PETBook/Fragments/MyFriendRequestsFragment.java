@@ -61,7 +61,7 @@ public class MyFriendRequestsFragment extends Fragment implements AsyncResult {
         // Inflate the layout for this fragment
         MyView =  inflater.inflate(R.layout.fragment_my_friend_requests, container, false);
         // Set tittle to the fragment
-        getActivity().setTitle("REQUESTS");
+        getActivity().setTitle("Friends");
 
         Conexion con = new Conexion(MyFriendRequestsFragment.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
