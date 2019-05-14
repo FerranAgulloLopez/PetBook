@@ -8,7 +8,13 @@ import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Pair;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,13 +33,17 @@ import java.util.Calendar;
 
 public class NewEvent extends AppCompatActivity implements AsyncResult {
 
-    private TextInputLayout Localizacion;
+    private AutoCompleteTextView Localizacion;
     private TextInputLayout Fecha;
     private TextInputLayout Hora;
     private TextInputLayout Titulo;
     private EditText inputFecha;
     private EditText inputHora;
     private EditText inputDescripcion;
+    private String[] addressName;
+    private Pair<Double,Double>[] latlng;
+    private ArrayAdapter<String> loc;
+    int select_location;
 
     private Button addEventButton;
     private RadioButton publicButton;
@@ -44,8 +54,28 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
+        loc = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,addressName);
+        Localizacion = (AutoCompleteTextView) findViewById(R.id.editLocalizacion);
+        Localizacion.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
-        Localizacion = (TextInputLayout) findViewById(R.id.Localizacion);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //Conexión para sacar la lista de sitios
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) { }
+        });
+        Localizacion.setAdapter(loc);
+        Localizacion.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Localizacion.setText(addressName[position]);
+                select_location = position;
+            }
+        });
         Fecha = (TextInputLayout) findViewById(R.id.Fecha);
         Hora = (TextInputLayout) findViewById(R.id.Hora);
         Titulo = (TextInputLayout) findViewById(R.id.Titulo);
@@ -119,17 +149,6 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 calendario.get(Calendar.MINUTE)));
     }
 
-    private boolean validateLocation(String loc){
-        if(loc.isEmpty()) {
-            Localizacion.setError("Campo obligatorio");
-            return false;
-        }
-        else {
-            Localizacion.setErrorEnabled(false);
-            return true;
-        }
-    }
-
     private boolean validateFecha(String date){
         if(date.isEmpty()) {
             Fecha.setError("Campo obligatorio");
@@ -172,31 +191,34 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private void createEvent(){
         SingletonUsuario su = SingletonUsuario.getInstance();
-
-        String localizacion = Localizacion.getEditText().getText().toString();
+        String address = addressName[select_location];
+        Double lat = latlng[select_location].first;
+        Double lng = latlng[select_location].second;
         String titulo = Titulo.getEditText().getText().toString();
         String descripcion = inputDescripcion.getText().toString();
-        Integer radio = 0;
         String user = su.getEmail();
         boolean pubOpriv = publicButton.isChecked();
 
 
         boolean isValidTitulo = validateTitulo(titulo);
-        boolean isValidLoc = validateLocation(localizacion);
         boolean isValidFecha = validateFecha(inputFecha.getText().toString());
         boolean isValidHora = validateHora(inputHora.getText().toString());
 
-        if(isValidTitulo && isValidLoc && isValidFecha && isValidHora) {
+        if(isValidTitulo && isValidFecha && isValidHora) {
             String fechaHora = transformacionFechaHora();
             JSONObject jsonToSend = new JSONObject();
+            JSONObject loc = new JSONObject();
             try {
-                jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion));
-                jsonToSend.accumulate("descripcion", descripcion);
-                jsonToSend.accumulate("fecha", fechaHora); //2019-05-24T19:13:00.000Z formato fecha
-                jsonToSend.accumulate("publico", pubOpriv);
-                jsonToSend.accumulate("radio", 0); //No se trata el valor por Google Maps
-                jsonToSend.accumulate("titulo", titulo);
-                jsonToSend.accumulate("userEmail", user);
+                jsonToSend.accumulate("creatorMail", user);
+                jsonToSend.accumulate("date", fechaHora);//2019-05-24T19:13:00.000Z formato fecha
+                jsonToSend.accumulate("description", descripcion);
+                jsonToSend.accumulate("isPublic", pubOpriv);
+                loc.accumulate("address",address);
+                loc.accumulate("latitude",lat);
+                loc.accumulate("longitude",lng);
+                jsonToSend.accumulate("localization", loc);
+                jsonToSend.accumulate("public", pubOpriv);
+                jsonToSend.accumulate("title", titulo);
                 System.out.print(jsonToSend);
             } catch (JSONException e) {
                 e.printStackTrace();
