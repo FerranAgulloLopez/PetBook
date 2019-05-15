@@ -2,7 +2,8 @@ package com.example.PETBook.Models.Logic;
 
 import com.example.PETBook.Models.Mensaje;
 
-import java.text.SimpleDateFormat;
+import org.ocpsoft.prettytime.PrettyTime;
+
 import java.util.Date;
 import java.util.Locale;
 
@@ -49,7 +50,16 @@ public class MensajeLogic {
 
     public String fechaDeCreacionDelMensaje() {
         Date date = new Date(getCreatedTimestampLong());
+
+
+        PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
+        return prettyTime.format(date);
+
+
+        /*
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm:ss a", Locale.getDefault());
         return simpleDateFormat.format(date);
+        */
+
     }
 }
