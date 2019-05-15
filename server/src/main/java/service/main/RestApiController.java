@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
@@ -212,15 +214,16 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @GetMapping(value = "/GetUserFriendsRequests/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its email. " +
-            "Specifically gives the friends requests received by the user identified by the email given in the path", tags="Friends")
+    @GetMapping(value = "/GetUserFriendsRequests", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its token. " +
+            "Specifically gives the friends requests received by the user identified by the email given in the token of the user", tags="Friends")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
-    public ResponseEntity<?> getFriendsRequests(@PathVariable String email) {
+    public ResponseEntity<?> getFriendsRequests() {
         try {
+            String email = getLoggedUserMail();
             return new ResponseEntity<>(serverService.getFriendsRequests(email), HttpStatus.OK);
         }
         catch (NotFoundException e) {
@@ -230,8 +233,8 @@ public class RestApiController {
 
 
     @CrossOrigin
-    @PostMapping(value = "/sendFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Send a friend request to another user", tags="Friends", notes = "The user identified by *email* sends a friend request to the user identified by *friend* .")
+    @PostMapping(value = "/sendFriendRequest/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Send a friend request to another user", tags="Friends", notes = "The user sends a friend request to the user identified by *friend* .")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
@@ -239,10 +242,11 @@ public class RestApiController {
             @ApiResponse(code = 400, message = "Users are the same users")
 
     })
-    public ResponseEntity<?> sendFriendRequest(@PathVariable String email,
-                                               @PathVariable String friend)
+    public ResponseEntity<?> sendFriendRequest(@PathVariable String friend)
     {
         try {
+
+            String email = getLoggedUserMail();
             serverService.sendFriendRequest(email, friend);
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -255,18 +259,18 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/acceptFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Accept a friend request from another user", tags="Friends", notes = "The user identified by *email* accepts a friend request from the user identified by *friend*. Then, the to users are friends.")
+    @PostMapping(value = "/acceptFriendRequest/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Accept a friend request from another user", tags="Friends", notes = "The user accepts a friend request from the user identified by *friend*. Then, the to users are friends.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
-            @ApiResponse(code = 400, message = "The users already are friends OR The user *email* havent sent a friend request to the other user")
+            @ApiResponse(code = 400, message = "The users already are friends OR The user havent sent a friend request to the other user")
     })
 
-    public ResponseEntity<?> acceptFriendRequest(@PathVariable String email,
-                                                 @PathVariable String friend)
+    public ResponseEntity<?> acceptFriendRequest(@PathVariable String friend)
     {
         try {
+            String email = getLoggedUserMail();
             serverService.acceptFriendRequest(email, friend);
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -279,17 +283,17 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/denyFriendRequest/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Denies a friend request from another user", tags="Friends", notes = "The user identified by *email* denies a friend request from the user identified by *friend*.")
+    @PostMapping(value = "/denyFriendRequest/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Denies a friend request from another user", tags="Friends", notes = "The user denies a friend request from the user identified by *friend*.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The user *email* havent sent a friend request to the other user")
     })
-    public ResponseEntity<?> denyFriendRequest(@PathVariable String email,
-                                                 @PathVariable String friend)
+    public ResponseEntity<?> denyFriendRequest(@PathVariable String friend)
     {
         try {
+            String email = getLoggedUserMail();
             serverService.denyFriendRequest(email, friend);
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -302,18 +306,18 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/Unfriend/{email}/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Unfriends users", tags="Friends", notes = "The user identified by *email* unfriends the user identified by *friend* and vice versa.")
+    @PostMapping(value = "/Unfriend/{friend}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Unfriends users", tags="Friends", notes = "The user unfriends the user identified by *friend* and vice versa.")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
             @ApiResponse(code = 400, message = "The users are not friends")
     })
 
-    public ResponseEntity<?> unfriendRequest(@PathVariable String email,
-                                               @PathVariable String friend)
+    public ResponseEntity<?> unfriendRequest(@PathVariable String friend)
     {
         try {
+            String email = getLoggedUserMail();
             serverService.unfriendRequest(email, friend);
             return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -972,5 +976,24 @@ public class RestApiController {
         return new ResponseEntity<>(HttpStatus.OK);
 
     }
+
+
+
+        /*
+    Auxiliary operations
+     */
+
+    public String getLoggedUserMail() {
+        Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String userMail;
+        try {
+            userMail = (String) user;
+        } catch (Exception e) {
+            UserDetails userDetails = (UserDetails) user;
+            userMail = userDetails.getUsername();
+        }
+        return userMail;
+    }
+
 
 }

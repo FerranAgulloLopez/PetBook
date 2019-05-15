@@ -1,5 +1,6 @@
 package service.main;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -21,7 +24,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@WithMockUser(username = "test", password = "test", roles = "USER")
 public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
 
     @Autowired
@@ -30,7 +32,8 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
 
     @Before
     public void ClearDB() throws Exception {
-        this.mockMvc.perform(delete("/ServerRESTAPI/Test/RemoveDatabase"))
+        this.mockMvc.perform(delete("/ServerRESTAPI/Test/RemoveDatabase")
+                .with(user("foo@main.com").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isOk());
     }
 
@@ -46,11 +49,17 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"send_friend_request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com(asi se puede cambiar
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests/foo@main.com"))
+
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com(asi se puede cambiar de usuario
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"send_friend_request_operation/output_GetUserFriendsRequests_USER1.json")));
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests/foo@main.com2"))
+
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2(asi se puede cambiar de usuario
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"send_friend_request_operation/output_GetUserFriendsRequests_USER2.json")));
     }
 
@@ -60,9 +69,11 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"send_friend_request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
@@ -72,7 +83,8 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"send_friend_request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
@@ -82,17 +94,24 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"accept_Friend_Request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com2/foo@main.com"))
+
+
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void sendFriendRequest_AND_USER_DONT_EXIST() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
@@ -106,18 +125,25 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"accept_Friend_Request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests/foo@main.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"accept_Friend_Request_operation/output_GetUserFriendsRequests_USER1.json")));
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests/foo@main.com2"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"accept_Friend_Request_operation/output_GetUserFriendsRequests_USER2.json")));
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com"))
+
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"accept_Friend_Request_operation/output_GetUserFriends_USER1.json")));
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com2"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com2")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"accept_Friend_Request_operation/output_GetUserFriends_USER2.json")));
     }
 
@@ -128,7 +154,8 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"accept_Friend_Request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
@@ -138,15 +165,19 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"accept_Friend_Request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void acceptFriendRequest_AND_USER_DONT_EXIST() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com/foo@main.com2"))
                 .andDo(print()).andExpect(status().isNotFound());
@@ -162,18 +193,24 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"deny_Friend_Request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/denyFriendRequest/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/denyFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests/foo@main.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"deny_Friend_Request_operation/output_GetUserFriendsRequests_USER1.json")));
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests/foo@main.com2"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriendsRequests")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"deny_Friend_Request_operation/output_GetUserFriendsRequests_USER2.json")));
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"deny_Friend_Request_operation/output_GetUserFriends_USER1.json")));
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com2"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com2")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"deny_Friend_Request_operation/output_GetUserFriends_USER2.json")));
     }
 
@@ -184,12 +221,14 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"deny_Friend_Request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(post("/ServerRESTAPI/denyFriendRequest/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/denyFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void denyFriendRequest_AND_USER_DONT_EXIST() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/denyFriendRequest/foo@main.com/foo@main.com2"))
                 .andDo(print()).andExpect(status().isNotFound());
@@ -206,17 +245,22 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"unfriend_Request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(post("/ServerRESTAPI/Unfriend/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/Unfriend/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"unfriend_Request_operation/output_GetUserFriends_USER1.json")));
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com2"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUserFriends/foo@main.com2")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"unfriend_Request_operation/output_GetUserFriends_USER2.json")));
     }
 
@@ -227,11 +271,13 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"unfriend_Request_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/Unfriend/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/Unfriend/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void unfriend_AND_USER_DONT_EXIST() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com/foo@main.com2"))
                 .andDo(print()).andExpect(status().isNotFound());
@@ -245,6 +291,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
 
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void  GetUsersFriendSuggestion() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
@@ -264,10 +311,12 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "get_users_friend_suggestion_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_empty.json")));
     }
 
@@ -277,10 +326,12 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "get_users_friend_suggestion_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_empty.json")));
 
     }
@@ -292,12 +343,15 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com2/foo@main.com"))
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com")
+                .with(user("foo@main.com2").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com2
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com")
+                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
                 .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_empty.json")));
 
     }
@@ -305,6 +359,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
 
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void GetUsersFriendSuggestion_AND_NO_USER_HAS_SAME_POSTALCODE_AS_USER() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
@@ -317,6 +372,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
     }
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void GetUsersFriendSuggestion_AND_SOME_USER_BEEN_REJECTED_AS_A_SUGESTION() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
@@ -333,6 +389,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
     }
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void GetUsersFriendSuggestion_AND_USER_HASNT_POSTALCODE() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"get_users_friend_suggestion_operation/input_register4.json")))
                 .andDo(print()).andExpect(status().isOk());
@@ -340,6 +397,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isBadRequest());    }
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void GetUsersFriendSuggestion_AND_USER_DONT_EXIST() throws Exception {
         this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com4"))
                 .andDo(print()).andExpect(status().isNotFound());
@@ -352,6 +410,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
      */
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void deleteFriendSuggestion() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"delete_Friend_Suggestion_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
@@ -367,6 +426,7 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
 
 
     @Test
+    @WithMockUser(username = "foo@main.com", password = "test", roles = "USER")
     public void deleteFriendSuggestion_AND_USER_DONT_EXIST() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/deleteFriendSuggestion/foo@main.com/foo@main.com2"))
                 .andDo(print()).andExpect(status().isNotFound());

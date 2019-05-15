@@ -292,6 +292,13 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public void acceptFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException {
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        System.out.println("Email: "  + emailUser);
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+
+
+
         Optional<User> optUser = userRepository.findById(emailUser);
         if (!optUser.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
 
