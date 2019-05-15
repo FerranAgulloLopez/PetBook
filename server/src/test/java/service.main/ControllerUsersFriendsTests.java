@@ -67,6 +67,16 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
     }
 
     @Test
+    public void sendFriendRequest_AND_ARE_THE_SAME_USER() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"send_friend_request_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"send_friend_request_operation/input_register2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com"))
+                .andDo(print()).andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void sendFriendRequest_AND_USERS_ALREADY_ARE_FRIENDS() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"accept_Friend_Request_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
@@ -255,6 +265,19 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "get_users_friend_suggestion_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com/foo@main.com2"))
+                .andDo(print()).andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))
+                .andDo(print()).andExpect(content().string(read_file_raw(path+"get_users_friend_suggestion_operation/output_empty.json")));
+    }
+
+    @Test
+    public void GetUsersFriendSuggestion_AND_USER_RequestedToBeFriend_WITH_ANOTHER_USER() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "get_users_friend_suggestion_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "get_users_friend_suggestion_operation/input_register2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2/foo@main.com"))
                 .andDo(print()).andExpect(status().isOk());
 
         this.mockMvc.perform(get("/ServerRESTAPI/GetUsersFriendSuggestion/foo@main.com"))

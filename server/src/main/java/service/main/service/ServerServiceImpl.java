@@ -50,6 +50,7 @@ public class ServerServiceImpl implements ServerService {
     private static final String THREADNOTDB = "The forum thread does not exist in the database";
     private static final String USERS_ARE_NOT_FRIENDS = "The users are not friends";
     private static final String USER_HASNT_POSTAL_CODE = "The user has not a postal code";
+    private static final String ARE_THE_SAME_USER = "Users are the same user";
 
 
     private SendEmailTLS mailsender;
@@ -283,6 +284,7 @@ public class ServerServiceImpl implements ServerService {
 
         if(friend.beenRequestedToBeFriendBy(emailUser)) throw new BadRequestException(ALREADY_SENT_FRIEND_REQUEST);
         if(friend.isFriend(emailUser)) throw new BadRequestException(USERS_ALREADY_ARE_FRIENDS);
+        if(emailUser.equals(emailRequested)) throw new BadRequestException(ARE_THE_SAME_USER);
 
         friend.addFriendRequest(emailUser);
         userRepository.save(friend);
@@ -372,13 +374,16 @@ public class ServerServiceImpl implements ServerService {
             if(user.rejectedFriendSuggestionOf(u.getEmail())) { // Si rechazo el sugerimiento
                 elementosAEliminar.add(i);
             }
-            if(user.getEmail().equals(u.getEmail())) {          // Se quita a si mismo
+            else if(user.getEmail().equals(u.getEmail())) {          // Se quita a si mismo
                 elementosAEliminar.add(i);
             }
-            if(u.beenRequestedToBeFriendBy(user.getEmail())) {  // El usuario sugerido tiene una solicitud pendiente por parte de *user*
+            else if(u.beenRequestedToBeFriendBy(user.getEmail())) {  // El usuario sugerido tiene una solicitud pendiente por parte de *user*
                 elementosAEliminar.add(i);
             }
-            if(u.isFriend(user.getEmail())) {  // Si ya son amigos se quita de sugeridos
+            else if(user.beenRequestedToBeFriendBy(u.getEmail())) {  // El usuario tiene una solicitud pendiente por parte de *u*
+                elementosAEliminar.add(i);
+            }
+            else if (u.isFriend(user.getEmail())) {  // Si ya son amigos se quita de sugeridos
                 elementosAEliminar.add(i);
             }
         }

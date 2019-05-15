@@ -235,7 +235,9 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
-            @ApiResponse(code = 400, message = "The user already have sent a friend request to the other user OR The users already are friends")
+            @ApiResponse(code = 400, message = "The user already have sent a friend request to the other user OR The users already are friends"),
+            @ApiResponse(code = 400, message = "Users are the same users")
+
     })
     public ResponseEntity<?> sendFriendRequest(@PathVariable String email,
                                                @PathVariable String friend)
