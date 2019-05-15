@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Toast;
@@ -17,6 +18,7 @@ import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.PantallaSignUp;
 import com.example.PETBook.SingletonUsuario;
+import com.example.PETBook.Fragments.EditProfileFragment;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONArray;
@@ -133,7 +135,11 @@ public class MyProfileFragment extends Fragment implements AsyncResult {
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProfile();
+                Fragment myFragment=null;
+                myFragment = new EditProfileFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_main,myFragment).commit();
+
+//                editProfile();
             }
         });
 
