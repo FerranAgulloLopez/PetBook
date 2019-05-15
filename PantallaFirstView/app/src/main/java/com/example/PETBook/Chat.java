@@ -64,6 +64,7 @@ public class Chat extends AppCompatActivity {
 
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference("chat");//Sala de chat (nombre)
+        databaseReference.orderByChild("createdTimestamp");
 
         adapter = new AdapterMensajes(this);
         LinearLayoutManager l = new LinearLayoutManager(this);
