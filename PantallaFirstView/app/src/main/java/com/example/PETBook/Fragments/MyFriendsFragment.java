@@ -65,7 +65,7 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
     private ViewPagerFriendAdapter adapter;
     private ArrayList<Fragment> friends_fragments;
     private ArrayList<String> titles_fragments;
-    private int[] tabIcons = {R.drawable.ic_menu_gallery,R.drawable.ic_menu_manage,R.drawable.ic_menu_gallery};
+    private int[] tabIcons = {R.drawable.icon_friend_suggestions,R.drawable.icon_friends,R.drawable.icon_friend_requests};
 
     private OnFragmentInteractionListener mListener;
 

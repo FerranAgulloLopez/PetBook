@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EventInfo;
 import com.example.PETBook.Fragments.MyFriendsFragment;
+import com.example.PETBook.Models.Image;
 import com.example.PETBook.SingletonUsuario;
 import com.example.PETBook.Models.FriendRequestModel;
 import com.example.PETBook.UserInfo;
@@ -34,7 +36,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
     private Context context;
     private ArrayList<FriendRequestModel> user_friends_requests;
     private String tipoConexion;
-
+    private ImageView imageProfile;
     FriendRequestModel friendRequest;
 
     public FriendRequestAdapter(Context context, ArrayList<FriendRequestModel> array){
@@ -70,7 +72,10 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
 
         TextView inputFullName = (TextView) convertView.findViewById(R.id.fullNameInput);
         inputFullName.setText(friend.getName() + " " + friend.getSurnames());
-
+        imageProfile = convertView.findViewById(R.id.imageView);
+        tipoConexion = "imageFriend";
+        Conexion con = new Conexion(this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + friend.getEmail(), "GET", null);
         inputFullName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,8 +87,8 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
             }
         });
 
-        ImageView imageProfile = (ImageView) convertView.findViewById(R.id.imageView);
-
+        //ImageView imageProfile = (ImageView) convertView.findViewById(R.id.imageView);
+/*
         imageProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +98,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                 intent.putExtra("friendRequestSelected", friend);
                 v.getContext().startActivity(intent);
             }
-        });
+        });*/
 
 
 
@@ -174,6 +179,25 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                         FriendRequestAdapter.this.notifyDataSetChanged();
 
                         Toast.makeText(this.context, "Friend request rejected successfully.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else if(tipoConexion.equals("imageFriend")) {
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200) {
+                        // convert string to bitmap
+                        SingletonUsuario user = SingletonUsuario.getInstance();
+                        Image imagenConversor = Image.getInstance();
+                        String image = output.getString("image");
+                        Bitmap profileImage = imagenConversor.StringToBitMap(image);
+                        imageProfile.setImageBitmap(profileImage);
+                        user.setProfilePicture(profileImage);
+                    }   else if (output.getInt("code")==404) { // user does not have profile picture
+                        imageProfile.setImageResource(R.drawable.troymcclure);
                     } else {
                         Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }
