@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.example.PETBook.Adapters.AdapterMensajes;
 import com.example.PETBook.Models.Logic.MensajeLogic;
 import com.example.PETBook.Models.Mensaje;
+import com.example.PETBook.Utilidades.Constants;
 import com.example.pantallafirstview.R;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -38,20 +39,32 @@ public class Chat extends AppCompatActivity {
     private ImageButton btnEnviarFoto;
 
     private FirebaseDatabase database;
-    private DatabaseReference databaseReference;
+    private DatabaseReference databaseReferenceEmisor;
+    private DatabaseReference databaseReferenceReceptor;
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private static final int PHOTO_SEND = 1;
     private static final int PHOTO_PERFIL = 2;
     private String fotoPerfilCadena;
 
-
+    private String emailReceptor;
+    private String emailEmisor;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            emailReceptor = getEmailWithoutDotCom(bundle.getString("emailReceptor"));
+        }
+        else {
+            finish();
+        }
+
 
 
         fotoPerfil = (CircleImageView) findViewById(R.id.fotoPerfil);
@@ -62,14 +75,18 @@ public class Chat extends AppCompatActivity {
         btnEnviarFoto = (ImageButton) findViewById(R.id.btnEnviarFoto);
         fotoPerfilCadena = "";
 
+        emailEmisor = getEmailWithoutDotCom(SingletonUsuario.getInstance().getEmail());
+
         database = FirebaseDatabase.getInstance();
-        databaseReference = database.getReference("chat");//Sala de chat (nombre)
-        databaseReference.orderByChild("createdTimestamp");
+        databaseReferenceEmisor = database.getReference(Constants.NODO_MENSAJES + "/" + emailEmisor + "/" + emailReceptor); //Sala de chat (nombre)
+        databaseReferenceReceptor = database.getReference(Constants.NODO_MENSAJES + "/" + emailReceptor + "/" + emailEmisor); //Sala de chat (nombre)
+        //databaseReference.orderByChild("createdTimestamp");
 
         adapter = new AdapterMensajes(this);
         LinearLayoutManager l = new LinearLayoutManager(this);
         rvMensajes.setLayoutManager(l);
         rvMensajes.setAdapter(adapter);
+        nombre.setText(emailReceptor);
 
 
         btnEnviar.setOnClickListener(new View.OnClickListener() {
@@ -83,7 +100,8 @@ public class Chat extends AppCompatActivity {
                     //mensaje.setUrlFoto();
                     mensaje.setContineFoto(false);
                     mensaje.setEmailCreador(user.getEmail());
-                    databaseReference.push().setValue(mensaje);
+                    databaseReferenceEmisor.push().setValue(mensaje);
+                    databaseReferenceReceptor.push().setValue(mensaje);
                     txtMensaje.setText("");
                 }
             }
@@ -98,12 +116,17 @@ public class Chat extends AppCompatActivity {
         });
 
 
-        databaseReference.addChildEventListener(new ChildEventListener() {
+        FirebaseDatabase.
+                getInstance().
+                getReference(Constants.NODO_MENSAJES).
+                child(emailEmisor).
+                child(emailReceptor).addChildEventListener(new ChildEventListener() {
+
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                Mensaje m = dataSnapshot.getValue(Mensaje.class);
-                MensajeLogic mensaje = new MensajeLogic(dataSnapshot.getKey(), m);
-                adapter.addMensaje(mensaje);
+                final Mensaje mensaje = dataSnapshot.getValue(Mensaje.class);
+                final MensajeLogic mensajeLogic = new MensajeLogic(dataSnapshot.getKey(), mensaje);
+                adapter.addMensaje(mensajeLogic);
             }
 
             @Override
@@ -127,11 +150,15 @@ public class Chat extends AppCompatActivity {
             }
         });
 
+
     }
 
 
 
 
+    private String getEmailWithoutDotCom(String email) {
+        return email.substring(0, email.length() - 4 );
+    }
 
 
     private void setScrollbar() {
