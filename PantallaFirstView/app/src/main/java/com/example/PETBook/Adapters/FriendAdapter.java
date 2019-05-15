@@ -1,6 +1,11 @@
 package com.example.PETBook.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Fragments.MyFriendsFragment;
 import com.example.PETBook.Models.FriendModel;
 import com.example.PETBook.Models.FriendSuggestionModel;
 import com.example.PETBook.SingletonUsuario;
@@ -67,12 +73,28 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                friendAccepted = friend;
-                SingletonUsuario su = SingletonUsuario.getInstance();
-                /* Nueva conexion llamando a la funcion del server */
-                Conexion con = new Conexion(FriendAdapter.this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/Unfriend/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
-
+                AlertDialog.Builder error = new AlertDialog.Builder(FriendAdapter.this.context);
+                error.setMessage("Are you sure you want to remove the friend?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                friendAccepted = friend;
+                                SingletonUsuario su = SingletonUsuario.getInstance();
+                                /* Nueva conexion llamando a la funcion del server */
+                                Conexion con = new Conexion(FriendAdapter.this);
+                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/Unfriend/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog errorE = error.create();
+                errorE.setTitle("Remove Friend");
+                errorE.show();
             }
         });
         return convertView;
@@ -85,6 +107,12 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
                 if (response == 200) {
                     user_friends.remove(friendAccepted);
                     FriendAdapter.this.notifyDataSetChanged();
+                    AppCompatActivity activity = (AppCompatActivity) this.context;
+                    Fragment fragment = new MyFriendsFragment();
+                    Bundle args = new Bundle();
+                    args.putInt("index_tl",1);
+                    fragment.setArguments(args);
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
                     Toast.makeText(this.context, "Friend removed successfully.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();

@@ -1,6 +1,8 @@
 package com.example.PETBook.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,12 +83,33 @@ public class FriendSuggestionAdapter extends BaseAdapter implements AsyncResult 
         removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                friendSuggestion = friend;
-                tipoConexion = "deleteSuggestion";
-                SingletonUsuario su = SingletonUsuario.getInstance();
-                /* Nueva conexion llamando a la funcion del server */
-                Conexion con = new Conexion(FriendSuggestionAdapter.this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/deleteFriendSuggestion/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                AlertDialog.Builder error = new AlertDialog.Builder(FriendSuggestionAdapter.this.context);
+                error.setMessage("Are you sure you want to delete the friend Suggestion?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                friendSuggestion = friend;
+                                tipoConexion = "deleteSuggestion";
+                                SingletonUsuario su = SingletonUsuario.getInstance();
+                                /* Nueva conexion llamando a la funcion del server */
+                                Conexion con = new Conexion(FriendSuggestionAdapter.this);
+                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/deleteFriendSuggestion/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog errorE = error.create();
+                errorE.setTitle("Delete Friend Suggestion");
+                errorE.show();
+
+
+
+
 
             }
         });

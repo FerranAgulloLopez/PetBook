@@ -1,7 +1,12 @@
 package com.example.PETBook.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +17,8 @@ import android.widget.Button;
 
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.EventInfo;
+import com.example.PETBook.Fragments.MyFriendsFragment;
 import com.example.PETBook.SingletonUsuario;
 import com.example.PETBook.Models.FriendRequestModel;
 import com.example.PETBook.UserInfo;
@@ -108,13 +115,29 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                friendRequest = friend;
-                tipoConexion = "denyRequest";
-                SingletonUsuario su = SingletonUsuario.getInstance();
-                /* Nueva conexion llamando a la funcion del server */
-                Conexion con = new Conexion(FriendRequestAdapter.this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/denyFriendRequest/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
-
+                AlertDialog.Builder error = new AlertDialog.Builder(FriendRequestAdapter.this.context);
+                error.setMessage("Are you sure you want to delete the friend request?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                friendRequest = friend;
+                                tipoConexion = "denyRequest";
+                                SingletonUsuario su = SingletonUsuario.getInstance();
+                                /* Nueva conexion llamando a la funcion del server */
+                                Conexion con = new Conexion(FriendRequestAdapter.this);
+                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/denyFriendRequest/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog errorE = error.create();
+                errorE.setTitle("Deny Friend Request");
+                errorE.show();
             }
         });
 
@@ -130,6 +153,12 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                     if (response == 200) {
                         user_friends_requests.remove(friendRequest);
                         FriendRequestAdapter.this.notifyDataSetChanged();
+                        AppCompatActivity activity = (AppCompatActivity) this.context;
+                        Fragment fragment = new MyFriendsFragment();
+                        Bundle args = new Bundle();
+                        args.putInt("index_tl",2);
+                        fragment.setArguments(args);
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
                         Toast.makeText(this.context, "Friend request accepted successfully.", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();

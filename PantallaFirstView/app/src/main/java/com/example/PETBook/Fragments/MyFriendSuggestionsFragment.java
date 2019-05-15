@@ -40,7 +40,7 @@ public class MyFriendSuggestionsFragment extends Fragment implements AsyncResult
             convertView = inflater.inflate(R.layout.fragment_my_friend_suggestions, container, false);
         }
 
-        getActivity().setTitle("SUGGESTIONS");
+        getActivity().setTitle("Friends");
         Conexion con = new Conexion(MyFriendSuggestionsFragment.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
 

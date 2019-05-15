@@ -42,7 +42,7 @@ public class MyFriendsAcceptedFragment extends Fragment implements AsyncResult {
             convertView = inflater.inflate(R.layout.fragment_my_friends_accepted, container, false);
         }
 
-        getActivity().setTitle("FRIENDS");
+        getActivity().setTitle("Friends");
 
         Conexion con = new Conexion(MyFriendsAcceptedFragment.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
