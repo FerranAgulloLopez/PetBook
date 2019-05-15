@@ -58,11 +58,13 @@ public class CommentForumAdapter extends BaseAdapter {
         TextView dataComment = convertView.findViewById(R.id.dataComment);
         TextView descripcioComment = convertView.findViewById(R.id.descripcionComment);
         TextView editable = (TextView) convertView.findViewById(R.id.editedView);
+        TextView idComment = convertView.findViewById(R.id.idComment);
         //ImageButton editComment = (ImageButton) convertView.findViewById(R.id.editCommentButton);
 
         LocalDateTime ahora= LocalDateTime.now();
         Integer minutosActual = ahora.getMinute();
-        System.out.println(forumList.get(position).getCreationDate());
+        System.out.println(forumList.get(position).getIDComment());
+        //System.out.println(forumList.get(position).getCreationDate());
         //Integer minutoCreacion = forumList.get(position).getCreationDate()
         /*if(minutosActual == ){
 
@@ -71,6 +73,7 @@ public class CommentForumAdapter extends BaseAdapter {
         userCreatorComment.setText(forumList.get(position).getCreatorMail());
         dataComment.setText(forumList.get(position).getCreationDate());
         descripcioComment.setText(forumList.get(position).getDescription());
+        idComment.setText(forumList.get(position).getIDComment().toString());
 
         return convertView;
     }

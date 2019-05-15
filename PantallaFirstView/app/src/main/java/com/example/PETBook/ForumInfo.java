@@ -60,9 +60,10 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
     private String fechaCreacion;
     private TextView dataComment;
     private TextView creatorComment;
-    private Integer IDComment;
+    private TextView ViewIDComment;
     private Integer IDForum;
-    private Integer posicio;
+    private String IDComment;
+;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
         addButtonComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 addComment();
             }
         });
@@ -117,13 +119,13 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                     cancelEditComment = arg1.findViewById(R.id.cancelEditComment);
                     confirmEditComment = arg1.findViewById(R.id.confirmEditComment);
                     editableComment = true;
-                    posicio = arg2;
-                    System.out.println("idComment: " + IDComment);
-                    System.out.println("arg0: " + arg0.getSelectedItemId());
-                    System.out.println("arg1: " + arg1);
-                    System.out.println("arg2: " + arg2);
-                    System.out.println("arg3: " + arg3);
+                    ViewIDComment = arg1.findViewById(R.id.idComment);
+                    IDComment = ViewIDComment.getText().toString();
+                    System.out.println("idComment: " + ViewIDComment.getText().toString());
+
+
                     editCommment();
+
                     //arg1.findViewById(R.id.editCommentButton).setVisibility(View.VISIBLE);
                     return false;
                 } else {
@@ -203,6 +205,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                 }
             });
         }
+
     }
     @TargetApi(Build.VERSION_CODES.O)
     private boolean comprobarEditable(){
@@ -554,7 +557,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                     startActivity(intent);
                 }
                 else{
-                    Toast.makeText(this, "There was a problem during the process", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "There was a problem during the process, try it later again", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -571,14 +574,14 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                     startActivity(intent);
                 }
                 else{
-                    Toast.makeText(this, "There was a problem during the process", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "There was a problem during the process, try it later again", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         else if(tipoConexion.equals("editarComment")){
-            try {
+            try  {
                 if(json.getInt("code") == 200){
                     Toast.makeText(this, "Comment successfully edited", Toast.LENGTH_SHORT).show();
                     Bundle enviar = new Bundle();
@@ -588,7 +591,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                     startActivity(intent);
                 }
                 else{
-                    Toast.makeText(this, "There was a problem during the process", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "There was a problem during the process, try it later again", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
