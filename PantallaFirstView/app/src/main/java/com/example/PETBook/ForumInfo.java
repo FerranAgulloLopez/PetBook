@@ -60,6 +60,9 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
     private String fechaCreacion;
     private TextView dataComment;
     private TextView creatorComment;
+    private Integer IDComment;
+    private Integer IDForum;
+    private Integer posicio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +117,12 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                     cancelEditComment = arg1.findViewById(R.id.cancelEditComment);
                     confirmEditComment = arg1.findViewById(R.id.confirmEditComment);
                     editableComment = true;
+                    posicio = arg2;
+                    System.out.println("idComment: " + IDComment);
+                    System.out.println("arg0: " + arg0.getSelectedItemId());
+                    System.out.println("arg1: " + arg1);
+                    System.out.println("arg2: " + arg2);
+                    System.out.println("arg3: " + arg3);
                     editCommment();
                     //arg1.findViewById(R.id.editCommentButton).setVisibility(View.VISIBLE);
                     return false;
@@ -211,7 +220,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
             forumModel = (ForumModel) datosRecibidos.getSerializable("forum");
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
 
-
+            IDForum = forumModel.getIDForum();
             forumCreator.setText(forumModel.getCreatorMail());
             forumDataCreation.setText(forumModel.getCreationDate());
             forumDescription.setText(forumModel.getDescription());
@@ -231,6 +240,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
             }
 
             mostrarComments();
+
         }
     }
 
@@ -268,7 +278,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
     private void mostrarComments(){
         tipoConexion = "mostrarComments";
         Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/GetAllThreadComments?creatorMail=" + creatorForum + "&title=" + transformacionStringAURL(nameForum) , "GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/GetAllThreadComments?threadId=" + IDForum  , "GET", null);
         System.out.println("conexion mostrar comments bien hecha");
     }
 
@@ -286,7 +296,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
     private void deleteForum(){
         tipoConexion = "deleteForum";
         Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/DeleteForumThread?creatorMail=" + creatorForum + "&title=" + transformacionStringAURL(nameForum) , "DELETE", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/DeleteForumThread?threadId=" + IDForum , "DELETE", null);
     }
 
     private void addComment(){
@@ -309,7 +319,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                 e.printStackTrace();
             }
             Conexion con = new Conexion(this);
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/CreateNewForumComment?creatorMail=" + creatorForum + "&title=" + transformacionStringAURL(nameForum), "POST", jsonToSend.toString());
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/CreateNewForumComment?threadId=" + IDForum, "POST", jsonToSend.toString());
             System.out.println("aixo es la resposta " );
             Bundle enviar = new Bundle();
             Intent intent = new Intent(this, MainActivity.class);
@@ -352,7 +362,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                                         e.printStackTrace();
                                     }
                                     Conexion con = new Conexion(ForumInfo.this);
-                                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/UpdateForumThread?creatorMail=" + creatorForum + "&title=" + transformacionStringAURL(nameForum), "PUT", jsonToSend.toString());
+                                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/UpdateForumThread?threadId=" + IDForum, "PUT", jsonToSend.toString());
 
                                     Bundle enviar = new Bundle();
                                     Intent intent = new Intent(ForumInfo.this, MainActivity.class);
@@ -435,6 +445,7 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                                 String updateDate = crearFechaActual();
                                 String description = editComment.getEditText().getText().toString();
                                 //confirmEditDescription = (ImageButton) findViewById(R.id.confirmEditDescription);
+                                //IDComment = forumModel.getComments().get(posicio).getIDComment();
                                 boolean isValidComment = validarComment(description, editComment);
                                 if(isValidComment) {
                                     JSONObject jsonToSend = new JSONObject();
@@ -446,15 +457,9 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                                         e.printStackTrace();
                                     }
                                     Conexion con = new Conexion(ForumInfo.this);
-                                    try {
-                                        //http://10.4.41.146:9999/ServerRESTAPI/forum/UpdateForumComment?commentCreationDate=2019-05-12T14%3A11%3A18.0000&commentCreatorMail=A&threadCreatorMail=A&threadTitle=Mi%20foro22
-                                        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/UpdateForumComment?commentCreationDate=" + transformacionFechaURL(fechaCreacion) + "&commentCreatorMail=A"
-                                                +"&threadCreatorMail=A" /*+ forumCreator*/ + "&threadTitle=Mi%20Foro22"/* + transformacionStringAURL(forumName.getText().toString())*/, "PUT", jsonToSend.toString());
-                                        System.out.println("http://10.4.41.146:9999/ServerRESTAPI/forum/UpdateForumComment?commentCreationDate=" + transformacionFechaURL(fechaCreacion) + "&commentCreatorMail="
-                                                + creatorComment.getText().toString() +"&threadCreatorMail=" + forumCreator.getText().toString() + "&threadTitle=" + transformacionStringAURL(forumName.getText().toString()));
-                                    } catch (ParseException e) {
-                                        e.printStackTrace();
-                                    }
+                                    //http://10.4.41.146:9999/ServerRESTAPI/forum/UpdateForumComment?commentCreationDate=2019-05-12T14%3A11%3A18.0000&commentCreatorMail=A&threadCreatorMail=A&threadTitle=Mi%20foro22
+                                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/UpdateForumComment?commentId=" + IDComment + "&threadId=" + IDForum , "PUT", jsonToSend.toString());
+                                    System.out.println("bien");
 
                                     Bundle enviar = new Bundle();
                                     Intent intent = new Intent(ForumInfo.this, MainActivity.class);
@@ -517,12 +522,14 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
                     for (int i = 0; i < jsonArray.length(); ++i) {
                         JSONObject forum = jsonArray.getJSONObject(i);
                         CommentForumModel cf = new CommentForumModel();
+                        cf.setIDComment(forum.getInt("id"));
                         cf.setCreationDate(transformacionFechaHora(forum.getString("creationDate")));
                         cf.setCreatorMail(forum.getString("creatorMail"));
                         cf.setDescription(forum.getString("description"));
                         fechaCreacion=cf.getCreationDate();
                        // System.out.println(cf.getCreationDate());
                         //cf.setTamaño(jsonArray.length());
+                        System.out.println("comment id: " + cf.getIDComment());
                         commentForumModel.add(cf);
                     }
                     commentForumAdapter = new CommentForumAdapter(this, commentForumModel);
