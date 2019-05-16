@@ -35,10 +35,6 @@
             android:title="Mapa" />
 
         <item
-            android:id="@+id/nav_chat"
-            android:icon="@drawable/icono_chat2"
-            android:title="Chat" />
-        <item
             android:id="@+id/nav_forum"
             android:icon="@drawable/ic_menu_send"
             android:title="Foro" />
