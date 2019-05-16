@@ -65,7 +65,7 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
     private ViewPagerFriendAdapter adapter;
     private ArrayList<Fragment> friends_fragments;
     private ArrayList<String> titles_fragments;
-    private int[] tabIcons = {R.drawable.ic_menu_gallery,R.drawable.ic_menu_manage,R.drawable.ic_menu_gallery};
+    private int[] tabIcons = {R.drawable.icon_friend_suggestions,R.drawable.icon_friends,R.drawable.icon_friend_requests};
 
     private OnFragmentInteractionListener mListener;
 
@@ -117,7 +117,7 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
         viewPagerEnTabLayout();
 
         // Set tittle to the fragment
-        getActivity().setTitle("FRIENDS");
+        getActivity().setTitle("Friends");
 
 
 
@@ -145,7 +145,27 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
         vpContenido.setAdapter(adapter);
         vpContenido.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.setupWithViewPager(vpContenido);
+
+        int position;
+        Bundle bundle = this.getArguments();
+
+        if (bundle != null) {
+            position = bundle.getInt("index_tl");
+        } else {
+            position = 0;
+        }
+
+
+        TabLayout.Tab tab = tabLayout.getTabAt(position);
+        tab.select();
         tabIcons();
+        tabNoSelect();
+
+        if (tab.isSelected()) {
+            iconColor(tab, "#3b5998");
+        }
+
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -165,6 +185,13 @@ public class MyFriendsFragment extends Fragment implements AsyncResult {
 
             }
         });
+    }
+    private void tabNoSelect() {
+        for (int i = 0; i < 3; i++) {
+            if (tabLayout.getTabAt(i).isSelected() == false) {
+                iconColor(tabLayout.getTabAt(i), "#E0E0E0");
+            }
+        }
     }
 
     private void tabIcons() {

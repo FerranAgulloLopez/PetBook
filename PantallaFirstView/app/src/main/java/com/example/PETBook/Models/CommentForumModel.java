@@ -7,7 +7,16 @@ public class CommentForumModel implements Serializable {
     private String creationDate;
     private String creatorMail;
     private String description;
-    private Integer tamaño;
+    private Integer IDComment;
+
+
+    public Integer getIDComment() {
+        return IDComment;
+    }
+
+    public void setIDComment(Integer IDComment) {
+        this.IDComment = IDComment;
+    }
 
     public String getCreationDate() {
         return creationDate;
@@ -34,11 +43,4 @@ public class CommentForumModel implements Serializable {
     }
 
 
-    public Integer getTamaño() {
-        return tamaño;
-    }
-
-    public void setTamaño(Integer tamaño) {
-        this.tamaño = tamaño;
-    }
 }

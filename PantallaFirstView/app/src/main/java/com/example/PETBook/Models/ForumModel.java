@@ -12,7 +12,15 @@ public class ForumModel implements Serializable {
     private String title;
     private String topic;
     private ArrayList<CommentForumModel> comments;
+    private Integer IDForum;
 
+    public Integer getIDForum() {
+        return IDForum;
+    }
+
+    public void setIDForum(Integer IDForum) {
+        this.IDForum = IDForum;
+    }
 
 
     public String getCreationDate() {

@@ -1,6 +1,8 @@
 package com.example.PETBook.Adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.example.PETBook.Models.CommentForumModel;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class CommentForumAdapter extends BaseAdapter {
@@ -42,22 +45,9 @@ public class CommentForumAdapter extends BaseAdapter {
     }
 
     @Override
+    @TargetApi(Build.VERSION_CODES.O)
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        /*if(convertView == null){
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.activity_hilo_forum,null);
-        }
-
-        TextView nombreForo = (TextView) convertView.findViewById(R.id.nombreForo);
-        TextView creadorForo = (TextView) convertView.findViewById(R.id.nombreCreadorForum);
-        TextView dataCreacionForum = (TextView) convertView.findViewById(R.id.dataCreacioForum);
-        TextView descripcionForum = (TextView) convertView.findViewById(R.id.descripcionComment);
-
-        //nombreForo.setText(forumList.get(position).get());
-        creadorForo.setText(forumList.get(position).getCreatorMail());
-        dataCreacionForum.setText(forumList.get(position).getCreationDate());
-        descripcionForum.setText(forumList.get(position).getDescription());*/
 
         if(convertView == null){
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -67,24 +57,24 @@ public class CommentForumAdapter extends BaseAdapter {
         TextView userCreatorComment = convertView.findViewById(R.id.userCreatorComment);
         TextView dataComment = convertView.findViewById(R.id.dataComment);
         TextView descripcioComment = convertView.findViewById(R.id.descripcionComment);
-        /*editCommentButton = convertView.findViewById(R.id.editCommentButton);
-        deleteCommentButton = convertView.findViewById(R.id.deleteCommentButton);
+        TextView editable = (TextView) convertView.findViewById(R.id.editedView);
+        TextView idComment = convertView.findViewById(R.id.idComment);
+        //ImageButton editComment = (ImageButton) convertView.findViewById(R.id.editCommentButton);
 
-        SingletonUsuario su = SingletonUsuario.getInstance();
-*/
+        LocalDateTime ahora= LocalDateTime.now();
+        Integer minutosActual = ahora.getMinute();
+        System.out.println(forumList.get(position).getIDComment());
+        //System.out.println(forumList.get(position).getCreationDate());
+        //Integer minutoCreacion = forumList.get(position).getCreationDate()
+        /*if(minutosActual == ){
+
+        }*/
+
         userCreatorComment.setText(forumList.get(position).getCreatorMail());
         dataComment.setText(forumList.get(position).getCreationDate());
         descripcioComment.setText(forumList.get(position).getDescription());
-/*
-        if(userCreatorComment.equals(su.getEmail())){
-            editCommentButton.setVisibility(View.VISIBLE);
-            deleteCommentButton.setVisibility(View.VISIBLE);
-        }
-        else{
-            editCommentButton.setVisibility(View.INVISIBLE);
-            deleteCommentButton.setVisibility(View.INVISIBLE);
-        }
-*/
+        idComment.setText(forumList.get(position).getIDComment().toString());
+
         return convertView;
     }
 }

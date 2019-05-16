@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.PETBook.Fragments.MyProfileFragment">
+    tools:context="com.example.PETBook.Fragments.EditProfileFragment">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -238,7 +238,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_marginBottom="24dp"
                 android:background="@color/colorProjecte"
-                android:text="Editar Perfil"
+                android:text="Save Changes"
                 android:textColor="@android:color/background_light"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"

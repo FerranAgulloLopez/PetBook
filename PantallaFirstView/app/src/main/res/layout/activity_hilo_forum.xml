@@ -25,44 +25,42 @@
 
         <ImageButton
             android:id="@+id/confirmEditDescription"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:layout_marginBottom="476dp"
+            android:layout_marginBottom="8dp"
             android:background="?attr/colorBackgroundFloating"
             android:scaleType="fitXY"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/editDescription"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.091"
+            app:layout_constraintHorizontal_bias="0.075"
             app:layout_constraintStart_toEndOf="@+id/editDescription"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintTop_toBottomOf="@+id/editForumButton"
             app:srcCompat="@drawable/exito" />
 
         <ImageButton
             android:id="@+id/cancelEditDescription"
-            android:layout_width="22dp"
-            android:layout_height="22dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="52dp"
-            android:layout_marginRight="52dp"
-            android:layout_marginBottom="472dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginBottom="8dp"
             android:background="?attr/colorBackgroundFloating"
             android:scaleType="fitXY"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/editDescription"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintStart_toEndOf="@+id/confirmEditDescription"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.947"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/editForumButton"
+            app:layout_constraintTop_toBottomOf="@+id/deleteForumButton"
             app:srcCompat="@drawable/no_editar" />
 
         <ImageButton
@@ -71,7 +69,7 @@
             android:layout_height="25dp"
             android:layout_marginStart="292dp"
             android:layout_marginLeft="292dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="56dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginBottom="8dp"
@@ -79,12 +77,11 @@
             android:scaleType="fitXY"
             android:tint="@color/colorPrimaryDark"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/descripcionForoInfo"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintHorizontal_bias="0.018"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.099"
             app:srcCompat="@drawable/borrar" />
 
         <TextView
@@ -169,28 +166,9 @@
             android:scrollbars="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/Comment"></ListView>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/addComment"
-            android:layout_width="wrap_content"
-            android:layout_height="52dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="48dp"
-            android:layout_marginRight="48dp"
-            android:layout_marginBottom="412dp"
-            android:clickable="true"
-            android:focusable="auto"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.285"
-            app:layout_constraintStart_toEndOf="@+id/Comment"
-            app:layout_constraintTop_toBottomOf="@+id/descripcionForoInfo"
-            app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@android:drawable/ic_input_add" />
+            app:layout_constraintTop_toBottomOf="@+id/Comment"></ListView>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/Comment"
@@ -214,8 +192,8 @@
             android:id="@+id/editForumButton"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginStart="256dp"
-            android:layout_marginLeft="256dp"
+            android:layout_marginStart="260dp"
+            android:layout_marginLeft="260dp"
             android:layout_marginTop="56dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
@@ -224,12 +202,11 @@
             android:scaleType="fitXY"
             android:tint="@color/colorPrimaryDark"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/descripcionForoInfo"
             app:layout_constraintEnd_toStartOf="@+id/imageButtonDelete2"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.013"
             app:srcCompat="@drawable/editar" />
 
         <android.support.design.widget.TextInputLayout
@@ -250,6 +227,24 @@
                 android:hint="Description editable"
                 android:textSize="13sp" />
         </android.support.design.widget.TextInputLayout>
+
+        <ImageButton
+            android:id="@+id/addComment"
+            android:layout_width="53dp"
+            android:layout_height="54dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/addcomment"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toTopOf="@+id/list_comments_forum"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/Comment"
+            tools:srcCompat="@drawable/addcomment" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

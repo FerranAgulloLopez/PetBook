@@ -188,6 +188,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
                 for(int i = 0; i < jsonArray.length(); ++i){
                     JSONObject forum = jsonArray.getJSONObject(i);
                     ForumModel f = new ForumModel();
+                    f.setIDForum(forum.getInt("id"));
                     f.setCreationDate(transformacionFechaHora(forum.getString("creationDate")));
                     f.setCreatorMail(forum.getString("creatorMail"));
                     f.setDescription(forum.getString("description"));
@@ -199,7 +200,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
                         cfm.setCreatorMail(com.getString("creatorMail"));
                         cfm.setCreationDate(transformacionFechaHora(com.getString("creationDate")));
                         cfm.setDescription(com.getString("description"));
-                        cfm.setTamaño(c.length());
+                        cfm.setIDComment(com.getInt("id"));
                         comments.add(cfm);
                     }
 
