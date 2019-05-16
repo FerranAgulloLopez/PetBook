@@ -101,30 +101,8 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
     }
 
     private void deleteEvent(){
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        String localizacion = txtLoc.getText().toString();
-        String titulo = txtTitle.getText().toString();
-        String descripcion = txtDescription.getText().toString();
-        Boolean publico = true;
-        String Fecha = txtFecha.getText().toString() + "T" + txtHora.getText().toString() + ":00.000Z";
-        String user = su.getEmail();
-
-        JSONObject jsonToSend = new JSONObject();
-        try {
-            jsonToSend.accumulate("coordenadas", Integer.parseInt(localizacion)/10); //cambiar cuando se implemente MAPS
-            jsonToSend.accumulate("descripcion", descripcion);
-            jsonToSend.accumulate("fecha", Fecha); //2019-05-24T19:13:00.000Z formato fecha
-            jsonToSend.accumulate("publico", publico);
-            jsonToSend.accumulate("radio", 0); //No se trata el valor por Google Maps
-            jsonToSend.accumulate("titulo", titulo);
-            jsonToSend.accumulate("userEmail", user);
-            System.out.print(jsonToSend);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
         Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/DeleteEvent/", "DELETE", jsonToSend.toString());
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/DeleteEvent/eventId="+event.getId(), "DELETE", null);
     }
 
     @Override

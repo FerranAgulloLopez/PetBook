@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.EventModel;
 import com.example.pantallafirstview.BuildConfig;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -94,6 +96,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
             mapFragment = SupportMapFragment.newInstance();
             ft.replace(R.id.map, mapFragment).commit();
         }
+        Conexion con = new Conexion(MyMapFragment.this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetAllEvents","GET",null);
         mapFragment.getMapAsync(this);
         return MyView;
     }
@@ -117,6 +121,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                     for(int i = 0; i < jsonArray.length(); ++i){
                         JSONObject evento = jsonArray.getJSONObject(i);
                         EventModel e = new EventModel();
+                        e.setId(evento.getInt("id"));
                         e.setTitulo(evento.getString("title"));
                         e.setDescripcion(evento.getString("description"));
                         e.setFecha(transformacionFechaHora(evento.getString("date")));
@@ -132,6 +137,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                         e.setMiembros(miembros);
                         e.setCreador(evento.getString("creatorMail"));
                         AllEvents.add(e);
+                        LatLng pos = new LatLng(e.getLatitude(),e.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(pos).title(e.getTitulo()));
                     }
                 }
             } catch (Exception e){

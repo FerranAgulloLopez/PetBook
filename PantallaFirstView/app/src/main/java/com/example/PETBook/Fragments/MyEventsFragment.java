@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.example.PETBook.Adapters.EventAdapter;
@@ -50,6 +51,10 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
     private ListView lista;
     private EventAdapter eventosUser;
     private ArrayList<EventModel> model;
+    private Button creator;
+    private Button participant;
+    private Conexion con;
+    private SingletonUsuario su;
     private OnFragmentInteractionListener mListener;
 
     public MyEventsFragment() {
@@ -94,8 +99,26 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
         getActivity().setTitle("Mis eventos");
 
 
-        Conexion con = new Conexion(MyEventsFragment.this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
+        con = new Conexion(MyEventsFragment.this);
+        su = SingletonUsuario.getInstance();
+
+        creator = (Button) MyView.findViewById(R.id.CreatorEvents);
+        creator.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                con = new Conexion(MyEventsFragment.this);
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByCreator?mail=" + su.getEmail(),"GET", null);
+            }
+        });
+
+        participant = (Button) MyView.findViewById(R.id.ParticipantEvents);
+        participant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                con = new Conexion(MyEventsFragment.this);
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByParticipant?mail=" + su.getEmail(),"GET", null);
+            }
+        });
 
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByCreator?mail=" + su.getEmail(),"GET", null);
 
@@ -180,6 +203,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                 for(int i = 0; i < jsonArray.length(); ++i){
                     JSONObject evento = jsonArray.getJSONObject(i);
                     EventModel e = new EventModel();
+                    e.setId(evento.getInt("id"));
                     e.setTitulo(evento.getString("title"));
                     e.setDescripcion(evento.getString("description"));
                     e.setFecha(transformacionFechaHora(evento.getString("date")));

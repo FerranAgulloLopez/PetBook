@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:layout_width="match_parent"
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -77,112 +78,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewInfo" />
 
-        <TextView
-            android:id="@+id/textViewFecha"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="341dp"
-            android:layout_marginRight="341dp"
-            android:text="Fecha *"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editDescriptionPet" />
-
-        <EditText
-            android:id="@+id/editRacePet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="11dp"
-            android:layout_marginEnd="181dp"
-            android:layout_marginRight="181dp"
-            android:ems="10"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewFecha" />
-
-        <TextView
-            android:id="@+id/textViewHora"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="338dp"
-            android:layout_marginRight="338dp"
-            android:text="Hora *"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editRacePet" />
-
-        <EditText
-            android:id="@+id/editEspeciePet"
-            android:layout_width="159dp"
-            android:layout_height="45dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginEnd="236dp"
-            android:layout_marginRight="236dp"
-            android:ems="10"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewHora" />
-
-        <TextView
-            android:id="@+id/textViewLoc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="268dp"
-            android:layout_marginRight="268dp"
-            android:text="Localización *"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editEspeciePet" />
-
-        <EditText
-            android:id="@+id/editEdadPet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginEnd="182dp"
-            android:layout_marginRight="182dp"
-            android:ems="10"
-            android:inputType="number"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewLoc" />
-
         <ImageButton
             android:id="@+id/imageButtonAcceptEdit"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginStart="33dp"
             android:layout_marginLeft="33dp"
-            android:layout_marginTop="115dp"
             android:layout_marginEnd="244dp"
             android:layout_marginRight="244dp"
             android:layout_marginBottom="37dp"
@@ -191,7 +92,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/imageButtonCancelEdit"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editEdadPet"
             app:srcCompat="@drawable/exito" />
 
         <ImageButton

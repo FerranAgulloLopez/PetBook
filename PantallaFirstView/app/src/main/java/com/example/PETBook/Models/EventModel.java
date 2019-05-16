@@ -8,14 +8,20 @@ import java.util.ArrayList;
 public class EventModel implements Serializable {
 
 
+    private Integer id;
     private String direccion;
-    private Pair<Double, Double> Coordenadas;
+    private Double latitude;
+    private Double longitude;
     private String fecha;
     private String titulo;
     private String descripcion;
     private boolean publico;
     private ArrayList<String> miembros;
     private String creador;
+
+    public void setId(Integer id) { this.id = id; }
+
+    public Integer getId() { return id; }
 
     public void setFecha(String fecha) {
         this.fecha = fecha;
@@ -36,10 +42,13 @@ public class EventModel implements Serializable {
     public String getDireccion(){ return direccion; }
 
     public void setCoordenadas(Double Long, Double Lat){
-        Coordenadas = new Pair<>(Long,Lat);
+        latitude = Lat;
+        longitude = Long;
     }
 
-    public Pair<Double,Double> getCoordenadas() { return Coordenadas; }
+    public Double getLatitude(){ return latitude; }
+
+    public Double getLongitude(){ return longitude; }
 
     public void setDescripcion(String descripcion){ this.descripcion = descripcion; }
 
