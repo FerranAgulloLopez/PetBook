@@ -135,11 +135,6 @@ public class ServerServiceImpl implements ServerService {
         user.setSecondName(userUpdated.getSecondName());
         user.setDateOfBirth(userUpdated.getDateOfBirth());
         user.setPostalCode(userUpdated.getPostalCode());
-        if (userUpdated.getPassword() != null) {
-            user.setPassword(userUpdated.getPassword());
-            System.out.println("cambiado");
-        }
-        System.out.println(userUpdated.getPassword());
         userRepository.save(user);
     }
 
@@ -168,6 +163,16 @@ public class ServerServiceImpl implements ServerService {
         userRepository.save(user);
     }
 
+
+
+    @Override
+    public void updatePassword(String email, DataUpdatePassword dataUpdatePassword) throws NotFoundException, BadRequestException {
+        User user = auxGetUser(email);
+        boolean result = user.checkPassword(dataUpdatePassword.getOldPassword());
+        if (!result) throw new BadRequestException("The oldPassword is not correct");
+        user.setPassword(dataUpdatePassword.getNewPassword());
+        userRepository.save(user);
+    }
 
 
     /*
@@ -760,5 +765,6 @@ public class ServerServiceImpl implements ServerService {
             e.printStackTrace();
         }
     }
+
 
 }

@@ -167,4 +167,6 @@ public interface ServerService {
      */
 
     public void sendTestNotifications(String token);
+
+    public void updatePassword(String email, DataUpdatePassword dataUpdatePassword) throws NotFoundException, BadRequestException;
 }

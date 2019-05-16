@@ -189,6 +189,27 @@ public class RestApiController {
     }
 
 
+    @CrossOrigin
+    @PostMapping(value = "/UpdatePassword/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Updates de the password of the user with the newPassowrd if the oldPassword is correct", tags="User")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database"),
+            @ApiResponse(code = 400, message = "The oldPassword is not correct")
+    })
+    public ResponseEntity<?> updatePassword(@PathVariable String email, @RequestBody DataUpdatePassword dataUpdatePassword)
+    {
+        try {
+            serverService.updatePassword(email, dataUpdatePassword);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 
 
     /*
