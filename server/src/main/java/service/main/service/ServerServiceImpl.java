@@ -50,6 +50,7 @@ public class ServerServiceImpl implements ServerService {
     private static final String THREADNOTDB = "The forum thread does not exist in the database";
     private static final String USERS_ARE_NOT_FRIENDS = "The users are not friends";
     private static final String USER_HASNT_POSTAL_CODE = "The user has not a postal code";
+    private static final String ARE_THE_SAME_USER = "Users are the same user";
 
 
     private SendEmailTLS mailsender;
@@ -134,11 +135,6 @@ public class ServerServiceImpl implements ServerService {
         user.setSecondName(userUpdated.getSecondName());
         user.setDateOfBirth(userUpdated.getDateOfBirth());
         user.setPostalCode(userUpdated.getPostalCode());
-        if (userUpdated.getPassword() != null) {
-            user.setPassword(userUpdated.getPassword());
-            System.out.println("cambiado");
-        }
-        System.out.println(userUpdated.getPassword());
         userRepository.save(user);
     }
 
@@ -167,6 +163,16 @@ public class ServerServiceImpl implements ServerService {
         userRepository.save(user);
     }
 
+
+
+    @Override
+    public void updatePassword(String email, DataUpdatePassword dataUpdatePassword) throws NotFoundException, BadRequestException {
+        User user = auxGetUser(email);
+        boolean result = user.checkPassword(dataUpdatePassword.getOldPassword());
+        if (!result) throw new BadRequestException("The oldPassword is not correct");
+        user.setPassword(dataUpdatePassword.getNewPassword());
+        userRepository.save(user);
+    }
 
 
     /*
@@ -283,6 +289,7 @@ public class ServerServiceImpl implements ServerService {
 
         if(friend.beenRequestedToBeFriendBy(emailUser)) throw new BadRequestException(ALREADY_SENT_FRIEND_REQUEST);
         if(friend.isFriend(emailUser)) throw new BadRequestException(USERS_ALREADY_ARE_FRIENDS);
+        if(emailUser.equals(emailRequested)) throw new BadRequestException(ARE_THE_SAME_USER);
 
         friend.addFriendRequest(emailUser);
         userRepository.save(friend);
@@ -290,6 +297,13 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public void acceptFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException {
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+        System.out.println("Email: "  + emailUser);
+        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+
+
+
+
         Optional<User> optUser = userRepository.findById(emailUser);
         if (!optUser.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
 
@@ -372,13 +386,16 @@ public class ServerServiceImpl implements ServerService {
             if(user.rejectedFriendSuggestionOf(u.getEmail())) { // Si rechazo el sugerimiento
                 elementosAEliminar.add(i);
             }
-            if(user.getEmail().equals(u.getEmail())) {          // Se quita a si mismo
+            else if(user.getEmail().equals(u.getEmail())) {          // Se quita a si mismo
                 elementosAEliminar.add(i);
             }
-            if(u.beenRequestedToBeFriendBy(user.getEmail())) {  // El usuario sugerido tiene una solicitud pendiente por parte de *user*
+            else if(u.beenRequestedToBeFriendBy(user.getEmail())) {  // El usuario sugerido tiene una solicitud pendiente por parte de *user*
                 elementosAEliminar.add(i);
             }
-            if(u.isFriend(user.getEmail())) {  // Si ya son amigos se quita de sugeridos
+            else if(user.beenRequestedToBeFriendBy(u.getEmail())) {  // El usuario tiene una solicitud pendiente por parte de *u*
+                elementosAEliminar.add(i);
+            }
+            else if (u.isFriend(user.getEmail())) {  // Si ya son amigos se quita de sugeridos
                 elementosAEliminar.add(i);
             }
         }
@@ -750,5 +767,6 @@ public class ServerServiceImpl implements ServerService {
             e.printStackTrace();
         }
     }
+
 
 }

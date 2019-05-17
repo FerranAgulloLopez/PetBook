@@ -86,6 +86,48 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isNotFound());
     }
 
+
+    /*
+    Update Password operation
+     */
+
+    @Test
+    public void UpdatePasswordOK() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updatePassword_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/ConfirmLogin").contentType(MediaType.APPLICATION_JSON).param("email","foo@mail.com").param("password", "believe_on_me"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"updatePassword_operation/output_OK.json")));
+        this.mockMvc.perform(post("/ServerRESTAPI/UpdatePassword/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updatePassword_operation/input_newPassword.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/ConfirmLogin").contentType(MediaType.APPLICATION_JSON).param("email","foo@mail.com").param("password", "12345"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"updatePassword_operation/output_OK.json")));
+    }
+
+
+    @Test
+    public void UpdatePasswordNOTOK() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updatePassword_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/ConfirmLogin").contentType(MediaType.APPLICATION_JSON).param("email","foo@mail.com").param("password", "believe_on_me"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"updatePassword_operation/output_OK.json")));
+        this.mockMvc.perform(post("/ServerRESTAPI/UpdatePassword/foo@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updatePassword_operation/input_newPassword_notCorrect.json")))
+                .andDo(print()).andExpect(status().isBadRequest());
+    }
+
+
+    @Test
+    public void UpdatePasswordUserNOTinDB() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updatePassword_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/ConfirmLogin").contentType(MediaType.APPLICATION_JSON).param("email","foo@mail.com").param("password", "believe_on_me"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"updatePassword_operation/output_OK.json")));
+        this.mockMvc.perform(post("/ServerRESTAPI/UpdatePassword/noUser@mail.com").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"updatePassword_operation/input_newPassword.json")))
+                .andDo(print()).andExpect(status().isNotFound());
+    }
+
+
+
+
     /*
     Confirm email operation
      */
