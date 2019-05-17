@@ -1,1 +1,1 @@
-[{"id":1,"creatorMail":"a@a.com","creationDate":"2018-05-01T12:34:14.000+0000","updateDate":"2024-05-01T12:34:14.000+0000","description":"Done!"},{"id":2,"creatorMail":"a@a.com","creationDate":"2019-05-01T12:34:14.026+0000","description":"You are wrong"}]
+[{"id":2,"creatorMail":"a@a.com","creationDate":"2017-05-01T12:34:14.026+0000","description":"You are wrong","updated":false},{"id":1,"creatorMail":"a@a.com","creationDate":"2018-05-01T12:34:14.000+0000","updateDate":"2018-05-01T12:37:14.000+0000","description":"Done!","updated":true}]

@@ -636,14 +636,16 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public void updateForumComment(long threadId, long commentId, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException, ForbiddenException {
+    public void updateForumComment(long threadId, long commentId, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException, ForbiddenException, BadRequestException {
         String userMail = getLoggedUserMail();
         ForumThread forumThread = auxGetForumThread(threadId);
         ForumComment forumComment = forumThread.findComment(commentId);
         if (forumComment == null) throw new NotFoundException("The forum comment does not exist in the database");
         if (!forumComment.getCreatorMail().equals(userMail)) throw new ForbiddenException("Only the creator user has privileges to modify a forum comment");
+        if ((forumComment.getCreationDate().getTime() + 2*60*60*1000) < dataForumCommentUpdate.getUpdateDate().getTime()) throw new BadRequestException("Two hours have passed from the creation of the comment");
         forumComment.setUpdateDate(dataForumCommentUpdate.getUpdateDate());
         forumComment.setDescription(dataForumCommentUpdate.getDescription());
+        forumComment.setUpdated(true);
         forumThreadRepository.save(forumThread);
     }
 
@@ -682,7 +684,7 @@ public class ServerServiceImpl implements ServerService {
     private void generateJWTToken(User user,HttpServletResponse response) {
         JwtConfig jwtConfig = new JwtConfig();
         List<GrantedAuthority> grantedAuthorities = AuthorityUtils.commaSeparatedStringToAuthorityList("ROLE_" + user.getRole());
-        Long now = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
         String token = Jwts.builder()
                 .setSubject(user.getEmail())
                 // Convert to list of strings.

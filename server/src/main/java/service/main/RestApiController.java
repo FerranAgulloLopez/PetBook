@@ -828,6 +828,7 @@ public class RestApiController {
     @ApiOperation(value = "Updates a forum comment", notes = "Updates a forum comment in a specified thread.", tags="Forum")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "Two hours have passed from the creation of the comment"),
             @ApiResponse(code = 401, message = "Only the creator user has privileges to modify a forum comment"),
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database"),
             @ApiResponse(code = 404, message = "The forum comment does not exist in the database")
@@ -843,6 +844,8 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (ForbiddenException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -873,7 +876,7 @@ public class RestApiController {
     @ApiOperation(value = "Returns all the user's wall posts", notes = "Returns all the user's wall posts.", tags="WallPosts")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 404, message = "The user has not a wall post with this id")
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> getUserWallPosts(@ApiParam(value="User's email", required = true) @PathVariable("userMail") String userMail) {
         try {

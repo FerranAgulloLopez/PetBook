@@ -18,6 +18,7 @@ public class ForumComment {
     private Date creationDate;
     private Date updateDate;
     private String description;
+    private boolean updated;
 
     public ForumComment(String creatorMail, Date creationDate, String description) {
         this.creatorMail = creatorMail;
@@ -50,6 +51,9 @@ public class ForumComment {
         return description;
     }
 
+    public boolean isUpdated() {
+        return updated;
+    }
 
     /*
     Set
@@ -75,6 +79,9 @@ public class ForumComment {
         this.description = description;
     }
 
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
+    }
 
     /*
     Auxiliary operations
