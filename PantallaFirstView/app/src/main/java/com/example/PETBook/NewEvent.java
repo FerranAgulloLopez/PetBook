@@ -1,8 +1,11 @@
 package com.example.PETBook;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Fragments.MyEventsFragment;
+import com.example.PETBook.Utilidades.Alarm;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
@@ -238,6 +242,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             if (json.getInt("code") == 200) {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
                 Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
+                //scheduleNotification();
                 Bundle enviar = new Bundle();
                 Intent intent = new Intent(this, MainActivity.class);
                 enviar.putString("fragment","events");
@@ -261,5 +266,17 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void scheduleNotification() {
+        setAlarm(calendario.getTimeInMillis());
+
+    }
+
+    private void setAlarm(long timeInMillis) {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, Alarm.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
+
     }
 }
