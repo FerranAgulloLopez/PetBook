@@ -103,10 +103,6 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
             System.out.print("La ventana recibe los datos ya que el bundle no es vacio\n");
             titulo.setText(event.getTitulo());
             descripcion.setText(event.getDescripcion());
-            loc.setText(String.valueOf(event.getDireccion()));
-            String[] Fecha = event.getFecha().split(" ");
-            fecha.setText(Fecha[0]);
-            hora.setText(Fecha[1]);
         }
     }
 
@@ -117,17 +113,6 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
         }
         else{
             //Titulo.setErrorEnabled(false);
-            return true;
-        }
-    }
-
-    private boolean validateLocation(String loc){
-        if(loc.isEmpty()) {
-            //Localizacion.setError("Campo obligatorio");
-            return false;
-        }
-        else {
-            //Localizacion.setErrorEnabled(false);
             return true;
         }
     }
@@ -166,6 +151,7 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
                 event.setDescripcion(descripcion.getText().toString());
                 Intent intent = new Intent(EditEvent.this, EventInfo.class);
                 intent.putExtra("event",event);
+                intent.putExtra("eventType", "Creator");
                 startActivity(intent);
             }
         } catch (Exception e){
