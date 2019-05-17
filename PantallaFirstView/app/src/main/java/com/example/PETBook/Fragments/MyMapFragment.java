@@ -1,5 +1,6 @@
 package com.example.PETBook.Fragments;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -10,15 +11,16 @@ import android.view.ViewGroup;
 
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.EventInfo;
 import com.example.PETBook.Models.EventModel;
-import com.example.pantallafirstview.BuildConfig;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -50,6 +52,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
     private MapView myOpenMapView;
     private MapController myMapController;
     private ArrayList<EventModel> AllEvents;
+    private static SingletonUsuario su = SingletonUsuario.getInstance();
 
     public MyMapFragment() {
         // Required empty public constructor
@@ -138,7 +141,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                         e.setCreador(evento.getString("creatorMail"));
                         AllEvents.add(e);
                         LatLng pos = new LatLng(e.getLatitude(),e.getLongitude());
-                        mMap.addMarker(new MarkerOptions().position(pos).title(e.getTitulo()));
+                        Marker markEvent = mMap.addMarker(new MarkerOptions().position(pos).title(e.getTitulo()));
+                        markEvent.setTag(i);
                     }
                 }
             } catch (Exception e){
@@ -152,5 +156,21 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.moveCamera(CameraUpdateFactory.newLatLng(madrid));
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                EventModel event = AllEvents.get((Integer) marker.getTag());
+                Intent intent = new Intent(getActivity(), EventInfo.class);
+                intent.putExtra("event", event);
+                if (event.getCreador().equals(su.getEmail())){
+                    intent.putExtra("eventType", "Creator");
+                }
+                else{
+                    intent.putExtra("eventType", "Participant");
+                }
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 }

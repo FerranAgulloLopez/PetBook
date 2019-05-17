@@ -45,14 +45,34 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
 
 
         editButton = (ImageButton) findViewById(R.id.EditPetButton);
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EventInfo.this,EditEvent.class);
-                intent.putExtra("event",event);
-                startActivity(intent);
-            }
-        });
+        if(this.getIntent().getStringExtra("eventType") == "Creator") {
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EventInfo.this, EditEvent.class);
+                    intent.putExtra("event", event);
+                    startActivity(intent);
+                }
+            });
+        }
+        else if (this.getIntent().getStringExtra("eventType") == "Participant"){
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EventInfo.this, EditEvent.class);
+                    intent.putExtra("event", event);
+                    startActivity(intent);
+                }
+            });
+        }
+        else{
+            editButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Conexion con = new Conexion(EventInfo.this);
+                }
+            });
+        }
 
 
         deleteButton = (ImageButton) findViewById(R.id.imageButtonDelete);

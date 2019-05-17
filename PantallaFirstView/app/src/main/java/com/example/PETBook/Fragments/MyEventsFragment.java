@@ -56,6 +56,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
     private Conexion con;
     private SingletonUsuario su;
     private OnFragmentInteractionListener mListener;
+    private String TypeList;
 
     public MyEventsFragment() {
         // Required empty public constructor
@@ -101,6 +102,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
 
         con = new Conexion(MyEventsFragment.this);
         su = SingletonUsuario.getInstance();
+        TypeList = "Creator";
 
         creator = (Button) MyView.findViewById(R.id.CreatorEvents);
         creator.setOnClickListener(new View.OnClickListener() {
@@ -108,6 +110,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
             public void onClick(View view){
                 con = new Conexion(MyEventsFragment.this);
                 con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByCreator?mail=" + su.getEmail(),"GET", null);
+                TypeList = "Creator";
             }
         });
 
@@ -117,6 +120,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
             public void onClick(View view){
                 con = new Conexion(MyEventsFragment.this);
                 con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByParticipant?mail=" + su.getEmail(),"GET", null);
+                TypeList = "Participant";
             }
         });
 
@@ -129,6 +133,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                 EventModel eventoSeleccionado = model.get(position);
                 Intent intent = new Intent(getActivity(), EventInfo.class);
                 intent.putExtra("event", eventoSeleccionado);
+                intent.putExtra("eventType", TypeList);
                 startActivity(intent);
             }
         });
