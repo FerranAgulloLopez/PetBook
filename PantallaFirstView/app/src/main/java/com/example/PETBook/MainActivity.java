@@ -180,8 +180,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_calendar) {
             myFragment = new MyCalendarFragment();
             fragmentSeleccionado = true;
-        } else if (id == R.id.nav_chat) {
-
         } else if (id == R.id.nav_forum) {
             myFragment = new ForumFragment();
             fragmentSeleccionado = true;

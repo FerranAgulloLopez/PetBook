@@ -3,6 +3,7 @@ package com.example.PETBook.Adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.PETBook.Chat;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Fragments.MyFriendsFragment;
@@ -104,6 +106,20 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
                 errorE.show();
             }
         });
+
+        Button chatButton = (Button) convertView.findViewById(R.id.button2);
+        chatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, Chat.class);
+                intent.putExtra("emailReceptor", friend.getEmail());
+                context.startActivity(intent);
+            }
+        });
+
+
+
+
         return convertView;
     }
 
