@@ -857,8 +857,7 @@ public class RestApiController {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 400, message = "Two hours have passed from the creation of the comment"),
             @ApiResponse(code = 401, message = "Only the creator user has privileges to modify a forum comment"),
-            @ApiResponse(code = 404, message = "The forum thread does not exist in the database"),
-            @ApiResponse(code = 404, message = "The forum comment does not exist in the database")
+            @ApiResponse(code = 404, message = "The forum thread or comment do not exist in the database")
 
     })
     public ResponseEntity<?> updateForumComment(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId,
