@@ -1,10 +1,8 @@
 package service.main.config;
 
-import org.springframework.beans.factory.annotation.Value;
-
 public class JwtConfig {
-    @Value("${security.jwt.uri:/ServerRESTAPI/RegisterUser}")
-    private String RegisterUri;
+    //@Value("${security.jwt.uri:/ServerRESTAPI/RegisterUser}")
+    private String RegisterUri = "/ServerRESTAPI/RegisterUser";
 
     private String LoginUri = "/ServerRESTAPI/ConfirmLogin";
 

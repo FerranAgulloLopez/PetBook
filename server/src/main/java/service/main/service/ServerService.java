@@ -157,7 +157,7 @@ public interface ServerService {
 
     public void createForumComment(long threadId, DataForumComment dataForumComment) throws NotFoundException;
 
-    public void updateForumComment(long threadId, long commentId, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException, ForbiddenException;
+    public void updateForumComment(long threadId, long commentId, DataForumCommentUpdate dataForumCommentUpdate) throws NotFoundException, ForbiddenException, BadRequestException;
 
     public void deleteForumComment(long threadId, long commentId) throws NotFoundException, ForbiddenException;
 
@@ -167,4 +167,6 @@ public interface ServerService {
      */
 
     public void sendTestNotifications(String token);
+
+    public void updatePassword(String email, DataUpdatePassword dataUpdatePassword) throws NotFoundException, BadRequestException;
 }

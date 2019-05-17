@@ -25,6 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser(username = "a@a.com", password = "test", roles = "USER")
 public class ControllerForumTests extends ControllerIntegrationTests {
 
+    //TODO do test for thread comment update caducation
+
     @Autowired
     private MockMvc mockMvc;
     private String path = "../testing_files/server/forum/";
