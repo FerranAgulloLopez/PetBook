@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.example.PETBook.Holders.HolderMensaje;
 import com.example.PETBook.Models.Logic.MensajeLogic;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
 import java.util.ArrayList;
@@ -35,8 +36,15 @@ public class AdapterMensajes extends RecyclerView.Adapter<HolderMensaje> {
     @NonNull
     @Override
     public HolderMensaje onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(c).inflate(R.layout.card_view_mensajes,parent,false);
-        return new HolderMensaje(v);
+
+        View view;
+        if(viewType==1){
+            view = LayoutInflater.from(c).inflate(R.layout.card_view_mensajes_emisor,parent,false);
+        }else{
+            view = LayoutInflater.from(c).inflate(R.layout.card_view_mensajes_receptor,parent,false);
+        }
+        return new HolderMensaje(view);
+
     }
 
     @Override
@@ -70,5 +78,20 @@ public class AdapterMensajes extends RecyclerView.Adapter<HolderMensaje> {
     @Override
     public int getItemCount() {
         return listMensaje.size();
+    }
+
+
+    @Override
+    public int getItemViewType(int position) {
+        if(listMensaje.get(position).getEmailCreador()!=null){
+            if(listMensaje.get(position).getEmailCreador().equals(SingletonUsuario.getInstance().getEmail())){
+                return 1;
+            }else{
+                return -1;
+            }
+        }else{
+            return -1;
+        }
+       // return super.getItemViewType(position);
     }
 }

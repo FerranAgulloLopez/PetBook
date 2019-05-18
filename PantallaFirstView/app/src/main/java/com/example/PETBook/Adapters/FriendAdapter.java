@@ -92,7 +92,7 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
                                 SingletonUsuario su = SingletonUsuario.getInstance();
                                 /* Nueva conexion llamando a la funcion del server */
                                 Conexion con = new Conexion(FriendAdapter.this);
-                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/Unfriend/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/Unfriend/" + friend.getEmail(), "POST", null);
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {

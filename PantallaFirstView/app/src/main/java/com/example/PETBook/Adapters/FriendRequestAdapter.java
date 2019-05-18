@@ -113,7 +113,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                 SingletonUsuario su = SingletonUsuario.getInstance();
                 /* Nueva conexion llamando a la funcion del server */
                 Conexion con = new Conexion(FriendRequestAdapter.this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/acceptFriendRequest/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/acceptFriendRequest/" + friend.getEmail(), "POST", null);
             }
         });
 
@@ -131,7 +131,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                                 SingletonUsuario su = SingletonUsuario.getInstance();
                                 /* Nueva conexion llamando a la funcion del server */
                                 Conexion con = new Conexion(FriendRequestAdapter.this);
-                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/denyFriendRequest/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/denyFriendRequest/" + friend.getEmail(), "POST", null);
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
