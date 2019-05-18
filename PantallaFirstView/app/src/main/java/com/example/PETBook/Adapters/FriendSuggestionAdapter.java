@@ -81,7 +81,7 @@ public class FriendSuggestionAdapter extends BaseAdapter implements AsyncResult 
                 SingletonUsuario su = SingletonUsuario.getInstance();
                 /* Nueva conexion llamando a la funcion del server */
                 Conexion con = new Conexion(FriendSuggestionAdapter.this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/sendFriendRequest/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/sendFriendRequest/" + friend.getEmail(), "POST", null);
             }
         });
 

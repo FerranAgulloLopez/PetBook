@@ -66,7 +66,7 @@ public class MyFriendRequestsFragment extends Fragment implements AsyncResult {
         Conexion con = new Conexion(MyFriendRequestsFragment.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
 
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUserFriendsRequests/" + su.getEmail(),"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUserFriendsRequests","GET", null);
 
 
         return MyView;
