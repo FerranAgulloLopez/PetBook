@@ -1,15 +1,10 @@
 package com.example.PETBook;
 
-import android.app.PendingIntent;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -28,13 +23,14 @@ import com.example.PETBook.Fragments.MyFriendsFragment;
 import com.example.PETBook.Fragments.MyMapFragment;
 import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.PETBook.Fragments.MyPostsFragment;
-import com.example.PETBook.Fragments.MyProfileFragment;
 import com.example.pantallafirstview.R;
+
+import static com.example.PETBook.Fragments.HomeFragment.*;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
                             , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener
-                            , MyProfileFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener {
+                            , MyFriendsFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener {
 
 
 
@@ -78,7 +74,7 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if(fragType.equals("profile")){
-                fragment = new MyProfileFragment();
+                fragment = new HomeFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if(fragType.equals("friends")){
@@ -168,10 +164,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
             fragmentSeleccionado = true;
-        } else if (id == R.id.nav_profile) {
-            myFragment = new MyProfileFragment();
+        }/* else if (id == R.id.nav_profile) {
+            myFragment = new HomeFragment();
             fragmentSeleccionado = true;
-        } else if (id == R.id.nav_friends) {
+        }*/ else if (id == R.id.nav_friends) {
             myFragment = new MyFriendsFragment();
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_events) {

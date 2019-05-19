@@ -1,42 +1,30 @@
 package com.example.PETBook.Fragments;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
+import android.provider.MediaStore;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import android.widget.TextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.Image;
-import com.example.PETBook.NewPet;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONException;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-
 import static android.app.Activity.RESULT_OK;
-
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -55,13 +43,16 @@ public class HomeFragment extends Fragment implements AsyncResult {
     private String mParam1;
     private String mParam2;
 
+    /* ATRIBUTOS   */
+    private View MyView;
 
-    private String username;
-    private String name;
-    private ImageView imageProfile;
-    private Integer functionType = 0; // 1 -> get ; 2 -> post
-
-
+    private TextView inputFullName;
+    private TextView inputEmail;
+    private TextView inputBirthday;
+    private TextView inputPostalCode;
+    private ImageView imatgePerfil;
+    private Button buttonEditProfile;
+    private String tipoConexion;
     private OnFragmentInteractionListener mListener;
 
     public HomeFragment() {
@@ -98,44 +89,64 @@ public class HomeFragment extends Fragment implements AsyncResult {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-
+        MyView = inflater.inflate(R.layout.fragment_my_profile, container, false);
         // Set tittle to the fragment
-        getActivity().setTitle("Mi perfil");
-
-        // De momento layout activity_pantalla_home
-        View MyView = inflater.inflate(R.layout.activity_pantalla_home, container, false);
-
-        imageProfile = MyView.findViewById(R.id.fotoPerfil);
-
-        SingletonUsuario user = SingletonUsuario.getInstance();
-
-        if (user.getProfilePicture() == null) {
-
-            functionType = 1; // get
-            Conexion con = new Conexion(this);
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + user.getEmail(), "GET", null);
-        }
-        else {
-            imageProfile.setImageBitmap(user.getProfilePicture());
-        }
+        getActivity().setTitle("Profile");
+        imatgePerfil = MyView.findViewById(R.id.imatgePerfilHome);
+        inputFullName      = (TextView) MyView.findViewById(R.id.fullNameInput);
+        inputEmail      = (TextView) MyView.findViewById(R.id.emailInput);
+        inputBirthday      = (TextView) MyView.findViewById(R.id.birthdayInput);
+        inputPostalCode  = (TextView) MyView.findViewById(R.id.postalCodeInput);
 
 
-        MyView.findViewById(R.id.fotoPerfil).setOnClickListener(new View.OnClickListener() {
+        getUser();
+        getPicture();
+        buttonEditProfile = (Button) MyView.findViewById(R.id.editProfileButton);
+
+        buttonEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Fragment myFragment=null;
+                myFragment = new EditProfileFragment();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_main,myFragment).commit();
+
+//                editProfile();
+            }
+        });
+        MyView.findViewById(R.id.imatgePerfilHome).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                    Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(i, 1);
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, 1);
             }
         });
 
-
-        TextView usuari = MyView.findViewById(R.id.username);
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        usuari.setText(su.getEmail());
-
         return MyView;
     }
+
+    private void getUser(){
+        tipoConexion = "getUser";
+        Conexion con = new Conexion(HomeFragment.this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail(),"GET", null);
+    }
+
+    private void getPicture(){
+        tipoConexion = "getPicture";
+        SingletonUsuario user = SingletonUsuario.getInstance();
+        if (user.getProfilePicture() == null) {
+            Conexion con = new Conexion(this);
+
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + user.getEmail(), "GET", null);
+        }
+        else {
+            imatgePerfil.setImageBitmap(user.getProfilePicture());
+        }
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -161,8 +172,6 @@ public class HomeFragment extends Fragment implements AsyncResult {
         mListener = null;
     }
 
-
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -179,11 +188,10 @@ public class HomeFragment extends Fragment implements AsyncResult {
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-         if (resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             if (requestCode == 1) {
                 Uri returnUri = data.getData();
                 Bitmap bitmapImage = null;
@@ -192,7 +200,7 @@ public class HomeFragment extends Fragment implements AsyncResult {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                imageProfile.setImageBitmap(bitmapImage);
+                imatgePerfil.setImageBitmap(bitmapImage);
 
                 SingletonUsuario user = SingletonUsuario.getInstance();
                 user.setProfilePicture(bitmapImage);
@@ -207,7 +215,7 @@ public class HomeFragment extends Fragment implements AsyncResult {
                     e.printStackTrace();
                 }
 
-                functionType = 2; // post
+                //functionType = 2; // post
                 Conexion con = new Conexion(this);
                 con.execute("http://10.4.41.146:9999/ServerRESTAPI/setPicture/" + user.getEmail(), "POST", jsonToSend.toString());
             }
@@ -216,64 +224,54 @@ public class HomeFragment extends Fragment implements AsyncResult {
         //returnUri = data.getData();
 
     }
-
-
-
-
     @Override
     public void OnprocessFinish(JSONObject output) {
-
-        try {
-            if(output.getInt("code")==200) {
-
-                if (functionType == 1) {
-                    // convert string to bitmap
-                    SingletonUsuario user = SingletonUsuario.getInstance();
-                    Image imagenConversor = Image.getInstance();
-                    String image = output.getString("image");
-                    Bitmap profileImage = imagenConversor.StringToBitMap(image);
-                    imageProfile.setImageBitmap(profileImage);
-                    user.setProfilePicture(profileImage);
+        if (output != null) {
+            if (tipoConexion == "getUser") {
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200) {
+                        inputFullName.setText(output.getString("firstName") + " " + output.getString("secondName"));
+                        inputEmail.setText(output.getString("email"));
+                        inputBirthday.setText(output.getString("dateOfBirth"));
+                        inputPostalCode.setText(output.getString("postalCode"));
+                    } else {
+                        Toast.makeText(getActivity(), "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
+            } else if (tipoConexion == "getPicture") {
+                try {
+                    if(output.getInt("code")==200) {
+                            // convert string to bitmap
+                            SingletonUsuario user = SingletonUsuario.getInstance();
+                            Image imagenConversor = Image.getInstance();
+                            String image = output.getString("image");
+                            Bitmap profileImage = imagenConversor.StringToBitMap(image);
+                            imatgePerfil.setImageBitmap(profileImage);
+                            user.setProfilePicture(profileImage);
+                        }
+                    else if (output.getInt("code")==404) { // user does not have profile picture
+                        imatgePerfil.setImageResource(R.drawable.troymcclure);
+                    }
+                    else{
+                        System.out.println("ERRRRRROOOOOOOR, code ----------> " + output.getInt("code"));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    try {
+                        System.out.println(output.getInt("code") +"\n\n\n");
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
 
+                }
             }
-            else if (output.getInt("code")==404) { // user does not have profile picture
-                imageProfile.setImageResource(R.drawable.troymcclure);
-            }
-            else{
-                System.out.println("ERRRRRROOOOOOOR, code ----------> " + output.getInt("code"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-            try {
-                System.out.println(output.getInt("code") +"\n\n\n");
-            } catch (JSONException e1) {
-                e1.printStackTrace();
-            }
-
         }
     }
-
-
-
-    /*
-    Necesario porque de momento está puesto como layout el de activity_pantalla_home
-     */
-    public void myPets(View view){
-        System.out.println("HomeFragment");
-        // Intent intent = new Intent(this, PetsContainer.class);
-        //startActivity(intent);
-    }
-    public void myPosts(View view){
-        // Intent intent = new Intent(this, MyPosts.class);
-        //  startActivity(intent);
-    }
-    public void myCalendar(View view) {
-        // Intent intent = new Intent(this, MyCalendar.class);
-        // startActivity(intent);
-    }
-    public void myEvents(View view){
-        //  Intent intent = new Intent(this, MyEvents.class);
-        //  startActivity(intent);
-    }
 }
+
+
+
+
