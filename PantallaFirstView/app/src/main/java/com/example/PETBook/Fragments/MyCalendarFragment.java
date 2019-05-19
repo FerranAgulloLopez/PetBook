@@ -2,20 +2,36 @@ package com.example.PETBook.Fragments;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.icu.util.Calendar;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.PETBook.CalendarActivity;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.NewPet;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +41,7 @@ import org.json.JSONObject;
  * Use the {@link MyCalendarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MyCalendarFragment extends Fragment  implements AsyncResult {
+public class MyCalendarFragment extends Fragment  implements OnDateSelectedListener, OnMonthChangedListener, OnDateLongClickListener, AsyncResult {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -34,6 +50,11 @@ public class MyCalendarFragment extends Fragment  implements AsyncResult {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private View MyView;
+
+
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -66,6 +87,7 @@ public class MyCalendarFragment extends Fragment  implements AsyncResult {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
@@ -107,11 +129,22 @@ public class MyCalendarFragment extends Fragment  implements AsyncResult {
         dialog.show();
 
 
+        MyView =  inflater.inflate(R.layout.activity_my_calendar, container, false);
 
 
+        FloatingActionButton fab = MyView.findViewById(R.id.gotoActivityCalendar); // Provisional
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CalendarActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return MyView;
 
 
-        return inflater.inflate(R.layout.activity_my_calendar, container, false);
+        //return inflater.inflate(R.layout.activity_my_calendar, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -143,6 +176,21 @@ public class MyCalendarFragment extends Fragment  implements AsyncResult {
 
     }
 
+    @Override
+    public void onDateLongClick(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay) {
+
+    }
+
+    @Override
+    public void onDateSelected(@NonNull MaterialCalendarView materialCalendarView, @NonNull CalendarDay calendarDay, boolean b) {
+
+    }
+
+    @Override
+    public void onMonthChanged(MaterialCalendarView materialCalendarView, CalendarDay calendarDay) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -157,4 +205,13 @@ public class MyCalendarFragment extends Fragment  implements AsyncResult {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+
+
+
+
+
+
+
 }
