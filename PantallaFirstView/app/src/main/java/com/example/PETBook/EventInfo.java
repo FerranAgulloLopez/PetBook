@@ -56,24 +56,25 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             });
         }
         else if (this.getIntent().getStringExtra("eventType").equals("Participant")){
-            editButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(EventInfo.this, EditEvent.class);
-                    intent.putExtra("event", event);
-                    startActivity(intent);
-                }
-            });
+            if (event.getMiembros().contains(SingletonUsuario.getInstance().getEmail())) {
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Conexion con = new Conexion(EventInfo.this);
+                        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/DeleteEventParticipant?eventId=" + event.getId() + "&participantMail=" + SingletonUsuario.getInstance().getEmail(), "DELETE", null);
+                    }
+                });
+            }
+            else {
+                editButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Conexion con = new Conexion(EventInfo.this);
+                        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/AddEventParticipant?eventId=" + event.getId() + "&participantMail=" + SingletonUsuario.getInstance().getEmail(), "POST", null);
+                    }
+                });
+            }
         }
-        else{
-            editButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Conexion con = new Conexion(EventInfo.this);
-                }
-            });
-        }
-
 
         deleteButton = (ImageButton) findViewById(R.id.imageButtonDelete);
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -99,6 +100,9 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                 errorE.show();
             }
         });
+        if (this.getIntent().getStringExtra("eventType").equals("Participant")){
+            deleteButton.setEnabled(false);
+        }
 
 
         recibirDatos();

@@ -84,6 +84,12 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 setAdapter();
             }
         });
+        editLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                select_location = position;
+            }
+        });
 
         addEventButton = (Button) findViewById(R.id.addEventButton);
         publicButton = (RadioButton) findViewById(R.id.PublicRadioButton);
@@ -271,6 +277,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                     addressNames[i] = completeAddress;
                     positionsAddress[i] = new Pair<>(lat, lon);
                 }
+                isAddress = false;
             } catch (Exception e) {
                 e.printStackTrace();
             }
