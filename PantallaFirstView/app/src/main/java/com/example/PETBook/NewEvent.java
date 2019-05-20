@@ -30,6 +30,7 @@ import com.example.PETBook.Fragments.MyEventsFragment;
 import com.example.PETBook.Utilidades.Alarm;
 import com.example.pantallafirstview.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,17 +38,17 @@ import java.util.Calendar;
 
 public class NewEvent extends AppCompatActivity implements AsyncResult {
 
-    private AutoCompleteTextView Localizacion;
+    private AutoCompleteTextView editLocation;
     private TextInputLayout Fecha;
     private TextInputLayout Hora;
     private TextInputLayout Titulo;
     private EditText inputFecha;
     private EditText inputHora;
     private EditText inputDescripcion;
-    private String[] addressName;
-    private Pair<Double,Double>[] latlng;
-    private ArrayAdapter<String> loc;
+    private String[] addressNames = new String[0];
+    private Pair<String,String>[] positionsAddress = new Pair[0];
     int select_location;
+    private Boolean isAddress = false;
 
     private Button addEventButton;
     private RadioButton publicButton;
@@ -58,32 +59,31 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_event);
-        loc = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,addressName);
-        Localizacion = (AutoCompleteTextView) findViewById(R.id.editLocalizacion);
-        Localizacion.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //Conexión para sacar la lista de sitios
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) { }
-        });
-        Localizacion.setAdapter(loc);
-        Localizacion.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Localizacion.setText(addressName[position]);
-                select_location = position;
-            }
-        });
         Fecha = (TextInputLayout) findViewById(R.id.Fecha);
         Hora = (TextInputLayout) findViewById(R.id.Hora);
         Titulo = (TextInputLayout) findViewById(R.id.Titulo);
 
+        editLocation = (AutoCompleteTextView) findViewById(R.id.edLoc);
+        editLocation.setThreshold(1);
+        editLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String a = s.toString().replace(" ", "+");
+                isAddress = true;
+                llamadaServidor(a);
+                setAdapter();
+            }
+        });
 
         addEventButton = (Button) findViewById(R.id.addEventButton);
         publicButton = (RadioButton) findViewById(R.id.PublicRadioButton);
@@ -115,6 +115,15 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 createEvent();
             }
         });
+    }
+
+    public void llamadaServidor(String a){
+        ConexionNominatim conNom = new ConexionNominatim(this);
+        conNom.execute("https://nominatim.openstreetmap.org/?addressdetails=1&q=" + a + "&format=json&limit=5");
+    }
+
+    public void setAdapter(){
+        editLocation.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item,addressNames));
     }
 
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -195,9 +204,9 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private void createEvent(){
         SingletonUsuario su = SingletonUsuario.getInstance();
-        String address = addressName[select_location];
-        Double lat = latlng[select_location].first;
-        Double lng = latlng[select_location].second;
+        String address = addressNames[select_location];
+        Double lat = Double.parseDouble(positionsAddress[select_location].first);
+        Double lng = Double.parseDouble(positionsAddress[select_location].second);
         String titulo = Titulo.getEditText().getText().toString();
         String descripcion = inputDescripcion.getText().toString();
         String user = su.getEmail();
@@ -231,52 +240,70 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             /* Nueva conexion llamando a la funcion del server */
 
             Conexion con = new Conexion(this);
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/CreateEvent/", "POST", jsonToSend.toString());
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/CreateEvent/", "POST", jsonToSend.toString());
         }
     }
 
     @Override
     public void OnprocessFinish(JSONObject json) {
-
-        try {
-            if (json.getInt("code") == 200) {
-                System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
-                Toast.makeText(this, "Creación de evento correcta", Toast.LENGTH_SHORT).show();
-                //scheduleNotification();
-                Bundle enviar = new Bundle();
-                Intent intent = new Intent(this, MainActivity.class);
-                enviar.putString("fragment","events");
-                intent.putExtras(enviar);
-                startActivity(intent);
-            } else {
-                System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
-                AlertDialog.Builder error = new AlertDialog.Builder(NewEvent.this);
-                error.setMessage("Evento existente con los mismos datos")
-                        .setCancelable(false)
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog errorE = error.create();
-                errorE.setTitle("Evento existente");
-                errorE.show();
+        if (isAddress) {
+            try {
+                JSONArray jsonArray = json.getJSONArray("array");
+                addressNames = new String[jsonArray.length()];
+                positionsAddress = new Pair[jsonArray.length()];
+                for (int i = 0; i < jsonArray.length(); ++i) {
+                    JSONObject address = jsonArray.getJSONObject(i);
+                    String lat = address.getString("lat");
+                    String lon = address.getString("lon");
+                    JSONObject direccion = address.getJSONObject("address");
+                    String completeAddress = "";
+                    if (direccion.has("road"))
+                        completeAddress += direccion.getString("road") + ", ";
+                    if (direccion.has("town"))
+                        completeAddress += direccion.getString("town") + ", ";
+                    if (direccion.has("village"))
+                        completeAddress += direccion.getString("village") + ", ";
+                    if (direccion.has("city"))
+                        completeAddress += direccion.getString("city") + ", ";
+                    if (direccion.has("state"))
+                        completeAddress += direccion.getString("state") + ", ";
+                    if (direccion.has("country")) completeAddress += direccion.getString("country");
+                    addressNames[i] = completeAddress;
+                    positionsAddress[i] = new Pair<>(lat, lon);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-    }
-
-    private void scheduleNotification() {
-        setAlarm(calendario.getTimeInMillis());
-
-    }
-
-    private void setAlarm(long timeInMillis) {
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(this, Alarm.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this,0,intent,0);
-
+        else {
+            try {
+                if (json.getInt("code") == 200) {
+                    System.out.print(json.getInt("code") + "Correcto+++++++++++++++++++++++++++\n");
+                    Toast.makeText(this, "CreaciÃ³n de evento correcta", Toast.LENGTH_SHORT).show();
+                    //scheduleNotification();
+                    Bundle enviar = new Bundle();
+                    Intent intent = new Intent(this, MainActivity.class);
+                    enviar.putString("fragment", "events");
+                    intent.putExtras(enviar);
+                    startActivity(intent);
+                } else {
+                    System.out.print(json.getInt("code") + "Mal+++++++++++++++++++++++++++\n");
+                    AlertDialog.Builder error = new AlertDialog.Builder(NewEvent.this);
+                    error.setMessage("Evento existente con los mismos datos")
+                            .setCancelable(false)
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog errorE = error.create();
+                    errorE.setTitle("Evento existente");
+                    errorE.show();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
