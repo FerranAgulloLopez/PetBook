@@ -1,18 +1,18 @@
 package com.example.PETBook;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Fragments.HomeWallFragment;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
@@ -36,7 +36,9 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
     private TextInputLayout textInputBirthday;
     private TextInputLayout textInputPostalCode;
     private Button buttonEditProfile;
+    private Button buttonEditPass;
     private String tipoConexion;
+    private TextInputLayout oldPasswordInput;
     Calendar calendario = Calendar.getInstance();
 
     @Override
@@ -47,17 +49,18 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
         // Set tittle to the fragment
         this.setTitle("Edit Profile");
 
-        textInputName      = (TextInputLayout) MyView.findViewById(R.id.nameTextInput);
-        textInputSurnames      = (TextInputLayout) MyView.findViewById(R.id.surnamesTextInput);
-        textInputMail      = (TextInputLayout) MyView.findViewById(R.id.mailTextInput);
-        textInputPassword1  = (TextInputLayout) MyView.findViewById(R.id.password1TextInput);
-        textInputPassword2 = (TextInputLayout) MyView.findViewById(R.id.password2TextInput);
-        textInputBirthday  = (TextInputLayout) MyView.findViewById(R.id.birthdayTextInput);
-        textInputPostalCode  = (TextInputLayout) MyView.findViewById(R.id.postalCodeTextInput);
+        textInputName      = (TextInputLayout) findViewById(R.id.nameTextInput);
+        textInputSurnames      = (TextInputLayout) findViewById(R.id.surnamesTextInput);
+        textInputMail      = (TextInputLayout) findViewById(R.id.mailTextInput);
+        textInputPassword1  = (TextInputLayout) findViewById(R.id.password1TextInput);
+        textInputPassword2 = (TextInputLayout) findViewById(R.id.password2TextInput);
+        textInputBirthday  = (TextInputLayout) findViewById(R.id.birthdayTextInput);
+        textInputPostalCode  = (TextInputLayout) findViewById(R.id.postalCodeTextInput);
+        oldPasswordInput = findViewById(R.id.oldPasswordTextInput);
+        SingletonUsuario su = SingletonUsuario.getInstance();
 
         tipoConexion = "getUser";
         Conexion con = new Conexion(EditProfile.this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
 
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail(),"GET", null);
 
@@ -71,15 +74,23 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
         });
 
 
-        buttonEditProfile = (Button) MyView.findViewById(R.id.editProfileButton);
+        buttonEditProfile = (Button) findViewById(R.id.editProfileButton);
 
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editProfile();
+                tipoConexion = "updateUser";
+                editProfileNoPass();
             }
         });
-
+        buttonEditPass = findViewById(R.id.editPass);
+        buttonEditPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tipoConexion = "updatePass";
+                editProfilePass();
+            }
+        });
     }
 
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -132,68 +143,79 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
     }
 
     private boolean validateSurnames(String surnames) {
-        Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
-        textInputSurnames.setErrorTextAppearance(R.style.text_error);
-        textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_wrong24dp,0);
-        if (surnames.isEmpty()) {
-            textInputSurnames.setError("Please enter your last name");
-            return false;
-        } else if (surnames.length() > 30) {
-            textInputSurnames.setError("Last Name too long");
-            return false;
-        } else if (!patron.matcher(surnames).matches()) {
-            textInputSurnames.setError("Please enter a valid last name");
-            return false;
-        } else {
-            textInputSurnames.setErrorTextAppearance(R.style.text_success);
-            textInputSurnames.setError(" ");
-            textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0,0,R.drawable.check_success24dp,0);
-            return true;
-        }
+
+            Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+            textInputSurnames.setErrorTextAppearance(R.style.text_error);
+            textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_wrong24dp, 0);
+            if (surnames.isEmpty()) {
+                textInputSurnames.setError("Please enter your last name");
+                return false;
+            } else if (surnames.length() > 30) {
+                textInputSurnames.setError("Last Name too long");
+                return false;
+            } else if (!patron.matcher(surnames).matches()) {
+                textInputSurnames.setError("Please enter a valid last name");
+                return false;
+            } else {
+                textInputSurnames.setErrorTextAppearance(R.style.text_success);
+                textInputSurnames.setError(" ");
+                textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_success24dp, 0);
+                return true;
+            }
+
     }
 
-    private boolean validatePasswords(String password1, String password2) {
+    private boolean validatePasswords(String password1, String password2, String oldPassword) {
         boolean passwords_ok = false;
-        textInputPassword1.setErrorTextAppearance(R.style.text_error);
-        if (password1.isEmpty()) {
-            textInputPassword1.setError("Please enter your password");
-            passwords_ok = false;
-        } else if (password1.length() < 8) {
-            textInputPassword1.setError("Password too short");
-            passwords_ok = false;
-        } else {
-            textInputPassword1.setErrorTextAppearance(R.style.text_success);
-            textInputPassword1.setError(" ");
-        }
+        if(tipoConexion.equals("updatePass")) {
 
-        textInputPassword2.setErrorTextAppearance(R.style.text_error);
-        if (password2.isEmpty()) {
-            textInputPassword2.setError("Please retype your password");
-            passwords_ok = false;
-        } else if (password2.length() < 8) {
-            textInputPassword2.setError("Confirm password too short");
-            passwords_ok = false;
-        } else {
-            textInputPassword2.setErrorTextAppearance(R.style.text_success);
-            textInputPassword2.setError(" ");
-            if (password1.equals(password2)) {
-                //textInputPassword1.getEditText().setPadding(0,0,0,0);
-                //textInputPassword2.getEditText().setPadding(0,0,0,0);
+            textInputPassword1.setErrorTextAppearance(R.style.text_error);
+            if (password1.isEmpty()) {
+                textInputPassword1.setError("Please enter your password");
+                passwords_ok = false;
+            } else if (password1.length() < 8) {
+                textInputPassword1.setError("Password too short");
+                passwords_ok = false;
+            } else {
                 textInputPassword1.setErrorTextAppearance(R.style.text_success);
                 textInputPassword1.setError(" ");
+            }
+            oldPasswordInput.setErrorTextAppearance(R.style.text_error);
+            if (password1.isEmpty()) {
+                oldPasswordInput.setError("Please enter your old password");
+                passwords_ok = false;
+            } else {
+                oldPasswordInput.setErrorTextAppearance(R.style.text_success);
+                oldPasswordInput.setError(" ");
+            }
+            textInputPassword2.setErrorTextAppearance(R.style.text_error);
+            if (password2.isEmpty()) {
+                textInputPassword2.setError("Please retype your password");
+                passwords_ok = false;
+            } else if (password2.length() < 8) {
+                textInputPassword2.setError("Confirm password too short");
+                passwords_ok = false;
+            } else {
                 textInputPassword2.setErrorTextAppearance(R.style.text_success);
                 textInputPassword2.setError(" ");
-                passwords_ok = true;
-            } else {
-                textInputPassword1.setErrorTextAppearance(R.style.text_error);
-                textInputPassword2.setErrorTextAppearance(R.style.text_error);
-                textInputPassword1.setError("The password and its confirm are not the same");
-                textInputPassword2.setError("The password and its confirm are not the same");
-                passwords_ok = false;
+                if (password1.equals(password2)) {
+                    //textInputPassword1.getEditText().setPadding(0,0,0,0);
+                    //textInputPassword2.getEditText().setPadding(0,0,0,0);
+                    textInputPassword1.setErrorTextAppearance(R.style.text_success);
+                    textInputPassword1.setError(" ");
+                    textInputPassword2.setErrorTextAppearance(R.style.text_success);
+                    textInputPassword2.setError(" ");
+                    passwords_ok = true;
+                } else {
+                    textInputPassword1.setErrorTextAppearance(R.style.text_error);
+                    textInputPassword2.setErrorTextAppearance(R.style.text_error);
+                    textInputPassword1.setError("The password and its confirm are not the same");
+                    textInputPassword2.setError("The password and its confirm are not the same");
+                    passwords_ok = false;
+                }
             }
         }
-
-        return passwords_ok;
+            return passwords_ok;
     }
 
     private boolean validatePostalCode(String postalCode) {
@@ -229,7 +251,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
         }
     }
 
-    private void editProfile() {
+    private void editProfileNoPass() {
         tipoConexion = "updateUser";
         SingletonUsuario su = SingletonUsuario.getInstance();
         String name = textInputName.getEditText().getText().toString().trim();
@@ -241,11 +263,11 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
 
         boolean isValidName = validateName(name);
         boolean isValidSurname = validateSurnames(surnames);
-        boolean isValidPassword = validatePasswords(password1,password2);
+
         boolean isValidBirthday = validateBirthday(birthday);
         boolean isValidPostalCode = validatePostalCode(postalCode);
 
-        if (isValidName && isValidSurname && isValidPassword && isValidBirthday && isValidPostalCode) {
+        if (isValidName && isValidSurname &&isValidBirthday && isValidPostalCode) {
 
             JSONObject jsonToSend = new JSONObject();
             try {
@@ -261,6 +283,32 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
 
             Conexion con = new Conexion(EditProfile.this);
             con.execute("http://10.4.41.146:9999/ServerRESTAPI/update/" + su.getEmail(), "PUT", jsonToSend.toString());
+        }
+    }
+
+    private void editProfilePass() {
+        tipoConexion = "updatePass";
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        String password1 = textInputPassword1.getEditText().getText().toString().trim();
+        String password2 = textInputPassword2.getEditText().getText().toString().trim();
+        String oldpassword = oldPasswordInput.getEditText().getText().toString().trim();
+
+        boolean isValidPassword = validatePasswords(password1,password2, oldpassword);
+
+        if (isValidPassword) {
+
+            JSONObject jsonToSend = new JSONObject();
+            try {
+                jsonToSend.accumulate("newPassword", password1);
+                jsonToSend.accumulate("oldPassword", oldpassword);
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            Conexion con = new Conexion(EditProfile.this);
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/UpdatePassword/" + su.getEmail(), "POST", jsonToSend.toString());
         }
     }
     @Override
@@ -286,6 +334,30 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                     int response = output.getInt("code");
                     if (response == 200 || response == 201) {
                         Toast.makeText(this, "User updated succesfully.", Toast.LENGTH_SHORT).show();
+                        /*Fragment fragment = null;
+                        fragment = new HomeWallFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();*/
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
+
+                    } else {
+                        Toast.makeText(this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(tipoConexion.equals("updatePass")) {
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200 || response == 201) {
+                        Toast.makeText(this, "Password updated succesfully.", Toast.LENGTH_SHORT).show();
+                        /*Fragment fragment = null;
+                        fragment = new HomeWallFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();*/
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
+
                     } else {
                         Toast.makeText(this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }

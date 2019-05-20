@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Fragments.HomeWallFragment;
 import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.WallModel;
 import com.example.pantallafirstview.R;
@@ -36,6 +37,7 @@ public class WallInfo extends AppCompatActivity implements AsyncResult {
     private TextView descriptionWall;
     private TextView dataCreacioWall;
 
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wall);
@@ -48,7 +50,7 @@ public class WallInfo extends AppCompatActivity implements AsyncResult {
         listWalls = findViewById(R.id.list_walls);
         inputFullName.setText("Hola");
         /*mostrarWalls();*/
-        Conexion con = new Conexion(this);
+        Conexion con = new Conexion(WallInfo.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail() , "GET", null);
        /* mostrarPerfil();*/

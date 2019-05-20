@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +21,7 @@ import com.example.PETBook.Adapters.ForumAdapter;
 import com.example.PETBook.Adapters.WallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.EditProfile;
 import com.example.PETBook.ForumInfo;
 import com.example.PETBook.Models.CommentForumModel;
 import com.example.PETBook.Models.ForumModel;
@@ -58,6 +62,13 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
     private WallAdapter wallAdapter;
     private ArrayList<WallModel> wallModel;
     private OnFragmentInteractionListener mListener;
+    private String tipoConexion;
+    private TextView inputFullName;
+    private TextView inputEmail;
+    private TextView inputBirthday;
+    private TextView inputPostalCode;
+    private ImageView imatgePerfil;
+    private Button buttonEditProfile;
 
     public HomeWallFragment() {
         // Required empty public constructor
@@ -98,12 +109,25 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         MyView = inflater.inflate(R.layout.activity_wall, container, false);
         // Set tittle to the fragment
         getActivity().setTitle("Profile");
+        imatgePerfil = MyView.findViewById(R.id.imatgePerfilHome);
+        inputFullName = MyView.findViewById(R.id.fullNameInput);
+        inputEmail = MyView.findViewById(R.id.emailInput);
+        inputBirthday = MyView.findViewById(R.id.birthdayInput);
+        inputPostalCode = MyView.findViewById(R.id.postalCodeInput);
 
-        Conexion con = new Conexion(HomeWallFragment.this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
+        mostrarPerfil();
+        mostrarWalls();
+        buttonEditProfile = (Button) MyView.findViewById(R.id.editProfileButton);
 
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + su.getEmail() + "/WallPosts" ,"GET", null);
-
+        buttonEditProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), EditProfile.class);
+                //intent.putExtra("pet", petModel);
+                startActivity(intent);
+//                editProfile();
+            }
+        });
         /*lista = MyView.findViewById(R.id.list_walls);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -126,7 +150,23 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         return MyView;
     }
 
+    private void mostrarWalls(){
+        System.out.println("entro a mostrar walls");
+        tipoConexion = "getWalls";
+        Conexion con = new Conexion(this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + su.getEmail() + "/WallPosts", "GET", null);
+        System.out.println("conexio walls ben feta");
 
+    }
+    private void mostrarPerfil(){
+        System.out.println("entro a mostrar perfil");
+        tipoConexion = "getUser";
+        Conexion con = new Conexion(this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail() , "GET", null);
+        System.out.println("conexion mostrar user bien hecha");
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -174,31 +214,46 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
     }
     @Override
     public void OnprocessFinish(JSONObject json) {
-        try{
-            if(json.getInt("code") == 200){
-                wallModel = new ArrayList<>();
-                JSONArray jsonArray = json.getJSONArray("array");
-                //ArrayList<CommentForumModel> comments = new ArrayList<CommentForumModel>();
-                for(int i = 0; i < jsonArray.length(); ++i){
-                    JSONObject wall = jsonArray.getJSONObject(i);
-                    WallModel w = new WallModel();
-                    w.setDescription(wall.getString("description"));
-                    w.setCreationDate(transformacionFechaHora(wall.getString("creationDate")));
+        if (tipoConexion.equals("getWalls")){
+            try {
+                if (json.getInt("code") == 200) {
+                    wallModel = new ArrayList<>();
+                    JSONArray jsonArray = json.getJSONArray("array");
+                    //ArrayList<CommentForumModel> comments = new ArrayList<CommentForumModel>();
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        JSONObject wall = jsonArray.getJSONObject(i);
+                        WallModel w = new WallModel();
+                        w.setDescription(wall.getString("description"));
+                        w.setCreationDate(transformacionFechaHora(wall.getString("creationDate")));
 
-                    wallModel.add(w);
+                        wallModel.add(w);
+                    }
+                    wallAdapter = new WallAdapter(getActivity(), wallModel);
+                    lista = (ListView) MyView.findViewById(R.id.list_walls);
+                    lista.setAdapter(wallAdapter);
+                    /*System.out.println(forumModel.get(2).getTitle());
+                    System.out.println(forumModel.get(2).getComments().get(1).getDescription());*/
+                    System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
+                } else {
+                    System.out.print("El sistema no logra mostrar la lista de walls del creador\n");
                 }
-                wallAdapter = new WallAdapter(getActivity(), wallModel);
-                lista = (ListView) MyView.findViewById(R.id.list_walls);
-                lista.setAdapter(wallAdapter);
-                /*System.out.println(forumModel.get(2).getTitle());
-                System.out.println(forumModel.get(2).getComments().get(1).getDescription());*/
-                System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            else{
-                System.out.print("El sistema no logra mostrar la lista de walls del creador\n");
+        } else if(tipoConexion.equals("getUser")){
+            try {
+                System.out.println("entro a mostrar el user");
+                if (json.getInt("code")==200) {
+                    inputFullName.setText(json.getString("firstName") + " " + json.getString("secondName"));
+                    inputEmail.setText(json.getString("email"));
+                    inputBirthday.setText(json.getString("dateOfBirth"));
+                    inputPostalCode.setText(json.getString("postalCode"));
+                } else {
+                    //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (Exception e){
-            e.printStackTrace();
         }
     }
 }
