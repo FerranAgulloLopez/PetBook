@@ -1,37 +1,29 @@
-package com.example.PETBook.Fragments;
+package com.example.PETBook;
 
 import android.app.DatePickerDialog;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.PETBook.Adapters.FriendAdapter;
-import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.Models.FriendModel;
-import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-public class EditProfileFragment extends Fragment implements AsyncResult {
+public class EditProfile extends AppCompatActivity implements AsyncResult {
 
     /* ATRIBUTOS   */
     private View MyView;
@@ -47,18 +39,13 @@ public class EditProfileFragment extends Fragment implements AsyncResult {
     private String tipoConexion;
     Calendar calendario = Calendar.getInstance();
 
-
-    public EditProfileFragment() {
-        // Required empty public constructor
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        MyView = inflater.inflate(R.layout.fragment_edit_profile, container, false);
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_edit_profile);
+        Bundle profileEdit = getIntent().getExtras();
         // Set tittle to the fragment
-        getActivity().setTitle("Edit Profile");
+        this.setTitle("Edit Profile");
 
         textInputName      = (TextInputLayout) MyView.findViewById(R.id.nameTextInput);
         textInputSurnames      = (TextInputLayout) MyView.findViewById(R.id.surnamesTextInput);
@@ -69,7 +56,7 @@ public class EditProfileFragment extends Fragment implements AsyncResult {
         textInputPostalCode  = (TextInputLayout) MyView.findViewById(R.id.postalCodeTextInput);
 
         tipoConexion = "getUser";
-        Conexion con = new Conexion(EditProfileFragment.this);
+        Conexion con = new Conexion(EditProfile.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
 
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail(),"GET", null);
@@ -77,7 +64,7 @@ public class EditProfileFragment extends Fragment implements AsyncResult {
         textInputBirthday.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new DatePickerDialog(getActivity(), date, calendario
+                new DatePickerDialog(EditProfile.this, date, calendario
                         .get(Calendar.YEAR), calendario.get(Calendar.MONTH),
                         calendario.get(Calendar.DAY_OF_MONTH)).show();
             }
@@ -93,7 +80,6 @@ public class EditProfileFragment extends Fragment implements AsyncResult {
             }
         });
 
-        return MyView;
     }
 
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
@@ -267,13 +253,13 @@ public class EditProfileFragment extends Fragment implements AsyncResult {
                 jsonToSend.accumulate("secondName", surnames);
                 jsonToSend.accumulate("dateOfBirth", birthday);
                 jsonToSend.accumulate("postalCode", postalCode);
-                jsonToSend.accumulate("password", password1);
+                //jsonToSend.accumulate("password", password1);
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            Conexion con = new Conexion(EditProfileFragment.this);
+            Conexion con = new Conexion(EditProfile.this);
             con.execute("http://10.4.41.146:9999/ServerRESTAPI/update/" + su.getEmail(), "PUT", jsonToSend.toString());
         }
     }
@@ -290,7 +276,7 @@ public class EditProfileFragment extends Fragment implements AsyncResult {
                         textInputBirthday.getEditText().setText(output.getString("dateOfBirth"));
                         textInputPostalCode.getEditText().setText(output.getString("postalCode"));
                     } else {
-                        Toast.makeText(getActivity(), "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -299,16 +285,16 @@ public class EditProfileFragment extends Fragment implements AsyncResult {
                 try {
                     int response = output.getInt("code");
                     if (response == 200 || response == 201) {
-                        Toast.makeText(getActivity(), "User updated succesfully.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "User updated succesfully.", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getActivity(), "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         } else {
-            Toast.makeText(getActivity(), "The server does not work.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The server does not work.", Toast.LENGTH_SHORT).show();
         }
     }
 

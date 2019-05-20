@@ -16,7 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.PETBook.Fragments.ForumFragment;
-import com.example.PETBook.Fragments.HomeFragment;
+import com.example.PETBook.Fragments.HomeWallFragment;
 import com.example.PETBook.Fragments.MyCalendarFragment;
 import com.example.PETBook.Fragments.MyEventsFragment;
 import com.example.PETBook.Fragments.MyFriendsFragment;
@@ -25,10 +25,8 @@ import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.PETBook.Fragments.MyPostsFragment;
 import com.example.pantallafirstview.R;
 
-import static com.example.PETBook.Fragments.HomeFragment.*;
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
+        implements NavigationView.OnNavigationItemSelectedListener, HomeWallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
                             , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener
                             , MyFriendsFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener {
 
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity
 */
 
 
-        // First fragment to display (de momento HomeFragment -perfil-)
+        // First fragment to display (de momento HomeWallFragment -perfil-)
         Fragment fragment = null;
         Bundle recibir = this.getIntent().getExtras();
         if (recibir != null){
@@ -74,7 +72,7 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if(fragType.equals("profile")){
-                fragment = new HomeFragment();
+                fragment = new HomeWallFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if(fragType.equals("friends")){
@@ -98,12 +96,12 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else {
-                fragment = new HomeFragment();
+                fragment = new HomeWallFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
         }
         else{
-            fragment = new HomeFragment();
+            fragment = new HomeWallFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.content_main, fragment).commit();
         }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -159,13 +157,13 @@ public class MainActivity extends AppCompatActivity
         boolean fragmentSeleccionado=false;
 
         if (id == R.id.nav_home) {
-            myFragment = new HomeFragment();
+            myFragment = new HomeWallFragment();
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
             fragmentSeleccionado = true;
         }/* else if (id == R.id.nav_profile) {
-            myFragment = new HomeFragment();
+            myFragment = new HomeWallFragment();
             fragmentSeleccionado = true;
         }*/ else if (id == R.id.nav_friends) {
             myFragment = new MyFriendsFragment();
