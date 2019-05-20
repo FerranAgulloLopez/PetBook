@@ -18,7 +18,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       app:layout_constraintTop_toTopOf="parent"
-      app:mcv_selectionColor="#00F"
+      app:mcv_selectionColor="#3F51B5"
       app:mcv_showOtherDates="all" />
 
   <TextView
