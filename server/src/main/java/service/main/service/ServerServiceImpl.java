@@ -292,6 +292,13 @@ public class ServerServiceImpl implements ServerService {
         if(emailUser.equals(emailRequested)) throw new BadRequestException(ARE_THE_SAME_USER);
 
         friend.addFriendRequest(emailUser);
+
+        try {
+            FireMessage f = new FireMessage("Solicitud de amistad", emailRequested + " quiere ser tu amigo");
+            f.sendToToken(friend.getTokenFirebase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         userRepository.save(friend);
     }
 
