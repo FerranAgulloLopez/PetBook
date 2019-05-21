@@ -113,6 +113,7 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
             public void onClick(View v) {
                 Intent intent = new Intent(context, Chat.class);
                 intent.putExtra("emailReceptor", friend.getEmail());
+                intent.putExtra("nameReceptor", friend.getName());
                 context.startActivity(intent);
             }
         });

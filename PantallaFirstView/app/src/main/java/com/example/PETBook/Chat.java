@@ -49,7 +49,7 @@ public class Chat extends AppCompatActivity {
 
     private String emailReceptor;
     private String emailEmisor;
-
+    private String nameReceptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +60,7 @@ public class Chat extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             emailReceptor = getEmailWithoutDotCom(bundle.getString("emailReceptor"));
+            nameReceptor = bundle.getString("nameReceptor");
         }
         else {
             finish();
@@ -86,7 +87,8 @@ public class Chat extends AppCompatActivity {
         LinearLayoutManager l = new LinearLayoutManager(this);
         rvMensajes.setLayoutManager(l);
         rvMensajes.setAdapter(adapter);
-        nombre.setText(emailReceptor);
+        // Nombre del usuario con quien se está chateando
+        nombre.setText(nameReceptor);
 
 
         btnEnviar.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +128,10 @@ public class Chat extends AppCompatActivity {
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 final Mensaje mensaje = dataSnapshot.getValue(Mensaje.class);
                 final MensajeLogic mensajeLogic = new MensajeLogic(dataSnapshot.getKey(), mensaje);
-                adapter.addMensaje(mensajeLogic);
+                final int posicion = adapter.addMensaje(mensajeLogic);
+
+
+                //adapter.addMensaje(mensajeLogic);
             }
 
             @Override
