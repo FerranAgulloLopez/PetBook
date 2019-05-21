@@ -51,8 +51,12 @@ public class AdapterMensajes extends RecyclerView.Adapter<HolderMensaje> {
     public void onBindViewHolder(@NonNull HolderMensaje holder, int position) {
 
         MensajeLogic mensajeLogic = listMensaje.get(position);
+        String emailUsuarioEmisor = mensajeLogic.getEmailCreador();
 
-        holder.getNombre().setText(mensajeLogic.getEmailCreador());
+        if (emailUsuarioEmisor != null) {
+            holder.getNombre().setText(mensajeLogic.getEmailCreador());
+        }
+
         holder.getMensaje().setText(mensajeLogic.getMensaje().getMensaje());
 
         if (mensajeLogic.getMensaje().isContineFoto()) {
@@ -83,13 +87,15 @@ public class AdapterMensajes extends RecyclerView.Adapter<HolderMensaje> {
 
     @Override
     public int getItemViewType(int position) {
-        if(listMensaje.get(position).getEmailCreador()!=null){
+        if(listMensaje.get(position).getEmailCreador() != null){
+            System.out.println("!!!!!!!!!!!!!!!!!!!EMail singleoton: " + SingletonUsuario.getInstance().getEmail());
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!EMail emisor: " + listMensaje.get(position).getEmailCreador());
             if(listMensaje.get(position).getEmailCreador().equals(SingletonUsuario.getInstance().getEmail())){
                 return 1;
             }else{
                 return -1;
             }
-        }else{
+        }else {
             return -1;
         }
        // return super.getItemViewType(position);
