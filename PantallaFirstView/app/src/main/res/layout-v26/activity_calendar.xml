@@ -21,6 +21,7 @@
       app:mcv_selectionColor="#3F51B5"
       app:mcv_showOtherDates="all" />
 
+  <!--
   <TextView
       android:id="@+id/textView"
       android:layout_margin="16dp"
@@ -29,5 +30,22 @@
       android:layout_gravity="center"
       android:textAppearance="?android:attr/textAppearanceLarge"
       />
+  -->
+
+
+  <ListView
+      android:id="@+id/list_eventos"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="1dp"
+      android:footerDividersEnabled="true"
+      android:headerDividersEnabled="true"
+      android:scrollbars="horizontal|vertical"
+      android:visibility="visible"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/calendarView" />
+
 
 </LinearLayout>

@@ -13,7 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.PETBook.Adapters.EventAdapter;
+import com.example.PETBook.Adapters.EventAdapterCalendar;
 import com.example.PETBook.Calendar.Decorators.EventDecorator;
 import com.example.PETBook.Calendar.Decorators.MySelectorDecorator;
 import com.example.PETBook.Calendar.Decorators.OneDayDecorator;
@@ -55,11 +55,12 @@ public class CalendarActivity extends AppCompatActivity
 
   // Elementos de dissenyo
   MaterialCalendarView widget;
-  TextView textView;
+  //TextView textView;
+  private ListView lista;
 
 
   //
-  private EventAdapter eventosUser;
+  private EventAdapterCalendar eventosUser;
   private ArrayList<EventModel> model;
   private Conexion con;
   private SingletonUsuario su;
@@ -70,7 +71,9 @@ public class CalendarActivity extends AppCompatActivity
     setContentView(R.layout.activity_calendar);
 
     widget = findViewById(R.id.calendarView);
-    textView = findViewById(R.id.textView);
+    //textView = findViewById(R.id.textView);
+    lista = findViewById(R.id.list_eventos);
+
 
     widget.setOnDateChangedListener(this);
     widget.setOnDateLongClickListener(this);
@@ -94,21 +97,6 @@ public class CalendarActivity extends AppCompatActivity
             oneDayDecorator
     );
 
-/*
-    // Aqui se hara la llamada a la API para escoger los dias que deben ser marcados como que hay eventos en ellos
-    LocalDate temp = LocalDate.now().minusMonths(2);
-    printLines();
-    System.out.println("OnCreate(...) temp = " + temp);
-    printLines();
-    final ArrayList<CalendarDay> calendarDays = new ArrayList<>();
-    for (int i = 0; i < 30; i++) {
-      final CalendarDay day = CalendarDay.from(temp);
-      calendarDays.add(day);
-      temp = temp.plusDays(5);
-    }
-
-    widget.addDecorator(new EventDecorator(Color.RED, calendarDays));
-*/
     // Acaba Decorador ****************************************************************************************************
 
 
@@ -121,7 +109,7 @@ public class CalendarActivity extends AppCompatActivity
     // Acaba Conexion ****************************************************************************************************
 
     // Setup initial text
-    textView.setText("No Selection");
+    //textView.setText("No Selection");
   }
 
   @Override
@@ -130,7 +118,7 @@ public class CalendarActivity extends AppCompatActivity
           @NonNull CalendarDay date,
           boolean selected) {
 
-    textView.setText(selected ? FORMATTER.format(date.getDate()) : "No Selection");
+    //textView.setText(selected ? FORMATTER.format(date.getDate()) : "No Selection");
 
     /*
      * Aqui se mostrara los eventos del dia correspondiente
@@ -139,15 +127,17 @@ public class CalendarActivity extends AppCompatActivity
      */
 
     // Miro todos los eventos y meto la info del ultimo que encuentre  (ESTO ES SIMPLEMENTE DE PRUEBA, SEGURAMENTE LUEGO USARE UNA LISTA O SIMILAR)
-    // QUIZA IR DIRECTAMENTE A LA PANTALLA DE VER EVENTO(SI SOLO HAY UN EVENTO ESE DIA)
+    // IDEA QUE HACER: Mostrar una lista con los eventos(info reducida) de el dia correspondiente, y si el usuario hace click en un evento IR DIRECTAMENTE A LA PANTALLA(ya hecha) DE VER EVENTO
     // Luego quiza se hace alguna clase de mejora para ir mas rapido(quiza ordenar por fecha los eventos desde aqui o desde el server)
+
+    ArrayList<EventModel> eventsOfTheSelectedDay = new ArrayList<>();
     for(int i = 0; i < model.size(); ++i) {
       EventModel event = model.get(i);
       LocalDate fecha = event.getLocalDate();
       if(fecha.getYear()        == date.getYear() &&
          fecha.getMonthValue()  == date.getMonth() &&
          fecha.getDayOfMonth()  == date.getDay())
-      {
+      {/*
       // Atrbutos provisionales, luego ya vere cuales escojo para mostrar,
         final String info = "Testeando" + "\n" +
                 event.getTitulo()       + "\n" +
@@ -156,7 +146,24 @@ public class CalendarActivity extends AppCompatActivity
                 event.getFecha()        + "\n" +
                 "Puta Barça" ;
         textView.setText(info);
+        */
+        eventsOfTheSelectedDay.add(event);
       }
+
+      // Meter los
+      eventosUser = new EventAdapterCalendar(this, eventsOfTheSelectedDay);
+      lista.setAdapter(eventosUser);
+
+      lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+          EventModel eventoSeleccionado = model.get(position);
+          Intent intent = new Intent(getApplicationContext(), EventInfo.class); // Haber si funciona con el context
+          intent.putExtra("event", eventoSeleccionado);
+          intent.putExtra("eventType", "Participant"); // No se porque participant es requrido  ¿?
+          startActivity(intent);
+        }
+      });
     }
 
 
@@ -223,6 +230,7 @@ public class CalendarActivity extends AppCompatActivity
           //date.plusDays(5); + funciones similares para operar con las fechas
         }
 
+        // Remarcar los dias donde hay eventis
         widget.addDecorator(new EventDecorator(Color.RED, calendarDays));
 
         System.out.print(json.getInt("code") + " se muestran correctamente la lista de eventos\n");
