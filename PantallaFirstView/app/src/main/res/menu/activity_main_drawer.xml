@@ -9,10 +9,6 @@
             android:icon="@drawable/icono_home"
             android:title="Home" />
         <item
-            android:id="@+id/nav_profile"
-            android:icon="@drawable/pets"
-            android:title="Mi perfil" />
-        <item
             android:id="@+id/nav_friends"
             android:icon="@drawable/participantes"
             android:title="Mis amigos" />

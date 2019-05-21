@@ -1,15 +1,10 @@
 package com.example.PETBook;
 
-import android.app.PendingIntent;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,20 +16,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.example.PETBook.Fragments.ForumFragment;
-import com.example.PETBook.Fragments.HomeFragment;
+import com.example.PETBook.Fragments.HomeWallFragment;
 import com.example.PETBook.Fragments.MyCalendarFragment;
 import com.example.PETBook.Fragments.MyEventsFragment;
 import com.example.PETBook.Fragments.MyFriendsFragment;
 import com.example.PETBook.Fragments.MyMapFragment;
 import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.PETBook.Fragments.MyPostsFragment;
-import com.example.PETBook.Fragments.MyProfileFragment;
 import com.example.pantallafirstview.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
+        implements NavigationView.OnNavigationItemSelectedListener, HomeWallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
                             , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener
-                            , MyProfileFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener {
+                            , MyFriendsFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener {
 
 
 
@@ -64,7 +58,7 @@ public class MainActivity extends AppCompatActivity
 */
 
 
-        // First fragment to display (de momento HomeFragment -perfil-)
+        // First fragment to display (de momento HomeWallFragment -perfil-)
         Fragment fragment = null;
         Bundle recibir = this.getIntent().getExtras();
         if (recibir != null){
@@ -78,7 +72,7 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if(fragType.equals("profile")){
-                fragment = new MyProfileFragment();
+                fragment = new HomeWallFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if(fragType.equals("friends")){
@@ -102,12 +96,12 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else {
-                fragment = new HomeFragment();
+                fragment = new HomeWallFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
         }
         else{
-            fragment = new HomeFragment();
+            fragment = new HomeWallFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.content_main, fragment).commit();
         }
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -163,15 +157,15 @@ public class MainActivity extends AppCompatActivity
         boolean fragmentSeleccionado=false;
 
         if (id == R.id.nav_home) {
-            myFragment = new HomeFragment();
+            myFragment = new HomeWallFragment();
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
             fragmentSeleccionado = true;
-        } else if (id == R.id.nav_profile) {
-            myFragment = new MyProfileFragment();
+        }/* else if (id == R.id.nav_profile) {
+            myFragment = new HomeWallFragment();
             fragmentSeleccionado = true;
-        } else if (id == R.id.nav_friends) {
+        }*/ else if (id == R.id.nav_friends) {
             myFragment = new MyFriendsFragment();
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_events) {
