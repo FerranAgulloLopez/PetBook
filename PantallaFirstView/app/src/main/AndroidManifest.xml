@@ -30,7 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name="com.example.PETBook.CalendarActivity" />
+        <activity android:name="com.example.PETBook.Calendar.CalendarActivity" />
         <activity android:name="com.example.PETBook.Chat"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

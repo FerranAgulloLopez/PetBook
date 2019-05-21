@@ -3,10 +3,7 @@ package com.example.PETBook.Fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.icu.util.Calendar;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -16,10 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.PETBook.CalendarActivity;
+import com.example.PETBook.Calendar.CalendarActivity;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.NewPet;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -29,9 +25,6 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener;
 
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.

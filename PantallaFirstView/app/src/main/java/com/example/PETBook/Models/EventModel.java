@@ -3,6 +3,7 @@ package com.example.PETBook.Models;
 import android.util.Pair;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class EventModel implements Serializable {
@@ -13,6 +14,7 @@ public class EventModel implements Serializable {
     private Double latitude;
     private Double longitude;
     private String fecha;
+    private org.threeten.bp.LocalDate localDate;
     private String titulo;
     private String descripcion;
     private boolean publico;
@@ -65,4 +67,13 @@ public class EventModel implements Serializable {
     public void setCreador(String creador){ this.creador = creador; }
 
     public String getCreador(){ return creador; }
+
+
+    public org.threeten.bp.LocalDate getLocalDate() {
+        return localDate;
+    }
+
+    public void setLocalDate(org.threeten.bp.LocalDate localDate) {
+        this.localDate = localDate;
+    }
 }
