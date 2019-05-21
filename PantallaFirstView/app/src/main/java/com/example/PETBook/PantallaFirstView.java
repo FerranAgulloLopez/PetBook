@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.example.PETBook.Firebase.FirebaseService;
 import com.example.pantallafirstview.R;
 import com.google.firebase.iid.FirebaseInstanceId;
 
@@ -27,6 +28,11 @@ public class PantallaFirstView extends AppCompatActivity {
 
         System.out.println("!!!!!!!!!!!! TOKEN FCM !!!!!!!!!!!!!!!");
         Log.d("Firebase", "token " + FirebaseInstanceId.getInstance().getToken());
+
+        if (token != null) {
+            FirebaseService firebaseService = new FirebaseService();
+            firebaseService.sendRegistrationToServer(token);
+        }
 
 
 

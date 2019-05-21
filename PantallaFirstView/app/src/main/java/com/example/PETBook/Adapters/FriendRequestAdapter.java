@@ -18,12 +18,11 @@ import android.widget.Button;
 
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.EventInfo;
 import com.example.PETBook.Fragments.MyFriendsFragment;
 import com.example.PETBook.Models.Image;
 import com.example.PETBook.SingletonUsuario;
 import com.example.PETBook.Models.FriendRequestModel;
-import com.example.PETBook.UserInfo;
+import com.example.PETBook.WallInfo;
 import com.example.pantallafirstview.R;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,7 +80,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
             public void onClick(View v) {
                 Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigoo", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(v.getContext(), UserInfo.class);
+                Intent intent = new Intent(v.getContext(), WallInfo.class);
                 intent.putExtra("friendRequestSelected", friend);
                 v.getContext().startActivity(intent);
             }
@@ -94,7 +93,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
             public void onClick(View v) {
                 Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigoo", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(v.getContext(), UserInfo.class);
+                Intent intent = new Intent(v.getContext(), WallInfo.class);
                 intent.putExtra("friendRequestSelected", friend);
                 v.getContext().startActivity(intent);
             }
@@ -113,7 +112,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                 SingletonUsuario su = SingletonUsuario.getInstance();
                 /* Nueva conexion llamando a la funcion del server */
                 Conexion con = new Conexion(FriendRequestAdapter.this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/acceptFriendRequest/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/acceptFriendRequest/" + friend.getEmail(), "POST", null);
             }
         });
 
@@ -131,7 +130,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
                                 SingletonUsuario su = SingletonUsuario.getInstance();
                                 /* Nueva conexion llamando a la funcion del server */
                                 Conexion con = new Conexion(FriendRequestAdapter.this);
-                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/denyFriendRequest/" + su.getEmail() + "/" + friend.getEmail(), "POST", null);
+                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/denyFriendRequest/" + friend.getEmail(), "POST", null);
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {

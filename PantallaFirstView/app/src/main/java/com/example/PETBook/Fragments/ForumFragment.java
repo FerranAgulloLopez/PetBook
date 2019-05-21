@@ -12,26 +12,20 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.example.PETBook.Adapters.EventAdapter;
 import com.example.PETBook.Adapters.ForumAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.EventInfo;
 import com.example.PETBook.ForumInfo;
 import com.example.PETBook.Models.CommentForumModel;
-import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.Models.ForumModel;
-import com.example.PETBook.NewEvent;
 import com.example.PETBook.NewForum;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Comment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.

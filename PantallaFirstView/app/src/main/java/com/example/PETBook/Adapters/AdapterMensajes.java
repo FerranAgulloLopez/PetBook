@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.example.PETBook.Holders.HolderMensaje;
 import com.example.PETBook.Models.Logic.MensajeLogic;
+import com.example.PETBook.Models.Mensaje;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
@@ -27,9 +28,16 @@ public class AdapterMensajes extends RecyclerView.Adapter<HolderMensaje> {
         this.c = c;
     }
 
-    public void addMensaje(MensajeLogic m){
+    public int addMensaje(MensajeLogic m){
         listMensaje.add(m);
+        int posicion = listMensaje.size()-1;
         notifyItemInserted(listMensaje.size());
+        return posicion;
+    }
+
+    public void actualizarMensaje(int posicion, MensajeLogic mensajeLogic) {
+        listMensaje.set(posicion, mensajeLogic);
+        notifyItemChanged(posicion);
     }
 
 
@@ -51,8 +59,12 @@ public class AdapterMensajes extends RecyclerView.Adapter<HolderMensaje> {
     public void onBindViewHolder(@NonNull HolderMensaje holder, int position) {
 
         MensajeLogic mensajeLogic = listMensaje.get(position);
+        String emailUsuarioEmisor = mensajeLogic.getMensaje().getEmailCreador();
 
-        holder.getNombre().setText(mensajeLogic.getEmailCreador());
+        if (emailUsuarioEmisor != null) {
+            holder.getNombre().setText(mensajeLogic.getMensaje().getEmailCreador());
+        }
+
         holder.getMensaje().setText(mensajeLogic.getMensaje().getMensaje());
 
         if (mensajeLogic.getMensaje().isContineFoto()) {
@@ -83,13 +95,13 @@ public class AdapterMensajes extends RecyclerView.Adapter<HolderMensaje> {
 
     @Override
     public int getItemViewType(int position) {
-        if(listMensaje.get(position).getEmailCreador()!=null){
-            if(listMensaje.get(position).getEmailCreador().equals(SingletonUsuario.getInstance().getEmail())){
+        if(listMensaje.get(position).getMensaje().getEmailCreador() != null){
+            if(listMensaje.get(position).getMensaje().getEmailCreador().equals(SingletonUsuario.getInstance().getEmail())){
                 return 1;
             }else{
                 return -1;
             }
-        }else{
+        }else {
             return -1;
         }
        // return super.getItemViewType(position);

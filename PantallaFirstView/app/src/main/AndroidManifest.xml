@@ -30,8 +30,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name="com.example.PETBook.NewEvent"></activity>
+        <activity android:name="com.example.PETBook.Chat" />
         <activity android:name="com.example.PETBook.Calendar.CalendarActivity" />
-        <activity android:name="com.example.PETBook.Chat"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -45,6 +46,15 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name="com.example.PETBook.EditEvent" />
+        <activity
+            android:name="com.example.PETBook.EditProfile"
+            android:label="Edit Profile"
+            android:parentActivityName="com.example.PETBook.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.PETBook.MainActivity" />
+        </activity>
+        <activity android:name="com.example.PETBook.WallInfo"/>
         <activity
             android:name="com.example.PETBook.PetInfo"
             android:label="@string/title_activity_pets"
@@ -69,7 +79,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.PETBook.MainActivity" />
         </activity>
-        <activity android:name="com.example.PETBook.NewEvent" />
         <activity android:name="com.example.PETBook.NewForum" />
         <activity
             android:name="com.example.PETBook.PetsContainer"

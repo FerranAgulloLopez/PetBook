@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
-    tools:context="com.example.PETBook.Fragments.HomeFragment">
+    tools:context="com.example.PETBook.Fragments.HomeWallFragment">
 
     <!--tools:context="com.example.PETBook.PantallaHome"-->
 
