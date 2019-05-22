@@ -16,6 +16,7 @@ import com.example.PETBook.Models.ForumModel;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class ForumAdapter extends BaseAdapter{
         TextView numberMessages = (TextView) convertView.findViewById(R.id.numberMessagesForum);
         TextView dataCreacionForum = (TextView) convertView.findViewById(R.id.dataCreacioForum);
         TextView creadorForum = (TextView) convertView.findViewById(R.id.nombreCreadorForum);
+        TextView descriptionForum = (TextView) convertView.findViewById(R.id.descriptionForum);
 
 
         nombreForum.setText(forumList.get(position).getTitle());
@@ -63,6 +65,7 @@ public class ForumAdapter extends BaseAdapter{
         //System.out.println(forumList.get(position).getComments().get(position).getTamaño());
         dataCreacionForum.setText(forumList.get(position).getCreationDate());
         creadorForum.setText(forumList.get(position).getCreatorMail());
+        descriptionForum.setText(forumList.get(position).getDescription());
         return convertView;
     }
 
