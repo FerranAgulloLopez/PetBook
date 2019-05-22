@@ -1,11 +1,15 @@
 package service.main.entity.input_output.user;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 import java.util.Date;
 
 public class DataWallPost implements Serializable {
 
+    @JsonProperty(value="description")
     private String description;
+    @JsonProperty(value="creationDate")
     private Date creationDate;
 
 
@@ -26,7 +30,7 @@ public class DataWallPost implements Serializable {
     Auxiliary operations
      */
 
-    public boolean isOk() {
+    public boolean inputCorrect() {
         return !(this.description == null || this.creationDate == null);
     }
 }
