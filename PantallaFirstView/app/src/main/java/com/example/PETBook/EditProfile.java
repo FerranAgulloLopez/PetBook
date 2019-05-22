@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
@@ -40,6 +41,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
     private String tipoConexion;
     private TextInputLayout oldPasswordInput;
     Calendar calendario = Calendar.getInstance();
+    private ProgressBar spinner;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
         // Set tittle to the fragment
         this.setTitle("Edit Profile");
 
+        spinner=(ProgressBar)findViewById(R.id.progressBar);
         textInputName      = (TextInputLayout) findViewById(R.id.nameTextInput);
         textInputSurnames      = (TextInputLayout) findViewById(R.id.surnamesTextInput);
         textInputMail      = (TextInputLayout) findViewById(R.id.mailTextInput);
@@ -103,9 +106,11 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
             calendario.set(Calendar.MONTH, monthOfYear);
             calendario.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             actualizarInput();
+
         }
 
     };
+
 
     private void actualizarInput() {
 /*
@@ -313,6 +318,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
     }
     @Override
     public void OnprocessFinish(JSONObject output) {
+        spinner.setVisibility(View.VISIBLE);
         if (output != null) {
             if(tipoConexion.equals("getUser")) {
                 try {
@@ -323,6 +329,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                         textInputMail.getEditText().setText(output.getString("email"));
                         textInputBirthday.getEditText().setText(output.getString("dateOfBirth"));
                         textInputPostalCode.getEditText().setText(output.getString("postalCode"));
+                        spinner.setVisibility(View.GONE);
                     } else {
                         Toast.makeText(this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }

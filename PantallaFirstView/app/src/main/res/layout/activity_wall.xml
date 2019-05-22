@@ -6,6 +6,7 @@
     tools:context="com.example.PETBook.Fragments.HomeWallFragment">
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -18,6 +19,24 @@
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingBottom="@dimen/activity_vertical_margin">
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="200dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="308dp"
+                app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.706" />
 
             <Button
                 android:id="@+id/editProfileButton"
@@ -49,7 +68,6 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="240dp"
                 android:layout_marginRight="240dp"
-                android:text="Full Name"
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -61,14 +79,13 @@
                 android:id="@+id/emailInput"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
-                android:layout_marginLeft="2dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:text="Email"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/textView2"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/fullNameInput" />
 
             <TextView
@@ -80,11 +97,10 @@
                 android:layout_marginEnd="220dp"
                 android:layout_marginRight="220dp"
                 android:layout_marginBottom="500dp"
-                android:text="19/05/2019"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imageView11"
+                app:layout_constraintStart_toEndOf="@+id/iconoNac"
                 app:layout_constraintTop_toBottomOf="@+id/emailInput"
                 app:layout_constraintVertical_bias="0.0" />
 
@@ -97,41 +113,32 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="08776"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imageView9"
+                app:layout_constraintStart_toEndOf="@+id/iconoDir"
                 app:layout_constraintTop_toBottomOf="@+id/emailInput"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:text="@"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/fullNameInput" />
-
             <ImageView
-                android:id="@+id/imageView9"
+                android:id="@+id/iconoDir"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="4dp"
                 android:src="@drawable/icono_mapa"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/emailInput" />
 
             <ImageView
-                android:id="@+id/imageView11"
+                android:id="@+id/iconoNac"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_marginTop="4dp"
                 android:src="@drawable/calendar"
+                android:visibility="invisible"
                 app:layout_constraintStart_toEndOf="@+id/postalCodeInput"
                 app:layout_constraintTop_toBottomOf="@+id/emailInput" />
 
@@ -153,8 +160,8 @@
                 android:id="@+id/list_walls"
                 android:layout_width="325dp"
                 android:layout_height="454dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
@@ -164,6 +171,25 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/postalCodeInput" />
+
+            <ImageButton
+                android:id="@+id/addCommentWall"
+                android:layout_width="75dp"
+                android:layout_height="72dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorAccent"
+                android:scaleType="fitXY"
+                android:src="@drawable/addcomment"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.951"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.862" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

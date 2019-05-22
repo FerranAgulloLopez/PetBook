@@ -152,7 +152,7 @@ public class WallInfo extends AppCompatActivity implements AsyncResult {
                     System.out.println("entro a mostrar el user");
                     if (output.getInt("code")==200) {
                         inputFullName.setText(output.getString("firstName") + " " + output.getString("secondName"));
-                        inputEmail.setText(output.getString("email"));
+                        inputEmail.setText("@" + output.getString("email"));
                         inputBirthday.setText(output.getString("dateOfBirth"));
                         inputPostalCode.setText(output.getString("postalCode"));
                     } else {

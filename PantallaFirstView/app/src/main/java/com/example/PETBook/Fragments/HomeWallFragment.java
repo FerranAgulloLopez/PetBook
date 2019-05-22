@@ -2,14 +2,12 @@ package com.example.PETBook.Fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.support.design.widget.FloatingActionButton;
-import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,19 +15,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.PETBook.Adapters.ForumAdapter;
 import com.example.PETBook.Adapters.WallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EditProfile;
-import com.example.PETBook.ForumInfo;
-import com.example.PETBook.Models.CommentForumModel;
-import com.example.PETBook.Models.ForumModel;
-import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.WallModel;
-import com.example.PETBook.NewForum;
+import com.example.PETBook.NewWall;
 import com.example.PETBook.SingletonUsuario;
-import com.example.PETBook.WallInfo;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONArray;
@@ -69,6 +61,10 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
     private TextView inputPostalCode;
     private ImageView imatgePerfil;
     private Button buttonEditProfile;
+    private ProgressBar spinner;
+    private ImageView iconoDir;
+    private ImageView iconoNac;
+    private ImageButton addCommentWalL;
 
     public HomeWallFragment() {
         // Required empty public constructor
@@ -99,6 +95,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mostrarPerfil();
     }
 
     @Override
@@ -108,21 +105,34 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         // Inflate the layout for this fragment
         MyView = inflater.inflate(R.layout.activity_wall, container, false);
         // Set tittle to the fragment
-        getActivity().setTitle("Profile");
+        getActivity().setTitle("Home");
         imatgePerfil = MyView.findViewById(R.id.imatgePerfilHome);
         inputFullName = MyView.findViewById(R.id.fullNameInput);
         inputEmail = MyView.findViewById(R.id.emailInput);
         inputBirthday = MyView.findViewById(R.id.birthdayInput);
         inputPostalCode = MyView.findViewById(R.id.postalCodeInput);
+        iconoDir = MyView.findViewById(R.id.iconoDir);
+        iconoNac = MyView.findViewById(R.id.iconoNac);
+        addCommentWalL = MyView.findViewById(R.id.addCommentWall);
+        spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
 
         mostrarPerfil();
-        mostrarWalls();
+       // mostrarWalls();
         buttonEditProfile = (Button) MyView.findViewById(R.id.editProfileButton);
 
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), EditProfile.class);
+                //intent.putExtra("pet", petModel);
+                startActivity(intent);
+//                editProfile();
+            }
+        });
+        addCommentWalL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NewWall.class);
                 //intent.putExtra("pet", petModel);
                 startActivity(intent);
 //                editProfile();
@@ -166,6 +176,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         SingletonUsuario su = SingletonUsuario.getInstance();
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail() , "GET", null);
         System.out.println("conexion mostrar user bien hecha");
+        //mostrarWalls();
     }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -214,10 +225,11 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
     }
     @Override
     public void OnprocessFinish(JSONObject json) {
+        spinner.setVisibility(View.VISIBLE);
         if (tipoConexion.equals("getWalls")){
             try {
                 if (json.getInt("code") == 200) {
-                    wallModel = new ArrayList<>();
+                    wallModel = new ArrayList<WallModel>();
                     JSONArray jsonArray = json.getJSONArray("array");
                     //ArrayList<CommentForumModel> comments = new ArrayList<CommentForumModel>();
                     for (int i = 0; i < jsonArray.length(); ++i) {
@@ -234,6 +246,8 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     /*System.out.println(forumModel.get(2).getTitle());
                     System.out.println(forumModel.get(2).getComments().get(1).getDescription());*/
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
+                    addCommentWalL.setVisibility(View.VISIBLE);
+                    spinner.setVisibility(View.GONE);
                 } else {
                     System.out.print("El sistema no logra mostrar la lista de walls del creador\n");
                 }
@@ -245,9 +259,12 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                 System.out.println("entro a mostrar el user");
                 if (json.getInt("code")==200) {
                     inputFullName.setText(json.getString("firstName") + " " + json.getString("secondName"));
-                    inputEmail.setText(json.getString("email"));
+                    inputEmail.setText("@" + json.getString("email"));
                     inputBirthday.setText(json.getString("dateOfBirth"));
                     inputPostalCode.setText(json.getString("postalCode"));
+                    iconoNac.setVisibility(View.VISIBLE);
+                    iconoDir.setVisibility(View.VISIBLE);
+                    mostrarWalls();
                 } else {
                     //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                 }
