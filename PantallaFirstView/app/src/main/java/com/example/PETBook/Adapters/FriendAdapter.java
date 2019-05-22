@@ -32,6 +32,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class FriendAdapter extends BaseAdapter implements AsyncResult {
 
     private Context context;
@@ -73,7 +75,7 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
         TextView inputFullName = (TextView) convertView.findViewById(R.id.fullNameInput);
 
         inputFullName.setText(user_friends.get(position).getName() +" " + user_friends.get(position).getSurnames());
-        imageProfile = convertView.findViewById(R.id.imageView);
+        imageProfile = (CircleImageView) convertView.findViewById(R.id.imageView);
         Button deleteButton = (Button) convertView.findViewById(R.id.deleteButton);
         tipoConexion = "imageFriend";
         Conexion con = new Conexion(this);
