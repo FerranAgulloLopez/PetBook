@@ -292,6 +292,13 @@ public class ServerServiceImpl implements ServerService {
         if(emailUser.equals(emailRequested)) throw new BadRequestException(ARE_THE_SAME_USER);
 
         friend.addFriendRequest(emailUser);
+
+        try {
+            FireMessage f = new FireMessage("Solicitud de amistad", emailRequested + " quiere ser tu amigo");
+            f.sendToToken(friend.getTokenFirebase());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         userRepository.save(friend);
     }
 
@@ -492,6 +499,18 @@ public class ServerServiceImpl implements ServerService {
 
     public void deleteEvent(long eventId) throws NotFoundException {
         if(!eventRepository.existsById(eventId)) throw new NotFoundException(EVENTNOTDB);
+        Event event = auxGetEvent(eventId);
+        List<String> participants = event.getParticipants();
+        for (String particpant : participants) {
+            User participantUser = auxGetUser(particpant);
+            try {
+                FireMessage f = new FireMessage("PetBook", "Se eliminó el evento " + event.getTitle() + " en el que participas");
+                //TODO cambiar sendToToken por sendToGroup
+                f.sendToToken(participantUser.getTokenFirebase());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         eventRepository.deleteById(eventId);
     }
 
