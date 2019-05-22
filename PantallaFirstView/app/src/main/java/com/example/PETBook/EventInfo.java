@@ -43,6 +43,8 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
         txtMiembros = (TextView) findViewById(R.id.textNumPart);
         txtCreador = (TextView) findViewById(R.id.textCreador);
 
+        recibirDatos(); // Hay que poner antes la funcion de recibir datos, porque sino event es null.
+
 
         editButton = (ImageButton) findViewById(R.id.EditPetButton);
         if(this.getIntent().getStringExtra("eventType").equals("Creator")) {
@@ -105,7 +107,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
         }
 
 
-        recibirDatos();
+        recibirDatos();  // Quiza ponerlo aqui no tiene utilidad
     }
 
     private void recibirDatos(){
