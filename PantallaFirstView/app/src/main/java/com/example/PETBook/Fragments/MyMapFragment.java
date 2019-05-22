@@ -1,6 +1,9 @@
 package com.example.PETBook.Fragments;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -93,19 +96,19 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
         // Set tittle to the fragment
         getActivity().setTitle("Mapa");
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-        if (mapFragment == null){
+        if (mapFragment == null) {
             FragmentManager fm = getFragmentManager();
-            FragmentTransaction ft =  fm.beginTransaction();
+            FragmentTransaction ft = fm.beginTransaction();
             mapFragment = SupportMapFragment.newInstance();
             ft.replace(R.id.map, mapFragment).commit();
         }
         Conexion con = new Conexion(MyMapFragment.this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetAllEvents","GET",null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetAllEvents", "GET", null);
         mapFragment.getMapAsync(this);
         return MyView;
     }
 
-    private String transformacionFechaHora(String fechaHora){
+    private String transformacionFechaHora(String fechaHora) {
         Integer fin = 0;
         String result = fechaHora.replace("T", " ");
         result = result.replace(":00.000+0000", " ");
@@ -114,14 +117,14 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
 
 
     @Override
-    public void OnprocessFinish(JSONObject output){
-        if (output != null){
-            try{
+    public void OnprocessFinish(JSONObject output) {
+        if (output != null) {
+            try {
                 int response = output.getInt("code");
-                if (response == 200){
+                if (response == 200) {
                     AllEvents = new ArrayList<>();
                     JSONArray jsonArray = output.getJSONArray("array");
-                    for(int i = 0; i < jsonArray.length(); ++i){
+                    for (int i = 0; i < jsonArray.length(); ++i) {
                         JSONObject evento = jsonArray.getJSONObject(i);
                         EventModel e = new EventModel();
                         e.setId(evento.getInt("id"));
@@ -130,23 +133,23 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                         e.setFecha(transformacionFechaHora(evento.getString("date")));
                         JSONObject loc = evento.getJSONObject("localization");
                         e.setDireccion(loc.getString("address"));
-                        e.setCoordenadas(loc.getDouble("longitude"),loc.getDouble("latitude"));
+                        e.setCoordenadas(loc.getDouble("longitude"), loc.getDouble("latitude"));
                         e.setPublico(evento.getBoolean("public"));
                         JSONArray m = evento.getJSONArray("participants");
                         ArrayList<String> miembros = new ArrayList<String>();
-                        for(int j = 0; j < m.length(); ++j){
+                        for (int j = 0; j < m.length(); ++j) {
                             miembros.add(m.getString(j));
                         }
                         e.setMiembros(miembros);
                         e.setCreador(evento.getString("creatorMail"));
                         AllEvents.add(e);
-                        LatLng pos = new LatLng(e.getLatitude(),e.getLongitude());
+                        LatLng pos = new LatLng(e.getLatitude(), e.getLongitude());
                         Marker markEvent = mMap.addMarker(new MarkerOptions().position(pos).title(e.getTitulo()));
                         markEvent.setTag(i);
                     }
                 }
-            } catch (Exception e){
-                    e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -155,6 +158,17 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(madrid));
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override

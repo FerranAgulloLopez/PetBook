@@ -43,11 +43,12 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
         txtMiembros = (TextView) findViewById(R.id.textNumPart);
         txtCreador = (TextView) findViewById(R.id.textCreador);
 
-        recibirDatos(); // Hay que poner antes la funcion de recibir datos, porque sino event es null.
-
+        recibirDatos();  // Quiza ponerlo aqui no tiene utilidad
 
         editButton = (ImageButton) findViewById(R.id.EditPetButton);
-        if(this.getIntent().getStringExtra("eventType").equals("Creator")) {
+        deleteButton = (ImageButton) findViewById(R.id.imageButtonDelete);
+
+        if(event.getCreador().equals(SingletonUsuario.getInstance().getEmail())) {
             editButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -56,8 +57,32 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                     startActivity(intent);
                 }
             });
+
+            deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder error = new AlertDialog.Builder(EventInfo.this);
+                    error.setMessage("Esta seguro que quiere eliminar el evento?")
+                            .setCancelable(false)
+                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    deleteEvent();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog errorE = error.create();
+                    errorE.setTitle("Eliminar evento");
+                    errorE.show();
+                }
+            });
         }
-        else if (this.getIntent().getStringExtra("eventType").equals("Participant")){
+        else {
             if (event.getMiembros().contains(SingletonUsuario.getInstance().getEmail())) {
                 editButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -76,38 +101,9 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                     }
                 });
             }
-        }
-
-        deleteButton = (ImageButton) findViewById(R.id.imageButtonDelete);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder error = new AlertDialog.Builder(EventInfo.this);
-                error.setMessage("Esta seguro que quiere eliminar el evento?")
-                        .setCancelable(false)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                deleteEvent();
-                            }
-                        })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog errorE = error.create();
-                errorE.setTitle("Eliminar evento");
-                errorE.show();
-            }
-        });
-        if (this.getIntent().getStringExtra("eventType").equals("Participant")){
             deleteButton.setEnabled(false);
+            deleteButton.setVisibility(View.INVISIBLE);
         }
-
-
-        recibirDatos();  // Quiza ponerlo aqui no tiene utilidad
     }
 
     private void recibirDatos(){

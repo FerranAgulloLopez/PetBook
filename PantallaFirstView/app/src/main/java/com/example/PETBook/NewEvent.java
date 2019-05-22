@@ -280,6 +280,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 isAddress = false;
             } catch (Exception e) {
                 e.printStackTrace();
+                isAddress = false;
             }
         }
         else {
