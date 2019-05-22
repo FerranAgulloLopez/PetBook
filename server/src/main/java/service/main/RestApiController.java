@@ -17,6 +17,7 @@ import service.main.entity.input_output.forum.DataForumThread;
 import service.main.entity.input_output.forum.DataForumThreadUpdate;
 import service.main.entity.input_output.image.DataImage;
 import service.main.entity.input_output.interestsite.DataInterestSite;
+import service.main.entity.input_output.interestsite.DataInterestSiteUpdate;
 import service.main.entity.input_output.pet.DataPetUpdate;
 import service.main.entity.input_output.user.*;
 import service.main.exception.BadRequestException;
@@ -649,13 +650,37 @@ public class RestApiController {
      */
 
     @CrossOrigin
-    @PostMapping(value = "/SuggestInterestSite", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Suggest a new interest site", notes = "Saves a new interest site to the database. It receives a json with the necessary parameters: name, localization, description, type and the " +
-            "creator's email.", tags="Interest Sites")
+    @GetMapping(value = "/interestSites", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns all interest sites", notes = "Returns all the accepted interest sites or returns all the suggested ones, depending on the input parameter.", tags="Interest Sites")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 400, message = "The interest site already exists"),
-            @ApiResponse(code = 404, message = "The user does not exist in the database")
+    })
+    public ResponseEntity<?> getAllInterestSite(@ApiParam(value="True to return accepted interest sites", required = true, example = "true") @RequestParam("accepted") boolean accepted) {
+        return new ResponseEntity<>(serverService.getAllInterestSites(accepted), HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/interestSites/{interestSiteId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Get one interest site", notes = "Returns the interest site identified by the specified id.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The interest site does not exist in the database")
+    })
+    public ResponseEntity<?> getInterestSite(@ApiParam(value="Interest site identifier", required = true, example = "4") @PathVariable("interestSiteId") long interestSiteId) {
+        try {
+            return new ResponseEntity<>(serverService.getInterestSite(interestSiteId), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/interestSites", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Creates a new interest site", notes = "Saves a new interest site to the database. It receives a json with the necessary parameters: name, localization, description and type.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The interest site already exists / The input data is not well formed"),
 
     })
     public ResponseEntity<?> createInterestSite(@ApiParam(value="The site parameters", required = true) @RequestBody DataInterestSite inputInterestSite) {
@@ -664,48 +689,90 @@ public class RestApiController {
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (NotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @CrossOrigin
-    @GetMapping(value = "/GetInterestSite", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ApiOperation(value = "Get one interest site", notes = "Get the interest site identified by the specified name and localization.", tags="Interest Sites")
+    @PostMapping(value = "/interestSites/{interestSiteId}/vote")
+    @ApiOperation(value = "Vote a interest site", notes = "Votes a interest site. A interest site with more than four votes is accepted. Is only possible to vote not accepted interest sites.", tags="Interest Sites")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 404, message = "The interest site does not exist in the database")
-    })
-    public ResponseEntity<?> getInterestSite(@ApiParam(value="Name of the interest site", required = true, example = "Goddard Veterinary") @RequestParam("name") String name,
-                                             @ApiParam(value="Localization of the interest site", required = true, example = "00") @RequestParam("localization") String localization) {
-        try {
-            return new ResponseEntity<>(serverService.getInterestSite(name,localization), HttpStatus.OK);
-        }
-        catch (NotFoundException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @CrossOrigin
-    @PostMapping(value = "/VoteInterestSite")
-    @ApiOperation(value = "Vote a interest site", notes = "Votes a interest site. A interest site with more than five votes is accepted.", tags="Interest Sites")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 400, message = "The user already voted this interest site"),
-            @ApiResponse(code = 404, message = "The user does not exist in the database"),
+            @ApiResponse(code = 400, message = "The user already voted this interest site / Is only possible to vote not accepted interest sites"),
             @ApiResponse(code = 404, message = "The interest site does not exist in the database")
 
     })
-    public ResponseEntity<?> voteInterestSite(@ApiParam(value="The interest site's name", required = true) @RequestParam("name") String interestSiteName,
-                                              @ApiParam(value="The interest site's localization", required = true) @RequestParam("localization") String interestSiteLocalization,
-                                              @ApiParam(value="The interest site's name", required = true) @RequestParam("email") String userEmail) {
+    public ResponseEntity<?> voteInterestSite(@ApiParam(value="Interest site identifier", required = true, example = "4") @PathVariable("interestSiteId") long interestSiteId) {
         try {
-            serverService.voteInterestSite(interestSiteName,interestSiteLocalization,userEmail);
+            serverService.voteInterestSite(interestSiteId);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (BadRequestException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/interestSites/{interestSiteId}/unVote")
+    @ApiOperation(value = "Unvote a interest site", notes = "Unvotes a interest site. Is only possible to unvote not accepted interest sites.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The user did not vote this interest site / Is only possible to unvote not accepted interest sites"),
+            @ApiResponse(code = 404, message = "The interest site does not exist in the database")
+
+    })
+    public ResponseEntity<?> unVoteInterestSite(@ApiParam(value="Interest site identifier", required = true, example = "4") @PathVariable("interestSiteId") long interestSiteId) {
+        try {
+            serverService.unVoteInterestSite(interestSiteId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PatchMapping(value = "/interestSites/{interestSiteId}")
+    @ApiOperation(value = "Update a interest site", notes = "Updates a interest site. Is only possible to change not accepted interest sites", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The input data is not well formed / Is only possible to change not accepted interest sites"),
+            @ApiResponse(code = 401, message = "The creator user is the only one with update rights"),
+            @ApiResponse(code = 404, message = "The interest site does not exist in the database")
+
+    })
+    public ResponseEntity<?> updateInterestSite(@ApiParam(value="Interest site identifier", required = true, example = "4") @PathVariable("interestSiteId") long interestSiteId,
+                                                @ApiParam(value="The site parameters", required = true) @RequestBody DataInterestSiteUpdate inputInterestSite) {
+        try {
+            serverService.updateInterestSite(interestSiteId,inputInterestSite);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping(value = "/interestSites/{interestSiteId}")
+    @ApiOperation(value = "Delete a interest site", notes = "Deletes a interest site.", tags="Interest Sites")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 401, message = "The creator user is the only one with delete rights"),
+            @ApiResponse(code = 404, message = "The interest site does not exist in the database")
+
+    })
+    public ResponseEntity<?> deleteInterestSite(@ApiParam(value="Interest site identifier", required = true, example = "4") @PathVariable("interestSiteId") long interestSiteId) {
+        try {
+            serverService.deleteInterestSite(interestSiteId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
         }
     }
 

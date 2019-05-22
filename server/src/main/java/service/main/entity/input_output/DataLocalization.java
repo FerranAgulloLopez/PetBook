@@ -37,4 +37,8 @@ public class DataLocalization implements Serializable {
     public Localization toLocalization() {
         return new Localization(address,latitude,longitude);
     }
+
+    public boolean inputCorrect() {
+        return (address != null/* && latitude != 0 && longitude != 0*/);
+    }
 }

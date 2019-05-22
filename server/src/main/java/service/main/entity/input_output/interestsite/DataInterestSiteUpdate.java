@@ -1,13 +1,10 @@
 package service.main.entity.input_output.interestsite;
 
-import service.main.entity.input_output.DataLocalization;
-
 import java.io.Serializable;
 
-public class DataInterestSite implements Serializable {
+public class DataInterestSiteUpdate implements Serializable {
 
     private String name;
-    private DataLocalization localization;
     private String description;
     private String type;
 
@@ -18,10 +15,6 @@ public class DataInterestSite implements Serializable {
 
     public String getName() {
         return name;
-    }
-
-    public DataLocalization getLocalization() {
-        return localization;
     }
 
     public String getDescription() {
@@ -38,7 +31,6 @@ public class DataInterestSite implements Serializable {
      */
 
     public boolean inputCorrect() {
-        return (name != null && localization.inputCorrect());
+        return (name != null || description != null || type != null);
     }
-
 }

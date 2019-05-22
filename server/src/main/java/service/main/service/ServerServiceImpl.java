@@ -2,7 +2,9 @@ package service.main.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +20,7 @@ import service.main.entity.input_output.forum.DataForumThread;
 import service.main.entity.input_output.forum.DataForumThreadUpdate;
 import service.main.entity.input_output.image.DataImage;
 import service.main.entity.input_output.interestsite.DataInterestSite;
+import service.main.entity.input_output.interestsite.DataInterestSiteUpdate;
 import service.main.entity.input_output.pet.DataPetUpdate;
 import service.main.entity.input_output.user.*;
 import service.main.exception.BadRequestException;
@@ -581,36 +584,73 @@ public class ServerServiceImpl implements ServerService {
     Interest Site operations
      */
 
-    public void createInterestSite(DataInterestSite inputInterestSite) throws BadRequestException, NotFoundException {
-        InterestSite interestSite = inputInterestSite.toInterestSite();
-        if (!userRepository.existsById(inputInterestSite.getCreatorMail())) throw new NotFoundException(USERNOTDB);
-        if (interestSiteRepository.existsById(interestSite.getId())) throw new BadRequestException("The interest site already exists in the database");
+    @Override
+    public List<InterestSite> getAllInterestSites(boolean accepted) {
+        return interestSiteRepository.findByAccepted(accepted);
+    }
+
+    @Override
+    public InterestSite getInterestSite(long interestSiteId) throws NotFoundException {
+        return auxGetInterestSite(interestSiteId);
+    }
+
+    @Override
+    public void createInterestSite(DataInterestSite inputInterestSite) throws BadRequestException {
+        if (!inputInterestSite.inputCorrect()) throw new BadRequestException("The input data is not well formed");
+        if (interestSiteRepository.existsByName(inputInterestSite.getName())) throw new BadRequestException("The interest site already exists in the database");
+        String name = inputInterestSite.getName();
+        Localization localization = inputInterestSite.getLocalization().toLocalization();
+        String description = inputInterestSite.getDescription();
+        String type = inputInterestSite.getType();
+        String creatorMail = getLoggedUserMail();
+        InterestSite interestSite = new InterestSite(name,localization,description,type,creatorMail);
+        interestSite.addVote(creatorMail);
         interestSiteRepository.save(interestSite);
     }
 
-    public InterestSite getInterestSite(String name, String localization) throws NotFoundException {
-        InterestSite aux = new InterestSite(name,localization);
-        Optional<InterestSite> interestSite = interestSiteRepository.findById(aux.getId());
-        if (!interestSite.isPresent()) throw new NotFoundException(SITENOTDB);
-        return interestSite.get();
-    }
-
-    public void voteInterestSite(String interestSiteName, String interestSiteLocalization, String userEmail) throws NotFoundException, BadRequestException {
-        if (!userRepository.existsById(userEmail)) throw new NotFoundException(USERNOTDB);
-        InterestSite aux = new InterestSite(interestSiteName,interestSiteLocalization);
-        Optional<InterestSite> interestSite_opt = interestSiteRepository.findById(aux.getId());
-        if (!interestSite_opt.isPresent()) throw new NotFoundException(SITENOTDB);
-        InterestSite interestSite = interestSite_opt.get();
-        boolean found = false;
-        for (int i = 0; !found && i < interestSite.getVotes().size(); ++i) {
-            String email = interestSite.getVotes().get(i);
-            if (email.equals(userEmail)) found = true;
-        }
-        if (found) throw new BadRequestException("The user already voted this interest site");
-        interestSite.addVote(userEmail);
+    @Override
+    public void voteInterestSite(long interestSiteId) throws NotFoundException, BadRequestException {
+        InterestSite interestSite = auxGetInterestSite(interestSiteId);
+        if (interestSite.isAccepted()) throw new BadRequestException("Is only possible to vote not accepted interest sites");
+        String userMail = getLoggedUserMail();
+        if (interestSite.getVotes().contains(userMail)) throw new BadRequestException("The user already voted this interest site");
+        interestSite.addVote(userMail);
         interestSiteRepository.save(interestSite);
     }
 
+    @Override
+    public void unVoteInterestSite(long interestSiteId) throws NotFoundException, BadRequestException {
+        InterestSite interestSite = auxGetInterestSite(interestSiteId);
+        if (interestSite.isAccepted()) throw new BadRequestException("Is only possible to unvote not accepted interest sites");
+        String userMail = getLoggedUserMail();
+        if (!interestSite.getVotes().contains(userMail)) throw new BadRequestException("The user did not vote this interest site");
+        interestSite.deleteVote(userMail);
+        interestSiteRepository.save(interestSite);
+    }
+
+    @Override
+    public void updateInterestSite(long interestSiteId, DataInterestSiteUpdate dataInterestSiteUpdate) throws NotFoundException, BadRequestException, ForbiddenException {
+        if (!dataInterestSiteUpdate.inputCorrect()) throw new BadRequestException("The input data is not well formed");
+        InterestSite interestSite = auxGetInterestSite(interestSiteId);
+        if (interestSite.isAccepted()) throw new BadRequestException("Is only possible to change not accepted interest sites");
+        String userMail = getLoggedUserMail();
+        if (!userMail.equals(interestSite.getCreatorMail())) throw new ForbiddenException("The creator user is the only one with update rights");
+        String name = dataInterestSiteUpdate.getName();
+        String description = dataInterestSiteUpdate.getDescription();
+        String type = dataInterestSiteUpdate.getType();
+        if (name != null) interestSite.setName(name);
+        if (description != null) interestSite.setDescription(description);
+        if (type != null) interestSite.setType(type);
+        interestSiteRepository.save(interestSite);
+    }
+
+    @Override
+    public void deleteInterestSite(long interestSiteId) throws NotFoundException, ForbiddenException {
+        InterestSite interestSite = auxGetInterestSite(interestSiteId);
+        String userMail = getLoggedUserMail();
+        if (!userMail.equals(interestSite.getCreatorMail())) throw new ForbiddenException("The creator user is the only one with delete rights");
+        interestSiteRepository.deleteById(interestSiteId);
+    }
 
 
     /*
@@ -734,6 +774,12 @@ public class ServerServiceImpl implements ServerService {
         response.addHeader(jwtConfig.getHeader(), jwtConfig.getPrefix() + token);
     }
 
+    private InterestSite auxGetInterestSite(long interestSiteId) throws NotFoundException {
+        Optional<InterestSite> interestSite_opt = interestSiteRepository.findById(interestSiteId);
+        if (!interestSite_opt.isPresent()) throw new NotFoundException(SITENOTDB);
+        return interestSite_opt.get();
+    }
+
     private Event auxGetEvent(long eventId) throws NotFoundException {
         Optional<Event> optionalEvent = eventRepository.findById(eventId);
         if (!optionalEvent.isPresent()) throw new NotFoundException(EVENTNOTDB);
@@ -767,6 +813,7 @@ public class ServerServiceImpl implements ServerService {
         sequenceGeneratorService.deleteSequence(ForumThread.SEQUENCE_NAME);
         sequenceGeneratorService.deleteSequence(ForumComment.SEQUENCE_NAME);
         sequenceGeneratorService.deleteSequence(WallPost.SEQUENCE_NAME);
+        sequenceGeneratorService.deleteSequence(InterestSite.SEQUENCE_NAME);
 
     }
 

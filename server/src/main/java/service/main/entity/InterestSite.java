@@ -3,6 +3,7 @@ package service.main.entity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -13,11 +14,13 @@ import java.util.List;
 @Document(collection = "interestsites")
 public class InterestSite implements Serializable {
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Transient
+    public static final String SEQUENCE_NAME = "interestSites_sequence";
+
     @Id
-    private String id;
+    private long id;
     private String name;
-    private String localization;
+    private Localization localization;
     private String description;
     private String type;
     private boolean accepted;
@@ -30,16 +33,7 @@ public class InterestSite implements Serializable {
     }
 
     public InterestSite(String name,
-                        String localization)
-    {
-        this.name = name;
-        this.localization = localization;
-        this.votes = new ArrayList<>();
-        makeId();
-    }
-
-    public InterestSite(String name,
-                        String localization,
+                        Localization localization,
                         String description,
                         String type,
                         String creatorMail)
@@ -51,25 +45,6 @@ public class InterestSite implements Serializable {
         this.accepted = false;
         this.creatorMail = creatorMail;
         this.votes = new ArrayList<>();
-        makeId();
-    }
-
-    public InterestSite(String name,
-                        String localization,
-                        String description,
-                        String type,
-                        int votesNumber,
-                        boolean accepted,
-                        String creatorMail)
-    {
-        this.name = name;
-        this.localization = localization;
-        this.description = description;
-        this.type = type;
-        this.accepted = accepted;
-        this.creatorMail = creatorMail;
-        this.votes = new ArrayList<>();
-        makeId();
     }
 
 
@@ -77,7 +52,7 @@ public class InterestSite implements Serializable {
     Get
      */
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
@@ -85,7 +60,7 @@ public class InterestSite implements Serializable {
         return name;
     }
 
-    public String getLocalization() {
+    public Localization getLocalization() {
         return localization;
     }
 
@@ -114,14 +89,16 @@ public class InterestSite implements Serializable {
     Set
      */
 
-    public void setName(String name) {
-        this.name = name;
-        makeId();
+    public void setId(long id) {
+        this.id = id;
     }
 
-    public void setLocalization(String localization) {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLocalization(Localization localization) {
         this.localization = localization;
-        makeId();
     }
 
     public void setDescription(String description) {
@@ -149,13 +126,16 @@ public class InterestSite implements Serializable {
     auxiliary operations
     */
 
-    private void makeId() {
-        id = name + " " + localization;
-    }
-
     public void addVote(String email) {
         votes.add(email);
-        if (votes.size() > 5) accepted = true;
+        if (votes.size() > 4)  {
+            accepted = true;
+            votes = null;
+        }
+    }
+
+    public void deleteVote(String email) {
+        votes.remove(email);
     }
 
 

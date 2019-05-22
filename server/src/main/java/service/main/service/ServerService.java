@@ -9,6 +9,7 @@ import service.main.entity.input_output.forum.DataForumThread;
 import service.main.entity.input_output.forum.DataForumThreadUpdate;
 import service.main.entity.input_output.image.DataImage;
 import service.main.entity.input_output.interestsite.DataInterestSite;
+import service.main.entity.input_output.interestsite.DataInterestSiteUpdate;
 import service.main.entity.input_output.pet.DataPetUpdate;
 import service.main.entity.input_output.user.*;
 import service.main.exception.BadRequestException;
@@ -129,11 +130,19 @@ public interface ServerService {
     Interest site operations
      */
 
-    public void createInterestSite(DataInterestSite inputInterestSite) throws BadRequestException, NotFoundException;
+    public List<InterestSite> getAllInterestSites(boolean accepted);
 
-    public InterestSite getInterestSite(String name, String localization) throws NotFoundException;
+    public InterestSite getInterestSite(long interestSiteId) throws NotFoundException;
 
-    public void voteInterestSite(String interestSiteName, String interestSiteLocalization, String userEmail) throws NotFoundException, BadRequestException;
+    public void createInterestSite(DataInterestSite inputInterestSite) throws BadRequestException;
+
+    public void voteInterestSite(long interestSiteId) throws NotFoundException, BadRequestException;
+
+    public void unVoteInterestSite(long interestSiteId) throws NotFoundException, BadRequestException;
+
+    public void updateInterestSite(long interestSiteId, DataInterestSiteUpdate dataInterestSiteUpdate) throws NotFoundException, BadRequestException, ForbiddenException;
+
+    public void deleteInterestSite(long interestSiteId) throws NotFoundException, ForbiddenException;
 
 
 

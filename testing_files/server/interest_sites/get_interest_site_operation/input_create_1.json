@@ -1,0 +1,10 @@
+{
+    "name":"Just me boy",
+    "localization": {
+        "address": "Road 12",
+        "latitude": "50",
+        "longitude": "50"
+    },
+    "description":"A very good place",
+    "type":"veterinaries"
+}
