@@ -750,7 +750,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> getForumThread(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId) {
+    public ResponseEntity<?> getForumThread(@ApiParam(value="The thread's identifier", required = true, example = "4") @RequestParam("threadId") long threadId) {
         try {
             return new ResponseEntity<>(serverService.getForumThread(threadId),HttpStatus.OK);
         } catch (NotFoundException e) {
@@ -784,7 +784,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> updateForumThread(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId,
+    public ResponseEntity<?> updateForumThread(@ApiParam(value="The thread's identifier", required = true, example = "4") @RequestParam("threadId") long threadId,
                                                @ApiParam(value="The thread parameters to update", required = true) @RequestBody DataForumThreadUpdate dataForumThreadUpdate) {
         try {
             serverService.updateForumThread(threadId,dataForumThreadUpdate);
@@ -805,7 +805,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> deleteForumThread(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId) {
+    public ResponseEntity<?> deleteForumThread(@ApiParam(value="The thread's identifier", required = true, example = "4") @RequestParam("threadId") long threadId) {
         try {
             serverService.deleteForumThread(threadId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -824,7 +824,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> getAllThreadComments(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId) {
+    public ResponseEntity<?> getAllThreadComments(@ApiParam(value="The thread's identifier", required = true, example = "4") @RequestParam("threadId") long threadId) {
         try {
             return new ResponseEntity<>(serverService.getAllThreadComments(threadId),HttpStatus.OK);
         } catch (NotFoundException e) {
@@ -840,7 +840,7 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread does not exist in the database")
 
     })
-    public ResponseEntity<?> createForumComment(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId,
+    public ResponseEntity<?> createForumComment(@ApiParam(value="The thread's identifier", required = true, example = "4") @RequestParam("threadId") long threadId,
                                                 @ApiParam(value="The comment parameters", required = true) @RequestBody DataForumComment dataForumComment) {
         try {
             serverService.createForumComment(threadId,dataForumComment);
@@ -860,8 +860,8 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum thread or comment do not exist in the database")
 
     })
-    public ResponseEntity<?> updateForumComment(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId,
-                                                @ApiParam(value="The comment's identifier", required = true) @RequestParam("commentId") long commentId,
+    public ResponseEntity<?> updateForumComment(@ApiParam(value="The thread's identifier", required = true, example = "4") @RequestParam("threadId") long threadId,
+                                                @ApiParam(value="The comment's identifier", required = true, example = "4") @RequestParam("commentId") long commentId,
                                                 @ApiParam(value="The comment parameters", required = true) @RequestBody DataForumCommentUpdate dataForumCommentUpdate) {
         try {
             serverService.updateForumComment(threadId,commentId,dataForumCommentUpdate);
@@ -885,8 +885,8 @@ public class RestApiController {
             @ApiResponse(code = 404, message = "The forum comment does not exist in the database")
 
     })
-    public ResponseEntity<?> deleteForumComment(@ApiParam(value="The thread's identifier", required = true) @RequestParam("threadId") long threadId,
-                                                @ApiParam(value="The comment's identifier", required = true) @RequestParam("commentId") long commentId) {
+    public ResponseEntity<?> deleteForumComment(@ApiParam(value="The thread's identifier", required = true, example = "4") @RequestParam("threadId") long threadId,
+                                                @ApiParam(value="The comment's identifier", required = true, example = "4") @RequestParam("commentId") long commentId) {
         try {
             serverService.deleteForumComment(threadId,commentId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -938,7 +938,7 @@ public class RestApiController {
             @ApiResponse(code = 400, message = "The input data is not well formed"),
             @ApiResponse(code = 404, message = "The user has not a wall post with this id")
     })
-    public ResponseEntity<?> updateWallPost(@ApiParam(value="The post's identifier", required = true) @RequestParam("wallPostId") long wallPostId,
+    public ResponseEntity<?> updateWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @RequestParam("wallPostId") long wallPostId,
                                             @ApiParam(value="The wall post parameters", required = true) @RequestBody DataWallPostUpdate dataWallPostUpdate) {
         try {
             serverService.updateWallPost(wallPostId,dataWallPostUpdate);
@@ -959,7 +959,7 @@ public class RestApiController {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user has not a wall post with this id")
     })
-    public ResponseEntity<?> deleteWallPost(@ApiParam(value="The post's identifier", required = true) @RequestParam("wallPostId") long wallPostId) {
+    public ResponseEntity<?> deleteWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @RequestParam("wallPostId") long wallPostId) {
         try {
             serverService.deleteWallPost(wallPostId);
             return new ResponseEntity<>(HttpStatus.OK);

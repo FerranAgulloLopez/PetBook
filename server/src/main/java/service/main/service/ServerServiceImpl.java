@@ -194,7 +194,7 @@ public class ServerServiceImpl implements ServerService {
         } catch (NotFoundException e) {
             throw new InternalServerErrorException("Error while loading user from the database");
         }
-        if (!dataWallPost.isOk()) throw new BadRequestException("The input data is not well formed");
+        if (!dataWallPost.inputCorrect()) throw new BadRequestException("The input data is not well formed");
         WallPost wallPost = new WallPost(dataWallPost.getDescription(),dataWallPost.getCreationDate(),null);
         wallPost.setId(sequenceGeneratorService.generateSequence(WallPost.SEQUENCE_NAME));
         user.addWallPost(wallPost);
@@ -212,7 +212,7 @@ public class ServerServiceImpl implements ServerService {
         }
         WallPost wallPost = user.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
-        if (!dataWallPostUpdate.isOk()) throw new BadRequestException("The input data is not well formed");
+        if (!dataWallPostUpdate.inputCorrect()) throw new BadRequestException("The input data is not well formed");
         wallPost.setDescription(dataWallPostUpdate.getDescription());
         wallPost.setUpdateDate(dataWallPostUpdate.getUpdateDate());
         userRepository.save(user);

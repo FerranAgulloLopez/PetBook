@@ -26,7 +26,7 @@ public class DataWallPostUpdate implements Serializable {
     Auxiliary operations
      */
 
-    public boolean isOk() {
+    public boolean inputCorrect() {
         return !(this.description == null || this.updateDate == null);
     }
 }
