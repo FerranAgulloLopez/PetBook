@@ -64,6 +64,9 @@ public class NewForum extends AppCompatActivity implements AsyncResult {
         String segundos = String.valueOf(ahora.getSecond());
         if(ahora.getMonthValue() < 10) mes = "0" + mes;
         if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
+        if(ahora.getHour() < 10) hora = "0" + hora;
+        if(ahora.getMinute() < 10) minutos = "0" + minutos;
+        if(ahora.getSecond() < 10) segundos = "0" + segundos;
         String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
         System.out.println(fechaRetorno);
         return fechaRetorno;

@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setTitle("Mi perfil");
+        setTitle("My profile");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -184,9 +184,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_logout) {
             //salir a la ventana de log in
             AlertDialog.Builder exit = new AlertDialog.Builder(MainActivity.this);
-            exit.setMessage("¿Esta seguro de querer salir de la aplicación?")
+            exit.setMessage("Are you sure you want to quit PETBook?")
                     .setCancelable(false)
-                    .setPositiveButton("Si",new DialogInterface.OnClickListener(){
+                    .setPositiveButton("Yes",new DialogInterface.OnClickListener(){
                         @Override
                         public void onClick(DialogInterface dialog, int which){
 
@@ -210,7 +210,7 @@ public class MainActivity extends AppCompatActivity
                     });
 
             AlertDialog cerrar = exit.create();
-            cerrar.setTitle("Salida");
+            cerrar.setTitle("Exit");
             cerrar.show();
         }
 

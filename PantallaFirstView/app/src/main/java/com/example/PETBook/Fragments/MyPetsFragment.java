@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 
 //-------------
@@ -58,6 +59,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
     private View MyView;
     private OnFragmentInteractionListener mListener;
     private ListView lista;
+    private ProgressBar spinner;
 
     public MyPetsFragment() {
         // Required empty public constructor
@@ -97,9 +99,9 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
 
 
         MyView =  inflater.inflate(R.layout.activity_pets, container, false);
-
+        spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
         // Set tittle to the fragment
-        getActivity().setTitle("Mis mascotas");
+        getActivity().setTitle("My pets");
 
         SingletonUsuario su = SingletonUsuario.getInstance();
         String us = su.getEmail();
@@ -172,6 +174,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
 
     @Override
     public void OnprocessFinish(JSONObject json) {
+        spinner.setVisibility(View.VISIBLE);
         try {
             if (json.getInt("code") == 200) {
                 pets = new ArrayList<PetModel>();
@@ -197,7 +200,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
                     lista = (ListView) MyView.findViewById(R.id.list_pets);
                     lista.setAdapter(petsUser);
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de pets\n");
-
+                    spinner.setVisibility(View.GONE);
 
                 }
             }

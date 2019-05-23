@@ -71,15 +71,6 @@
             android:name="com.example.PETBook.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.example.PETBook.DeletePet"
-            android:label="@string/title_activity_pets"
-            android:parentActivityName="com.example.PETBook.PetsContainer"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MainActivity" />
-        </activity>
         <activity android:name="com.example.PETBook.NewForum" />
         <activity
             android:name="com.example.PETBook.PetsContainer"
