@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
     private TextInputLayout oldPasswordInput;
     Calendar calendario = Calendar.getInstance();
     private ProgressBar spinner;
+    private ImageView profileImage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
         textInputBirthday  = (TextInputLayout) findViewById(R.id.birthdayTextInput);
         textInputPostalCode  = (TextInputLayout) findViewById(R.id.postalCodeTextInput);
         oldPasswordInput = findViewById(R.id.oldPasswordTextInput);
+        profileImage = findViewById(R.id.profileImageAdd);
         SingletonUsuario su = SingletonUsuario.getInstance();
 
         tipoConexion = "getUser";

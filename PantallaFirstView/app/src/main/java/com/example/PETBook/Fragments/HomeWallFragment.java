@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -180,6 +181,15 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         return MyView;
     }
 
+    private void getPicture(){
+        System.out.println("entro a mostrar imatge");
+        tipoConexion = "getImatge";
+        Conexion con = new Conexion(this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+        System.out.println("conexio walls ben feta");
+
+    }
     private void mostrarWalls(){
         System.out.println("entro a mostrar walls");
         tipoConexion = "getWalls";
@@ -243,6 +253,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         System.out.println(result.split("."));
         return result;
     }
+
     @Override
     public void OnprocessFinish(JSONObject json) {
         spinner.setVisibility(View.VISIBLE);
