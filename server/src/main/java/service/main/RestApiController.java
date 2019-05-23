@@ -476,7 +476,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/events/AddEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/events/AddEventParticipant")
     @ApiOperation(value = "Adds a user to an event", notes = "Adds a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -488,7 +488,8 @@ public class RestApiController {
     {
         try {
             serverService.addEventParticipant(eventId,usermail);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
+            //return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (BadRequestException e) {
@@ -497,7 +498,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @DeleteMapping(value = "/events/DeleteEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/events/DeleteEventParticipant")
     @ApiOperation(value = "Removes a user to an event", notes = "Removes a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -509,7 +510,7 @@ public class RestApiController {
     {
         try {
             serverService.removeEventParticipant(eventId,usermail);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (BadRequestException e) {
