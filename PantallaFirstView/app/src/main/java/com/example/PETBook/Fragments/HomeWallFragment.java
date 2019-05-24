@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.widget.AdapterView;
@@ -25,6 +26,7 @@ import com.example.PETBook.Adapters.WallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EditProfile;
+import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.WallModel;
 import com.example.PETBook.NewWall;
 import com.example.PETBook.SingletonUsuario;
@@ -128,7 +130,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         emptyWalls = MyView.findViewById(R.id.emptyWalls);
 
         mostrarPerfil();
-       // mostrarWalls();
+        // mostrarWalls();
         buttonEditProfile = (Button) MyView.findViewById(R.id.editProfileButton);
 
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
@@ -286,6 +288,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
                     addCommentWalL.setVisibility(View.VISIBLE);
                     spinner.setVisibility(View.GONE);
+                    getPicture();
                 } else {
                     System.out.print("El sistema no logra mostrar la lista de walls del creador\n");
                 }
@@ -303,6 +306,27 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     iconoNac.setVisibility(View.VISIBLE);
                     iconoDir.setVisibility(View.VISIBLE);
                     mostrarWalls();
+                } else {
+                    //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }else if(tipoConexion.equals("getImatge")){
+            try {
+                System.out.println("entro a mostrar la imagen");
+                if (json.getInt("code")==200) {
+                    // convert string to bitmap
+                    SingletonUsuario user = SingletonUsuario.getInstance();
+                    Image imagenConversor = Image.getInstance();
+                    String image = json.getString("image");
+                    Bitmap profileImage = imagenConversor.StringToBitMap(image);
+                    imatgePerfil.setImageBitmap(profileImage);
+                    //user.setProfilePicture(profileImage);
+
+
+
+                    spinner.setVisibility(View.GONE);
                 } else {
                     //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                 }

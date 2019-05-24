@@ -2,7 +2,11 @@ package com.example.PETBook;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -15,15 +19,19 @@ import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Fragments.HomeWallFragment;
+import com.example.PETBook.Models.Image;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.regex.Pattern;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class EditProfile extends AppCompatActivity implements AsyncResult {
 
@@ -45,6 +53,8 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
     private ProgressBar spinner;
     private ImageView profileImage;
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +72,29 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
         textInputBirthday  = (TextInputLayout) findViewById(R.id.birthdayTextInput);
         textInputPostalCode  = (TextInputLayout) findViewById(R.id.postalCodeTextInput);
         oldPasswordInput = findViewById(R.id.oldPasswordTextInput);
-        profileImage = findViewById(R.id.profileImageAdd);
+        profileImage = (CircleImageView) findViewById(R.id.profileImageAdd);
         SingletonUsuario su = SingletonUsuario.getInstance();
+
+
+
+
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i,1);
+            }
+        });
+
+
+
+
+        tipoConexion = "getPicture";
+        Conexion conexion = new Conexion(EditProfile.this);
+        conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+
+
+
 
         tipoConexion = "getUser";
         Conexion con = new Conexion(EditProfile.this);
@@ -375,9 +406,79 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                     e.printStackTrace();
                 }
             }
+            else if(tipoConexion.equals("getPicture")) {
+                spinner.setVisibility(View.GONE);
+
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200 ) {
+                        // convert string to bitmap
+                        SingletonUsuario user = SingletonUsuario.getInstance();
+                        Image imagenConversor = Image.getInstance();
+                        String image = output.getString("image");
+                        Bitmap bitMapImage = imagenConversor.StringToBitMap(image);
+                        profileImage.setImageBitmap(bitMapImage);
+                        //user.setProfilePicture(bitMapImage);
+                        spinner.setVisibility(View.GONE);
+
+
+
+
+                    }
+                    else if (output.getInt("code")==404) { // user does not have profile picture
+                    }
+
+                    else {
+                        Toast.makeText(this, "User does not have profile picture", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         } else {
             Toast.makeText(this, "The server does not work.", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        //super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                Uri returnUri = data.getData();
+                Bitmap bitmapImage = null;
+                try {
+                    bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), returnUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                profileImage.setImageBitmap(bitmapImage);
+
+                SingletonUsuario user = SingletonUsuario.getInstance();
+                //user.setProfilePicture(bitmapImage);
+
+                Image imageConversor = Image.getInstance();
+                String imageEncoded = imageConversor.BitmapToString(bitmapImage);
+
+                JSONObject jsonToSend = new JSONObject();
+                try {
+                    jsonToSend.accumulate("image", imageEncoded);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Conexion con = new Conexion(this);
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/setPicture/" + user.getEmail(), "POST", jsonToSend.toString());
+            }
+        }
+        //Uri returnUri;
+        //returnUri = data.getData();
+    }
+
+
+
 
 }
