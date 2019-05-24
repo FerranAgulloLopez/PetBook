@@ -23,15 +23,16 @@
         android:allowBackup="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
-        tools:replace="android:label"
         android:label="PETBook"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true">
-        <activity android:name="com.example.PETBook.NewEvent"></activity>
-        <activity android:name="com.example.PETBook.NewWall"></activity>
+        android:usesCleartextTraffic="true"
+        tools:replace="android:label">
+        <activity android:name="com.example.PETBook.New_SuggestedSite"></activity>
+        <activity android:name="com.example.PETBook.NewEvent" />
+        <activity android:name="com.example.PETBook.NewWall" />
         <activity android:name="com.example.PETBook.Chat" />
         <activity android:name="com.example.PETBook.Calendar.CalendarActivity" />
         <!--
@@ -55,7 +56,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.PETBook.MainActivity" />
         </activity>
-        <activity android:name="com.example.PETBook.WallInfo"/>
+        <activity android:name="com.example.PETBook.WallInfo" />
         <activity
             android:name="com.example.PETBook.PetInfo"
             android:label="@string/title_activity_pets"
