@@ -78,6 +78,7 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
         imageProfile = (CircleImageView) convertView.findViewById(R.id.imageView);
         Button deleteButton = (Button) convertView.findViewById(R.id.deleteButton);
         tipoConexion = "imageFriend";
+
         Conexion con = new Conexion(this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + friend.getEmail(), "GET", null);
         deleteButton.setOnClickListener(new View.OnClickListener() {
@@ -116,6 +117,7 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
                 Intent intent = new Intent(context, Chat.class);
                 intent.putExtra("emailReceptor", friend.getEmail());
                 intent.putExtra("nameReceptor", friend.getName());
+                intent.putExtra("fotoPerfilReceptor", friend.getFotoPerfil());
                 context.startActivity(intent);
             }
         });
@@ -155,6 +157,7 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
                         SingletonUsuario user = SingletonUsuario.getInstance();
                         Image imagenConversor = Image.getInstance();
                         String image = output.getString("image");
+                        friendAccepted.setFotoPerfil(image);
                         Bitmap profileImage = imagenConversor.StringToBitMap(image);
                         imageProfile.setImageBitmap(profileImage);
                         user.setProfilePicture(profileImage);
