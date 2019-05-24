@@ -31,8 +31,6 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class EditProfile extends AppCompatActivity implements AsyncResult {
 
     /* ATRIBUTOS   */
@@ -53,8 +51,6 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
     private ProgressBar spinner;
     private ImageView profileImage;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +68,8 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
         textInputBirthday  = (TextInputLayout) findViewById(R.id.birthdayTextInput);
         textInputPostalCode  = (TextInputLayout) findViewById(R.id.postalCodeTextInput);
         oldPasswordInput = findViewById(R.id.oldPasswordTextInput);
-        profileImage = (CircleImageView) findViewById(R.id.profileImageAdd);
+        profileImage = findViewById(R.id.profileImageAdd);
         SingletonUsuario su = SingletonUsuario.getInstance();
-
 
 
 
@@ -85,16 +80,6 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                 startActivityForResult(i,1);
             }
         });
-
-
-
-
-        tipoConexion = "getPicture";
-        Conexion conexion = new Conexion(EditProfile.this);
-        conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
-
-
-
 
         tipoConexion = "getUser";
         Conexion con = new Conexion(EditProfile.this);
@@ -183,24 +168,24 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
 
     private boolean validateSurnames(String surnames) {
 
-            Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
-            textInputSurnames.setErrorTextAppearance(R.style.text_error);
-            textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_wrong24dp, 0);
-            if (surnames.isEmpty()) {
-                textInputSurnames.setError("Please enter your last name");
-                return false;
-            } else if (surnames.length() > 30) {
-                textInputSurnames.setError("Last Name too long");
-                return false;
-            } else if (!patron.matcher(surnames).matches()) {
-                textInputSurnames.setError("Please enter a valid last name");
-                return false;
-            } else {
-                textInputSurnames.setErrorTextAppearance(R.style.text_success);
-                textInputSurnames.setError(" ");
-                textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_success24dp, 0);
-                return true;
-            }
+        Pattern patron = Pattern.compile("^[a-zA-Z ]+$");
+        textInputSurnames.setErrorTextAppearance(R.style.text_error);
+        textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_wrong24dp, 0);
+        if (surnames.isEmpty()) {
+            textInputSurnames.setError("Please enter your last name");
+            return false;
+        } else if (surnames.length() > 30) {
+            textInputSurnames.setError("Last Name too long");
+            return false;
+        } else if (!patron.matcher(surnames).matches()) {
+            textInputSurnames.setError("Please enter a valid last name");
+            return false;
+        } else {
+            textInputSurnames.setErrorTextAppearance(R.style.text_success);
+            textInputSurnames.setError(" ");
+            textInputSurnames.getEditText().setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.check_success24dp, 0);
+            return true;
+        }
 
     }
 
@@ -254,7 +239,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                 }
             }
         }
-            return passwords_ok;
+        return passwords_ok;
     }
 
     private boolean validatePostalCode(String postalCode) {
@@ -350,11 +335,25 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
             con.execute("http://10.4.41.146:9999/ServerRESTAPI/UpdatePassword/" + su.getEmail(), "POST", jsonToSend.toString());
         }
     }
+
+
+    private void getPicture(){
+        System.out.println("entro a mostrar imatge");
+        tipoConexion = "getImatge";
+        Conexion con = new Conexion(this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+        System.out.println("conexio walls ben feta");
+
+    }
+
+
+
     @Override
     public void OnprocessFinish(JSONObject output) {
         spinner.setVisibility(View.VISIBLE);
         if (output != null) {
-            if(tipoConexion.equals("getUser")) {
+            if (tipoConexion.equals("getUser")) {
                 try {
                     int response = output.getInt("code");
                     if (response == 200) {
@@ -363,6 +362,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                         textInputMail.getEditText().setText(output.getString("email"));
                         textInputBirthday.getEditText().setText(output.getString("dateOfBirth"));
                         textInputPostalCode.getEditText().setText(output.getString("postalCode"));
+                        getPicture();
                         spinner.setVisibility(View.GONE);
                     } else {
                         Toast.makeText(this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
@@ -370,7 +370,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            } else if(tipoConexion.equals("updateUser")) {
+            } else if (tipoConexion.equals("updateUser")) {
                 try {
                     int response = output.getInt("code");
                     if (response == 200 || response == 201) {
@@ -387,8 +387,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-            else if(tipoConexion.equals("updatePass")) {
+            } else if (tipoConexion.equals("updatePass")) {
                 try {
                     int response = output.getInt("code");
                     if (response == 200 || response == 201) {
@@ -405,42 +404,29 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }
-            else if(tipoConexion.equals("getPicture")) {
-                spinner.setVisibility(View.GONE);
-
+            } else if (tipoConexion.equals("getImatge")) {
                 try {
-                    int response = output.getInt("code");
-                    if (response == 200 ) {
+                    System.out.println("entro a mostrar la imagen");
+                    if (output.getInt("code") == 200) {
                         // convert string to bitmap
                         SingletonUsuario user = SingletonUsuario.getInstance();
                         Image imagenConversor = Image.getInstance();
                         String image = output.getString("image");
-                        Bitmap bitMapImage = imagenConversor.StringToBitMap(image);
-                        profileImage.setImageBitmap(bitMapImage);
-                        //user.setProfilePicture(bitMapImage);
+                        Bitmap bitMap = imagenConversor.StringToBitMap(image);
+                        profileImage.setImageBitmap(bitMap);
+                        //user.setProfilePicture(bitmap);
                         spinner.setVisibility(View.GONE);
-
-
-
-
-                    }
-                    else if (output.getInt("code")==404) { // user does not have profile picture
-                    }
-
-                    else {
-                        Toast.makeText(this, "User does not have profile picture", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            } else {
+                Toast.makeText(this, "The server does not work.", Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(this, "The server does not work.", Toast.LENGTH_SHORT).show();
         }
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -472,13 +458,11 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
 
                 Conexion con = new Conexion(this);
                 con.execute("http://10.4.41.146:9999/ServerRESTAPI/setPicture/" + user.getEmail(), "POST", jsonToSend.toString());
+                spinner.setVisibility(View.GONE);
             }
         }
         //Uri returnUri;
         //returnUri = data.getData();
     }
-
-
-
 
 }
