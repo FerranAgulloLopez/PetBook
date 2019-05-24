@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imatgeNewWall"
+        android:id="@+id/imatgeEditWall"
         android:layout_width="54dp"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
@@ -25,33 +25,35 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/crearWall"
-        android:layout_width="273dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/editWall"
+        android:layout_width="271dp"
+        android:layout_height="508dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="73dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginBottom="473dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.885"
-        app:layout_constraintStart_toEndOf="@+id/imatgeNewWall"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imatgeEditWall"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintVertical_bias="0.9">
 
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/textNewWall"
+            android:id="@+id/textEditWall"
             android:layout_width="match_parent"
-            android:layout_height="489dp"
-            android:hint="Say something"
+            android:layout_height="437dp"
+            android:layout_weight="1"
+            android:hint="Edit your post"
             android:inputType="textMultiLine"
             android:textAllCaps="false" />
+
     </android.support.design.widget.TextInputLayout>
 
     <ImageButton
-        android:id="@+id/cancelWall"
+        android:id="@+id/cancelEditWall"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginStart="22dp"
@@ -59,34 +61,25 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="329dp"
         android:layout_marginRight="329dp"
-        android:layout_marginBottom="8dp"
         android:background="@color/common_google_signin_btn_text_dark_default"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toTopOf="@+id/imatgeNewWall"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.12"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/check_wrong24dp" />
 
     <ImageButton
-        android:id="@+id/confirmWall"
+        android:id="@+id/confirmEditWall"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_marginStart="279dp"
-        android:layout_marginLeft="279dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="60dp"
         android:layout_marginRight="60dp"
-        android:layout_marginBottom="8dp"
         android:background="@color/common_google_signin_btn_text_dark_default"
         android:scaleType="fitXY"
-        app:layout_constraintBottom_toTopOf="@+id/editWall"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/cancelWall"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/exito" />
 </android.support.constraint.ConstraintLayout>

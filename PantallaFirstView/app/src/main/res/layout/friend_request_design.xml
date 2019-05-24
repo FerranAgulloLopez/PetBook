@@ -86,9 +86,9 @@
         app:layout_constraintStart_toStartOf="@+id/guideline7"
         app:layout_constraintTop_toTopOf="@+id/guideline2" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
-        android:background="#9b9b9b"
+        android:src="@drawable/imatge_defecte"
         android:layout_width="105dp"
         android:layout_height="134dp"
         android:layout_marginStart="8dp"

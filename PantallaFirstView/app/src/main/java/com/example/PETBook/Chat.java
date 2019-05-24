@@ -1,5 +1,6 @@
 package com.example.PETBook;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.PETBook.Adapters.AdapterMensajes;
+import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.Logic.MensajeLogic;
 import com.example.PETBook.Models.Mensaje;
 import com.example.PETBook.Utilidades.Constants;
@@ -56,11 +58,13 @@ public class Chat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        Bitmap fotoPerfilBitmap = null;
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             emailReceptor = getEmailWithoutDotCom(bundle.getString("emailReceptor"));
             nameReceptor = bundle.getString("nameReceptor");
+            fotoPerfilBitmap = Image.getInstance().StringToBitMap(bundle.getString("fotoPerfilReceptor"));
         }
         else {
             finish();
@@ -69,6 +73,7 @@ public class Chat extends AppCompatActivity {
 
 
         fotoPerfil = (CircleImageView) findViewById(R.id.fotoPerfil);
+        //fotoPerfil.setImageBitmap(fotoPerfilBitmap);
         nombre = (TextView) findViewById(R.id.nombre);
         rvMensajes = (RecyclerView) findViewById(R.id.rvMensajes);
         txtMensaje = (EditText) findViewById(R.id.txtMensaje);

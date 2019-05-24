@@ -9,6 +9,8 @@ public class FriendModel implements Serializable {
     private String email;
     private String birthday;
     private String postalCode;
+    private String fotoPerfil;
+
 
     public void setName(String name) {
         this.name = name;
@@ -42,5 +44,12 @@ public class FriendModel implements Serializable {
 
     public String getPostalCode() { return postalCode; }
 
+    public String getFotoPerfil() {
+        return fotoPerfil;
+    }
+
+    public void setFotoPerfil(String fotoPerfil) {
+        this.fotoPerfil = fotoPerfil;
+    }
 
 }

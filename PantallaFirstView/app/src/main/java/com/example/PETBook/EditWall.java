@@ -21,7 +21,7 @@ import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 
-public class NewWall extends AppCompatActivity implements AsyncResult {
+public class EditWall extends AppCompatActivity implements AsyncResult {
 
 
 
@@ -31,22 +31,23 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
     private ImageButton cancel;
     private ImageButton confirm;
     private String tipoConexion;
+    private Integer idComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_wall);
+        setContentView(R.layout.activity_edit_wall);
 
-        imatgeUser = findViewById(R.id.imatgeNewWall);
-        cancel = findViewById(R.id.cancelWall);
+        imatgeUser = findViewById(R.id.imatgeEditWall);
+        cancel = findViewById(R.id.cancelEditWall);
         confirm = findViewById(R.id.confirmWall);
-        newWall = findViewById(R.id.crearWall);
+        newWall = findViewById(R.id.editWall);
         mostrarImatge();
 
         confirm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-               addNewWall();
+                updateWall();
             }
         });
 
@@ -54,7 +55,7 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewWall.this, MainActivity.class);
+                Intent intent = new Intent(EditWall.this, MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -62,7 +63,7 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
 
     public void mostrarImatge(){
         tipoConexion = "mostrarImatge";
-        Conexion con = new Conexion(NewWall.this);
+        Conexion con = new Conexion(EditWall.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(),"GET", null);
     }
@@ -86,8 +87,8 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
         return fechaRetorno;
     }
 
-    public void addNewWall(){
-        tipoConexion = "afegirWall";
+    public void updateWall(){
+        tipoConexion = "updateWall";
         String fechaHora = crearFechaActual();
         String description = newWall.getEditText().getText().toString().trim();
         JSONObject jsonToSend = new JSONObject();
@@ -101,9 +102,10 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
 
 
         }
-        Conexion con = new Conexion(NewWall.this);
+        Conexion con = new Conexion(EditWall.this);
         SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts" , "POST", jsonToSend.toString());
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts?wallPostId=" + idComment , "PUT", jsonToSend.toString());
+
     }
 
     @Override
@@ -130,11 +132,11 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
             }
 
         }
-        else if(tipoConexion.equals("afegirWall")){
+        else if(tipoConexion.equals("updateWall")){
             try {
                 if(json.getInt("code")==200){
-                    Toast.makeText(this, "Post added succesfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(NewWall.this, MainActivity.class);
+                    Toast.makeText(this, "Post updated succesfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(EditWall.this, MainActivity.class);
                     startActivity(intent);
                 }
                 else{

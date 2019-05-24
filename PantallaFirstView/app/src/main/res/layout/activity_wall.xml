@@ -142,7 +142,7 @@
                 app:layout_constraintStart_toEndOf="@+id/postalCodeInput"
                 app:layout_constraintTop_toBottomOf="@+id/emailInput" />
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imatgePerfilHome"
                 android:layout_width="63dp"
                 android:layout_height="56dp"
