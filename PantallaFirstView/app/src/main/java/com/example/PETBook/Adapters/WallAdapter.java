@@ -46,8 +46,9 @@ public class WallAdapter extends BaseAdapter{
         }
         TextView descriptionWall = (TextView) convertView.findViewById(R.id.descriptionWall);
         TextView dataCreacioWall = (TextView) convertView.findViewById(R.id.dataCreacionWall);
+        TextView idComment = (TextView) convertView.findViewById(R.id.idComment);
 
-
+        idComment.setText(wallList.get(position).getIDWall().toString());
         descriptionWall.setText(wallList.get(position).getDescription());
         dataCreacioWall.setText(wallList.get(position).getCreationDate());
 

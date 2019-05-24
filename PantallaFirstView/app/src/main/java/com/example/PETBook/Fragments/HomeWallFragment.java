@@ -1,11 +1,12 @@
 package com.example.PETBook.Fragments;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.view.Menu;
+import android.os.Build;
 import android.view.MotionEvent;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -20,11 +21,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.PETBook.Adapters.WallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EditProfile;
+import com.example.PETBook.EditWall;
+import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.WallModel;
 import com.example.PETBook.NewWall;
 import com.example.PETBook.SingletonUsuario;
@@ -34,8 +38,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-import java.lang.reflect.Array;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+
+import static com.example.pantallafirstview.R.id.idComment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,7 +80,8 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
     private ImageButton addCommentWalL;
     private ImageButton botonOpcion;
     private TextView emptyWalls;
-
+    private String idComment;
+    private TextView ViewIDComment;
     public HomeWallFragment() {
         // Required empty public constructor
     }
@@ -135,18 +142,17 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), EditProfile.class);
-                //intent.putExtra("pet", petModel);
                 startActivity(intent);
-//                editProfile();
+
             }
         });
         addCommentWalL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NewWall.class);
-                //intent.putExtra("pet", petModel);
+
                 startActivity(intent);
-//                editProfile();
+
             }
         });
         lista = (ListView) MyView.findViewById(R.id.list_walls);
@@ -165,11 +171,27 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                //System.out.println("arg0:" + MyView.findViewById(R.id.descriptionWall).callOnClick());
+
+                ViewIDComment = arg1.findViewById(R.id.idComment);
+                idComment = ViewIDComment.getText().toString();
+                System.out.println("idComment: " + idComment);
+                //idComment = lista.findViewById(R.id.idComment);
                 AlertDialog.Builder builder = new AlertDialog.Builder(MyView.getContext());
+               // System.out.println("idcomment:" + builder.getContext());
                 builder.setItems(opcions, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // the user clicked on colors[which]
+
+                        System.out.println("idComment: " + ViewIDComment.getText().toString());
+                        System.out.println("numero which:" + which);
+                        if(which == 0){
+                            editComment();
+                        }
+                        else if(which == 1){
+                            deletePost();
+                        }
                     }
                 });
                 builder.show();
@@ -179,6 +201,36 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         });
 
         return MyView;
+    }
+
+    private void editComment(){
+        /*Intent intent = new Intent(HomeWallFragment.this, EditWall.class);
+        startActivity(intent);*/
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    private String crearFechaActual() {
+        LocalDateTime ahora= LocalDateTime.now();
+        String año = String.valueOf(ahora.getYear());
+        String mes = String.valueOf(ahora.getMonthValue());
+        String dia = String.valueOf(ahora.getDayOfMonth());
+        String hora = String.valueOf(ahora.getHour());
+        String minutos = String.valueOf(ahora.getMinute());
+        String segundos = String.valueOf(ahora.getSecond());
+        if(ahora.getMonthValue() < 10) mes = "0" + mes;
+        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
+        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
+
+        System.out.println(fechaRetorno);
+        return fechaRetorno;
+    }
+
+    private void deletePost(){
+        tipoConexion="deletePost";
+        Conexion con = new Conexion(this);
+        System.out.println("idComment: " + idComment);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts?wallPostId=" + idComment, "DELETE", null);
+        System.out.println("conexio walls ben feta");
     }
 
     private void getPicture(){
@@ -266,6 +318,8 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     for (int i = 0; i < jsonArray.length(); ++i) {
                         JSONObject wall = jsonArray.getJSONObject(i);
                         WallModel w = new WallModel();
+                        w.setIDWall(wall.getInt("id"));
+                        System.out.println("idwall: " + w.getIDWall());
                         w.setDescription(wall.getString("description"));
                         w.setCreationDate(transformacionFechaHora(wall.getString("creationDate")));
 
@@ -305,6 +359,17 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     mostrarWalls();
                 } else {
                     //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        else if(tipoConexion.equals("deletePost")){
+            try {
+                if (json.getInt("code")==200) {
+                    /*Toast.makeText(HomeWallFragment.this, "Post deleted succesfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, MainActivity.class);
+                    startActivity(intent);*/
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
