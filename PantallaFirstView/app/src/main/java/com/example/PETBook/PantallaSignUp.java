@@ -262,6 +262,7 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
                 jsonToSend.accumulate("password", password1);
                 jsonToSend.accumulate("postalCode", postalCode);
                 jsonToSend.accumulate("secondName", surnames);
+                System.out.println(jsonToSend);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

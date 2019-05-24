@@ -81,7 +81,6 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 String a = s.toString().replace(" ", "+");
                 isAddress = true;
                 llamadaServidor(a);
-                setAdapter();
             }
         });
         editLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -276,12 +275,12 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                     if (direccion.has("country")) completeAddress += direccion.getString("country");
                     addressNames[i] = completeAddress;
                     positionsAddress[i] = new Pair<>(lat, lon);
+                    setAdapter();
                 }
-                isAddress = false;
             } catch (Exception e) {
                 e.printStackTrace();
-                isAddress = false;
-            }
+
+            } finally { isAddress = false; }
         }
         else {
             try {
