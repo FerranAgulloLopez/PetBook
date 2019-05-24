@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import service.main.util.DefaultImage;
 import service.main.util.PBKDF2Hasher;
 
 import java.io.Serializable;
@@ -31,10 +32,8 @@ public class User implements Serializable {
     private String dateOfBirth;
     private String postalCode;
     private boolean mailconfirmed;
-    private String foto;    // Esta encodeado en Base64(byte[]) y luego pasado a String[].
-                            // Para conseguir la foto, pasar a Base64(byte[]) y luego convertir a file.
-                            // File   -> byte[] -> String[]
-                            // String[] -> byte[] -> File
+    private String foto = DefaultImage.image;
+
     private Friend friends; // Amigos tanto los confirmados como lo que solicitan serlo.
     private String tokenFirebase;
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
