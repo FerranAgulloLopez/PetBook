@@ -30,6 +30,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
 
     private Context context;
@@ -71,7 +73,7 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
 
         TextView inputFullName = (TextView) convertView.findViewById(R.id.fullNameInput);
         inputFullName.setText(friend.getName() + " " + friend.getSurnames());
-        imageProfile = convertView.findViewById(R.id.imageView);
+        imageProfile = (CircleImageView) convertView.findViewById(R.id.imageView);
         tipoConexion = "imageFriend";
         Conexion con = new Conexion(this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + friend.getEmail(), "GET", null);
