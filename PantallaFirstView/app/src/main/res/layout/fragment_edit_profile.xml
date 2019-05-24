@@ -312,8 +312,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/postalCodeTextInput"
                 app:layout_constraintVertical_bias="0.0" />
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profileImageAdd"
+                android:src="@drawable/addimage"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginStart="16dp"
@@ -321,11 +322,9 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="165dp"
                 android:layout_marginRight="165dp"
-                android:scaleType="fitXY"
                 app:layout_constraintEnd_toStartOf="@+id/progressBar"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:srcCompat="@drawable/addimage" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
