@@ -342,8 +342,9 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     System.out.println(forumModel.get(2).getComments().get(1).getDescription());*/
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
                     addCommentWalL.setVisibility(View.VISIBLE);
-                    spinner.setVisibility(View.GONE);
+
                     getPicture();
+                    spinner.setVisibility(View.GONE);
                 } else {
                     System.out.print("El sistema no logra mostrar la lista de walls del creador\n");
                 }
