@@ -1038,6 +1038,132 @@ public class RestApiController {
         }
     }
 
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/Like")
+    @ApiOperation(value = "Like a wall post", notes = "Likes a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "A user can not like his own posts / A user can not like two times the same post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> likeWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                          @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.likeWallPost(creatorMail,wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/UnLike")
+    @ApiOperation(value = "Unlike a wall post", notes = "Unlikes a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "A user can not unlike his own posts / The user has not a like in this post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> unlikeWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                          @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.unLikeWallPost(creatorMail,wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/Love")
+    @ApiOperation(value = "Love a wall post", notes = "Loves a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "A user can not love his own posts / A user can not love two times the same post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> loveWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                          @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.loveWallPost(creatorMail,wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/UnLove")
+    @ApiOperation(value = "Unlove a wall post", notes = "Unloves a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "A user can not unlove his own posts / The user has not a love in this post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> unloveWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                            @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.unloveWallPost(creatorMail,wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/Retweet")
+    @ApiOperation(value = "Retweet a wall post", notes = "Retweets a wall post identified by its creatorMail and its wallPostId. Creates a new wallPost with the old description and a new text parameter.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The input is not well formed / A user can not retweet his own posts / A user can not retweet two times the same post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> retweetWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                          @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId,
+                                             @ApiParam(value="The retweet parameters", required = true) @RequestBody DataWallPost dataWallPost) {
+        try {
+            serverService.retweetWallPost(creatorMail, wallPostId, dataWallPost);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InternalServerErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/UnRetweet")
+    @ApiOperation(value = "UnRetweet a wall post", notes = "UnRetweets a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The input is not well formed / A user can not unretweet his own posts / A user has not a retweet in this post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> retweetWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                             @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.unretweetWallPost(creatorMail, wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InternalServerErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
 
 
 

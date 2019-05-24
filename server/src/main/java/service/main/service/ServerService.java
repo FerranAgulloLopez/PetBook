@@ -61,6 +61,18 @@ public interface ServerService {
 
     public void deleteWallPost(long wallPostId) throws NotFoundException, InternalServerErrorException;
 
+    public void likeWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException;
+
+    public void unLikeWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException;
+
+    public void loveWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException;
+
+    public void unloveWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException;
+
+    public void retweetWallPost(String creatorMail, long wallPostId, DataWallPost dataRetweet) throws NotFoundException, BadRequestException, InternalServerErrorException;
+
+    public void unretweetWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException, InternalServerErrorException;
+
 
 
     /*

@@ -251,6 +251,18 @@ public class User implements Serializable {
         return result;
     }
 
+    public WallPost findRetweet(long wallPostId) {
+        boolean found = false;
+        WallPost result = null;
+        for (int i = 0; !found && i < wallPosts.size(); ++i) {
+            if (wallPosts.get(i).getRetweetId() == wallPostId) {
+                found = true;
+                result = wallPosts.get(i);
+            }
+        }
+        return result;
+    }
+
 
 
 }
