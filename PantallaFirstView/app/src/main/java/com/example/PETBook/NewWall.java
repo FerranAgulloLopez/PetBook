@@ -41,7 +41,7 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
         cancel = findViewById(R.id.cancelWall);
         confirm = findViewById(R.id.confirmWall);
         newWall = findViewById(R.id.crearWall);
-        mostrarImatge();
+        getPicture();
 
         confirm.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -59,12 +59,14 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
             }
         });
     }
-
-    public void mostrarImatge(){
-        tipoConexion = "mostrarImatge";
-        Conexion con = new Conexion(NewWall.this);
+    private void getPicture(){
+        System.out.println("entro a mostrar imatge");
+        tipoConexion = "getImatge";
+        Conexion con = new Conexion(this);
         SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(),"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+        System.out.println("conexio walls ben feta");
+
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -86,49 +88,60 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
         return fechaRetorno;
     }
 
+    private boolean validarComment(String comment, TextInputLayout textInputLayout){
+        if(comment.isEmpty()){
+            textInputLayout.setError("Required field");
+            return false;
+        }
+        else{
+            textInputLayout.setErrorEnabled(false);
+            return true;
+        }
+    }
+
     public void addNewWall(){
-        tipoConexion = "afegirWall";
+
         String fechaHora = crearFechaActual();
         String description = newWall.getEditText().getText().toString().trim();
-        JSONObject jsonToSend = new JSONObject();
-        try {
-            jsonToSend.accumulate("description", description);
-            jsonToSend.accumulate("creationDate", fechaHora);
-            //jsonToSend.accumulate("ok", "true");
-            System.out.println(jsonToSend);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        boolean isValidDescription = validarComment(description, newWall);
+        if(isValidDescription) {
+            tipoConexion = "afegirWall";
+            JSONObject jsonToSend = new JSONObject();
+            try {
+                jsonToSend.accumulate("description", description);
+                jsonToSend.accumulate("creationDate", fechaHora);
+                //jsonToSend.accumulate("ok", "true");
+                System.out.println(jsonToSend);
+            } catch (JSONException e) {
+                e.printStackTrace();
 
 
+            }
+            Conexion con = new Conexion(NewWall.this);
+            SingletonUsuario su = SingletonUsuario.getInstance();
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts", "POST", jsonToSend.toString());
         }
-        Conexion con = new Conexion(NewWall.this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts" , "POST", jsonToSend.toString());
     }
 
     @Override
     public void OnprocessFinish(JSONObject json) {
-        if (tipoConexion.equals("mostarImatge")) {
+        if(tipoConexion.equals("getImatge")){
             try {
-                if (json.getInt("code") == 200) {
+                System.out.println("entro a mostrar la imagen");
+                if (json.getInt("code")==200) {
+                    // convert string to bitmap
+                    SingletonUsuario user = SingletonUsuario.getInstance();
                     Image imagenConversor = Image.getInstance();
-                    Bitmap profileImage = imagenConversor.StringToBitMap(json.getString("image"));
+                    String image = json.getString("image");
+                    Bitmap profileImage = imagenConversor.StringToBitMap(image);
                     imatgeUser.setImageBitmap(profileImage);
-
+                    //user.setProfilePicture(profileImage);
                 } else {
-                    Toast.makeText(this, "Some problem during the process", Toast.LENGTH_SHORT).show();
-                    System.out.println(json.getInt("code") + "\n\n\n");
+                    //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
-                try {
-                    System.out.println(json.getInt("code") + "\n\n\n");
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-
             }
-
         }
         else if(tipoConexion.equals("afegirWall")){
             try {

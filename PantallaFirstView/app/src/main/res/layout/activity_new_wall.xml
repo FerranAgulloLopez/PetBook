@@ -6,19 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imatgeNewWall"
-        android:layout_width="54dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_width="63dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="74dp"
-        android:layout_marginEnd="248dp"
-        android:layout_marginRight="248dp"
         android:layout_marginBottom="441dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.079"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
@@ -26,8 +22,8 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/crearWall"
-        android:layout_width="273dp"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="503dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="73dp"

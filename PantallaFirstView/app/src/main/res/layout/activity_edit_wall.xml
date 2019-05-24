@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imatgeEditWall"
-        android:layout_width="54dp"
-        android:layout_height="48dp"
+        android:layout_width="63dp"
+        android:layout_height="56dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="74dp"

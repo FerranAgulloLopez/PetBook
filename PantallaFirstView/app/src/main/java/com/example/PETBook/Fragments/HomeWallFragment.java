@@ -8,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.graphics.Bitmap;
-import android.view.Menu;
 import android.view.MotionEvent;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -30,7 +29,6 @@ import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EditProfile;
 import com.example.PETBook.EditWall;
-import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.WallModel;
 import com.example.PETBook.NewWall;
@@ -43,8 +41,6 @@ import org.json.JSONException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-
-import static com.example.pantallafirstview.R.id.idComment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -85,6 +81,10 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
     private TextView emptyWalls;
     private String idComment;
     private TextView ViewIDComment;
+    private ImageView imageButtonAdd;
+    private ImageView helpIcon;
+    private TextView helpText;
+
     public HomeWallFragment() {
         // Required empty public constructor
     }
@@ -136,6 +136,9 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         addCommentWalL = MyView.findViewById(R.id.addCommentWall);
         spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
         emptyWalls = MyView.findViewById(R.id.emptyWalls);
+        imageButtonAdd = MyView.findViewById(R.id.viewButton);
+        helpIcon = MyView.findViewById(R.id.help1PostIcon);
+        helpText = MyView.findViewById(R.id.help1Post);
 
         mostrarPerfil();
         // mostrarWalls();
@@ -158,6 +161,15 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
 
             }
         });
+        imageButtonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NewWall.class);
+
+                startActivity(intent);
+
+            }
+        });
         lista = (ListView) MyView.findViewById(R.id.list_walls);
         lista.setClickable(true);
 
@@ -170,7 +182,9 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                 return false;
             }
         });
+
         final String[] opcions = {"Edit", "Delete"};
+
         lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -207,8 +221,12 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
     }
 
     private void editComment(){
-        /*Intent intent = new Intent(HomeWallFragment.this, EditWall.class);
-        startActivity(intent);*/
+        Bundle bundle = new Bundle();
+        bundle.putString("id", idComment);
+
+        Intent intent = new Intent(getActivity(), EditWall.class);
+        intent.putExtra("idComment", idComment);
+        startActivity(intent);
     }
 
     @TargetApi(Build.VERSION_CODES.O)
@@ -330,9 +348,24 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     }
                     if(wallModel.size()==0){
                         emptyWalls.setVisibility(View.VISIBLE);
+                        imageButtonAdd.setVisibility(View.VISIBLE);
+                        addCommentWalL.setVisibility(View.INVISIBLE);
+                        helpText.setVisibility(View.INVISIBLE);
+                        helpIcon.setVisibility(View.INVISIBLE);
                     }
-                    else{
+                    else if(wallModel.size() == 1){
                         emptyWalls.setVisibility(View.INVISIBLE);
+                        imageButtonAdd.setVisibility(View.INVISIBLE);
+                        addCommentWalL.setVisibility(View.VISIBLE);
+                        helpText.setVisibility(View.VISIBLE);
+                        helpIcon.setVisibility(View.VISIBLE);
+                    }
+                    else {
+                        emptyWalls.setVisibility(View.INVISIBLE);
+                        imageButtonAdd.setVisibility(View.INVISIBLE);
+                        addCommentWalL.setVisibility(View.VISIBLE);
+                        helpText.setVisibility(View.INVISIBLE);
+                        helpIcon.setVisibility(View.INVISIBLE);
                     }
                     wallAdapter = new WallAdapter(getActivity(), wallModel);
                     lista = (ListView) MyView.findViewById(R.id.list_walls);
@@ -341,8 +374,8 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     /*System.out.println(forumModel.get(2).getTitle());
                     System.out.println(forumModel.get(2).getComments().get(1).getDescription());*/
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
-                    addCommentWalL.setVisibility(View.VISIBLE);
 
+                    buttonEditProfile.setVisibility(View.VISIBLE);
                     getPicture();
                     spinner.setVisibility(View.GONE);
                 } else {
@@ -396,6 +429,8 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     /*Toast.makeText(HomeWallFragment.this, "Post deleted succesfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);*/
+                    Toast.makeText(getActivity(), "Post deleted succesfully", Toast.LENGTH_SHORT).show();
+                    getFragmentManager().beginTransaction().detach(this).attach(this).commit();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
