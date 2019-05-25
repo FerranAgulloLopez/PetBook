@@ -42,6 +42,8 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
     private ImageView imageProfile;
     FriendModel friendAccepted;
 
+    private String fotoPerfilFriend;
+
     public FriendAdapter(Context context, ArrayList<FriendModel> array){
         this.context = context;
         user_friends = array;
@@ -110,6 +112,9 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
             }
         });
 
+
+
+
         Button chatButton = (Button) convertView.findViewById(R.id.button2);
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +122,7 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
                 Intent intent = new Intent(context, Chat.class);
                 intent.putExtra("emailReceptor", friend.getEmail());
                 intent.putExtra("nameReceptor", friend.getName());
-                intent.putExtra("fotoPerfilReceptor", friend.getFotoPerfil());
+                intent.putExtra("fotoPerfilReceptor", fotoPerfilFriend);
                 context.startActivity(intent);
             }
         });
@@ -157,7 +162,7 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
                         SingletonUsuario user = SingletonUsuario.getInstance();
                         Image imagenConversor = Image.getInstance();
                         String image = output.getString("image");
-                        friendAccepted.setFotoPerfil(image);
+                        fotoPerfilFriend = image;
                         Bitmap profileImage = imagenConversor.StringToBitMap(image);
                         imageProfile.setImageBitmap(profileImage);
                         user.setProfilePicture(profileImage);

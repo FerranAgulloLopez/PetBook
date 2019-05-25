@@ -52,21 +52,23 @@ public class Chat extends AppCompatActivity {
     private String emailReceptor;
     private String emailEmisor;
     private String nameReceptor;
+    private String fotoReceptor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        Bitmap fotoPerfilBitmap = null;
+
 
         Bundle bundle = getIntent().getExtras();
         if (bundle != null) {
             emailReceptor = getEmailWithoutDotCom(bundle.getString("emailReceptor"));
             nameReceptor = bundle.getString("nameReceptor");
-            fotoPerfilBitmap = Image.getInstance().StringToBitMap(bundle.getString("fotoPerfilReceptor"));
+            fotoReceptor = bundle.getString("fotoPerfilReceptor");
         }
         else {
+            System.out.println("No BUNDLLEEEEEEEEEEEEEe");
             finish();
         }
 
@@ -92,9 +94,13 @@ public class Chat extends AppCompatActivity {
         LinearLayoutManager l = new LinearLayoutManager(this);
         rvMensajes.setLayoutManager(l);
         rvMensajes.setAdapter(adapter);
+
         // Nombre del usuario con quien se está chateando
         nombre.setText(nameReceptor);
-
+        // Foto de perfil del usuario con quien se está chateando
+        Image image = Image.getInstance();
+        Bitmap fotoPerfilBitmap = image.StringToBitMap(fotoReceptor);
+        fotoPerfil.setImageBitmap(fotoPerfilBitmap);
 
         btnEnviar.setOnClickListener(new View.OnClickListener() {
             @Override
