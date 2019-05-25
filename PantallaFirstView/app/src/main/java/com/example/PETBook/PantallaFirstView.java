@@ -25,17 +25,6 @@ public class PantallaFirstView extends AppCompatActivity {
         String token = sharedPreferences.getString("jwtToken", null);
 
 
-
-        System.out.println("!!!!!!!!!!!! TOKEN FCM !!!!!!!!!!!!!!!");
-        Log.d("Firebase", "token " + FirebaseInstanceId.getInstance().getToken());
-
-        if (token != null) {
-            FirebaseService firebaseService = new FirebaseService();
-            firebaseService.sendRegistrationToServer(token);
-        }
-
-
-
         /*
         if user was logged move directly to MainActivity
          */

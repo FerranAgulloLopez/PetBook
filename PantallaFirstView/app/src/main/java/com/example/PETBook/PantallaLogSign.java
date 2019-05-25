@@ -5,12 +5,15 @@ import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Firebase.FirebaseService;
 import com.example.pantallafirstview.R;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,6 +84,17 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                     editor.putString("login", usuari.getText().toString());
                     editor.putString("jwtToken", token);
                     editor.commit();
+
+
+                    /*
+                    Send firebase token to server
+                     */
+
+                    String tokenFirebase = FirebaseInstanceId.getInstance().getToken();
+                    System.out.println("!!!!!!!!!!!! TOKEN FCM !!!!!!!!!!!!!!!");
+                    Log.d("Firebase", "token " + tokenFirebase);
+                    FirebaseService firebaseService = new FirebaseService();
+                    firebaseService.sendRegistrationToServer(tokenFirebase);
 
 
                     Intent intent = new Intent(this, MainActivity.class);
