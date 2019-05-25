@@ -21,6 +21,8 @@ import org.json.JSONObject;
 
 import java.time.LocalDateTime;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class NewWall extends AppCompatActivity implements AsyncResult {
 
 
@@ -37,7 +39,7 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_wall);
 
-        imatgeUser = findViewById(R.id.imatgeNewWall);
+        imatgeUser = (CircleImageView) findViewById(R.id.imatgeNewWall);
         cancel = findViewById(R.id.cancelWall);
         confirm = findViewById(R.id.confirmWall);
         newWall = findViewById(R.id.crearWall);
