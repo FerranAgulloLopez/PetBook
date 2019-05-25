@@ -319,13 +319,6 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    private String transformacionFechaHora(String fechaHora){
-        Integer fin = 0;
-        String result = fechaHora.replace("T", " ");
-        result = result.replace("+0000", " ");
-        System.out.println(result.split("."));
-        return result;
-    }
 
     @Override
     public void OnprocessFinish(JSONObject json) {
@@ -342,8 +335,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                         w.setIDWall(wall.getInt("id"));
                         System.out.println("idwall: " + w.getIDWall());
                         w.setDescription(wall.getString("description"));
-                        w.setCreationDate(transformacionFechaHora(wall.getString("creationDate")));
-
+                        w.setCreationDate(wall.getString("creationDate"));
                         wallModel.add(w);
                     }
                     if(wallModel.size()==0){

@@ -10,7 +10,14 @@ import android.widget.TextView;
 import com.example.PETBook.Models.WallModel;
 import com.example.pantallafirstview.R;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class WallAdapter extends BaseAdapter{
 
@@ -50,7 +57,17 @@ public class WallAdapter extends BaseAdapter{
 
         idComment.setText(wallList.get(position).getIDWall().toString());
         descriptionWall.setText(wallList.get(position).getDescription());
-        dataCreacioWall.setText(wallList.get(position).getCreationDate());
+
+        String fechaString = wallList.get(position).getCreationDate();
+        Date dateNew = null;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        try {
+            dateNew = format.parse(fechaString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
+        dataCreacioWall.setText(prettyTime.format(dateNew));
 
         return convertView;
     }
