@@ -1238,6 +1238,15 @@ public class RestApiController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @CrossOrigin
+    @PostMapping(value = "/Test/PushDataToDatabase")
+    @ApiOperation(value = "Testing", tags = "Testing")
+    public ResponseEntity<?> pushDataToDatabase()
+    {
+        serverService.pushDataToDatabase();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 
     @CrossOrigin
