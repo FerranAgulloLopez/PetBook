@@ -134,8 +134,6 @@ public interface ServerService {
 
     public List<Pet> findAllMascotasByUser(String email) throws NotFoundException;
 
-    public void removeDataBase();
-
 
 
     /*
@@ -195,5 +193,14 @@ public interface ServerService {
 
     /* Search */
     public List<User> searchUsers(String postalCode, String petType, String userName);
+
+    /*
+    Test
+     */
+
+    public void removeDataBase();
+
+    public void pushDataToDatabase();
+
 
 }

@@ -3,8 +3,11 @@ package service.main.service;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.jni.Local;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +37,10 @@ import service.main.util.SendEmailTLS;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -874,6 +881,103 @@ public class ServerServiceImpl implements ServerService {
         return result;
     }
 
+    @Scheduled(cron = "0 30 22 * * ?")
+    public void eventNotifications() {
+        show_time("EventNotifications");
+        List<Event> events = eventRepository.findAll();
+        long day = 24*60*60*1000;
+        Date now = new Date();
+        for (Event event: events) {
+            Date eventDate = event.getDate();
+            if (eventDate.after(now) && (eventDate.getTime() < (now.getTime()+day))) {
+                List<String> participants = event.getParticipants();
+                for (String participant: participants) {
+                    try {
+                        User user = auxGetUser(participant);
+                        String firebaseToken = user.getTokenFirebase();
+                        FireMessage f = new FireMessage("Upcoming event", "The event with title " + event.getTitle() + " is at " + event.getDate());
+                        f.sendToToken(firebaseToken);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public void pushDataToDatabase() {
+        removeDataBase();
+        String pathDataFile = "../config_files/ini_data.json";
+        try(FileReader fileReader = new FileReader(pathDataFile);
+            BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+
+            String line;
+            String data = "";
+
+            while((line = bufferedReader.readLine()) != null) {
+                data = data.concat(line);
+            }
+
+            JSONObject jsonObject = new JSONObject(data);
+            JSONArray users_array = jsonObject.getJSONArray("users");
+            JSONArray events_array = jsonObject.getJSONArray("events");
+            JSONArray interestSites_array = jsonObject.getJSONArray("interestSites");
+
+            for (int i = 0; i < users_array.length(); ++i) {
+                JSONObject user_json = users_array.getJSONObject(i);
+                String dateOfBirth = user_json.getString("dateOfBirth");
+                String email = user_json.getString("email");
+                String firstName = user_json.getString("firstName");
+                boolean mailconfirmed = user_json.getBoolean("mailconfirmed");
+                String password = user_json.getString("password");
+                String postalCode = user_json.getString("postalCode");
+                String secondName = user_json.getString("secondName");
+                //String foto = user_json.getString("foto");
+                User user = new User(email, password, firstName, secondName, dateOfBirth, postalCode, mailconfirmed);
+                userRepository.save(user);
+            }
+
+            for (int i = 0; i < events_array.length(); ++i) {
+                JSONObject event_json = events_array.getJSONObject(i);
+                String creatorMail = event_json.getString("creatorMail");
+                String date_json = event_json.getString("date");
+                date_json.replace("Z", "");
+                String description = event_json.getString("description");
+                JSONObject localization_json = event_json.getJSONObject("localization");
+                String address = localization_json.getString("address");
+                double latitude = localization_json.getDouble("latitude");
+                double longitude = localization_json.getDouble("longitude");
+                boolean isPublic = event_json.getBoolean("public");
+                String title = event_json.getString("title");
+                Localization localization = new Localization(address, latitude, longitude);
+                String desiredStringFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+                SimpleDateFormat readingFormat = new SimpleDateFormat(desiredStringFormat);
+                Date date = readingFormat.parse(date_json);
+                Event event = new Event(creatorMail, localization, date, title, description, isPublic);
+                eventRepository.save(event);
+            }
+
+            for (int i = 0; i < interestSites_array.length(); ++i) {
+                JSONObject interest_json = interestSites_array.getJSONObject(i);
+                String creatorMail = interest_json.getString("creatorMail");
+                String description = interest_json.getString("description");
+                JSONObject localization_json = interest_json.getJSONObject("localization");
+                String address = localization_json.getString("address");
+                double latitude = localization_json.getDouble("latitude");
+                double longitude = localization_json.getDouble("longitude");
+                String name = interest_json.getString("name");
+                String type = interest_json.getString("type");
+                Localization localization = new Localization(address, latitude, longitude);
+                InterestSite interestSite = new InterestSite(name, localization, description, type, creatorMail);
+                interestSiteRepository.save(interestSite);
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 
@@ -891,6 +995,16 @@ public class ServerServiceImpl implements ServerService {
     /*
     Auxiliary operations
      */
+
+    private void show_time(String text) {
+        LocalDateTime now = LocalDateTime.now();
+        int year = now.getYear();
+        int month = now.getMonthValue();
+        int day = now.getDayOfMonth();
+        int hour = now.getHour();
+        int minute = now.getMinute();
+        System.out.println(text + " -- " + hour + ":" + minute + "  " + month + "/" + day + "/" + year);
+    }
 
     public String getLoggedUserMail() {
         Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
