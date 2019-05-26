@@ -5,6 +5,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +35,7 @@ import service.main.util.SendEmailTLS;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -874,6 +876,31 @@ public class ServerServiceImpl implements ServerService {
         return result;
     }
 
+    @Scheduled(cron = "0 30 22 * * ?")
+    public void eventNotifications() {
+        show_time("EventNotifications");
+        List<Event> events = eventRepository.findAll();
+        long day = 24*60*60*1000;
+        Date now = new Date();
+        for (Event event: events) {
+            Date eventDate = event.getDate();
+            if (eventDate.after(now) && (eventDate.getTime() < (now.getTime()+day))) {
+                List<String> participants = event.getParticipants();
+                for (String participant: participants) {
+                    try {
+                        User user = auxGetUser(participant);
+                        String firebaseToken = user.getTokenFirebase();
+                        FireMessage f = new FireMessage("Upcoming event", "The event with title " + event.getTitle() + " is at " + event.getDate());
+                        f.sendToToken(firebaseToken);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+    }
+
 
 
 
@@ -891,6 +918,16 @@ public class ServerServiceImpl implements ServerService {
     /*
     Auxiliary operations
      */
+
+    private void show_time(String text) {
+        LocalDateTime now = LocalDateTime.now();
+        int year = now.getYear();
+        int month = now.getMonthValue();
+        int day = now.getDayOfMonth();
+        int hour = now.getHour();
+        int minute = now.getMinute();
+        System.out.println(text + " -- " + hour + ":" + minute + "  " + month + "/" + day + "/" + year);
+    }
 
     public String getLoggedUserMail() {
         Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
