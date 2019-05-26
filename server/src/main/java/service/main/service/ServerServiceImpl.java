@@ -178,6 +178,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
+
     /*
     WallPosts
      */
@@ -222,6 +223,96 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    public void likeWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException {
+        User creatorUser = auxGetUser(creatorMail);
+        WallPost wallPost = creatorUser.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        String userMail = getLoggedUserMail();
+        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not like his own posts");
+        if (!wallPost.addLike(userMail)) throw new BadRequestException("A user can not like two times the same post");
+        userRepository.save(creatorUser);
+    }
+
+    @Override
+    public void unLikeWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException {
+        User creatorUser = auxGetUser(creatorMail);
+        WallPost wallPost = creatorUser.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        String userMail = getLoggedUserMail();
+        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unlike his own posts");
+        if (!wallPost.deleteLike(userMail)) throw new BadRequestException("The user has not a like in this post");
+        userRepository.save(creatorUser);
+    }
+
+    @Override
+    public void loveWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException {
+        User creatorUser = auxGetUser(creatorMail);
+        WallPost wallPost = creatorUser.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        String userMail = getLoggedUserMail();
+        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not love his own posts");
+        if (!wallPost.addLove(userMail)) throw new BadRequestException("A user can not love two times the same post");
+        userRepository.save(creatorUser);
+    }
+
+    @Override
+    public void unloveWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException {
+        User creatorUser = auxGetUser(creatorMail);
+        WallPost wallPost = creatorUser.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        String userMail = getLoggedUserMail();
+        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unlove his own posts");
+        if (!wallPost.deleteLove(userMail)) throw new BadRequestException("The user has not a love in this post");
+        userRepository.save(creatorUser);
+    }
+
+    @Override
+    public void retweetWallPost(String creatorMail, long wallPostId, DataWallPost dataRetweet) throws NotFoundException, BadRequestException, InternalServerErrorException {
+        if (!dataRetweet.inputCorrect()) throw new BadRequestException("The input is not well formed");
+        User creatorUser = auxGetUser(creatorMail);
+        WallPost wallPost = creatorUser.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        String userMail = getLoggedUserMail();
+        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not retweet his own posts");
+        if (!wallPost.addRetweet(userMail)) throw new BadRequestException("A user can not retweet two times the same post");
+        User userRetweet;
+        try {
+            userRetweet = auxGetUser(userMail);
+        } catch (NotFoundException e) {
+            throw new InternalServerErrorException("Error while loading new user from the database");
+        }
+        WallPost retweet = new WallPost(wallPost.getDescription(), dataRetweet.getCreationDate(),null);
+        retweet.setId(sequenceGeneratorService.generateSequence(WallPost.SEQUENCE_NAME));
+        retweet.setRetweet(true);
+        retweet.setRetweetId(wallPost.getId());
+        retweet.setRetweetText(dataRetweet.getDescription());
+        userRetweet.addWallPost(retweet);
+        userRepository.save(creatorUser);
+        userRepository.save(userRetweet);
+    }
+
+    @Override
+    public void unretweetWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException, InternalServerErrorException {
+        User creatorUser = auxGetUser(creatorMail);
+        WallPost wallPost = creatorUser.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        String userMail = getLoggedUserMail();
+        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unretweet his own posts");
+        if (!wallPost.deleteRetweet(userMail)) throw new BadRequestException("A user has not a retweet in this post");
+        User userRetweet;
+        try {
+            userRetweet = auxGetUser(userMail);
+        } catch (NotFoundException e) {
+            throw new InternalServerErrorException("Error while loading new user from the database");
+        }
+        WallPost retweet = userRetweet.findRetweet(wallPostId);
+        if (retweet == null) throw new InternalServerErrorException("Error while updating database");
+        userRetweet.deleteWallPost(retweet.getId());
+        userRepository.save(creatorUser);
+        userRepository.save(userRetweet);
+    }
+
+    @Override
     public void deleteWallPost(long wallPostId) throws NotFoundException, InternalServerErrorException {
         String userMail = getLoggedUserMail();
         User user;
@@ -230,8 +321,23 @@ public class ServerServiceImpl implements ServerService {
         } catch (NotFoundException e) {
             throw new InternalServerErrorException("Error while loading user from the database");
         }
-        boolean found = user.deleteWallPost(wallPostId);
-        if (!found) throw new NotFoundException("The user has not a wall post with this id");
+        WallPost wallPost = user.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        user.deleteWallPost(wallPostId);
+        if (wallPost.getRetweets().size() > 0) {
+            for (String mail: wallPost.getRetweets()) {
+                User aux_user;
+                try {
+                    aux_user = auxGetUser(mail);
+                } catch (NotFoundException e) {
+                    throw new InternalServerErrorException("Error while loading user from the database");
+                }
+                WallPost retweet = aux_user.findRetweet(wallPostId);
+                if (retweet == null) throw new InternalServerErrorException("Error while updating database");
+                aux_user.deleteWallPost(retweet.getId());
+                userRepository.save(aux_user);
+            }
+        }
         userRepository.save(user);
     }
 
@@ -307,13 +413,6 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public void acceptFriendRequest(String emailUser, String emailRequester) throws NotFoundException, BadRequestException {
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-        System.out.println("Email: "  + emailUser);
-        System.out.println("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-
-
-
-
         Optional<User> optUser = userRepository.findById(emailUser);
         if (!optUser.isPresent()) throw new NotFoundException(ONE_OF_USERS_DONT_EXIST);
 
@@ -735,6 +834,54 @@ public class ServerServiceImpl implements ServerService {
         forumThread.getComments().remove(forumComment);
         forumThreadRepository.save(forumThread);
     }
+
+    /**
+     *
+     * Search
+     *
+     */
+
+    @Override
+    public List<User> searchUsers(String postalCode, String petType, String userName) {
+        List<User> users = new ArrayList<>();
+        if(postalCode != null && userName != null)
+            users = userRepository.findByPostalCodeAndFirstNameLike(postalCode, userName);   // Finds users with same postalCode and firstName like user name given
+        else if(postalCode != null) // userName is null
+            users = userRepository.findByPostalCode(postalCode);                         // Finds users with same postalCode
+        else if(userName != null) // postalCode is null
+            users = userRepository.findByFirstNameLike(userName);                        // Finds users with same firstName like user name given
+
+        List<User> result = new ArrayList<>();
+
+        if(petType == null) return users;
+        else if(users.isEmpty() && (postalCode != null || userName != null) ) return users; // Vacio porque nadie cumple las condiciones de userName y postalCode siendo alguno de estos NO null
+        else { // petType != null && !users.isEmpty()   ||   petType != null && (postalCode == null && userName == null)
+            if(postalCode == null && userName == null) users = userRepository.findAll(); // petType != null && (postalCode == null && userName == null)
+            for(User user : users) {                                                     // Put on result those Users who also have a pet with same pet Type as *petType*
+                List<Pet> pets = mascotaRepository.findByUserEmail(user.getEmail());
+                boolean hasPetWithGivenType = false;
+                int i = 0;
+                while(i < pets.size() && ! hasPetWithGivenType) {
+                    if(pets.get(i).getEspecie() != null && pets.get(i).getEspecie().equals(petType)) {
+                        hasPetWithGivenType = true;
+                    }
+                    ++i;
+                }
+                if(hasPetWithGivenType) result.add(user);
+            }
+        }
+
+        return result;
+    }
+
+
+
+
+
+
+
+
+
 
 
 

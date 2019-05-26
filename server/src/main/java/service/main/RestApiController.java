@@ -3,12 +3,14 @@ package service.main;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import service.main.entity.WallPost;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
 import service.main.entity.input_output.forum.DataForumComment;
@@ -28,6 +30,7 @@ import service.main.service.ServerService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @RestController
@@ -476,7 +479,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/events/AddEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/events/AddEventParticipant")
     @ApiOperation(value = "Adds a user to an event", notes = "Adds a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -488,7 +491,8 @@ public class RestApiController {
     {
         try {
             serverService.addEventParticipant(eventId,usermail);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
+            //return new ResponseEntity<>(null, HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (BadRequestException e) {
@@ -497,7 +501,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @DeleteMapping(value = "/events/DeleteEventParticipant", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/events/DeleteEventParticipant")
     @ApiOperation(value = "Removes a user to an event", notes = "Removes a user to an event. Just add the creator's email, the coordinates, the radio and the date of the event", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -509,7 +513,7 @@ public class RestApiController {
     {
         try {
             serverService.removeEventParticipant(eventId,usermail);
-            return new ResponseEntity<>(null, HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         } catch (BadRequestException e) {
@@ -965,7 +969,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @GetMapping(value = "/users/{userMail}/WallPosts")
+    @GetMapping(value = "/users/{userMail}/WallPosts", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all the user's wall posts", notes = "Returns all the user's wall posts.", tags="WallPosts")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -973,14 +977,15 @@ public class RestApiController {
     })
     public ResponseEntity<?> getUserWallPosts(@ApiParam(value="User's email", required = true) @PathVariable("userMail") String userMail) {
         try {
-            return new ResponseEntity<>(serverService.getUserWallPosts(userMail),HttpStatus.OK);
+            List<WallPost> aux = serverService.getUserWallPosts(userMail);
+            return new ResponseEntity<>(aux,HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @CrossOrigin
-    @PostMapping(value = "/users/WallPosts")
+    @PostMapping(value = "/users/WallPosts", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Creates a wall post", notes = "Creates a new wall post to the corresponding user in the token.", tags="WallPosts")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -998,14 +1003,14 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PutMapping(value = "/users/WallPosts")
+    @PutMapping(value = "/users/WallPosts/{wallPostId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a wall post", notes = "Updates a wall post corresponding to the token's user.", tags="WallPosts")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 400, message = "The input data is not well formed"),
             @ApiResponse(code = 404, message = "The user has not a wall post with this id")
     })
-    public ResponseEntity<?> updateWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @RequestParam("wallPostId") long wallPostId,
+    public ResponseEntity<?> updateWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId,
                                             @ApiParam(value="The wall post parameters", required = true) @RequestBody DataWallPostUpdate dataWallPostUpdate) {
         try {
             serverService.updateWallPost(wallPostId,dataWallPostUpdate);
@@ -1020,13 +1025,13 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @DeleteMapping(value = "/users/WallPosts")
+    @DeleteMapping(value = "/users/WallPosts/{wallPostId}")
     @ApiOperation(value = "Deletes a wall post", notes = "Deletes a wall post", tags="WallPosts")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user has not a wall post with this id")
     })
-    public ResponseEntity<?> deleteWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @RequestParam("wallPostId") long wallPostId) {
+    public ResponseEntity<?> deleteWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
         try {
             serverService.deleteWallPost(wallPostId);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -1036,6 +1041,185 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/Like")
+    @ApiOperation(value = "Like a wall post", notes = "Likes a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "A user can not like his own posts / A user can not like two times the same post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> likeWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                          @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.likeWallPost(creatorMail,wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/UnLike")
+    @ApiOperation(value = "Unlike a wall post", notes = "Unlikes a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "A user can not unlike his own posts / The user has not a like in this post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> unlikeWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                          @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.unLikeWallPost(creatorMail,wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/Love")
+    @ApiOperation(value = "Love a wall post", notes = "Loves a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "A user can not love his own posts / A user can not love two times the same post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> loveWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                          @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.loveWallPost(creatorMail,wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/UnLove")
+    @ApiOperation(value = "Unlove a wall post", notes = "Unloves a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "A user can not unlove his own posts / The user has not a love in this post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> unloveWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                            @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.unloveWallPost(creatorMail,wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/Retweet")
+    @ApiOperation(value = "Retweet a wall post", notes = "Retweets a wall post identified by its creatorMail and its wallPostId. Creates a new wallPost with the old description and a new text parameter.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The input is not well formed / A user can not retweet his own posts / A user can not retweet two times the same post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> retweetWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                          @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId,
+                                             @ApiParam(value="The retweet parameters", required = true) @RequestBody DataWallPost dataWallPost) {
+        try {
+            serverService.retweetWallPost(creatorMail, wallPostId, dataWallPost);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InternalServerErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/users/{creatorMail}/WallPosts/{wallPostId}/UnRetweet")
+    @ApiOperation(value = "UnRetweet a wall post", notes = "UnRetweets a wall post identified by its creatorMail and its wallPostId.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The input is not well formed / A user can not unretweet his own posts / A user has not a retweet in this post"),
+            @ApiResponse(code = 404, message = "The creator user does not exist / The creator user has not a wall post with this id")
+    })
+    public ResponseEntity<?> retweetWallPost(@ApiParam(value="The creator's mail", required = true) @PathVariable("creatorMail") String creatorMail,
+                                             @ApiParam(value="The wall post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            serverService.unretweetWallPost(creatorMail, wallPostId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InternalServerErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
+
+    /**
+     *
+     *
+     * Search
+     *
+     */
+
+
+    @CrossOrigin
+    @GetMapping(value = "/Search/User")
+    @ApiOperation(value = "Search users by postal code, type of pet and name ", notes = "Returns all the users that match the search by postal code, type of pet and name\n " +
+            "The Operation does not return repeated users.", tags="Search")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok")
+    })
+    public ResponseEntity<?> searchUsers(   @ApiParam(value="Postal code",  required = false)   @RequestParam(value = "postalCode", required = false)   String  postalCode,
+                                            @ApiParam(value="Pet type",     required = false)   @RequestParam(value = "petType",    required = false)   String  petType,
+                                            @ApiParam(value="User's name",  required = false)   @RequestParam(value = "userName",   required = false)   String  userName)
+    {
+        return new ResponseEntity<>(serverService.searchUsers(postalCode, petType, userName), HttpStatus.OK);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

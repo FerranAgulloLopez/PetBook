@@ -14,7 +14,7 @@ public class DataEvent implements Serializable {
     private Date date;
     private String title;
     private String description;
-    @JsonProperty
+    //@JsonProperty
     private boolean isPublic;
 
 
