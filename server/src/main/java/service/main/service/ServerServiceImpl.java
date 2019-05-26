@@ -881,7 +881,7 @@ public class ServerServiceImpl implements ServerService {
         return result;
     }
 
-    @Scheduled(cron = "0 30 22 * * ?")
+    @Scheduled(cron = "0 0 1 * * ?")
     public void eventNotifications() {
         show_time("EventNotifications");
         List<Event> events = eventRepository.findAll();
@@ -895,7 +895,7 @@ public class ServerServiceImpl implements ServerService {
                     try {
                         User user = auxGetUser(participant);
                         String firebaseToken = user.getTokenFirebase();
-                        FireMessage f = new FireMessage("Upcoming event", "The event with title " + event.getTitle() + " is at " + event.getDate());
+                        FireMessage f = new FireMessage("Upcoming event", "The event with title " + event.getTitle() + " is today at " + event.getDate());
                         f.sendToToken(firebaseToken);
                     } catch (Exception e) {
                         e.printStackTrace();
