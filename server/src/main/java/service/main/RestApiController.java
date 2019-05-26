@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import service.main.entity.WallPost;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
 import service.main.entity.input_output.forum.DataForumComment;
@@ -28,6 +29,7 @@ import service.main.service.ServerService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 
 @RestController
@@ -966,7 +968,7 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @GetMapping(value = "/users/{userMail}/WallPosts")
+    @GetMapping(value = "/users/{userMail}/WallPosts", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Returns all the user's wall posts", notes = "Returns all the user's wall posts.", tags="WallPosts")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -974,14 +976,15 @@ public class RestApiController {
     })
     public ResponseEntity<?> getUserWallPosts(@ApiParam(value="User's email", required = true) @PathVariable("userMail") String userMail) {
         try {
-            return new ResponseEntity<>(serverService.getUserWallPosts(userMail),HttpStatus.OK);
+            List<WallPost> aux = serverService.getUserWallPosts(userMail);
+            return new ResponseEntity<>(aux,HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 
     @CrossOrigin
-    @PostMapping(value = "/users/WallPosts")
+    @PostMapping(value = "/users/WallPosts", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Creates a wall post", notes = "Creates a new wall post to the corresponding user in the token.", tags="WallPosts")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
@@ -999,14 +1002,14 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @PutMapping(value = "/users/WallPosts")
+    @PutMapping(value = "/users/WallPosts/{wallPostId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Updates a wall post", notes = "Updates a wall post corresponding to the token's user.", tags="WallPosts")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 400, message = "The input data is not well formed"),
             @ApiResponse(code = 404, message = "The user has not a wall post with this id")
     })
-    public ResponseEntity<?> updateWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @RequestParam("wallPostId") long wallPostId,
+    public ResponseEntity<?> updateWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId,
                                             @ApiParam(value="The wall post parameters", required = true) @RequestBody DataWallPostUpdate dataWallPostUpdate) {
         try {
             serverService.updateWallPost(wallPostId,dataWallPostUpdate);
@@ -1021,13 +1024,13 @@ public class RestApiController {
     }
 
     @CrossOrigin
-    @DeleteMapping(value = "/users/WallPosts")
+    @DeleteMapping(value = "/users/WallPosts/{wallPostId}")
     @ApiOperation(value = "Deletes a wall post", notes = "Deletes a wall post", tags="WallPosts")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "The user has not a wall post with this id")
     })
-    public ResponseEntity<?> deleteWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @RequestParam("wallPostId") long wallPostId) {
+    public ResponseEntity<?> deleteWallPost(@ApiParam(value="The post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
         try {
             serverService.deleteWallPost(wallPostId);
             return new ResponseEntity<>(HttpStatus.OK);

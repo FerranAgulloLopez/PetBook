@@ -19,11 +19,17 @@ public class WallPost implements Serializable {
     private Date creationDate;
     private Date updateDate;
     private boolean retweet;
-    private Long retweetId;
+    private long retweetId;
     private String retweetText;
     private List<String> likes;
     private List<String> loves;
     private List<String> retweets;
+
+    public WallPost() {
+        this.likes = new ArrayList<>();
+        this.loves = new ArrayList<>();
+        this.retweets = new ArrayList<>();
+    }
 
     public WallPost(String description, Date creationDate, Date updateDate) {
         this.description = description;

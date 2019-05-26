@@ -325,15 +325,16 @@ public class ServerServiceImpl implements ServerService {
         user.deleteWallPost(wallPostId);
         if (wallPost.getRetweets().size() > 0) {
             for (String mail: wallPost.getRetweets()) {
+                User aux_user;
                 try {
-                    user = auxGetUser(mail);
+                    aux_user = auxGetUser(mail);
                 } catch (NotFoundException e) {
                     throw new InternalServerErrorException("Error while loading user from the database");
                 }
-                WallPost retweet = user.findRetweet(wallPostId);
+                WallPost retweet = aux_user.findRetweet(wallPostId);
                 if (retweet == null) throw new InternalServerErrorException("Error while updating database");
-                user.deleteWallPost(retweet.getId());
-                userRepository.save(user);
+                aux_user.deleteWallPost(retweet.getId());
+                userRepository.save(aux_user);
             }
         }
         userRepository.save(user);
