@@ -15,8 +15,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     // Para ejecutarlo en local(No olvidarese de descomentar los ".antMatchers" para ejecutarlo.
-    private final static String exception   = "/ServerRESTAPI/events/AddEventParticipant";
-    private final static String exception2  = "/ServerRESTAPI/events/DeleteEventParticipant";
+    private final static String exception   = "/ServerRESTAPI/Search/User";
+    private final static String exception2  = "/ServerRESTAPI/CreatePet";
     private final static String exception3  = "/ServerRESTAPI/events/CreateEvent";
 
 
@@ -41,13 +41,13 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
 
 
-                /*
+
                 // Excepciones
                 .antMatchers(HttpMethod.POST,   exception, exception2, exception3).permitAll()
                 .antMatchers(HttpMethod.GET,    exception, exception2, exception3).permitAll()
                 .antMatchers(HttpMethod.DELETE, exception, exception2, exception3).permitAll()
                 .antMatchers(HttpMethod.PUT,    exception, exception2, exception3).permitAll()
-                */
+
 
 
 

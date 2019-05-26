@@ -178,6 +178,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
 
+
     /*
     WallPosts
      */
@@ -833,6 +834,54 @@ public class ServerServiceImpl implements ServerService {
         forumThread.getComments().remove(forumComment);
         forumThreadRepository.save(forumThread);
     }
+
+    /**
+     *
+     * Search
+     *
+     */
+
+    @Override
+    public List<User> searchUsers(String postalCode, String petType, String userName) {
+        List<User> users = new ArrayList<>();
+        if(postalCode != null && userName != null)
+            users = userRepository.findByPostalCodeAndFirstNameLike(postalCode, userName);   // Finds users with same postalCode and firstName like user name given
+        else if(postalCode != null) // userName is null
+            users = userRepository.findByPostalCode(postalCode);                         // Finds users with same postalCode
+        else if(userName != null) // postalCode is null
+            users = userRepository.findByFirstNameLike(userName);                        // Finds users with same firstName like user name given
+
+        List<User> result = new ArrayList<>();
+
+        if(petType == null) return users;
+        else if(users.isEmpty() && (postalCode != null || userName != null) ) return users; // Vacio porque nadie cumple las condiciones de userName y postalCode siendo alguno de estos NO null
+        else { // petType != null && !users.isEmpty()   ||   petType != null && (postalCode == null && userName == null)
+            if(postalCode == null && userName == null) users = userRepository.findAll(); // petType != null && (postalCode == null && userName == null)
+            for(User user : users) {                                                     // Put on result those Users who also have a pet with same pet Type as *petType*
+                List<Pet> pets = mascotaRepository.findByUserEmail(user.getEmail());
+                boolean hasPetWithGivenType = false;
+                int i = 0;
+                while(i < pets.size() && ! hasPetWithGivenType) {
+                    if(pets.get(i).getEspecie() != null && pets.get(i).getEspecie().equals(petType)) {
+                        hasPetWithGivenType = true;
+                    }
+                    ++i;
+                }
+                if(hasPetWithGivenType) result.add(user);
+            }
+        }
+
+        return result;
+    }
+
+
+
+
+
+
+
+
+
 
 
 
