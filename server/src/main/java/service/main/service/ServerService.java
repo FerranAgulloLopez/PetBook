@@ -178,4 +178,10 @@ public interface ServerService {
     public void sendTestNotifications(String token);
 
     public void updatePassword(String email, DataUpdatePassword dataUpdatePassword) throws NotFoundException, BadRequestException;
+
+
+
+    /* Search */
+    public List<User> searchUsers(String postalCode, String petType, String userName);
+
 }

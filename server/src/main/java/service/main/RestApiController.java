@@ -3,6 +3,7 @@ package service.main;
 
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -1037,6 +1038,59 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+
+    /**
+     *
+     *
+     * Search
+     *
+     */
+
+
+    @CrossOrigin
+    @GetMapping(value = "/Search/User")
+    @ApiOperation(value = "Search users by postal code, type of pet and name ", notes = "Returns all the users that match the search by postal code, type of pet and name\n " +
+            "The Operation does not return repeated users.", tags="Search")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok")
+    })
+    public ResponseEntity<?> searchUsers(   @ApiParam(value="Postal code",  required = false)   @RequestParam(value = "postalCode", required = false)   String  postalCode,
+                                            @ApiParam(value="Pet type",     required = false)   @RequestParam(value = "petType",    required = false)   String  petType,
+                                            @ApiParam(value="User's name",  required = false)   @RequestParam(value = "userName",   required = false)   String  userName)
+    {
+        return new ResponseEntity<>(serverService.searchUsers(postalCode, petType, userName), HttpStatus.OK);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
