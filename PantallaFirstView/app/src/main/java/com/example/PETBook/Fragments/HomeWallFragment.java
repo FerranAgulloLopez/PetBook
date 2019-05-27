@@ -250,7 +250,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         tipoConexion="deletePost";
         Conexion con = new Conexion(this);
         System.out.println("idComment: " + idComment);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts?wallPostId=" + idComment, "DELETE", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts/" + idComment, "DELETE", null);
         System.out.println("conexio walls ben feta");
     }
 
@@ -368,8 +368,8 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
 
                     buttonEditProfile.setVisibility(View.VISIBLE);
-                    getPicture();
                     spinner.setVisibility(View.GONE);
+                    getPicture();
                 } else {
                     System.out.print("El sistema no logra mostrar la lista de walls del creador\n");
                 }
