@@ -40,8 +40,9 @@
         android:orientation="vertical"
         app:layout_constraintGuide_begin="63dp" />
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imageView"
+        android:src="@drawable/imatge_defecte"
         android:layout_width="56dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -50,7 +51,6 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="#9b9b9b"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toStartOf="@+id/guideline7"
         app:layout_constraintStart_toStartOf="parent"
