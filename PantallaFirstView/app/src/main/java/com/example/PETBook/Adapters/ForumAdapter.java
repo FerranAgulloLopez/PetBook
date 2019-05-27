@@ -16,10 +16,16 @@ import com.example.PETBook.Models.ForumModel;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONObject;
+import org.ocpsoft.prettytime.PrettyTime;
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class ForumAdapter extends BaseAdapter{
 
@@ -63,7 +69,17 @@ public class ForumAdapter extends BaseAdapter{
         nombreForum.setText(forumList.get(position).getTitle());
         numberMessages.setText(String.format("%d", forumList.get(position).getComments().size()));
         //System.out.println(forumList.get(position).getComments().get(position).getTamaño());
-        dataCreacionForum.setText(forumList.get(position).getCreationDate());
+        String fechaString = forumList.get(position).getCreationDate();
+        Date dateNew = null;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        try {
+            dateNew = format.parse(fechaString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
+        dataCreacionForum.setText(prettyTime.format(dateNew));
+
         creadorForum.setText(forumList.get(position).getCreatorMail());
         descriptionForum.setText(forumList.get(position).getDescription());
         return convertView;
