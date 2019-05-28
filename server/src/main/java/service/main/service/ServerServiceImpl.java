@@ -33,6 +33,7 @@ import service.main.exception.NotFoundException;
 import service.main.repositories.*;
 import service.main.services.FireMessage;
 import service.main.services.SequenceGeneratorService;
+import service.main.util.DefaultImage;
 import service.main.util.SendEmailTLS;
 
 import javax.servlet.http.HttpServletRequest;
@@ -51,7 +52,6 @@ public class ServerServiceImpl implements ServerService {
     private static final String EVENTNOTDB = "The event does not exist in the database";
     private static final String PETNOTDB = "The pet does not exist in the database";
     private static final String SITENOTDB = "The interest site does not exist in the database";
-    private static final String NOTPICTURE = "The user does not have profile picture in the database";
     private static final String USER_NOT_IN_EVENT = "The user does not participate in the event";
     private static final String ALREADY_SENT_FRIEND_REQUEST = "The user already have sent a friend request to the other user";
     private static final String HAVENT_SENT_FRIEND_REQUEST = "The user havent sent a friend request to the other user";
@@ -152,7 +152,7 @@ public class ServerServiceImpl implements ServerService {
     public DataImage getProfilePicture(String email) throws NotFoundException {
         User user = auxGetUser(email);
         String Picture = user.getFoto();
-        if (Picture == null) throw new NotFoundException(NOTPICTURE);
+        if (Picture == null) Picture = DefaultImage.image;
         DataImage image = new DataImage();
         image.setImage(Picture);
         return image;

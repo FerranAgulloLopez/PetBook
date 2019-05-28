@@ -143,7 +143,7 @@ public class RestApiController {
     @ApiOperation(value = "Get the profile picture of the user identified by email", tags="User")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
-            @ApiResponse(code = 404, message = "The user does not exist in the database or does not have profile picture")
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
     })
     public ResponseEntity<?> getPictureUser(@PathVariable String email) {
         try {
