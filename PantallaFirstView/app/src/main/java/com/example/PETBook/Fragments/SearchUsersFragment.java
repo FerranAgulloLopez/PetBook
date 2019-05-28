@@ -1,13 +1,18 @@
 package com.example.PETBook.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.PETBook.Adapters.FriendSuggestionAdapter;
 import com.example.PETBook.Adapters.UserAdapter;
@@ -15,6 +20,7 @@ import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.FriendSuggestionModel;
 import com.example.PETBook.Models.UserModel;
+import com.example.PETBook.NewPet;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
@@ -40,10 +46,15 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
     private ArrayList<UserModel> model;
     private ListView lista;
     private UserAdapter user;
+    private EditText inputName;
+    private Spinner inputTypePet;
+    private EditText inputPostalCode;
+    private Button   button;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -86,10 +97,20 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
         }
 
         getActivity().setTitle("Search Users");
-        Conexion con = new Conexion(SearchUsersFragment.this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
+        inputName = (EditText) convertView.findViewById(R.id.nameInput);
+        inputTypePet = (Spinner) convertView.findViewById(R.id.typePetInput);
+        inputPostalCode = (EditText) convertView.findViewById(R.id.postalCodeInput);
 
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUsersFriendSuggestion/" + su.getEmail(),"GET", null);
+        button   = (Button) convertView.findViewById(R.id.searchButton);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getActivity(), "access succesfully", Toast.LENGTH_SHORT).show();
+                searchUser();
+            }
+        });
+
         return convertView;
     }
 
@@ -130,6 +151,46 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    private void searchUser() {
+        Conexion con = new Conexion(SearchUsersFragment.this);
+        String ByName = inputName.getText().toString().trim();
+        String ByTypePet = inputTypePet.getSelectedItem().toString();
+        String ByZone = inputPostalCode.getText().toString().trim();
+       // con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType="+ ByTypePet + "&postalCode="+ ByZone + "&userName=" + ByName,"GET", null);
+
+
+        int num_params = 0;
+        if(!ByName.isEmpty()) {
+            num_params++;
+        } else if (!ByTypePet.isEmpty()) {
+            num_params++;
+        } else if (!ByZone.isEmpty()){
+            num_params++;
+        }
+
+        if(num_params != 0) {
+            if (num_params == 1) {
+                if(!ByName.isEmpty()) {
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?userName=" + ByName,"GET", null);
+                } else if (!ByTypePet.isEmpty()) {
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType=" + ByTypePet,"GET", null);
+                } else if (!ByZone.isEmpty()){
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?postalCode="+ ByZone,"GET", null);
+                }
+            } else if (num_params == 2) {
+                if(ByName.isEmpty()) {
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType=" + ByTypePet + "&postalCode=" + ByZone,"GET", null);
+                } else if (ByTypePet.isEmpty()) {
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?postalCode=" + ByZone + "&userName=" + ByName,"GET", null);
+                } else if (ByZone.isEmpty()){
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType="+ ByTypePet + "&userName=" + ByName,"GET", null);
+                }
+            } else if(num_params == 3){
+                con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType="+ ByTypePet + "&postalCode="+ ByZone + "&userName=" + ByName,"GET", null);
+            }
+        }
     }
 
     @Override
