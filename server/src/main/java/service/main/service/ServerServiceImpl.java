@@ -410,7 +410,7 @@ public class ServerServiceImpl implements ServerService {
         friend.addFriendRequest(emailUser);
 
         try {
-            FireMessage f = new FireMessage("Solicitud de amistad", emailRequested + " quiere ser tu amigo");
+            FireMessage f = new FireMessage("Solicitud de amistad", emailUser + " quiere ser tu amigo");
             f.sendToToken(friend.getTokenFirebase());
         } catch (Exception e) {
             e.printStackTrace();
