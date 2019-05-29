@@ -183,7 +183,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
             }
         });
 
-        final String[] opcions = {"Edit", "Delete"};
+        /*final String[] opcions = {"Edit", "Delete"};
 
         lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
@@ -215,11 +215,11 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                 return true;
             }
 
-        });
+        });*/
 
         return MyView;
     }
-
+/*
     private void editComment(){
         Bundle bundle = new Bundle();
         bundle.putString("id", idComment);
@@ -227,7 +227,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         Intent intent = new Intent(getActivity(), EditWall.class);
         intent.putExtra("idComment", idComment);
         startActivity(intent);
-    }
+    }*/
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
@@ -245,25 +245,22 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         System.out.println(fechaRetorno);
         return fechaRetorno;
     }
-    private String emailToURL(String email){
-        email.replace("@", "%40");
-        return email;
-    }
 
+/*
     private void deletePost(){
         tipoConexion="deletePost";
         Conexion con = new Conexion(this);
         System.out.println("idComment: " + idComment);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts/" + idComment, "DELETE", null);
         System.out.println("conexio walls ben feta");
-    }
+    }*/
 
     private void getPicture(){
         System.out.println("entro a mostrar imatge");
         tipoConexion = "getImatge";
         Conexion con = new Conexion(this);
         SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + emailToURL(su.getEmail()), "GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
         System.out.println("conexio walls ben feta");
 
     }
@@ -340,6 +337,27 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                         System.out.println("idwall: " + w.getIDWall());
                         w.setDescription(wall.getString("description"));
                         w.setCreationDate(wall.getString("creationDate"));
+                        //likes
+                        JSONArray likes = wall.getJSONArray("likes");
+                        ArrayList<String> likers = new ArrayList<String>();
+                        for (int j = 0; j < likes.length(); ++j){
+                            likers.add(likes.getString(j));
+                        }
+                        w.setLikes(likers);
+                        //favs
+                        JSONArray favs = wall.getJSONArray("loves");
+                        ArrayList<String> favers = new ArrayList<String>();
+                        for (int k = 0; k < favs.length(); ++k){
+                            favers.add(favs.getString(k));
+                        }
+                        w.setFavs(favers);
+                        //retweets
+                        JSONArray retweets = wall.getJSONArray("retweets");
+                        ArrayList<String> retweeters = new ArrayList<String>();
+                        for (int l = 0; l < retweets.length(); ++l){
+                            retweeters.add(retweets.getString(l));
+                        }
+                        w.setRetweets(retweeters);
                         wallModel.add(w);
                     }
                     if(wallModel.size()==0){
