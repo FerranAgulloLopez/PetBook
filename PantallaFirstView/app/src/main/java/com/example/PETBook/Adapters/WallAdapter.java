@@ -42,7 +42,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
     private Context context;
     private ArrayList<WallModel> wallList;
     private TextView idComment;
-    private String tipoConexion;
+    private String tipoConexion="";
 
     public WallAdapter (Context context, ArrayList<WallModel> array){
         this.context = context;
@@ -177,7 +177,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
     }
     public void like(final ImageButton like, final Integer id){
         ///votar.setText("Vote");
-
+        tipoConexion = "like";
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,6 +231,17 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        else
+            try{
+                if(json.getInt("code")==200){
+                    System.out.println(json.getInt("code"));
+                }
+                else {
+                    Toast.makeText(this.context, "You can't like your own post", Toast.LENGTH_SHORT).show();
+                }
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }
