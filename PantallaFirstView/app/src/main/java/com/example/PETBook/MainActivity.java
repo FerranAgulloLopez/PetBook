@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.example.PETBook.Fragments.ForumFragment;
 import com.example.PETBook.Fragments.HomeWallFragment;
+import com.example.PETBook.Fragments.InterestSitesFragment;
 import com.example.PETBook.Fragments.MyCalendarFragment;
 import com.example.PETBook.Fragments.MyEventsFragment;
 import com.example.PETBook.Fragments.MyFriendsFragment;
@@ -28,7 +29,7 @@ import com.example.pantallafirstview.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeWallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
                             , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener
-                            , MyFriendsFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener {
+                            , MyFriendsFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener, InterestSitesFragment.OnFragmentInteractionListener {
 
 
 
@@ -93,6 +94,10 @@ public class MainActivity extends AppCompatActivity
             }
             else if (fragType.equals("mapa")){
                 fragment = new MyMapFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if (fragType.equals("interest")){
+                fragment = new InterestSitesFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else {
@@ -177,7 +182,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_forum) {
             myFragment = new ForumFragment();
             fragmentSeleccionado = true;
-
+        } else if (id == R.id.nav_interest){
+            myFragment = new InterestSitesFragment();
+            fragmentSeleccionado = true;
         } else if (id == R.id.nav_map){
             myFragment = new MyMapFragment();
             fragmentSeleccionado = true;

@@ -1,15 +1,19 @@
 package com.example.PETBook.Models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class InterestSiteModel implements Serializable {
 
+    private Integer id;
     private String titulo;
     private String tipo;
     private String descripcion;
     private String direccion;
     private Double latitude;
     private Double longitude;
+    private ArrayList<String> votantes;
+
 
 
     public String getTitulo() {
@@ -61,4 +65,19 @@ public class InterestSiteModel implements Serializable {
     }
 
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public ArrayList<String> getVotantes() {
+        return votantes;
+    }
+
+    public void setVotantes(ArrayList<String> votantes) {
+        this.votantes = votantes;
+    }
 }

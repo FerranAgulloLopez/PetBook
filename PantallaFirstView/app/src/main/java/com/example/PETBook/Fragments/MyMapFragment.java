@@ -104,6 +104,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
         }
         Conexion con = new Conexion(MyMapFragment.this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetAllEvents", "GET", null);
+        con = new Conexion(MyMapFragment.this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/interestSites?accepted=true", "GET", null);
         mapFragment.getMapAsync(this);
         return MyView;
     }

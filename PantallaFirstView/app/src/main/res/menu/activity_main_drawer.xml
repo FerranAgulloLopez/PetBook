@@ -36,6 +36,11 @@
             android:title="Forum" />
 
         <item
+            android:id="@+id/nav_interest"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Interest Sites" />
+
+        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/icono_cerrar_sesion"
             android:title="Log out" />

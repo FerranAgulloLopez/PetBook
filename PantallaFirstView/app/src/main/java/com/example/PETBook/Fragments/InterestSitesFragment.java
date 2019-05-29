@@ -134,6 +134,7 @@ public class InterestSitesFragment extends Fragment implements AsyncResult {
                 for (int i = 0; i < jsonarray.length(); ++i){
                     JSONObject site = jsonarray.getJSONObject(i);
                     InterestSiteModel is = new InterestSiteModel();
+                    is.setId(site.getInt("id"));
                     is.setTitulo(site.getString("name"));
                     is.setTipo(site.getString("type"));
                     is.setDescripcion(site.getString("description"));
@@ -141,6 +142,12 @@ public class InterestSitesFragment extends Fragment implements AsyncResult {
                     is.setDireccion(loc.getString("address"));
                     is.setLatitude(loc.getDouble("latitude"));
                     is.setLongitude(loc.getDouble("longitude"));
+                    JSONArray votes = site.getJSONArray("votes");
+                    ArrayList<String> votants = new ArrayList<String>();
+                    for (int j = 0; j < votes.length(); ++j){
+                        votants.add(votes.getString(j));
+                    }
+                    is.setVotantes(votants);
                     intSites.add(is);
                 }
                 InterestSitesAdapter itsa = new InterestSitesAdapter(getActivity(),intSites);
