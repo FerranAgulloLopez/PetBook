@@ -64,6 +64,9 @@ public final class CalendarSync extends Activity {
      adb shell setprop log.tag.HttpTransport DEBUG
      * </pre>
      */
+
+    private static final String APP_NAME = "pes-calendario";
+
     private static final Level LOGGING_LEVEL = Level.OFF;
 
     private static final String PREF_ACCOUNT_NAME = "mbenalifib@gmail.com";
@@ -123,7 +126,7 @@ public final class CalendarSync extends Activity {
         credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
         // Calendar client
         client = new com.google.api.services.calendar.Calendar.Builder(
-                transport, jsonFactory, credential).setApplicationName("PetBook") // No se si este nombre es correcto
+                transport, jsonFactory, credential).setApplicationName(APP_NAME) // No se si este nombre es correcto
                 .build();
     }
 
