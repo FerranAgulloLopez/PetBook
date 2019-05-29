@@ -8,6 +8,7 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imatgeEditWall"
+        android:background="?android:colorBackground"
         android:layout_width="63dp"
         android:layout_height="56dp"
         android:layout_marginStart="8dp"

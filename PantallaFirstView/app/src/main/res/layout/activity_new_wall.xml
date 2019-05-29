@@ -9,6 +9,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imatgeNewWall"
         android:layout_width="63dp"
+        android:background="?android:colorBackground"
         android:layout_height="56dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
