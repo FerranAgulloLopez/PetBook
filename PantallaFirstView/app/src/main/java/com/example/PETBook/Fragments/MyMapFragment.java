@@ -11,25 +11,26 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EventInfo;
 import com.example.PETBook.Models.EventModel;
+import com.example.PETBook.Models.InterestSiteModel;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.osmdroid.tileprovider.constants.OpenStreetMapTileProviderConstants;
-import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 
@@ -55,7 +56,10 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
     private MapView myOpenMapView;
     private MapController myMapController;
     private ArrayList<EventModel> AllEvents;
+    private ArrayList<InterestSiteModel> AllInterestSites;
     private static SingletonUsuario su = SingletonUsuario.getInstance();
+    private String typeConnection;
+    private View popup = null;
 
     public MyMapFragment() {
         // Required empty public constructor
@@ -102,10 +106,12 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
             mapFragment = SupportMapFragment.newInstance();
             ft.replace(R.id.map, mapFragment).commit();
         }
+        typeConnection = "Events";
         Conexion con = new Conexion(MyMapFragment.this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetAllEvents", "GET", null);
+        /*typeConnection = "Interest Sites";
         con = new Conexion(MyMapFragment.this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/interestSites?accepted=true", "GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/interestSites?accepted=true", "GET", null);*/
         mapFragment.getMapAsync(this);
         return MyView;
     }
@@ -121,37 +127,73 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
     @Override
     public void OnprocessFinish(JSONObject output) {
         if (output != null) {
-            try {
-                int response = output.getInt("code");
-                if (response == 200) {
-                    AllEvents = new ArrayList<>();
-                    JSONArray jsonArray = output.getJSONArray("array");
-                    for (int i = 0; i < jsonArray.length(); ++i) {
-                        JSONObject evento = jsonArray.getJSONObject(i);
-                        EventModel e = new EventModel();
-                        e.setId(evento.getInt("id"));
-                        e.setTitulo(evento.getString("title"));
-                        e.setDescripcion(evento.getString("description"));
-                        e.setFecha(transformacionFechaHora(evento.getString("date")));
-                        JSONObject loc = evento.getJSONObject("localization");
-                        e.setDireccion(loc.getString("address"));
-                        e.setCoordenadas(loc.getDouble("longitude"), loc.getDouble("latitude"));
-                        e.setPublico(evento.getBoolean("public"));
-                        JSONArray m = evento.getJSONArray("participants");
-                        ArrayList<String> miembros = new ArrayList<String>();
-                        for (int j = 0; j < m.length(); ++j) {
-                            miembros.add(m.getString(j));
+            if (typeConnection.equals("Events")){
+                try {
+                    int response = output.getInt("code");
+                    if (response == 200) {
+                        AllEvents = new ArrayList<>();
+                        JSONArray jsonArray = output.getJSONArray("array");
+                        for (int i = 0; i < jsonArray.length(); ++i) {
+                            JSONObject evento = jsonArray.getJSONObject(i);
+                            EventModel e = new EventModel();
+                            e.setId(evento.getInt("id"));
+                            e.setTitulo(evento.getString("title"));
+                            e.setDescripcion(evento.getString("description"));
+                            e.setFecha(transformacionFechaHora(evento.getString("date")));
+                            JSONObject loc = evento.getJSONObject("localization");
+                            e.setDireccion(loc.getString("address"));
+                            e.setCoordenadas(loc.getDouble("longitude"), loc.getDouble("latitude"));
+                            e.setPublico(evento.getBoolean("public"));
+                            JSONArray m = evento.getJSONArray("participants");
+                            ArrayList<String> miembros = new ArrayList<String>();
+                            for (int j = 0; j < m.length(); ++j) {
+                                miembros.add(m.getString(j));
+                            }
+                            e.setMiembros(miembros);
+                            e.setCreador(evento.getString("creatorMail"));
+                            AllEvents.add(e);
+                            LatLng pos = new LatLng(e.getLatitude(), e.getLongitude());
+                            Marker markEvent = mMap.addMarker(new MarkerOptions().position(pos).title(e.getTitulo()));
+                            markEvent.setTag(i);
+                            markEvent.setSnippet("Event");
                         }
-                        e.setMiembros(miembros);
-                        e.setCreador(evento.getString("creatorMail"));
-                        AllEvents.add(e);
-                        LatLng pos = new LatLng(e.getLatitude(), e.getLongitude());
-                        Marker markEvent = mMap.addMarker(new MarkerOptions().position(pos).title(e.getTitulo()));
-                        markEvent.setTag(i);
+                        typeConnection = "Interest Sites";
+                        Conexion con = new Conexion(MyMapFragment.this);
+                        con.execute("http://10.4.41.146:9999/ServerRESTAPI/interestSites?accepted=true", "GET", null);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+            }
+            else {
+                try{
+                    int response = output.getInt("code");
+                    if (response == 200){
+                        AllInterestSites = new ArrayList<>();
+                        JSONArray jsonArray = output.getJSONArray("array");
+                        for(int i = 0; i < jsonArray.length(); i++){
+                            JSONObject is = jsonArray.getJSONObject(i);
+                            InterestSiteModel site = new InterestSiteModel();
+                            site.setId(is.getInt("id"));
+                            site.setTitulo(is.getString("name"));
+                            site.setDescripcion(is.getString("description"));
+                            site.setTipo(is.getString("type"));
+                            JSONObject loc = is.getJSONObject("localization");
+                            site.setDireccion(loc.getString("address"));
+                            site.setLatitude(loc.getDouble("latitude"));
+                            site.setLongitude(loc.getDouble("longitude"));
+                            AllInterestSites.add(site);
+                            LatLng pos = new LatLng(site.getLatitude(), site.getLongitude());
+                            Marker markInterest = mMap.addMarker(new MarkerOptions().position(pos).title(site.getTitulo()));
+                            markInterest.setTag(i);
+                            markInterest.setSnippet("Interest");
+                            markInterest.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_park));
+                            markInterest.setAnchor(0.0f,1.0f);
+                        }
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -166,7 +208,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
         }
         mMap.setMyLocationEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(madrid));
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+        /*mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
                 EventModel event = AllEvents.get((Integer) marker.getTag());
@@ -181,6 +223,43 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                 startActivity(intent);
                 return false;
             }
+        });*/
+        mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+            @Override
+            public View getInfoWindow(Marker marker) {
+                return null;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                if (popup == null){
+                    if(marker.getSnippet().equals("Interest")) {
+                        popup = getLayoutInflater().inflate(R.layout.interestsite_map_window, null);
+                    }
+                    else {
+                        popup = getLayoutInflater().inflate(R.layout.event_map_window, null);
+                    }
+                }
+
+                if(marker.getSnippet().equals("Interest Site")) {
+                    InterestSiteModel is = AllInterestSites.get((Integer) marker.getTag());
+                    TextView title = (TextView) popup.findViewById(R.id.titleInterest);
+                    TextView type = (TextView) popup.findViewById(R.id.typeInterest);
+                    TextView desc = (TextView) popup.findViewById(R.id.descriptionInterest);
+                    TextView loc = (TextView) popup.findViewById(R.id.LocationInterest);
+                    title.setText(is.getTitulo());
+                    type.setText(is.getTipo());
+                    desc.setText(is.getDescripcion());
+                    loc.setText(is.getDireccion());
+                }
+                else {
+                    EventModel e = AllEvents.get((Integer) marker.getTag());
+                    TextView title = (TextView) popup.findViewById(R.id.titleEvent);
+                    title.setText(e.getTitulo());
+                }
+                return popup;
+            }
         });
+
     }
 }
