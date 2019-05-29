@@ -24,12 +24,12 @@ import com.example.PETBook.Fragments.MyFriendsFragment;
 import com.example.PETBook.Fragments.MyMapFragment;
 import com.example.PETBook.Fragments.MyPetsFragment;
 import com.example.PETBook.Fragments.MyPostsFragment;
+import com.example.PETBook.Fragments.SearchUsersFragment;
 import com.example.pantallafirstview.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeWallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
-                            , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener
-                            , MyFriendsFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener, InterestSitesFragment.OnFragmentInteractionListener {
+                            , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener, SearchUsersFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener, InterestSitesFragment.OnFragmentInteractionListener {
 
 
 
@@ -86,6 +86,10 @@ public class MainActivity extends AppCompatActivity
             }
             else if (fragType.equals("calendar")){
                 fragment = new MyCalendarFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if (fragType.equals("searchUsers")){
+                fragment = new SearchUsersFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if (fragType.equals("forum")){
@@ -167,10 +171,13 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
             fragmentSeleccionado = true;
-        }/* else if (id == R.id.nav_profile) {
+        /* else if (id == R.id.nav_profile) {
             myFragment = new HomeWallFragment();
+            fragmentSeleccionado = true;*/
+        } else if (id == R.id.nav_searchUsers) {
+            myFragment = new SearchUsersFragment();
             fragmentSeleccionado = true;
-        }*/ else if (id == R.id.nav_friends) {
+        } else if (id == R.id.nav_friends) {
             myFragment = new MyFriendsFragment();
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_events) {

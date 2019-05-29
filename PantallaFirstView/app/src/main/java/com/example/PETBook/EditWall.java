@@ -131,7 +131,7 @@ public class EditWall extends AppCompatActivity implements AsyncResult {
             }
             Conexion con = new Conexion(EditWall.this);
             SingletonUsuario su = SingletonUsuario.getInstance();
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts?wallPostId=" + idComment, "PUT", jsonToSend.toString());
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts/" + idComment, "PUT", jsonToSend.toString());
 
         }
     }
