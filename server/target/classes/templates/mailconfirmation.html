@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<style>
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
+  color: white;
+  text-align: center;
+}
+</style>
+<head>
+  <meta charset="utf-8">
+  <title>Petbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" type="text/css">
+  <link rel="stylesheet" href="https://static.pingendo.com/bootstrap/bootstrap-4.3.1.css">
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+ <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+ <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg bg-dark navbar-dark" style="height:125px">
+  <div class="container"> 
+    <div class="collapse navbar-collapse" id="navbar14">
+      <p class="d-none d-md-block lead mb-0  text-white" style="text-align:center" > <em class="fa d-inline fa-lg fa-stop-circle"></em> <strong> PETBOOK </strong> </p>
+      <ul class="navbar-nav ml-auto">
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="py-5" style="margin-bottom:40px">
+    <div class="container">    
+        <div class="row" style="">
+            <div class="col-md-1" style="">
+            </div>
+            <div class="col-md-8 offset-md-1" style="">
+                <div class="card bg-light mb-3">
+                    <div class="card-header" style="display:flex; flex-direction:row; justify-content:space-between;font-size:17px;font-weight:bold;">
+                        <h>Welcome!</h>
+                    </div>
+                    <div class="card-body" style="height:125px">
+                        <h5 th:text="'Hello, your email ' + ${email} + ' has been confirmed. Congratulations!'"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer" style="color:white;padding-top:25px;padding-bottom:20px;height: 125px;">
+    <p style="text-align:center;">©2019 Application For Student Purposes</p>
+</div>
+</body>
+
+</html>

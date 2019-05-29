@@ -22,6 +22,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
 }
 
 
@@ -62,7 +73,31 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     implementation 'com.jakewharton.threetenabp:threetenabp:1.1.1'
     implementation "com.android.support:appcompat-v7:28.0.0"
-    implementation "com.android.support:recyclerview-v7:28.0.0"//
+    implementation "com.android.support:recyclerview-v7:28.0.0"
+
+
+
+
+
+    // SINCRONIZACION
+    implementation ('com.google.android.gms:play-services:12.0.1') {
+        exclude group: "com.android.support"
+
+    }
+    //implementation 'com.google.apis:google-api-services-calendar:v3-rev119-1.19.1'
+    implementation 'com.google.api-client:google-api-client:1.25.0'
+    implementation 'com.google.api-client:google-api-client-android:1.23.0'
+    implementation 'com.google.api-client:google-api-client-gson:1.20.0'
+
+    implementation 'com.google.apis:google-api-services-calendar:v3-rev378-1.25.0'
+
+    // ???
+    implementation 'com.google.oauth-client:google-oauth-client-jetty:1.23.0'
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.google.android.gms:play-services:12.0.1'
+    implementation 'com.jakewharton:butterknife:8.5.1'
+
 
 
 }
