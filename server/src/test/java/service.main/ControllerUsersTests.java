@@ -210,6 +210,17 @@ public class ControllerUsersTests extends ControllerIntegrationTests {
         this.mockMvc.perform(get("/ServerRESTAPI/getPicture/foo@mail.com"))
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"getProfilePicture_operation/output_getPicture.json")));
     }
+    /*
+    Get default profile picture
+     */
+
+    @Test
+    public void getDefaultProfilePicture() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getDefaultProfilePicture_operation/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/getPicture/foo@mail.com"))
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path+"getDefaultProfilePicture_operation/output_getPicture.json")));
+    }
 
 
     /*
