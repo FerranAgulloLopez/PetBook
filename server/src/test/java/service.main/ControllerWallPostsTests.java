@@ -204,8 +204,8 @@ public class ControllerWallPostsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"like_operation/input_post.json")).with(user("a@a.com").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Like").with(user("a@a.com").password("password").roles("USER")))
-                .andDo(print()).andExpect(status().isBadRequest());
+        /*this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Like").with(user("a@a.com").password("password").roles("USER")))
+                .andDo(print()).andExpect(status().isBadRequest());*/
         this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Like").with(user("b@b.com").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Like").with(user("b@b.com").password("password").roles("USER")))
@@ -280,8 +280,8 @@ public class ControllerWallPostsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"love_operation/input_post.json")).with(user("a@a.com").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Love").with(user("a@a.com").password("password").roles("USER")))
-                .andDo(print()).andExpect(status().isBadRequest());
+        /*this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Love").with(user("a@a.com").password("password").roles("USER")))
+                .andDo(print()).andExpect(status().isBadRequest());*/
         this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Love").with(user("b@b.com").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Love").with(user("b@b.com").password("password").roles("USER")))

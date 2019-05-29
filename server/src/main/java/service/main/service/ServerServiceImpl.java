@@ -235,7 +235,7 @@ public class ServerServiceImpl implements ServerService {
         WallPost wallPost = creatorUser.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
         String userMail = getLoggedUserMail();
-        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not like his own posts");
+        //if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not like his own posts");
         if (!wallPost.addLike(userMail)) throw new BadRequestException("A user can not like two times the same post");
         userRepository.save(creatorUser);
     }
@@ -246,7 +246,7 @@ public class ServerServiceImpl implements ServerService {
         WallPost wallPost = creatorUser.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
         String userMail = getLoggedUserMail();
-        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unlike his own posts");
+        //if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unlike his own posts");
         if (!wallPost.deleteLike(userMail)) throw new BadRequestException("The user has not a like in this post");
         userRepository.save(creatorUser);
     }
@@ -257,7 +257,7 @@ public class ServerServiceImpl implements ServerService {
         WallPost wallPost = creatorUser.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
         String userMail = getLoggedUserMail();
-        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not love his own posts");
+        //if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not love his own posts");
         if (!wallPost.addLove(userMail)) throw new BadRequestException("A user can not love two times the same post");
         userRepository.save(creatorUser);
     }
@@ -268,7 +268,7 @@ public class ServerServiceImpl implements ServerService {
         WallPost wallPost = creatorUser.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
         String userMail = getLoggedUserMail();
-        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unlove his own posts");
+        //if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unlove his own posts");
         if (!wallPost.deleteLove(userMail)) throw new BadRequestException("The user has not a love in this post");
         userRepository.save(creatorUser);
     }
