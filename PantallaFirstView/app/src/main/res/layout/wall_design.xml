@@ -86,19 +86,20 @@
         android:layout_marginTop="4dp"
         android:layout_marginEnd="338dp"
         android:layout_marginRight="338dp"
-        android:background="@color/common_google_signin_btn_text_dark_default"
+        android:background="#F8F8F9"
         android:scaleType="fitXY"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionWall"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/like" />
+        app:srcCompat="@drawable/like2" />
 
     <TextView
         android:id="@+id/numLikes"
-        android:layout_width="14dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -115,25 +116,9 @@
         app:layout_constraintTop_toBottomOf="@+id/descriptionWall"
         app:layout_constraintVertical_bias="0.0" />
 
-    <ImageButton
-        android:id="@+id/favButton"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="72dp"
-        android:layout_marginLeft="72dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginBottom="8dp"
-        android:background="@color/common_google_signin_btn_text_dark_default"
-        android:scaleType="fitXY"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/numLikes"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionWall"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/fav" />
-
     <TextView
         android:id="@+id/numFavs"
-        android:layout_width="12dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
@@ -144,7 +129,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/favButton"
         app:layout_constraintTop_toBottomOf="@+id/descriptionWall"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
         android:id="@+id/retweetButton"
@@ -153,8 +138,9 @@
         android:layout_marginStart="80dp"
         android:layout_marginLeft="80dp"
         android:layout_marginTop="4dp"
-        android:background="@color/common_google_signin_btn_text_dark_default"
+        android:background="#F8F8F9"
         android:scaleType="fitXY"
+        android:tint="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/numFavs"
         app:layout_constraintTop_toBottomOf="@+id/descriptionWall"
@@ -179,5 +165,20 @@
         app:layout_constraintStart_toEndOf="@+id/retweetButton"
         app:layout_constraintTop_toBottomOf="@+id/descriptionWall"
         app:layout_constraintVertical_bias="0.0" />
+
+    <ImageButton
+        android:id="@+id/favButton"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginLeft="76dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="7dp"
+        android:background="#F8F8F9"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/numLikes"
+        app:layout_constraintTop_toBottomOf="@+id/descriptionWall"
+        app:srcCompat="@drawable/fav2" />
 
 </android.support.constraint.ConstraintLayout>
