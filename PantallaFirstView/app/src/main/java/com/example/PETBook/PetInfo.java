@@ -161,7 +161,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
         String nombrePet = textNombre.getText().toString();
 
         Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/DeletePet/" + user + "?nombreMascota=" + nombrePet, "DELETE", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/DeletePet/" + user + "?nombreMascota=" + nombrePet.trim(), "DELETE", null);
     }
     @Override
     public void OnprocessFinish(JSONObject json) {
