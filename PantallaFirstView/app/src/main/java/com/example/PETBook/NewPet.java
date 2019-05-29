@@ -101,7 +101,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
 
     public void addNewPet(View view) throws JSONException {
 
-        nombrePet = nombremascota.getText().toString();
+        nombrePet = nombremascota.getText().toString().trim();
         edadPet = edad.getText().toString();
         sexoPet = sexo.getSelectedItem().toString();
         colorPet = color.getText().toString();

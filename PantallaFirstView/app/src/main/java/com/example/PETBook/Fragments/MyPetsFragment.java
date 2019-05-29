@@ -15,8 +15,10 @@ import android.view.ViewGroup;
 //-----------
 
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 //-------------
@@ -60,6 +62,9 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
     private OnFragmentInteractionListener mListener;
     private ListView lista;
     private ProgressBar spinner;
+    private ImageView imatgeEmptyPets;
+    private TextView emptyPetsText;
+    private TextView emptyPetsTryThis;
 
     public MyPetsFragment() {
         // Required empty public constructor
@@ -91,7 +96,10 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
+    private String emailToURL(String email){
+        email.replace("@", "%40");
+        return email;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -100,13 +108,16 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
 
         MyView =  inflater.inflate(R.layout.activity_pets, container, false);
         spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
+        emptyPetsText = MyView.findViewById(R.id.emptyPets);
+        emptyPetsTryThis = MyView.findViewById(R.id.emptyPets2);
+        imatgeEmptyPets = MyView.findViewById(R.id.imageEmptyPets);
         // Set tittle to the fragment
         getActivity().setTitle("My pets");
 
         SingletonUsuario su = SingletonUsuario.getInstance();
         String us = su.getEmail();
         Conexion con = new Conexion(MyPetsFragment.this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLPetsByUser/" + us,"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLPetsByUser/" + emailToURL(us),"GET", null);
 
 
         lista = MyView.findViewById(R.id.list_pets);
@@ -174,7 +185,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
 
     @Override
     public void OnprocessFinish(JSONObject json) {
-        spinner.setVisibility(View.VISIBLE);
+        //spinner.setVisibility(View.VISIBLE);
         try {
             if (json.getInt("code") == 200) {
                 pets = new ArrayList<PetModel>();
@@ -195,16 +206,29 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
                     petModel.setFoto(jsonObjectHijo.getString("foto"));
 
                     pets.add(petModel);
-
+                    System.out.println("Aqui llego");
                     petsUser = new PetAdapters(getActivity(), pets);
                     lista = (ListView) MyView.findViewById(R.id.list_pets);
                     lista.setAdapter(petsUser);
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de pets\n");
-                    spinner.setVisibility(View.GONE);
+
 
                 }
+                if(pets.size() == 0 ){
+                    System.out.println("Aqui llego 2");
+                    emptyPetsTryThis.setVisibility(View.VISIBLE);
+                    emptyPetsText.setVisibility(View.VISIBLE);
+                    imatgeEmptyPets.setVisibility(View.VISIBLE);
+                }
+                else {
+                    emptyPetsTryThis.setVisibility(View.INVISIBLE);
+                    emptyPetsText.setVisibility(View.INVISIBLE);
+                    imatgeEmptyPets.setVisibility(View.INVISIBLE);
+                }
+                spinner.setVisibility(View.GONE);
             }
             else{
+                spinner.setVisibility(View.GONE);
                 System.out.print("El sistema no logra mostrar la lista de pets del creador\n");
             }
         } catch (Exception e) {

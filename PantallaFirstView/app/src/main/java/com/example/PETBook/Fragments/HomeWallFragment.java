@@ -245,6 +245,10 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         System.out.println(fechaRetorno);
         return fechaRetorno;
     }
+    private String emailToURL(String email){
+        email.replace("@", "%40");
+        return email;
+    }
 
     private void deletePost(){
         tipoConexion="deletePost";
@@ -259,7 +263,7 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         tipoConexion = "getImatge";
         Conexion con = new Conexion(this);
         SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + emailToURL(su.getEmail()), "GET", null);
         System.out.println("conexio walls ben feta");
 
     }
