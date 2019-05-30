@@ -197,6 +197,14 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    public WallPost getUserWallPost(String userMail, long wallPostId) throws NotFoundException {
+        User user = auxGetUser(userMail);
+        WallPost wallPost = user.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        return wallPost;
+    }
+
+    @Override
     public void createWallPost(DataWallPost dataWallPost) throws InternalServerErrorException, BadRequestException {
         String userMail = getLoggedUserMail();
         User user;
@@ -280,7 +288,7 @@ public class ServerServiceImpl implements ServerService {
         WallPost wallPost = creatorUser.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
         String userMail = getLoggedUserMail();
-        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not retweet his own posts");
+        //if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not retweet his own posts");
         if (!wallPost.addRetweet(userMail)) throw new BadRequestException("A user can not retweet two times the same post");
         User userRetweet;
         try {
@@ -304,7 +312,7 @@ public class ServerServiceImpl implements ServerService {
         WallPost wallPost = creatorUser.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
         String userMail = getLoggedUserMail();
-        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unretweet his own posts");
+        //if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unretweet his own posts");
         if (!wallPost.deleteRetweet(userMail)) throw new BadRequestException("A user has not a retweet in this post");
         User userRetweet;
         try {
@@ -410,7 +418,7 @@ public class ServerServiceImpl implements ServerService {
         friend.addFriendRequest(emailUser);
 
         try {
-            FireMessage f = new FireMessage("Solicitud de amistad", emailRequested + " quiere ser tu amigo");
+            FireMessage f = new FireMessage("Solicitud de amistad", emailUser + " quiere ser tu amigo");
             f.sendToToken(friend.getTokenFirebase());
         } catch (Exception e) {
             e.printStackTrace();
