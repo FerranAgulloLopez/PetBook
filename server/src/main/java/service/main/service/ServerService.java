@@ -55,6 +55,8 @@ public interface ServerService {
 
     public List<WallPost> getUserWallPosts(String userMail) throws NotFoundException;
 
+    public WallPost getUserWallPost(String userMail, long wallPostId) throws NotFoundException;
+
     public void createWallPost(DataWallPost dataWallPost) throws InternalServerErrorException, BadRequestException;
 
     public void updateWallPost(long wallPostId, DataWallPostUpdate dataWallPostUpdate) throws NotFoundException, InternalServerErrorException, BadRequestException;

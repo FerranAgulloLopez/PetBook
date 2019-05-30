@@ -364,8 +364,8 @@ public class ControllerWallPostsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"retweet_operation/input_post.json")).with(user("a@a.com").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Retweet").with(user("a@a.com").password("password").roles("USER")).contentType(MediaType.APPLICATION_JSON).content(read_file(path+"retweet_operation/input_retweet.json")))
-                .andDo(print()).andExpect(status().isBadRequest());
+        /*this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Retweet").with(user("a@a.com").password("password").roles("USER")).contentType(MediaType.APPLICATION_JSON).content(read_file(path+"retweet_operation/input_retweet.json")))
+                .andDo(print()).andExpect(status().isBadRequest());*/
         this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Retweet").with(user("b@b.com").password("password").roles("USER")).contentType(MediaType.APPLICATION_JSON).content(read_file(path+"retweet_operation/input_retweet.json")))
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/users/a@a.com/WallPosts/1/Retweet").with(user("b@b.com").password("password").roles("USER")).contentType(MediaType.APPLICATION_JSON).content(read_file(path+"retweet_operation/input_retweet.json")))
