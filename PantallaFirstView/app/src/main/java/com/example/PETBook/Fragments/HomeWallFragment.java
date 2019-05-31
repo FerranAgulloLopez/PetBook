@@ -358,6 +358,9 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                             retweeters.add(retweets.getString(l));
                         }
                         w.setRetweets(retweeters);
+                        w.setRetweetId(wall.getInt("retweetId"));
+                        w.setRetweeted(wall.getBoolean("retweet"));
+                        //w.setRetweetText(wall.getString("retweetText"));
                         wallModel.add(w);
                     }
                     if(wallModel.size()==0){

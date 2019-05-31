@@ -27,6 +27,7 @@ import com.example.pantallafirstview.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -96,14 +97,31 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
 
 
-
         TextView numlikes = convertView.findViewById(R.id.numLikes);
         TextView numFavs = convertView.findViewById(R.id.numFavs);
         TextView numRetweets = convertView.findViewById(R.id.numRetweets);
         final ImageButton option = convertView.findViewById(R.id.optionButton);
 
 
+        TextView isRetweeted = convertView.findViewById(R.id.retweeted);
+        if(wallList.get(position).isRetweeted()){
+            isRetweeted.setVisibility(View.VISIBLE);
+            option.setVisibility(View.INVISIBLE);
+        }
+        else {
+            isRetweeted.setVisibility(View.INVISIBLE);
+            option.setVisibility(View.VISIBLE);
 
+        }
+
+        TextView retweetText = convertView.findViewById(R.id.retweetText);
+
+        /*if(wallList.get(position).getRetweetText().isEmpty()){
+            retweetText.setVisibility(View.GONE);
+        }
+        else{
+            retweetText.setVisibility(View.VISIBLE);
+        }*/
 
         final String[] opcions = {"Edit", "Delete"};
         final View finalConvertView = convertView;
@@ -119,10 +137,9 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
                         //System.out.println("idComment: " + ViewIDComment.getText().toString());
                         System.out.println("numero which:" + which);
-                        if(which == 0){
+                        if (which == 0) {
                             editComment();
-                        }
-                        else if(which == 1){
+                        } else if (which == 1) {
                             deletePost();
                         }
                     }
@@ -130,6 +147,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                 builder.show();
             }
         });
+
 
         idComment.setText(wallList.get(position).getIDWall().toString());
         descriptionWall.setText(wallList.get(position).getDescription());
@@ -141,8 +159,6 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         numFavs.setText(String.valueOf(wallList.get(position).getFavs().size()));
         numRetweets.setText(String.valueOf(wallList.get(position).getRetweets().size()));
 
-
-
         final ImageButton like = convertView.findViewById(R.id.likeButton);
         final ImageButton fav = convertView.findViewById(R.id.favButton);
         final ImageButton retweet = convertView.findViewById(R.id.retweetButton);
@@ -150,11 +166,13 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         //interaction
         //likes
         if (w.getLikes().isEmpty() || !w.getLikes().contains(SingletonUsuario.getInstance().getEmail())) {
+            like.setColorFilter(Color.argb(100,0,0,0));
             like(like, w.getIDWall());
         }
         else {
-            like.setColorFilter(Color.argb(100,131,7,6));;
+            like.setColorFilter(Color.argb(100,131,7,6));
             unlike(like, w.getIDWall());
+
         }
         //favs
         if (w.getFavs().isEmpty() || !w.getFavs().contains(SingletonUsuario.getInstance().getEmail())) {
@@ -216,6 +234,11 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                WallAdapter.this.notifyDataSetChanged();
+
+                tipoConexion = "someInteraction";
+//                numlikes.setText(String.valueOf(wallList.get(positionn).getLikes().size() + 1));
+
                 try {
                     //like.setColorFilter(Color.argb(100,0,0,0));
 
@@ -233,12 +256,15 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
     public void unlike(final ImageButton like, final Integer id){
         //votar.setText("Unvote");
+        tipoConexion = "someInteraction";
+
+
         like.setColorFilter(Color.argb(100,0,0,0));
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-
+                    WallAdapter.this.notifyDataSetChanged();
                     Conexion con = new Conexion(WallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnLike", "POST", null);
                     unlike(like, id);
@@ -248,10 +274,12 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             }
         });
     }
+
     public void fav(final ImageButton fav, final Integer id){
         ///votar.setText("Vote");
         //like.setVisibility(View.VISIBLE);
         //unlike.setVisibility(View.INVISIBLE);
+        tipoConexion = "someInteraction";
         fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -260,7 +288,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     fav.setColorFilter(Color.argb(100,131,7,6));
                     Conexion con = new Conexion(WallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Love", "POST", null);
-                    like(fav, id);
+                    fav(fav, id);
 
                 } catch (Exception e){
                     e.printStackTrace();
@@ -271,6 +299,8 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
     public void unfav(final ImageButton fav, final Integer id){
         //votar.setText("Unvote");
+        tipoConexion = "someInteraction";
+
         fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -278,7 +308,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     fav.setColorFilter(Color.argb(100,0,0,0));
                     Conexion con = new Conexion(WallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnLove", "POST", null);
-                    unlike(fav, id);
+                    unfav(fav, id);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -305,18 +335,22 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         System.out.println(fechaRetorno);
         return fechaRetorno;
     }
+
     public void retweet(final ImageButton retweet, final Integer id){
         ///votar.setText("Vote");
         //like.setVisibility(View.VISIBLE);
         //unlike.setVisibility(View.INVISIBLE);
         //String user = wallList.get(position).get
+        tipoConexion = "someInteraction";
+
         retweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     //like.setColorFilter(Color.argb(100,0,0,0));
                     retweet.setColorFilter(Color.argb(100,131,7,6));
-                    Conexion con = new Conexion(WallAdapter.this);JSONObject jsonToSend = new JSONObject();
+                    Conexion con = new Conexion(WallAdapter.this);
+                    JSONObject jsonToSend = new JSONObject();
                     String fechaHora = crearFechaActual();
                     try {
                         jsonToSend.accumulate("description", descriptionWall.getText());
@@ -328,7 +362,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     }
 
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
-                    like(retweet, id);
+                    retweet(retweet, id);
 
                 } catch (Exception e){
                     e.printStackTrace();
@@ -338,6 +372,8 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
     }
 
     public void unretweet(final ImageButton retweet, final Integer id){
+        tipoConexion = "someInteraction";
+
         //votar.setText("Unvote");
         retweet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -346,9 +382,8 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     retweet.setColorFilter(Color.argb(255,0,0,0));
                     Conexion con = new Conexion(WallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnRetweet", "POST", null);
-
-
-                    unlike(retweet, id);
+                    unretweet(retweet, id);
+                    //deletePost();
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -374,13 +409,19 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         }
         else
             try{
-                if(json.getInt("code")==200){
-                    System.out.println(json.getInt("code"));
+                if(tipoConexion.equals("someInteraction")){
+                    if(json.getInt("code")==200){
+                        System.out.println(json.getInt("code"));
+                        WallAdapter.this.notifyDataSetChanged();
+                        Intent intent = new Intent(this.context, MainActivity.class);
+                        context.startActivity(intent);
+
+                    }
+                    else {
+                        Toast.makeText(this.context, "Error", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                else {
-                    Toast.makeText(this.context, "Error", Toast.LENGTH_SHORT).show();
-                }
-        } catch (Exception e){
+            }catch (Exception e){
             e.printStackTrace();
         }
     }
