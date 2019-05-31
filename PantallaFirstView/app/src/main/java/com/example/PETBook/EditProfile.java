@@ -49,7 +49,9 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
     private TextInputLayout oldPasswordInput;
     Calendar calendario = Calendar.getInstance();
     private ProgressBar spinner;
+
     private ImageView profileImage;
+    private Bitmap profileImageBitmap;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -307,6 +309,27 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
 
             Conexion con = new Conexion(EditProfile.this);
             con.execute("http://10.4.41.146:9999/ServerRESTAPI/update/" + su.getEmail(), "PUT", jsonToSend.toString());
+
+
+            //user.setProfilePicture(bitmapImage);
+
+            Image imageConversor = Image.getInstance();
+            String imageEncoded = imageConversor.BitmapToString(profileImageBitmap);
+
+            JSONObject jsonToSendImage = new JSONObject();
+            try {
+                jsonToSendImage.accumulate("image", imageEncoded);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            con = new Conexion(this);
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/setPicture/" + su.getEmail(), "POST", jsonToSendImage.toString());
+            spinner.setVisibility(View.GONE);
+
+
+
+
         }
     }
 
@@ -441,24 +464,10 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                profileImageBitmap = bitmapImage;
                 profileImage.setImageBitmap(bitmapImage);
 
-                SingletonUsuario user = SingletonUsuario.getInstance();
-                //user.setProfilePicture(bitmapImage);
-
-                Image imageConversor = Image.getInstance();
-                String imageEncoded = imageConversor.BitmapToString(bitmapImage);
-
-                JSONObject jsonToSend = new JSONObject();
-                try {
-                    jsonToSend.accumulate("image", imageEncoded);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                Conexion con = new Conexion(this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/setPicture/" + user.getEmail(), "POST", jsonToSend.toString());
-                spinner.setVisibility(View.GONE);
             }
         }
         //Uri returnUri;
