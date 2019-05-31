@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class WallPost implements Serializable {
+public class WallPost implements Serializable, Comparable<WallPost> {
 
     @Transient
     public static final String SEQUENCE_NAME = "wallPosts_sequence";
@@ -129,6 +129,26 @@ public class WallPost implements Serializable {
     public void setRetweets(List<String> retweets) {
         this.retweets = retweets;
     }
+
+
+
+
+
+
+
+
+
+
+
+    // Orders by creation date
+    @Override
+    public int compareTo(WallPost o) {
+        return this.getCreationDate().compareTo(o.getCreationDate());
+    }
+
+
+
+
 
     /*
     Auxiliary operations

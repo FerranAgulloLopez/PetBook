@@ -73,6 +73,8 @@ public interface ServerService {
 
     public void unretweetWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException, InternalServerErrorException;
 
+    public List<WallPost> GetInitialWallPosts(String email) throws NotFoundException;
+
 
 
     /*
