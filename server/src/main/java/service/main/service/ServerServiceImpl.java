@@ -197,6 +197,14 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    public WallPost getUserWallPost(String userMail, long wallPostId) throws NotFoundException {
+        User user = auxGetUser(userMail);
+        WallPost wallPost = user.findWallPost(wallPostId);
+        if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
+        return wallPost;
+    }
+
+    @Override
     public void createWallPost(DataWallPost dataWallPost) throws InternalServerErrorException, BadRequestException {
         String userMail = getLoggedUserMail();
         User user;
@@ -280,7 +288,7 @@ public class ServerServiceImpl implements ServerService {
         WallPost wallPost = creatorUser.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
         String userMail = getLoggedUserMail();
-        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not retweet his own posts");
+        //if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not retweet his own posts");
         if (!wallPost.addRetweet(userMail)) throw new BadRequestException("A user can not retweet two times the same post");
         User userRetweet;
         try {
@@ -295,7 +303,13 @@ public class ServerServiceImpl implements ServerService {
         retweet.setRetweetText(dataRetweet.getDescription());
         userRetweet.addWallPost(retweet);
         userRepository.save(creatorUser);
-        userRepository.save(userRetweet);
+        if (!creatorUser.getEmail().equals(userRetweet.getEmail())) userRepository.save(userRetweet);
+        else {
+            WallPost auxWallPost = userRetweet.findWallPost(wallPostId);
+            if (auxWallPost == null) throw new InternalServerErrorException("The user has not a wall post with this id");
+            auxWallPost.addRetweet(userRetweet.getEmail());
+            userRepository.save(userRetweet);
+        }
     }
 
     @Override
@@ -304,7 +318,7 @@ public class ServerServiceImpl implements ServerService {
         WallPost wallPost = creatorUser.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
         String userMail = getLoggedUserMail();
-        if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unretweet his own posts");
+        //if (userMail.equals(creatorMail)) throw new BadRequestException("A user can not unretweet his own posts");
         if (!wallPost.deleteRetweet(userMail)) throw new BadRequestException("A user has not a retweet in this post");
         User userRetweet;
         try {
@@ -316,7 +330,13 @@ public class ServerServiceImpl implements ServerService {
         if (retweet == null) throw new InternalServerErrorException("Error while updating database");
         userRetweet.deleteWallPost(retweet.getId());
         userRepository.save(creatorUser);
-        userRepository.save(userRetweet);
+        if (!creatorUser.getEmail().equals(userRetweet.getEmail())) userRepository.save(userRetweet);
+        else {
+            WallPost auxWallPost = userRetweet.findWallPost(wallPostId);
+            if (auxWallPost == null) throw new InternalServerErrorException("The user has not a wall post with this id");
+            if (!auxWallPost.deleteRetweet(userMail)) throw new InternalServerErrorException("A user has not a retweet in this post");
+            userRepository.save(userRetweet);
+        }
     }
 
     @Override // LUEGO SE PUEDE MEJORAR LA EFICIENCIA

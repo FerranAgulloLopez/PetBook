@@ -985,6 +985,23 @@ public class RestApiController {
     }
 
     @CrossOrigin
+    @GetMapping(value = "/users/{userMail}/WallPosts/{wallPostId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns all the user's wall posts", notes = "Returns all the user's wall posts.", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database / The user has not a wall post with this id")
+    })
+    public ResponseEntity<?> getUserWallPost(@ApiParam(value="User's email", required = true) @PathVariable("userMail") String userMail,
+                                             @ApiParam(value="The post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
+        try {
+            WallPost aux = serverService.getUserWallPost(userMail,wallPostId);
+            return new ResponseEntity<>(aux,HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
     @PostMapping(value = "/users/WallPosts", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Creates a wall post", notes = "Creates a new wall post to the corresponding user in the token.", tags="WallPosts")
     @ApiResponses(value = {
