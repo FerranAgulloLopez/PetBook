@@ -330,7 +330,13 @@ public class ServerServiceImpl implements ServerService {
         if (retweet == null) throw new InternalServerErrorException("Error while updating database");
         userRetweet.deleteWallPost(retweet.getId());
         userRepository.save(creatorUser);
-        userRepository.save(userRetweet);
+        if (!creatorUser.getEmail().equals(userRetweet.getEmail())) userRepository.save(userRetweet);
+        else {
+            WallPost auxWallPost = userRetweet.findWallPost(wallPostId);
+            if (auxWallPost == null) throw new InternalServerErrorException("The user has not a wall post with this id");
+            if (!auxWallPost.deleteRetweet(userMail)) throw new InternalServerErrorException("A user has not a retweet in this post");
+            userRepository.save(userRetweet);
+        }
     }
 
     @Override
