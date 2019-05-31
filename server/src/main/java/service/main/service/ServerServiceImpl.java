@@ -303,7 +303,13 @@ public class ServerServiceImpl implements ServerService {
         retweet.setRetweetText(dataRetweet.getDescription());
         userRetweet.addWallPost(retweet);
         userRepository.save(creatorUser);
-        userRepository.save(userRetweet);
+        if (!creatorUser.getEmail().equals(userRetweet.getEmail())) userRepository.save(userRetweet);
+        else {
+            WallPost auxWallPost = userRetweet.findWallPost(wallPostId);
+            if (auxWallPost == null) throw new InternalServerErrorException("The user has not a wall post with this id");
+            auxWallPost.addRetweet(userRetweet.getEmail());
+            userRepository.save(userRetweet);
+        }
     }
 
     @Override
