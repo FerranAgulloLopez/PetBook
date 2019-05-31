@@ -10,16 +10,8 @@ public class WallModel implements Serializable {
     private ArrayList<String> likes;
     private ArrayList<String> favs;
     private ArrayList<String> retweets;
-
-
-
     private Integer retweetId;
-
-
     private boolean retweeted;
-
-
-
     private String retweetText;
 
     public Integer getIDWall() {
@@ -84,6 +76,7 @@ public class WallModel implements Serializable {
     public void setRetweetText(String reteetText) {
         this.retweetText = reteetText;
     }
+
     public Integer getRetweetId() {
         return retweetId;
     }

@@ -43,7 +43,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
     private ArrayList<WallModel> wallList;
     private TextView idComment;
     private String tipoConexion="";
-    private TextView numlikes;
+    private TextView numlikes ;
     private TextView dataCreacioWall;
     private TextView descriptionWall;
     private String data;
@@ -69,7 +69,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if(convertView == null){
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -97,7 +97,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
 
 
-        TextView numlikes = convertView.findViewById(R.id.numLikes);
+        final TextView numlikes = convertView.findViewById(R.id.numLikes);
         TextView numFavs = convertView.findViewById(R.id.numFavs);
         TextView numRetweets = convertView.findViewById(R.id.numRetweets);
         final ImageButton option = convertView.findViewById(R.id.optionButton);
@@ -116,12 +116,12 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
         TextView retweetText = convertView.findViewById(R.id.retweetText);
 
-        /*if(wallList.get(position).getRetweetText().isEmpty()){
-            retweetText.setVisibility(View.GONE);
+        if(wallList.get(position).isRetweeted()){
+            retweetText.setVisibility(View.VISIBLE);
         }
         else{
-            retweetText.setVisibility(View.VISIBLE);
-        }*/
+            retweetText.setVisibility(View.GONE);
+        }
 
         final String[] opcions = {"Edit", "Delete"};
         final View finalConvertView = convertView;
@@ -167,11 +167,11 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         //likes
         if (w.getLikes().isEmpty() || !w.getLikes().contains(SingletonUsuario.getInstance().getEmail())) {
             like.setColorFilter(Color.argb(100,0,0,0));
-            like(like, w.getIDWall());
+            like(like, w.getIDWall(), position, numlikes);
         }
         else {
             like.setColorFilter(Color.argb(100,131,7,6));
-            unlike(like, w.getIDWall());
+            unlike(like, w.getIDWall(), position, numlikes);
 
         }
         //favs
@@ -226,7 +226,8 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         //con.execute()
         return 1;
     }
-    public void like(final ImageButton like, final Integer id){
+
+    public void like(final ImageButton like, final Integer id, final Integer position, final TextView numlikes){
         ///votar.setText("Vote");
         //like.setVisibility(View.VISIBLE);
         //unlike.setVisibility(View.INVISIBLE);
@@ -237,7 +238,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                 WallAdapter.this.notifyDataSetChanged();
 
                 tipoConexion = "someInteraction";
-//                numlikes.setText(String.valueOf(wallList.get(positionn).getLikes().size() + 1));
+                numlikes.setText(String.valueOf(wallList.get(position).getLikes().size() + 1));
 
                 try {
                     //like.setColorFilter(Color.argb(100,0,0,0));
@@ -245,7 +246,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     Conexion con = new Conexion(WallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Like", "POST", null);
                     like.setColorFilter(Color.argb(100,131,7,6));
-                    like(like, id);
+                    like(like, id, position, numlikes);
 
                 } catch (Exception e){
                     e.printStackTrace();
@@ -254,7 +255,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         });
     }
 
-    public void unlike(final ImageButton like, final Integer id){
+    public void unlike(final ImageButton like, final Integer id, final Integer position, final TextView numlikes){
         //votar.setText("Unvote");
         tipoConexion = "someInteraction";
 
@@ -264,10 +265,12 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             @Override
             public void onClick(View v) {
                 try {
+                    numlikes.setText(String.valueOf(wallList.get(position).getLikes().size() - 1));
+
                     WallAdapter.this.notifyDataSetChanged();
                     Conexion con = new Conexion(WallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnLike", "POST", null);
-                    unlike(like, id);
+                    unlike(like, id, position, numlikes);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -413,9 +416,9 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     if(json.getInt("code")==200){
                         System.out.println(json.getInt("code"));
                         WallAdapter.this.notifyDataSetChanged();
-                        Intent intent = new Intent(this.context, MainActivity.class);
+                        /*Intent intent = new Intent(this.context, MainActivity.class);
                         context.startActivity(intent);
-
+*/
                     }
                     else {
                         Toast.makeText(this.context, "Error", Toast.LENGTH_SHORT).show();
