@@ -135,7 +135,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
             textNombre.setText(name);
             System.out.print("textNombre bien");
 
-            textAge.setText(age);
+            textAge.setText("Age: " + age);
             System.out.print("textAge bien");
 
             textSex.setText(sex);

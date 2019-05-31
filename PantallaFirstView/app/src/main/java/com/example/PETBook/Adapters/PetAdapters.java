@@ -56,7 +56,7 @@ public class PetAdapters extends BaseAdapter {
 
         nombre.setText(petList.get(position).getNombre());
         especie.setText(petList.get(position).getEspecie());
-        edad.setText(String.format("%d",petList.get(position).getEdad()));
+        edad.setText("Age: " + String.format("%d",petList.get(position).getEdad()));
 
         return convertView;
     }
