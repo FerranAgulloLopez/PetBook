@@ -356,8 +356,8 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     JSONObject jsonToSend = new JSONObject();
                     String fechaHora = crearFechaActual();
                     try {
-                        jsonToSend.accumulate("description", descriptionWall.getText());
-                        jsonToSend.accumulate("updateDate", fechaHora);
+                        jsonToSend.accumulate("description", "String prueba");
+                        jsonToSend.accumulate("creationDate", fechaHora);
                         //jsonToSend.accumulate("ok", "true");
                         System.out.println(jsonToSend);
                     } catch (JSONException e) {
@@ -416,9 +416,9 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     if(json.getInt("code")==200){
                         System.out.println(json.getInt("code"));
                         WallAdapter.this.notifyDataSetChanged();
-                        /*Intent intent = new Intent(this.context, MainActivity.class);
+                        Intent intent = new Intent(this.context, MainActivity.class);
                         context.startActivity(intent);
-*/
+
                     }
                     else {
                         Toast.makeText(this.context, "Error", Toast.LENGTH_SHORT).show();

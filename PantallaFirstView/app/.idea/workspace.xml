@@ -118,8 +118,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/WallAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="512">
-              <caret line="229" column="106" selection-start-line="229" selection-start-column="106" selection-end-line="229" selection-end-column="106" />
+            <state relative-caret-position="-354">
+              <caret line="356" column="55" selection-start-line="356" selection-start-column="39" selection-end-line="356" selection-end-column="55" />
               <folding>
                 <element signature="method#WallAdapter#0;class#WallAdapter#0" />
                 <element signature="e#3687#3801#1" />
@@ -138,10 +138,11 @@
                 <element signature="method#editComment#0;class#WallAdapter#0" />
                 <element signature="method#deletePost#0;class#WallAdapter#0" />
                 <element signature="method#getLikes#0;class#WallAdapter#0" />
+                <element signature="method#like#0;class#WallAdapter#0" />
+                <element signature="method#unlike#0;class#WallAdapter#0" />
                 <element signature="method#fav#0;class#WallAdapter#0" />
                 <element signature="method#unfav#0;class#WallAdapter#0" />
                 <element signature="method#crearFechaActual#0;class#WallAdapter#0" />
-                <element signature="method#retweet#0;class#WallAdapter#0" />
                 <element signature="method#unretweet#0;class#WallAdapter#0" />
               </folding>
             </state>
@@ -462,13 +463,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Conexion.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-529">
-          <caret line="57" column="14" selection-start-line="57" selection-start-column="14" selection-end-line="57" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Models/PetModel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -670,10 +664,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Conexion.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="75" selection-start-line="75" selection-end-line="75" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/WallAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="512">
-          <caret line="229" column="106" selection-start-line="229" selection-start-column="106" selection-end-line="229" selection-end-column="106" />
+        <state relative-caret-position="-354">
+          <caret line="356" column="55" selection-start-line="356" selection-start-column="39" selection-end-line="356" selection-end-column="55" />
           <folding>
             <element signature="method#WallAdapter#0;class#WallAdapter#0" />
             <element signature="e#3687#3801#1" />
@@ -692,10 +693,11 @@
             <element signature="method#editComment#0;class#WallAdapter#0" />
             <element signature="method#deletePost#0;class#WallAdapter#0" />
             <element signature="method#getLikes#0;class#WallAdapter#0" />
+            <element signature="method#like#0;class#WallAdapter#0" />
+            <element signature="method#unlike#0;class#WallAdapter#0" />
             <element signature="method#fav#0;class#WallAdapter#0" />
             <element signature="method#unfav#0;class#WallAdapter#0" />
             <element signature="method#crearFechaActual#0;class#WallAdapter#0" />
-            <element signature="method#retweet#0;class#WallAdapter#0" />
             <element signature="method#unretweet#0;class#WallAdapter#0" />
           </folding>
         </state>
