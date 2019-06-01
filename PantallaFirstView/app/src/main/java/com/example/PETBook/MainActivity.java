@@ -108,22 +108,10 @@ public class MainActivity extends AppCompatActivity
                 fragment = new HomeWallFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
-            /*else {
-                fragment = new HomeWallFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
-            }*/
         }
-        /*else{
-            fragment = new HomeWallFragment();
-            getSupportFragmentManager().beginTransaction().add(R.id.content_main, fragment).commit();
-        }*/
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-
-
-
-
 
 
     }
