@@ -1,16 +1,22 @@
 package com.example.PETBook.Adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.PetModel;
 import com.example.pantallafirstview.R;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.PETBook.Models.Image.getInstance;
 
 public class PetAdapters extends BaseAdapter {
 
@@ -52,11 +58,14 @@ public class PetAdapters extends BaseAdapter {
         TextView nombre = (TextView) convertView.findViewById(R.id.nombrePetDesign);
         TextView especie = (TextView) convertView.findViewById(R.id.Especie);
         TextView edad = (TextView) convertView.findViewById(R.id.edad);
+        CircleImageView foto = (CircleImageView) convertView.findViewById(R.id.fotoMascota);
 
 
         nombre.setText(petList.get(position).getNombre());
         especie.setText(petList.get(position).getEspecie());
         edad.setText("Age: " + String.format("%d",petList.get(position).getEdad()));
+        Bitmap fotoMascota = Image.getInstance().StringToBitMap(petList.get(position).getFoto());
+        foto.setImageBitmap(fotoMascota);
 
         return convertView;
     }

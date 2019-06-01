@@ -119,6 +119,11 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
             Image imagenConversor = Image.getInstance();
             Bitmap profileImage = imagenConversor.StringToBitMap(petModel.getFoto());
 
+/*
+            int nh = (int) ( profileImage.getHeight() * (256.0 / profileImage.getWidth()) );
+            Bitmap scaledProfileImage = Bitmap.createScaledBitmap(profileImage, 512, nh, true);
+            */
+
             fotoPet.setImageBitmap(profileImage);
 
 
