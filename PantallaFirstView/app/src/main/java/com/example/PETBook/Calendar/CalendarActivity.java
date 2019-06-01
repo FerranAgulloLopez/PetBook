@@ -25,6 +25,7 @@ import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.NewEvent;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
+import com.google.api.client.util.DateTime;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateLongClickListener;
@@ -207,6 +208,13 @@ public class CalendarActivity extends AppCompatActivity
           LocalDate localdates = obtainLocalDate(dateStr);
           e.setLocalDate(localdates);
 
+          /*
+          Date dt = obtainDate(evento.getString("date"));
+          System.out.println("\n.\n.toString()" + dt.toString() + "\n,\n.");
+          System.out.println("\n.\n" + dt + "\n,\n.");
+          */
+
+
           JSONObject loc = evento.getJSONObject("localization");
           e.setDireccion(loc.getString("address"));
           e.setCoordenadas(loc.getDouble("longitude"),loc.getDouble("latitude"));
@@ -256,11 +264,11 @@ public class CalendarActivity extends AppCompatActivity
 
   // Obtains year-month-dayOfTheYear
   private LocalDate obtainLocalDate(String dateStr) {
-    String date = dateStr.substring(0,10);
+    String date = dateStr.substring(0,9+1);
 
-    String string_year = date.substring(0,4);
-    String string_month = date.substring(5,7);
-    String string_dayOfTheYear = date.substring(8,10);
+    String string_year = date.substring(0,3+1);
+    String string_month = date.substring(5,6+1);
+    String string_dayOfTheYear = date.substring(8,9+1);
 
     int year = Integer.parseInt(string_year);
     int month = Integer.parseInt(string_month);
@@ -269,6 +277,28 @@ public class CalendarActivity extends AppCompatActivity
     LocalDate localdate = LocalDate.of(year,month,dayOfTheYear);
 
     return localdate;
+  }
+
+  // Obtains year-month-dayOfTheYear
+  private Date obtainDate(String dateStr) {
+    String date = dateStr.substring(0,9+1);
+
+    String string_year = date.substring(0,3+1);
+    String string_month = date.substring(5,6+1);
+    String string_dayOfTheYear = date.substring(8,9+1);
+    String string_hour = dateStr.substring(11,12+1);
+    String string_min = dateStr.substring(14,15+1);
+
+    int year = Integer.parseInt(string_year);
+    int month = Integer.parseInt(string_month);
+    int dayOfTheYear = Integer.parseInt(string_dayOfTheYear);
+    int hour = Integer.parseInt(string_hour);
+    int min = Integer.parseInt(string_min);
+
+
+    Date date1 = new Date(year-1900,month -1,dayOfTheYear, hour, min);
+
+    return date1;
   }
 
   // Obtains year-month-dayOfTheYear

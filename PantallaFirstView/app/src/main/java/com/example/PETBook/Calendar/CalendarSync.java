@@ -1,5 +1,9 @@
 package com.example.PETBook.Calendar;
 
+import com.example.PETBook.Conexion;
+import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Models.EventModel;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.api.client.extensions.android.http.AndroidHttp;
@@ -12,27 +16,20 @@ import com.google.api.services.calendar.model.Calendar;
 
 import android.accounts.AccountManager;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.threeten.bp.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,7 +48,7 @@ import java.util.logging.Logger;
  *
  * @author Yaniv Inbar
  */
-public final class CalendarSync extends Activity {
+public final class CalendarSync extends Activity implements AsyncResult {
 
     /**
      * Logging level for HTTP requests/responses.
@@ -61,7 +58,7 @@ public final class CalendarSync extends Activity {
      * </p>
      *
      * <pre>
-     adb shell setprop log.tag.HttpTransport DEBUG
+     * adb shell setprop log.tag.HttpTransport DEBUG
      * </pre>
      */
 
@@ -85,8 +82,6 @@ public final class CalendarSync extends Activity {
 
     static final int REQUEST_ACCOUNT_PICKER = 2;
 
-    private final static int ADD_OR_EDIT_CALENDAR_REQUEST = 3;
-
     final HttpTransport transport = AndroidHttp.newCompatibleTransport();
 
     final JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
@@ -99,10 +94,10 @@ public final class CalendarSync extends Activity {
 
     com.google.api.services.calendar.Calendar client;
 
+    private static final String SUMMARY = "PETBOOK2"; // Nombre del calendario
+
+
     int numAsyncTasks;
-
-
-    private ListView listView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,8 +111,6 @@ public final class CalendarSync extends Activity {
 
         // view and menu
         setContentView(R.layout.calendarlist);
-        listView = (ListView) findViewById(R.id.list);
-        registerForContextMenu(listView);
 
         // Google Accounts
         credential =
@@ -128,6 +121,7 @@ public final class CalendarSync extends Activity {
         client = new com.google.api.services.calendar.Calendar.Builder(
                 transport, jsonFactory, credential).setApplicationName(APP_NAME) // No se si este nombre es correcto
                 .build();
+
     }
 
     void showGooglePlayServicesAvailabilityErrorDialog(final int connectionStatusCode) {
@@ -140,29 +134,33 @@ public final class CalendarSync extends Activity {
         });
     }
 
-    void refreshView() {
-        adapter = new ArrayAdapter<CalendarInfo>(
-                this, android.R.layout.simple_list_item_1, model.toSortedArray()) {
-
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                // by default it uses toString; override to use summary instead
-                TextView view = (TextView) super.getView(position, convertView, parent);
-                CalendarInfo calendarInfo = getItem(position);
-                view.setText(calendarInfo.summary);
-                return view;
-            }
-        };
-        listView.setAdapter(adapter);
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
+
+
         if (checkGooglePlayServicesAvailable()) {
             haveGooglePlayServices();
         }
     }
+
+    private void createCalendarANDInsertEvents() {
+
+        Conexion con = new Conexion(this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/getUserGoogleCalendarID", "GET", null);
+        //String su = SingletonUsuario.getInstance().getEmail();
+        //con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByParticipant?mail=" + su,"GET", null);
+    /*
+        String id_existente = "328r59ggesgnonbcd2fa9ufnf4@group.calendar.google.com";
+
+        String id = id_existente;
+        boolean exist = true;
+
+        OnprocessFinish2(id, exist);
+*/
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -177,7 +175,7 @@ public final class CalendarSync extends Activity {
                 break;
             case REQUEST_AUTHORIZATION:
                 if (resultCode == Activity.RESULT_OK) {
-                    AsyncLoadCalendars.run(this);
+                    createCalendarANDInsertEvents();
                 } else {
                     chooseAccount();
                 }
@@ -191,97 +189,17 @@ public final class CalendarSync extends Activity {
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
                         editor.commit();
-                        AsyncLoadCalendars.run(this);
-                    }
-                }
-                break;
-            case ADD_OR_EDIT_CALENDAR_REQUEST:
-                if (resultCode == Activity.RESULT_OK) {
-                    Calendar calendar = new Calendar();
-                    calendar.setSummary(data.getStringExtra("summary"));
-                    String id = data.getStringExtra("id");
-                    if (id == null) {
-                        new AsyncInsertCalendar(this, calendar).execute();
-                    } else {
-                        calendar.setId(id);
-                        new AsyncUpdateCalendar(this, id, calendar).execute();
+                        createCalendarANDInsertEvents();
                     }
                 }
                 break;
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_refresh:
-                AsyncLoadCalendars.run(this);
-                break;
-            case R.id.menu_accounts:
-                chooseAccount();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, CONTEXT_EDIT, 0, R.string.edit);
-        menu.add(0, CONTEXT_DELETE, 0, R.string.delete);
-        menu.add(0, CONTEXT_BATCH_ADD, 0, R.string.batchadd);
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        int calendarIndex = (int) info.id;
-        if (calendarIndex < adapter.getCount()) {
-            final CalendarInfo calendarInfo = adapter.getItem(calendarIndex);
-            switch (item.getItemId()) {
-                case CONTEXT_EDIT:
-                    startAddOrEditCalendarActivity(calendarInfo);
-                    return true;
-                case CONTEXT_DELETE:
-                    new AlertDialog.Builder(this).setTitle(R.string.delete_title)
-                            .setMessage(calendarInfo.summary)
-                            .setCancelable(false)
-                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-
-                                public void onClick(DialogInterface dialog, int which) {
-                                    new AsyncDeleteCalendar(CalendarSync.this, calendarInfo).execute();
-                                }
-                            })
-                            .setNegativeButton(R.string.no, null)
-                            .create()
-                            .show();
-                    return true;
-                case CONTEXT_BATCH_ADD:
-                    List<Calendar> calendars = new ArrayList<Calendar>();
-                    for (int i = 0; i < 3; i++) {
-                        Calendar cal = new Calendar();
-                        cal.setSummary(calendarInfo.summary + " [" + (i + 1) + "]");
-                        calendars.add(cal);
-                    }
-                    new AsyncBatchInsertCalendars(this, calendars).execute();
-                    return true;
-            }
-        }
-        return super.onContextItemSelected(item);
-    }
-
-    public void onAddClick(View view) {
-        startAddOrEditCalendarActivity(null);
-    }
-
-    /** Check that Google Play services APK is installed and up to date. */
+    /**
+     * Check that Google Play services APK is installed and up to date.
+     */
     private boolean checkGooglePlayServicesAvailable() {
         final int connectionStatusCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
         if (GooglePlayServicesUtil.isUserRecoverableError(connectionStatusCode)) {
@@ -291,6 +209,12 @@ public final class CalendarSync extends Activity {
         return true;
     }
 
+
+    private void chooseAccount() {
+        startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
+    }
+
+
     private void haveGooglePlayServices() {
         // check if there is already an account selected
         if (credential.getSelectedAccountName() == null) {
@@ -298,21 +222,147 @@ public final class CalendarSync extends Activity {
             chooseAccount();
         } else {
             // load calendars
-            AsyncLoadCalendars.run(this);
+            createCalendarANDInsertEvents();
         }
     }
 
-    private void chooseAccount() {
-        startActivityForResult(credential.newChooseAccountIntent(), REQUEST_ACCOUNT_PICKER);
+
+    public void refreshView() {
+        // Lo que sea, un text view o algo
     }
 
-    private void startAddOrEditCalendarActivity(CalendarInfo calendarInfo) {
-        Intent intent = new Intent(this, AddOrEditCalendarActivity.class);
-        if (calendarInfo != null) {
-            intent.putExtra("id", calendarInfo.id);
-            intent.putExtra("summary", calendarInfo.summary);
+
+    @Override
+    public void OnprocessFinish(JSONObject json) {
+        try {
+            if (json.getInt("code") == 200) {
+                String googleCalendarID;
+                boolean existe;
+                List<EventModel> events;
+
+                googleCalendarID = json.getString("GoogleCalendarID");
+                existe = json.getBoolean("hasGoogleCalendar");
+                //googleCalendarID = "2";
+                //existe = false;
+
+                events = new ArrayList<>(); // ArrayList<EventsModel>()
+                JSONArray jsonArray = json.getJSONArray("events");
+                for(int i = 0; i < jsonArray.length(); ++i){
+                    JSONObject evento = jsonArray.getJSONObject(i);
+                    EventModel e = new EventModel();
+                    e.setId(evento.getInt("id"));
+                    e.setTitulo(evento.getString("title"));
+                    e.setDescripcion(evento.getString("description"));
+
+                    e.setFecha(obtainDateANDHour(evento.getString("date")));
+
+                    String dateStr = evento.getString("date");
+                    Date dates =obtainDate(dateStr);
+                    e.setDate(dates);
+
+                    JSONObject loc = evento.getJSONObject("localization");
+                    e.setDireccion(loc.getString("address"));
+                    e.setCoordenadas(loc.getDouble("longitude"),loc.getDouble("latitude"));
+                    e.setPublico(evento.getBoolean("public"));
+                    JSONArray m = evento.getJSONArray("participants");
+                    ArrayList<String> miembros = new ArrayList<String>();
+                    for(int j = 0; j < m.length(); ++j){
+                        miembros.add(m.getString(j));
+                    }
+                    e.setMiembros(miembros);
+                    e.setCreador(evento.getString("creatorMail"));
+
+                    events.add(e);
+                }
+
+
+                /*
+                String id_existente = "328r59ggesgnonbcd2fa9ufnf4@group.calendar.google.com";
+                googleCalendarID = id_existente;
+                existe = true;
+                */
+
+                Calendar calendar = new Calendar();
+                if (existe) calendar.setId(googleCalendarID);
+                calendar.setSummary(SUMMARY); // Titulo
+                new AsyncInsertCalendar(this, calendar, existe, events).execute();
+
+
+                System.out.println(json.getInt("code") + " Id Google Calendar bien conseguido\n");
+            } else {
+                System.out.println("El sistema no logra recojer el id del Calendario, exista o no, del usuario.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        startActivityForResult(intent, ADD_OR_EDIT_CALENDAR_REQUEST);
+
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // Obtains year-month-dayOfTheYear
+    private LocalDate obtainLocalDate(String dateStr) {
+        String date = dateStr.substring(0,10);
+
+        String string_year = date.substring(0,4);
+        String string_month = date.substring(5,7);
+        String string_dayOfTheYear = date.substring(8,10);
+
+        int year = Integer.parseInt(string_year);
+        int month = Integer.parseInt(string_month);
+        int dayOfTheYear = Integer.parseInt(string_dayOfTheYear);
+
+        LocalDate localDate = LocalDate.of(year, month, dayOfTheYear);
+        return localDate;
+    }
+
+    // Obtains year-month-dayOfTheYear
+    private Date obtainDate(String dateStr) {
+        String date = dateStr.substring(0,9+1);
+
+        String string_year = date.substring(0,3+1);
+        String string_month = date.substring(5,6+1);
+        String string_dayOfTheYear = date.substring(8,9+1);
+        String string_hour = dateStr.substring(11,12+1);
+        String string_min = dateStr.substring(14,15+1);
+
+        int year = Integer.parseInt(string_year);
+        int month = Integer.parseInt(string_month);
+        int dayOfTheYear = Integer.parseInt(string_dayOfTheYear);
+        int hour = Integer.parseInt(string_hour);
+        int min = Integer.parseInt(string_min);
+
+
+        Date date1 = new Date(year-1900,month -1,dayOfTheYear, hour, min);
+
+        return date1;
+    }
+    // Obtains year-month-dayOfTheYear
+    private String obtainDateANDHour(String dateStr) {
+        String year = dateStr.substring(0, 3+1);
+        String month = dateStr.substring(5, 6+1);
+        String dayOfTheYear = dateStr.substring(8, 9+1);
+        String hour = dateStr.substring(11,12+1);
+        String minute = dateStr.substring(14,15+1);
+
+        String result = year + "-" + month + "-" + dayOfTheYear + " " + hour + ":" + minute;
+
+        return result;
+    }
+
+
 
 }

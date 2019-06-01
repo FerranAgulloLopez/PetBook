@@ -36,8 +36,6 @@
         <activity android:name="com.example.PETBook.Chat" />
         <activity android:name="com.example.PETBook.Calendar.CalendarActivity" />
         <activity android:name="com.example.PETBook.Calendar.CalendarSync" />
-        <activity android:name="com.example.PETBook.Calendar.AddOrEditCalendarActivity" />
-
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

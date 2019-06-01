@@ -32,13 +32,11 @@ import java.io.IOException;
 abstract class CalendarAsyncTask extends AsyncTask<Void, Void, Boolean> {
 
   final CalendarSync activity;
-  final CalendarModel model;
   final com.google.api.services.calendar.Calendar client;
   private final View progressBar;
 
   CalendarAsyncTask(CalendarSync activity) {
     this.activity = activity;
-    model = activity.model;
     client = activity.client;
     progressBar = activity.findViewById(R.id.title_refresh_progress);
   }

@@ -42,6 +42,5 @@ class AsyncDeleteCalendar extends CalendarAsyncTask {
         throw e;
       }
     }
-    model.remove(calendarId);
   }
 }
