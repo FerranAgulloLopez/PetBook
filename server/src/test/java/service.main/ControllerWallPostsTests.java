@@ -420,4 +420,96 @@ public class ControllerWallPostsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 
+
+
+     String path2 = path + "getInitialWallPosts_operaton/";
+
+    @Test
+    public void getInitialWallPosts_TWO_FRIENDS() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_register_1.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_register_2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_register_3.json")))
+                .andDo(print()).andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/b@b.com")
+                .with(user("a@a.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/a@a.com")
+                .with(user("b@b.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/c@c.com")
+                .with(user("a@a.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/a@a.com")
+                .with(user("c@c.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+
+
+
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post1.json")).with(user("a@a.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post2.json")).with(user("a@a.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post3.json")).with(user("b@b.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post4.json")).with(user("b@b.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post5.json")).with(user("c@c.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post6.json")).with(user("c@c.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/ServerRESTAPI/WallPosts/GetInitialWallPosts").with(user("a@a.com").password("believe_on_me").roles("USER"))) // a@a.com
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path2+"output_1.json")));
+
+        this.mockMvc.perform(get("/ServerRESTAPI/WallPosts/GetInitialWallPosts").with(user("b@b.com").password("believe_on_me").roles("USER"))) // b@b.com
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path2+"output_2.json")));
+
+        this.mockMvc.perform(get("/ServerRESTAPI/WallPosts/GetInitialWallPosts").with(user("c@c.com").password("believe_on_me").roles("USER"))) // c@c.com
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path2+"output_3.json")));
+    }
+
+    @Test
+    public void getInitialWallPosts_ONE_FRIEND() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_register_1.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_register_2.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_register_3.json")))
+                .andDo(print()).andExpect(status().isOk());
+
+        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/b@b.com")
+                .with(user("a@a.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/a@a.com")
+                .with(user("b@b.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+
+
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post2.json")).with(user("a@a.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post1.json")).with(user("a@a.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post4.json")).with(user("b@b.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post3.json")).with(user("b@b.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post6.json")).with(user("c@c.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(post("/ServerRESTAPI/users/WallPosts").contentType(MediaType.APPLICATION_JSON).content(read_file(path2+"input_post5.json")).with(user("c@c.com").password("believe_on_me").roles("USER")))
+                .andDo(print()).andExpect(status().isOk());
+
+        this.mockMvc.perform(get("/ServerRESTAPI/WallPosts/GetInitialWallPosts").with(user("a@a.com").password("believe_on_me").roles("USER"))) // a@a.com
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path2+"output_1_1.json")));
+
+        this.mockMvc.perform(get("/ServerRESTAPI/WallPosts/GetInitialWallPosts").with(user("b@b.com").password("believe_on_me").roles("USER"))) // b@b.com
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path2+"output_2_2.json")));
+
+        this.mockMvc.perform(get("/ServerRESTAPI/WallPosts/GetInitialWallPosts").with(user("c@c.com").password("believe_on_me").roles("USER"))) // c@c.com
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path2+"output_3_3.json")));
+    }
+
 }

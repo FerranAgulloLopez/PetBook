@@ -1210,6 +1210,32 @@ public class RestApiController {
     }
 
 
+    /**
+     *
+     *
+     * Search
+     *
+     */
+
+
+    @CrossOrigin
+    @GetMapping(value = "/WallPosts/GetInitialWallPosts")
+    @ApiOperation(value = "Returns ALL posts(user+user's friends) ordered by time", notes = "Returns ALL posts made by user and user's friends. The Posts are ordered by time.\n " +
+            "Ascendent order(first positions are older)", tags="WallPosts")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok")
+    })
+    public ResponseEntity<?> GetInitialWallPosts()
+    {
+        String email = getLoggedUserMail();
+        try {
+            return new ResponseEntity<>(serverService.GetInitialWallPosts(email), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
 
 

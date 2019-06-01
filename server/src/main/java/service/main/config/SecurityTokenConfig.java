@@ -16,8 +16,10 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
     // Para ejecutarlo en local(No olvidarese de descomentar los ".antMatchers" para ejecutarlo.
     private final static String exception   = "/ServerRESTAPI/Search/User";
-    private final static String exception2  = "/ServerRESTAPI/CreatePet";
-    private final static String exception3  = "/ServerRESTAPI/events/CreateEvent";
+    private final static String exception2  = "/ServerRESTAPI/sendFriendRequest";
+    private final static String exception3  = "/ServerRESTAPI/users/WallPosts";
+    private final static String exception4  = "/ServerRESTAPI/WallPosts/GetInitialWallPosts";
+
 
 
 
@@ -43,10 +45,10 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
 
 
                 // Excepciones
-                .antMatchers(HttpMethod.POST,   exception, exception2, exception3).permitAll()
-                .antMatchers(HttpMethod.GET,    exception, exception2, exception3).permitAll()
-                .antMatchers(HttpMethod.DELETE, exception, exception2, exception3).permitAll()
-                .antMatchers(HttpMethod.PUT,    exception, exception2, exception3).permitAll()
+                .antMatchers(HttpMethod.POST,   exception, exception2, exception3, exception4).permitAll()
+                .antMatchers(HttpMethod.GET,    exception, exception2, exception3, exception4).permitAll()
+                .antMatchers(HttpMethod.DELETE, exception, exception2, exception3, exception4).permitAll()
+                .antMatchers(HttpMethod.PUT,    exception, exception2, exception3, exception4).permitAll()
 
 
 

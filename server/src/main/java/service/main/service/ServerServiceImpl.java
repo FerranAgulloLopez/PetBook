@@ -339,6 +339,24 @@ public class ServerServiceImpl implements ServerService {
         }
     }
 
+    @Override // LUEGO SE PUEDE MEJORAR LA EFICIENCIA
+    public List<WallPost> GetInitialWallPosts(String email) throws NotFoundException {
+        List<WallPost> result = new ArrayList<>();
+        User actual_user = auxGetUser(email);
+        List<String> users_emails = actual_user.getFriends().getFriends();
+        users_emails.add(email);
+
+        for(int i = 0; i < users_emails.size(); ++i) {  // Puts on result all the posts of all users
+            User user = auxGetUser(users_emails.get(i));
+            List<WallPost> posts = user.getWallPosts();
+            result.addAll(posts); // result + posts (concat them, preservs the order.
+        }
+
+        Collections.sort(result);
+
+        return result;
+    }
+
     @Override
     public void deleteWallPost(long wallPostId) throws NotFoundException, InternalServerErrorException {
         String userMail = getLoggedUserMail();

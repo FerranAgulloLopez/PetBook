@@ -86,7 +86,8 @@ public class ControllerSearchTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "search_user_operation/input_register2.json")))
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_crea_mascota.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_crea_mascota.json"))
+                .with(user("a@.com").password("pass").roles("USER")) )
                 .andDo(print()).andExpect(status().isOk());
 
         this.mockMvc.perform(get("/ServerRESTAPI/Search/User?petType=Perro")
@@ -107,9 +108,11 @@ public class ControllerSearchTests extends ControllerIntegrationTests {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path + "search_user_operation/input_register4.json")))
                 .andDo(print()).andExpect(status().isOk());
 
-        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_crea_mascota.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_crea_mascota.json"))
+                .with(user("a@.com").password("pass").roles("USER")) )
                 .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_crea_mascota3.json")))
+        this.mockMvc.perform(post("/ServerRESTAPI/CreatePet").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_crea_mascota3.json"))
+                .with(user("a@.com3").password("pass").roles("USER")) )
                 .andDo(print()).andExpect(status().isOk());
 
         this.mockMvc.perform(get("/ServerRESTAPI/Search/User?petType=Anfield&postalCode=123456789&userName=Goku")
