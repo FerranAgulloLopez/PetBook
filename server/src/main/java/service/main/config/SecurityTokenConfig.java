@@ -18,7 +18,7 @@ public class SecurityTokenConfig extends WebSecurityConfigurerAdapter {
     private final static String exception   = "/ServerRESTAPI/Search/User";
     private final static String exception2  = "/ServerRESTAPI/sendFriendRequest";
     private final static String exception3  = "/ServerRESTAPI/users/WallPosts";
-    private final static String exception4  = "/ServerRESTAPI/WallPosts/GetInitialWallPosts";
+    private final static String exception4  = "/ServerRESTAPI/events/getUserGoogleCalendarID";
 
 
 

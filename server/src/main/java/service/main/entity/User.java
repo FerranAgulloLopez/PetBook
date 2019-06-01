@@ -42,6 +42,9 @@ public class User implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String role = "USER";
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String googleCalendarID;
+
 
     public User() {
         this.wallPosts = new ArrayList<>();
@@ -131,6 +134,8 @@ public class User implements Serializable {
         return wallPosts;
     }
 
+    public String getGoogleCalendarID() { return googleCalendarID; }
+
     /*
     Set
      */
@@ -170,6 +175,8 @@ public class User implements Serializable {
     public void setWallPosts(List<WallPost> wallPosts) {
         this.wallPosts = wallPosts;
     }
+
+    public void setGoogleCalendarID(String googleCalendarID) { this.googleCalendarID = googleCalendarID; }
 
     /*
     Friends
@@ -262,6 +269,8 @@ public class User implements Serializable {
         }
         return result;
     }
+
+
 
 
 

@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import service.main.config.JwtConfig;
 import service.main.entity.*;
+import service.main.entity.input_output.event.CustomEventCalendarIdAdapter;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
 import service.main.entity.input_output.forum.DataForumComment;
@@ -614,6 +615,23 @@ public class ServerServiceImpl implements ServerService {
     public List<Event> findEventsByParticipant(String participantMail) throws NotFoundException {
         if (!userRepository.existsById(participantMail)) throw new NotFoundException(USERNOTDB);
         return eventRepository.findByParticipantsInOrderByDate(participantMail);
+    }
+
+    @Override
+    public CustomEventCalendarIdAdapter getUserGoogleCalendarID(String email) throws NotFoundException {
+        User user = auxGetUser(email);
+
+        boolean exist;
+        String calendarID;
+        List<Event> events;
+
+        events = eventRepository.findByParticipantsInOrderByDate(email);
+        calendarID = user.getGoogleCalendarID();
+        exist = (calendarID != null);
+
+        CustomEventCalendarIdAdapter customEventCalendarIdAdapter = new CustomEventCalendarIdAdapter(calendarID, exist, events);
+
+        return customEventCalendarIdAdapter;
     }
 
     @Override

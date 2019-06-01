@@ -1,6 +1,7 @@
 package service.main.service;
 
 import service.main.entity.*;
+import service.main.entity.input_output.event.CustomEventCalendarIdAdapter;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
 import service.main.entity.input_output.forum.DataForumComment;
@@ -114,6 +115,8 @@ public interface ServerService {
 
     public List<Event> findEventsByParticipant(String participantMail) throws NotFoundException;
 
+    public CustomEventCalendarIdAdapter getUserGoogleCalendarID(String email) throws NotFoundException;
+
     public Event updateEvent(long eventId, DataEventUpdate event) throws NotFoundException;
 
     public void addEventParticipant(long eventId, String userMail) throws NotFoundException, BadRequestException;
@@ -205,6 +208,5 @@ public interface ServerService {
     public void removeDataBase();
 
     public void pushDataToDatabase();
-
 
 }
