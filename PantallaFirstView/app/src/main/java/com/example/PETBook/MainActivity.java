@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity
                 fragment = new ForumFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
-            else if (fragType.equals("mapa")){
+            else if (fragType.equals("map")){
                 fragment = new MyMapFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
@@ -104,15 +104,19 @@ public class MainActivity extends AppCompatActivity
                 fragment = new InterestSitesFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
-            else {
+            else if (fragType.equals("home")){
                 fragment = new HomeWallFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
+            /*else {
+                fragment = new HomeWallFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }*/
         }
-        else{
+        /*else{
             fragment = new HomeWallFragment();
             getSupportFragmentManager().beginTransaction().add(R.id.content_main, fragment).commit();
-        }
+        }*/
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -167,33 +171,42 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             myFragment = new HomeWallFragment();
+            this.getIntent().putExtra("fragment","home");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
+            this.getIntent().putExtra("fragment","pets");
             fragmentSeleccionado = true;
         /* else if (id == R.id.nav_profile) {
             myFragment = new HomeWallFragment();
             fragmentSeleccionado = true;*/
         } else if (id == R.id.nav_searchUsers) {
             myFragment = new SearchUsersFragment();
+            this.getIntent().putExtra("fragment","searchUsers");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_friends) {
             myFragment = new MyFriendsFragment();
+            this.getIntent().putExtra("fragment","friends");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_events) {
             myFragment = new MyEventsFragment();
+            this.getIntent().putExtra("fragment","events");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_calendar) {
             myFragment = new MyCalendarFragment();
+            this.getIntent().putExtra("fragment","calendar");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_forum) {
             myFragment = new ForumFragment();
+            this.getIntent().putExtra("fragment","forum");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_interest){
             myFragment = new InterestSitesFragment();
+            this.getIntent().putExtra("fragment","interest");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_map){
             myFragment = new MyMapFragment();
+            this.getIntent().putExtra("fragment","map");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_logout) {
             //salir a la ventana de log in

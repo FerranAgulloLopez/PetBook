@@ -100,7 +100,7 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
 
 
                     Intent intent = new Intent(this, MainActivity.class);
-                    //intent.putExtra("fragment", "home");
+                    intent.putExtra("fragment", "home");
                     startActivity(intent);
                     finish();
                 }
