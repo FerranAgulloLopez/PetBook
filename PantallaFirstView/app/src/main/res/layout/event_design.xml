@@ -20,14 +20,11 @@
             android:id="@+id/e_titulo"
             android:layout_width="318dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="45dp"
-            android:layout_marginRight="45dp"
             android:text="aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="25sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/imagenParticipantes"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,13 +32,11 @@
             android:id="@+id/imagenParticipantes"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginStart="45dp"
-            android:layout_marginLeft="45dp"
-            android:layout_marginBottom="44dp"
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
             android:scaleType="fitCenter"
             android:tint="#635959"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/e_titulo"
+            app:layout_constraintEnd_toStartOf="@+id/e_miembros"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/participantes" />
 
@@ -51,13 +46,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
             android:layout_marginRight="2dp"
-            android:layout_marginBottom="44dp"
             android:text="100"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/imagenParticipantes"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
@@ -89,7 +81,6 @@
             android:scaleType="fitCenter"
             android:tint="#635959"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/e_localizacion"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/localitzacio" />
@@ -98,13 +89,10 @@
             android:id="@+id/e_localizacion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="229dp"
-            android:layout_marginRight="229dp"
             android:text="Terrassa, España"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageLoc"
             app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
