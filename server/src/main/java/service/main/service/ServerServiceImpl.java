@@ -2,11 +2,9 @@ package service.main.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.tomcat.jni.Local;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -633,6 +631,14 @@ public class ServerServiceImpl implements ServerService {
 
         return customEventCalendarIdAdapter;
     }
+
+    @Override
+    public void UpdateCalendarId(String email, String calendarId) throws NotFoundException {
+        User user = auxGetUser(email);
+        user.setGoogleCalendarID(calendarId);
+        userRepository.save(user);
+    }
+
 
     @Override
     public Event updateEvent(long eventId, DataEventUpdate inputEvent) throws NotFoundException {

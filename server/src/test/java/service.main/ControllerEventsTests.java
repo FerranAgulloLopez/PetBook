@@ -284,6 +284,21 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "getUserGoogleCalendarID/output.json")));
     }
 
+    /*
+        Updates the google calendar id  UpdateCalendarId
+     */
+    @Test
+    public void UpdateCalendarId() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"UpdateCalendarId/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(put("/ServerRESTAPI/events/UpdateCalendarId/bla")
+                .with(user("a").password("a").roles("USER")))   // Para que lo haga el usuario a
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUser/a")
+                .with(user("a").password("a").roles("USER")))   // Para que lo haga el usuario a
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "UpdateCalendarId/output.json")));
+    }
+
 
 
 

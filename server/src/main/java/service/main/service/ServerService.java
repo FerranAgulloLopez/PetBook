@@ -117,6 +117,8 @@ public interface ServerService {
 
     public CustomEventCalendarIdAdapter getUserGoogleCalendarID(String email) throws NotFoundException;
 
+    void UpdateCalendarId(String email, String calendarId) throws NotFoundException;
+
     public Event updateEvent(long eventId, DataEventUpdate event) throws NotFoundException;
 
     public void addEventParticipant(long eventId, String userMail) throws NotFoundException, BadRequestException;
