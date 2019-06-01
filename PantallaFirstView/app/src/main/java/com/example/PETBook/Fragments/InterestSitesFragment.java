@@ -1,11 +1,13 @@
 package com.example.PETBook.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,10 @@ import android.widget.ListView;
 import com.example.PETBook.Adapters.InterestSitesAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.InterestSiteModel;
 import com.example.PETBook.New_SuggestedSite;
+import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONArray;
@@ -84,6 +88,57 @@ public class InterestSitesFragment extends Fragment implements AsyncResult {
         // Inflate the layout for this fragment
         MyView = inflater.inflate(R.layout.fragment_interest_sites, container, false);
         getActivity().setTitle("Suggested Sites");
+
+
+        SingletonUsuario usuario = SingletonUsuario.getInstance();
+
+        if (!usuario.isMailConfirmed()) {
+
+            /*
+            Show dialog to inform user that does not have email confirmed
+             */
+            AlertDialog.Builder emailConfirmedDialog = new AlertDialog.Builder(getActivity());
+            emailConfirmedDialog.setMessage("Confirme su correo para acceder a todas las funciones de PetBook")
+                    .setCancelable(true)
+                    .setPositiveButton("Reenviar correo de confirmación", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            /*
+                            sends confirmation mail to the user's email
+                             */
+                            SingletonUsuario user = SingletonUsuario.getInstance();
+                            Conexion conexion = new Conexion(InterestSitesFragment.this);
+                            conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/SendConfirmationEmail", "POST", null);
+                            dialog.cancel();
+                            Intent i = new Intent(getActivity(), MainActivity.class);
+                            startActivity(i);
+                            getActivity().finish();
+                        }
+                    })
+                    .setNegativeButton("Más adelante", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+
+                            /*
+
+                            Comentado para poder testear
+
+                            Intent i = new Intent(getActivity(), MainActivity.class);
+                            startActivity(i);
+                            getActivity().finish();
+                            */
+                        }
+                    });
+            AlertDialog dialog = emailConfirmedDialog.create();
+            dialog.setTitle("Confirmación del correo");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+
+
+
         Conexion con = new Conexion(InterestSitesFragment.this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/interestSites?accepted=false", "GET", null);
 

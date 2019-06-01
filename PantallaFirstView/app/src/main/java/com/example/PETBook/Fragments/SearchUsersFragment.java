@@ -1,10 +1,12 @@
 package com.example.PETBook.Fragments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +20,7 @@ import com.example.PETBook.Adapters.FriendSuggestionAdapter;
 import com.example.PETBook.Adapters.UserAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.FriendSuggestionModel;
 import com.example.PETBook.Models.UserModel;
 import com.example.PETBook.NewPet;
@@ -97,6 +100,58 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
         }
 
         getActivity().setTitle("Search Users");
+
+
+        SingletonUsuario usuario = SingletonUsuario.getInstance();
+
+        if (!usuario.isMailConfirmed()) {
+
+            /*
+            Show dialog to inform user that does not have email confirmed
+             */
+            AlertDialog.Builder emailConfirmedDialog = new AlertDialog.Builder(getActivity());
+            emailConfirmedDialog.setMessage("Confirme su correo para acceder a todas las funciones de PetBook")
+                    .setCancelable(true)
+                    .setPositiveButton("Reenviar correo de confirmación", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            /*
+                            sends confirmation mail to the user's email
+                             */
+                            SingletonUsuario user = SingletonUsuario.getInstance();
+                            Conexion conexion = new Conexion(SearchUsersFragment.this);
+                            conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/SendConfirmationEmail", "POST", null);
+                            dialog.cancel();
+                            Intent i = new Intent(getActivity(), MainActivity.class);
+                            startActivity(i);
+                            getActivity().finish();
+                        }
+                    })
+                    .setNegativeButton("Más adelante", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+
+                            /*
+
+                            Comentado para poder testear
+
+                            Intent i = new Intent(getActivity(), MainActivity.class);
+                            startActivity(i);
+                            getActivity().finish();
+                            */
+                        }
+                    });
+            AlertDialog dialog = emailConfirmedDialog.create();
+            dialog.setTitle("Confirmación del correo");
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+        }
+
+
+
+
         inputName = (EditText) convertView.findViewById(R.id.nameInput);
         inputTypePet = (Spinner) convertView.findViewById(R.id.typePetInput);
         inputPostalCode = (EditText) convertView.findViewById(R.id.postalCodeInput);
