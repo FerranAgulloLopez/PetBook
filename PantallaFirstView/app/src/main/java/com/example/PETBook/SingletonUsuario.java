@@ -7,6 +7,7 @@ public class SingletonUsuario {
     private static String Email;
     private String jwtToken;
     private Bitmap profilePicture;
+    private Boolean mailConfirmed;
 
     private static SingletonUsuario ourInstance;
 
@@ -42,5 +43,14 @@ public class SingletonUsuario {
 
     public void setJwtToken(String jwtToken) {
         this.jwtToken = jwtToken;
+    }
+
+    public boolean isMailConfirmed() {
+        return mailConfirmed;
+    }
+
+    public void setMailConfirmed(Boolean mailConfirmed) {
+        this.mailConfirmed = mailConfirmed;
+        System.out.println("!!!MAILCONFIRMED: " + mailConfirmed);
     }
 }

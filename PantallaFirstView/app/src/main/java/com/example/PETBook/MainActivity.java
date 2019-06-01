@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.remove("login");
                             editor.remove("jwtToken");
+                            editor.remove("mailConfirmed");
                             editor.commit();
 
                             finish();

@@ -66,11 +66,12 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
         try {
             if (json.getInt("code") == 200) {
                 String success = json.getString("success");
-                String mail = json.getString("mailconfirmed");
+                Boolean mailconfirmed = json.getBoolean("mailconfirmed");
                 if(success.equals("true")) {
 
                     SingletonUsuario user = SingletonUsuario.getInstance();
                     SingletonUsuario.setEmail(usuari.getText().toString());
+                    user.setMailConfirmed(mailconfirmed);
                     String token = json.getString("token");
                     user.setJwtToken(token);
                     user.setProfilePicture(null);
@@ -83,6 +84,7 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("login", usuari.getText().toString());
                     editor.putString("jwtToken", token);
+                    editor.putBoolean("mailConfirmed", mailconfirmed);
                     editor.commit();
 
 
