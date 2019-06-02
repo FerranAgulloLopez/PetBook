@@ -6,4 +6,85 @@
     android:layout_height="match_parent"
     tools:context="com.example.PETBook.New_SuggestedSite">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/CrearSiteText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Crear Sitio de Interés"
+                android:textColor="@color/colorAccent"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp">
+
+                <EditText
+                    android:id="@+id/nameSiteEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Nombre del sitio de interés"
+                    android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp">
+
+                <EditText
+                    android:id="@+id/descSiteEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:gravity="start|top"
+                    android:hint="Descripción del sitio de interés"
+                    android:inputType="textMultiLine" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/spinnerTypeSite"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:entries="@array/TypeSite" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/locSiteEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Escriba y seleccione la localización" />
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/addInterestSiteButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/colorAccent"
+                android:text="Add Interest Site"
+                android:textColor="@color/common_google_signin_btn_text_dark_default"
+                android:textSize="18sp" />
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

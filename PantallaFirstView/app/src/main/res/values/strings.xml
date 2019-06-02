@@ -63,6 +63,15 @@
         <item>Rabbit</item>
         <item>Other</item>
     </string-array>
+    <string-array name="TypeSite">
+        <item>Select one type of place</item>
+        <item>Park</item>
+        <item>Veterinary Clinic</item>
+        <item>Pet Shop</item>
+        <item>Hairdressing for animals</item>
+        <item>Animal association</item>
+        <item>Other</item>
+    </string-array>
     <string name="Sex">Sex</string>
     <string name="title_activity_new_event">NewEvent</string>
     <string name="title_activity_main">MainActivity</string>
