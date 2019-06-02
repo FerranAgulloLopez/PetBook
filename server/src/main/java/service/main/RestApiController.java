@@ -460,6 +460,38 @@ public class RestApiController {
     }
 
     @CrossOrigin
+    @GetMapping(value = "/events/getUserGoogleCalendarID", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns all events of the user, if has google calendar id, and the google calendar id", notes = "Returns all events of the user, if has google calendar id, and the google calendar id\n", tags = "Events")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+    })
+    public ResponseEntity<?> getUserGoogleCalendarID() throws NotFoundException {
+        String email = getLoggedUserMail();
+        try {
+            return new ResponseEntity<>(serverService.getUserGoogleCalendarID(email), HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PutMapping(value = "/events/UpdateCalendarId/{calendarId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Returns all events of the user, if has google calendar id, and the google calendar id", notes = "Returns all events of the user, if has google calendar id, and the google calendar id\n", tags = "Events")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+    })
+    public ResponseEntity<?> UpdateCalendarId(@PathVariable String calendarId) throws NotFoundException {
+        String petbookEmail = getLoggedUserMail();
+        try {
+            serverService.UpdateCalendarId(petbookEmail, calendarId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+    @CrossOrigin
     @PutMapping(value = "/events/UpdateEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "UPDATE Event", notes = "Updates an event. Updates only descripcion, publico and titulo. An Event is identified by any, coordenadas, dia, hora, mes, radio.", tags = "Events")
     @ApiResponses(value = {

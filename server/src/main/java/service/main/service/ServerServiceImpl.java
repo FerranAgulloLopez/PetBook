@@ -2,11 +2,9 @@ package service.main.service;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.apache.tomcat.jni.Local;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -15,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import service.main.config.JwtConfig;
 import service.main.entity.*;
+import service.main.entity.input_output.event.CustomEventCalendarIdAdapter;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
 import service.main.entity.input_output.forum.DataForumComment;
@@ -340,8 +339,8 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override // LUEGO SE PUEDE MEJORAR LA EFICIENCIA
-    public List<WallPost> GetInitialWallPosts(String email) throws NotFoundException {
-        List<WallPost> result = new ArrayList<>();
+    public List<DataWallPostAux> GetInitialWallPosts(String email) throws NotFoundException {
+        List<DataWallPostAux> result = new ArrayList<>();
         User actual_user = auxGetUser(email);
         List<String> users_emails = actual_user.getFriends().getFriends();
         users_emails.add(email);
@@ -349,7 +348,10 @@ public class ServerServiceImpl implements ServerService {
         for(int i = 0; i < users_emails.size(); ++i) {  // Puts on result all the posts of all users
             User user = auxGetUser(users_emails.get(i));
             List<WallPost> posts = user.getWallPosts();
-            result.addAll(posts); // result + posts (concat them, preservs the order.
+            for (WallPost wallPost: posts) {
+                DataWallPostAux wallPostAux = new DataWallPostAux(wallPost, user.getEmail(),user.getFoto());
+                result.add(wallPostAux);
+            }
         }
 
         Collections.sort(result);
@@ -615,6 +617,31 @@ public class ServerServiceImpl implements ServerService {
         if (!userRepository.existsById(participantMail)) throw new NotFoundException(USERNOTDB);
         return eventRepository.findByParticipantsInOrderByDate(participantMail);
     }
+
+    @Override
+    public CustomEventCalendarIdAdapter getUserGoogleCalendarID(String email) throws NotFoundException {
+        User user = auxGetUser(email);
+
+        boolean exist;
+        String calendarID;
+        List<Event> events;
+
+        events = eventRepository.findByParticipantsInOrderByDate(email);
+        calendarID = user.getGoogleCalendarID();
+        exist = (calendarID != null);
+
+        CustomEventCalendarIdAdapter customEventCalendarIdAdapter = new CustomEventCalendarIdAdapter(calendarID, exist, events);
+
+        return customEventCalendarIdAdapter;
+    }
+
+    @Override
+    public void UpdateCalendarId(String email, String calendarId) throws NotFoundException {
+        User user = auxGetUser(email);
+        user.setGoogleCalendarID(calendarId);
+        userRepository.save(user);
+    }
+
 
     @Override
     public Event updateEvent(long eventId, DataEventUpdate inputEvent) throws NotFoundException {

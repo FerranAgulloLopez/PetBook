@@ -1,6 +1,7 @@
 package service.main.service;
 
 import service.main.entity.*;
+import service.main.entity.input_output.event.CustomEventCalendarIdAdapter;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
 import service.main.entity.input_output.forum.DataForumComment;
@@ -75,7 +76,7 @@ public interface ServerService {
 
     public void unretweetWallPost(String creatorMail, long wallPostId) throws NotFoundException, BadRequestException, InternalServerErrorException;
 
-    public List<WallPost> GetInitialWallPosts(String email) throws NotFoundException;
+    public List<DataWallPostAux> GetInitialWallPosts(String email) throws NotFoundException;
 
 
 
@@ -113,6 +114,10 @@ public interface ServerService {
     public List<Event> findEventsByCreator(String creatorMail) throws NotFoundException;
 
     public List<Event> findEventsByParticipant(String participantMail) throws NotFoundException;
+
+    public CustomEventCalendarIdAdapter getUserGoogleCalendarID(String email) throws NotFoundException;
+
+    void UpdateCalendarId(String email, String calendarId) throws NotFoundException;
 
     public Event updateEvent(long eventId, DataEventUpdate event) throws NotFoundException;
 
@@ -205,6 +210,5 @@ public interface ServerService {
     public void removeDataBase();
 
     public void pushDataToDatabase();
-
 
 }

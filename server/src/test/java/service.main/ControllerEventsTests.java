@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -268,6 +269,40 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
         this.mockMvc.perform(delete("/ServerRESTAPI/events/DeleteEvent").contentType(MediaType.APPLICATION_JSON).param("eventId","4"))
                 .andDo(print()).andExpect(status().isNotFound());
     }
+
+
+    /*
+        Get Google CalendarID + events of an user  getUserGoogleCalendarID
+     */
+
+    @Test
+    public void getUserGoogleCalendarID_AND_NO_EVENT_NO_CALENDAR_ID() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"getUserGoogleCalendarID/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/events/getUserGoogleCalendarID")
+                .with(user("a").password("a").roles("USER")))   // Para que lo haga el usuario a
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "getUserGoogleCalendarID/output.json")));
+    }
+
+    /*
+        Updates the google calendar id  UpdateCalendarId
+     */
+    @Test
+    public void UpdateCalendarId() throws Exception {
+        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"UpdateCalendarId/input_register.json")))
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(put("/ServerRESTAPI/events/UpdateCalendarId/bla")
+                .with(user("a").password("a").roles("USER")))   // Para que lo haga el usuario a
+                .andDo(print()).andExpect(status().isOk());
+        this.mockMvc.perform(get("/ServerRESTAPI/GetUser/a")
+                .with(user("a").password("a").roles("USER")))   // Para que lo haga el usuario a
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "UpdateCalendarId/output.json")));
+    }
+
+
+
+
+
 
 
     /*
