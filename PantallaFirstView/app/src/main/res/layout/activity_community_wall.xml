@@ -1,11 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.PETBook.NewForum"
-    tools:layout_editor_absoluteY="81dp">
+    tools:context="com.example.PETBook.Fragments.WallFragment">
+
+    <ScrollView
+        android:id="@+id/scrollView3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
 
     <android.support.constraint.ConstraintLayout
@@ -20,6 +24,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -38,35 +43,16 @@
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.706" />
+            app:layout_constraintVertical_bias="0.706" /><![CDATA[
 
-        <ImageButton
-            android:id="@+id/addCommentWall"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="#FFF8F8F9"
-            android:bottomLeftRadius="8dp"
-            android:bottomRightRadius="8dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/create"
-            android:topLeftRadius="8dp"
-            android:topRightRadius="8dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.951"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.862" />/>
+        />
+
+        ]]>
 
         <ListView
             android:id="@+id/listaCommunityWall"
             android:layout_width="0dp"
-            android:layout_height="565dp"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
@@ -97,7 +83,7 @@
             app:layout_constraintVertical_bias="0.283" />
 
         <ImageView
-            android:id="@+id/createCommentWall"
+            android:id="@+id/createCommentWall2"
             android:layout_width="52dp"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"
@@ -116,5 +102,24 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.374" />
 
+        <ImageView
+            android:id="@+id/addCommunityWall"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="#FFF8F8F9"
+            android:scaleType="fitXY"
+            android:src="@drawable/create"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.89"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.942" />
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
+    </FrameLayout>

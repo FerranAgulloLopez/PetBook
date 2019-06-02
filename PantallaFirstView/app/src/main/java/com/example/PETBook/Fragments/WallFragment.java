@@ -37,6 +37,7 @@ import org.json.JSONException;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -128,7 +129,7 @@ public class WallFragment extends Fragment implements AsyncResult {
         inputPostalCode = MyView.findViewById(R.id.postalCodeInput);
         iconoDir = MyView.findViewById(R.id.iconoDir);
         iconoNac = MyView.findViewById(R.id.iconoNac);
-        addCommentWalL = MyView.findViewById(R.id.addCommentWall);
+        addCommentWalL = MyView.findViewById(R.id.addWall);
         spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
         emptyWalls = MyView.findViewById(R.id.emptyWalls);
         imageButtonAdd = MyView.findViewById(R.id.createCommentWallProfile);
@@ -184,7 +185,7 @@ public class WallFragment extends Fragment implements AsyncResult {
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-        LocalDateTime ahora= LocalDateTime.now();
+       /* LocalDateTime ahora= LocalDateTime.now();
         String año = String.valueOf(ahora.getYear());
         String mes = String.valueOf(ahora.getMonthValue());
         String dia = String.valueOf(ahora.getDayOfMonth());
@@ -196,7 +197,9 @@ public class WallFragment extends Fragment implements AsyncResult {
         String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
 
         System.out.println(fechaRetorno);
-        return fechaRetorno;
+        return fechaRetorno;*/
+        Date date = new Date();
+        return Long.toString(date.getTime());
     }
 
     private void getPicture(){

@@ -23,7 +23,6 @@ import com.example.PETBook.Adapters.CommunityWallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.CommunityWallModel;
-import com.example.PETBook.NewWall;
 import com.example.PETBook.NewWallCommunity;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
@@ -32,8 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,7 +60,7 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
     private OnFragmentInteractionListener mListener;
     private String tipoConexion;
     private ProgressBar spinner;
-    private ImageButton addCommentWalL;
+    private ImageView addCommentWalL;
     private TextView emptyWalls;
     private ImageView imageButtonAdd;
     private ImageView helpIcon;
@@ -117,10 +116,10 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
         MyView = inflater.inflate(R.layout.activity_community_wall, container, false);
         // Set tittle to the fragment
         getActivity().setTitle("Home");
-        addCommentWalL = MyView.findViewById(R.id.addCommentWall);
+        addCommentWalL = MyView.findViewById(R.id.addCommunityWall);
         spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
         emptyWalls = MyView.findViewById(R.id.emptyWalls);
-        imageButtonAdd = MyView.findViewById(R.id.createCommentWall);
+        imageButtonAdd = MyView.findViewById(R.id.createCommentWall2);
 
         helpIcon = MyView.findViewById(R.id.help1PostIcon);
         helpText = MyView.findViewById(R.id.help1Post);
@@ -165,19 +164,8 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-        LocalDateTime ahora= LocalDateTime.now();
-        String año = String.valueOf(ahora.getYear());
-        String mes = String.valueOf(ahora.getMonthValue());
-        String dia = String.valueOf(ahora.getDayOfMonth());
-        String hora = String.valueOf(ahora.getHour());
-        String minutos = String.valueOf(ahora.getMinute());
-        String segundos = String.valueOf(ahora.getSecond());
-        if(ahora.getMonthValue() < 10) mes = "0" + mes;
-        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
-        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
-
-        System.out.println(fechaRetorno);
-        return fechaRetorno;
+        Date date = new Date();
+        return Long.toString(date.getTime());
     }
 
     private void mostrarWalls(){
