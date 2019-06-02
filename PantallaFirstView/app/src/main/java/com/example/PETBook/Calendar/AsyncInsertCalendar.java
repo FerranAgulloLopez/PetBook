@@ -14,6 +14,7 @@
 
 package com.example.PETBook.Calendar;
 
+import com.example.PETBook.Conexion;
 import com.example.PETBook.Models.EventModel;
 import com.google.api.services.calendar.model.Calendar;
 import com.google.api.services.calendar.model.Event;
@@ -40,6 +41,7 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
   private final Calendar entry;
   private final boolean existe;
   private List<EventModel> events;
+  CalendarSync calendarSync;
 
   private String calendarId;
   private String TIME_ZONE = "Europe/Madrid";
@@ -47,6 +49,7 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
 
   AsyncInsertCalendar(CalendarSync calendarSync, Calendar entry, boolean existe, List<EventModel> events) {
     super(calendarSync);
+    this.calendarSync = calendarSync;
     this.entry = entry;
     this.existe = existe;
     this.events = events;
@@ -55,10 +58,13 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
   @Override
   protected void doInBackground() throws IOException {
     if(! existe) {
-      Calendar calendar= client.calendars().insert(entry).setFields(CalendarInfo.FIELDS).execute();
+      Calendar calendar = client.calendars().insert(entry).setFields(CalendarInfo.FIELDS).execute();
       calendarId = calendar.getId();
 
       // [ Hacer conexion para guardar el ID en el server ]
+      Conexion con = new Conexion(calendarSync);
+      calendarSync.llamada = calendarSync.CONEXION_UpdateCalendarId;
+      con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/UpdateCalendarId/" + calendarId, "GET", null);
     }
     else {
       calendarId = entry.getId();

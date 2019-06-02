@@ -99,6 +99,12 @@ public final class CalendarSync extends Activity implements AsyncResult {
 
     int numAsyncTasks;
 
+    public String llamada = null;
+
+    public static final String CONEXION_UpdateCalendarId = "UpdateCalendarId";
+    public static final String CONEXION_getUserGoogleCalendarID = "getUserGoogleCalendarID";
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,6 +153,7 @@ public final class CalendarSync extends Activity implements AsyncResult {
     private void createCalendarANDInsertEvents() {
 
         Conexion con = new Conexion(this);
+        llamada = CONEXION_getUserGoogleCalendarID;
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/getUserGoogleCalendarID", "GET", null);
         //String su = SingletonUsuario.getInstance().getEmail();
         //con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByParticipant?mail=" + su,"GET", null);
@@ -234,67 +241,75 @@ public final class CalendarSync extends Activity implements AsyncResult {
 
     @Override
     public void OnprocessFinish(JSONObject json) {
-        try {
-            if (json.getInt("code") == 200) {
-                String googleCalendarID;
-                boolean existe;
-                List<EventModel> events;
+        switch (llamada) {
+            case CONEXION_getUserGoogleCalendarID:
+                try {
+                    if (json.getInt("code") == 200) {
+                        String googleCalendarID;
+                        boolean existe;
+                        List<EventModel> events;
 
-                googleCalendarID = json.getString("GoogleCalendarID");
-                existe = json.getBoolean("hasGoogleCalendar");
-                //googleCalendarID = "2";
-                //existe = false;
+                        googleCalendarID = json.getString("GoogleCalendarID");
+                        existe = json.getBoolean("hasGoogleCalendar");
+                        //googleCalendarID = "2";
+                        //existe = false;
 
-                events = new ArrayList<>(); // ArrayList<EventsModel>()
-                JSONArray jsonArray = json.getJSONArray("events");
-                for(int i = 0; i < jsonArray.length(); ++i){
-                    JSONObject evento = jsonArray.getJSONObject(i);
-                    EventModel e = new EventModel();
-                    e.setId(evento.getInt("id"));
-                    e.setTitulo(evento.getString("title"));
-                    e.setDescripcion(evento.getString("description"));
+                        events = new ArrayList<>(); // ArrayList<EventsModel>()
+                        JSONArray jsonArray = json.getJSONArray("events");
+                        for(int i = 0; i < jsonArray.length(); ++i){
+                            JSONObject evento = jsonArray.getJSONObject(i);
+                            EventModel e = new EventModel();
+                            e.setId(evento.getInt("id"));
+                            e.setTitulo(evento.getString("title"));
+                            e.setDescripcion(evento.getString("description"));
 
-                    e.setFecha(obtainDateANDHour(evento.getString("date")));
+                            e.setFecha(obtainDateANDHour(evento.getString("date")));
 
-                    String dateStr = evento.getString("date");
-                    Date dates =obtainDate(dateStr);
-                    e.setDate(dates);
+                            String dateStr = evento.getString("date");
+                            Date dates =obtainDate(dateStr);
+                            e.setDate(dates);
 
-                    JSONObject loc = evento.getJSONObject("localization");
-                    e.setDireccion(loc.getString("address"));
-                    e.setCoordenadas(loc.getDouble("longitude"),loc.getDouble("latitude"));
-                    e.setPublico(evento.getBoolean("public"));
-                    JSONArray m = evento.getJSONArray("participants");
-                    ArrayList<String> miembros = new ArrayList<String>();
-                    for(int j = 0; j < m.length(); ++j){
-                        miembros.add(m.getString(j));
+                            JSONObject loc = evento.getJSONObject("localization");
+                            e.setDireccion(loc.getString("address"));
+                            e.setCoordenadas(loc.getDouble("longitude"),loc.getDouble("latitude"));
+                            e.setPublico(evento.getBoolean("public"));
+                            JSONArray m = evento.getJSONArray("participants");
+                            ArrayList<String> miembros = new ArrayList<String>();
+                            for(int j = 0; j < m.length(); ++j){
+                                miembros.add(m.getString(j));
+                            }
+                            e.setMiembros(miembros);
+                            e.setCreador(evento.getString("creatorMail"));
+
+                            events.add(e);
+                        }
+
+                        /*
+                        String id_existente = "328r59ggesgnonbcd2fa9ufnf4@group.calendar.google.com";
+                        googleCalendarID = id_existente;
+                        existe = true;
+                        */
+
+                        Calendar calendar = new Calendar();
+                        if (existe) calendar.setId(googleCalendarID);
+                        calendar.setSummary(SUMMARY); // Titulo
+                        new AsyncInsertCalendar(this, calendar, existe, events).execute();
+
+
+                        System.out.println(json.getInt("code") + " Id Google Calendar bien conseguido\n");
+                    } else {
+                        System.out.println("El sistema no logra recojer el id del Calendario, exista o no, del usuario.");
                     }
-                    e.setMiembros(miembros);
-                    e.setCreador(evento.getString("creatorMail"));
-
-                    events.add(e);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
+                break;
+            case CONEXION_UpdateCalendarId:
 
-                /*
-                String id_existente = "328r59ggesgnonbcd2fa9ufnf4@group.calendar.google.com";
-                googleCalendarID = id_existente;
-                existe = true;
-                */
-
-                Calendar calendar = new Calendar();
-                if (existe) calendar.setId(googleCalendarID);
-                calendar.setSummary(SUMMARY); // Titulo
-                new AsyncInsertCalendar(this, calendar, existe, events).execute();
-
-
-                System.out.println(json.getInt("code") + " Id Google Calendar bien conseguido\n");
-            } else {
-                System.out.println("El sistema no logra recojer el id del Calendario, exista o no, del usuario.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                break;
         }
+
 
     }
 
