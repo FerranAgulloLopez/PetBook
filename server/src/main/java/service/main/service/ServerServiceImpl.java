@@ -190,17 +190,22 @@ public class ServerServiceImpl implements ServerService {
      */
 
     @Override
-    public List<WallPost> getUserWallPosts(String userMail) throws NotFoundException {
+    public List<DataWallPostAux> getUserWallPosts(String userMail) throws NotFoundException {
         User user = auxGetUser(userMail);
-        return user.getWallPosts();
+        List<DataWallPostAux> result = new ArrayList<>();
+        for (WallPost wallPost: user.getWallPosts()) {
+            DataWallPostAux aux = new DataWallPostAux(wallPost, user.getEmail(), user.getFoto());
+            result.add(aux);
+        }
+        return result;
     }
 
     @Override
-    public WallPost getUserWallPost(String userMail, long wallPostId) throws NotFoundException {
+    public DataWallPostAux getUserWallPost(String userMail, long wallPostId) throws NotFoundException {
         User user = auxGetUser(userMail);
         WallPost wallPost = user.findWallPost(wallPostId);
         if (wallPost == null) throw new NotFoundException("The user has not a wall post with this id");
-        return wallPost;
+        return new DataWallPostAux(wallPost, user.getEmail(), user.getFoto());
     }
 
     @Override
