@@ -9,7 +9,7 @@
 
 
     <android.support.constraint.ConstraintLayout
-        android:layout_width="383dp"
+        android:layout_width="match_parent"
         android:layout_height="587dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
@@ -26,7 +26,7 @@
 
         <ImageView
             android:id="@+id/Imatge"
-            android:layout_width="151dp"
+            android:layout_width="0dp"
             android:layout_height="167dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -41,7 +41,7 @@
 
         <EditText
             android:id="@+id/Name"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/textNM"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="28dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -75,7 +75,7 @@
 
         <Spinner
             android:id="@+id/Sex"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="43dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -90,7 +90,7 @@
 
         <Spinner
             android:id="@+id/Type"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="45dp"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -105,12 +105,12 @@
 
         <EditText
             android:id="@+id/Race"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginRight="60dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:autofillHints=""
             android:ems="10"
             android:hint="Race"
@@ -121,7 +121,7 @@
 
         <EditText
             android:id="@+id/Age"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
@@ -138,13 +138,13 @@
 
         <EditText
             android:id="@+id/Color"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginRight="60dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:ems="10"
             android:hint="Color"
             android:inputType="textPersonName"
@@ -154,13 +154,11 @@
 
         <EditText
             android:id="@+id/Observations"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="60dp"
-            android:layout_marginRight="60dp"
             android:ems="10"
             android:hint="Observations"
             android:inputType="textMultiLine"
