@@ -1009,8 +1009,7 @@ public class RestApiController {
     })
     public ResponseEntity<?> getUserWallPosts(@ApiParam(value="User's email", required = true) @PathVariable("userMail") String userMail) {
         try {
-            List<WallPost> aux = serverService.getUserWallPosts(userMail);
-            return new ResponseEntity<>(aux,HttpStatus.OK);
+            return new ResponseEntity<>(serverService.getUserWallPosts(userMail),HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
@@ -1026,8 +1025,7 @@ public class RestApiController {
     public ResponseEntity<?> getUserWallPost(@ApiParam(value="User's email", required = true) @PathVariable("userMail") String userMail,
                                              @ApiParam(value="The post's identifier", required = true, example = "4") @PathVariable("wallPostId") long wallPostId) {
         try {
-            WallPost aux = serverService.getUserWallPost(userMail,wallPostId);
-            return new ResponseEntity<>(aux,HttpStatus.OK);
+            return new ResponseEntity<>(serverService.getUserWallPost(userMail,wallPostId),HttpStatus.OK);
         } catch (NotFoundException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
