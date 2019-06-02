@@ -151,9 +151,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                             e.setCreador(evento.getString("creatorMail"));
                             AllEvents.add(e);
                             LatLng pos = new LatLng(e.getLatitude(), e.getLongitude());
-                            Marker markEvent = mMap.addMarker(new MarkerOptions().position(pos).title(e.getTitulo()));
-                            markEvent.setTag(i);
-                            markEvent.setSnippet("Event");
+                            Marker markEvent = mMap.addMarker(new MarkerOptions().position(pos));
+                            markEvent.setTag(i + " Event");
                         }
                         typeConnection = "Interest Sites";
                         Conexion con = new Conexion(MyMapFragment.this);
@@ -182,9 +181,8 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                             site.setLongitude(loc.getDouble("longitude"));
                             AllInterestSites.add(site);
                             LatLng pos = new LatLng(site.getLatitude(), site.getLongitude());
-                            Marker markInterest = mMap.addMarker(new MarkerOptions().position(pos).title(site.getTitulo()));
-                            markInterest.setTag(i);
-                            markInterest.setSnippet("Interest");
+                            Marker markInterest = mMap.addMarker(new MarkerOptions().position(pos));
+                            markInterest.setTag(i + " Interest");
                             markInterest.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.icon_park));
                             markInterest.setAnchor(0.0f,1.0f);
                         }
@@ -211,15 +209,16 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
             @Override
             public View getInfoWindow(Marker marker) {
                 View popup;
-                if(marker.getSnippet().equals("Interest")){
+                String[] s = marker.getTag().toString().split(" ");
+                if(s[1].equals("Interest")){
                     popup = getLayoutInflater().inflate(R.layout.interestsite_window_info, null);
                 }
                 else{
                     popup = getLayoutInflater().inflate(R.layout.event_window_info, null);
                 }
 
-                if(marker.getSnippet().equals("Interest")) {
-                    InterestSiteModel is = AllInterestSites.get((Integer) marker.getTag());
+                if(s[1].equals("Interest")) {
+                    InterestSiteModel is = AllInterestSites.get(Integer.parseInt(s[0]));
                     TextView name = (TextView) popup.findViewById(R.id.NameInterestInfo);
                     TextView type = (TextView) popup.findViewById(R.id.TypeInterestInfo);
                     TextView desc = (TextView) popup.findViewById(R.id.descInterestInfo);
@@ -230,7 +229,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                     loc.setText(is.getDireccion());
                 }
                 else {
-                    EventModel e = AllEvents.get((Integer) marker.getTag());
+                    EventModel e = AllEvents.get(Integer.parseInt(s[0]));
                     TextView title = (TextView) popup.findViewById(R.id.titleInfoEvent);
                     TextView miembros = (TextView) popup.findViewById(R.id.partInfoEvent);
                     TextView fecha = (TextView) popup.findViewById(R.id.fechaInfoEvent);
@@ -244,15 +243,16 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
             @Override
             public View getInfoContents(Marker marker) {
                 View popup;
-                if(marker.getSnippet().equals("Interest")){
+                String[] s = marker.getTag().toString().split(" ");
+                if(s[1].equals("Interest")){
                     popup = getLayoutInflater().inflate(R.layout.interestsite_window_info, null);
                 }
                 else{
                     popup = getLayoutInflater().inflate(R.layout.event_window_info, null);
                 }
 
-                if(marker.getSnippet().equals("Interest")) {
-                    InterestSiteModel is = AllInterestSites.get((Integer) marker.getTag());
+                if(s[1].equals("Interest")) {
+                    InterestSiteModel is = AllInterestSites.get(Integer.parseInt(s[0]));
                     TextView name = (TextView) popup.findViewById(R.id.NameInterestInfo);
                     TextView type = (TextView) popup.findViewById(R.id.TypeInterestInfo);
                     TextView desc = (TextView) popup.findViewById(R.id.descInterestInfo);
@@ -263,7 +263,7 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                     loc.setText(is.getDireccion());
                 }
                 else {
-                    EventModel e = AllEvents.get((Integer) marker.getTag());
+                    EventModel e = AllEvents.get(Integer.parseInt(s[0]));
                     TextView title = (TextView) popup.findViewById(R.id.titleInfoEvent);
                     TextView miembros = (TextView) popup.findViewById(R.id.partInfoEvent);
                     TextView fecha = (TextView) popup.findViewById(R.id.fechaInfoEvent);
@@ -278,8 +278,9 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                if(marker.getSnippet().equals("Event")){
-                    EventModel event = AllEvents.get((Integer) marker.getTag());
+                String[] s = marker.getTag().toString().split(" ");
+                if(s[1].equals("Event")){
+                    EventModel event = AllEvents.get(Integer.parseInt(s[0]));
                     Intent intent = new Intent(getActivity(), EventInfo.class);
                     intent.putExtra("event", event);
                     if (event.getCreador().equals(su.getEmail())){
