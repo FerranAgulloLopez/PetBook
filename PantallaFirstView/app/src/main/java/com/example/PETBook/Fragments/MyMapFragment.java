@@ -3,6 +3,7 @@ package com.example.PETBook.Fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EventInfo;
+import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.Models.InterestSiteModel;
 import com.example.PETBook.SingletonUsuario;
@@ -59,7 +61,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
     private ArrayList<InterestSiteModel> AllInterestSites;
     private static SingletonUsuario su = SingletonUsuario.getInstance();
     private String typeConnection;
-    private View popup = null;
 
     public MyMapFragment() {
         // Required empty public constructor
@@ -109,9 +110,6 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
         typeConnection = "Events";
         Conexion con = new Conexion(MyMapFragment.this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetAllEvents", "GET", null);
-        /*typeConnection = "Interest Sites";
-        con = new Conexion(MyMapFragment.this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/interestSites?accepted=true", "GET", null);*/
         mapFragment.getMapAsync(this);
         return MyView;
     }
@@ -208,56 +206,90 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
         }
         mMap.setMyLocationEnabled(true);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(madrid));
-        /*mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                EventModel event = AllEvents.get((Integer) marker.getTag());
-                Intent intent = new Intent(getActivity(), EventInfo.class);
-                intent.putExtra("event", event);
-                if (event.getCreador().equals(su.getEmail())){
-                    intent.putExtra("eventType", "Creator");
-                }
-                else{
-                    intent.putExtra("eventType", "Participant");
-                }
-                startActivity(intent);
-                return false;
-            }
-        });*/
+
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker marker) {
-                return null;
-            }
-
-            @Override
-            public View getInfoContents(Marker marker) {
-                if (popup == null){
-                    if(marker.getSnippet().equals("Interest")) {
-                        popup = getLayoutInflater().inflate(R.layout.interestsite_map_window, null);
-                    }
-                    else {
-                        popup = getLayoutInflater().inflate(R.layout.event_map_window, null);
-                    }
+                View popup;
+                if(marker.getSnippet().equals("Interest")){
+                    popup = getLayoutInflater().inflate(R.layout.interestsite_window_info, null);
+                }
+                else{
+                    popup = getLayoutInflater().inflate(R.layout.event_window_info, null);
                 }
 
-                if(marker.getSnippet().equals("Interest Site")) {
+                if(marker.getSnippet().equals("Interest")) {
                     InterestSiteModel is = AllInterestSites.get((Integer) marker.getTag());
-                    TextView title = (TextView) popup.findViewById(R.id.titleInterest);
-                    TextView type = (TextView) popup.findViewById(R.id.typeInterest);
-                    TextView desc = (TextView) popup.findViewById(R.id.descriptionInterest);
-                    TextView loc = (TextView) popup.findViewById(R.id.LocationInterest);
-                    title.setText(is.getTitulo());
-                    type.setText(is.getTipo());
-                    desc.setText(is.getDescripcion());
+                    TextView name = (TextView) popup.findViewById(R.id.NameInterestInfo);
+                    TextView type = (TextView) popup.findViewById(R.id.TypeInterestInfo);
+                    TextView desc = (TextView) popup.findViewById(R.id.descInterestInfo);
+                    TextView loc = (TextView) popup.findViewById(R.id.LocInterestInfo);
+                    name.setText(is.getTitulo());
+                    type.setText("Tipo: " + is.getTipo());
+                    desc.setText("Descripción: \n" + is.getDescripcion());
                     loc.setText(is.getDireccion());
                 }
                 else {
                     EventModel e = AllEvents.get((Integer) marker.getTag());
-                    TextView title = (TextView) popup.findViewById(R.id.titleEvent);
+                    TextView title = (TextView) popup.findViewById(R.id.titleInfoEvent);
+                    TextView miembros = (TextView) popup.findViewById(R.id.partInfoEvent);
+                    TextView fecha = (TextView) popup.findViewById(R.id.fechaInfoEvent);
                     title.setText(e.getTitulo());
+                    miembros.setText("Participantes: " + String.valueOf(e.getNumeroParticipantes()));
+                    fecha.setText(e.getFecha());
                 }
                 return popup;
+            }
+
+            @Override
+            public View getInfoContents(Marker marker) {
+                View popup;
+                if(marker.getSnippet().equals("Interest")){
+                    popup = getLayoutInflater().inflate(R.layout.interestsite_window_info, null);
+                }
+                else{
+                    popup = getLayoutInflater().inflate(R.layout.event_window_info, null);
+                }
+
+                if(marker.getSnippet().equals("Interest")) {
+                    InterestSiteModel is = AllInterestSites.get((Integer) marker.getTag());
+                    TextView name = (TextView) popup.findViewById(R.id.NameInterestInfo);
+                    TextView type = (TextView) popup.findViewById(R.id.TypeInterestInfo);
+                    TextView desc = (TextView) popup.findViewById(R.id.descInterestInfo);
+                    TextView loc = (TextView) popup.findViewById(R.id.LocInterestInfo);
+                    name.setText(is.getTitulo());
+                    type.setText("Tipo: " + is.getTipo());
+                    desc.setText("Descripción: \n" + is.getDescripcion());
+                    loc.setText(is.getDireccion());
+                }
+                else {
+                    EventModel e = AllEvents.get((Integer) marker.getTag());
+                    TextView title = (TextView) popup.findViewById(R.id.titleInfoEvent);
+                    TextView miembros = (TextView) popup.findViewById(R.id.partInfoEvent);
+                    TextView fecha = (TextView) popup.findViewById(R.id.fechaInfoEvent);
+                    title.setText(e.getTitulo());
+                    miembros.setText("Participantes: " + String.valueOf(e.getNumeroParticipantes()));
+                    fecha.setText(e.getFecha());
+                }
+                return popup;
+            }
+
+        });
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                if(marker.getSnippet().equals("Event")){
+                    EventModel event = AllEvents.get((Integer) marker.getTag());
+                    Intent intent = new Intent(getActivity(), EventInfo.class);
+                    intent.putExtra("event", event);
+                    if (event.getCreador().equals(su.getEmail())){
+                        intent.putExtra("eventType", "Creator");
+                    }
+                    else{
+                        intent.putExtra("eventType", "Participant");
+                    }
+                    startActivity(intent);
+                }
             }
         });
 

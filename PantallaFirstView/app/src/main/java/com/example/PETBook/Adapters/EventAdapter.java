@@ -52,7 +52,7 @@ public class EventAdapter extends BaseAdapter {
         titulo.setText(events.get(position).getTitulo());
         fecha.setText(events.get(position).getFecha());
         localizacion.setText(events.get(position).getDireccion());
-        miembros.setText(String.format("%d",events.get(position).getMiembros().size()));
+        miembros.setText(String.valueOf(events.get(position).getNumeroParticipantes()));
         return convertView;
     }
 

@@ -68,6 +68,9 @@ public class EventModel implements Serializable {
 
     public String getCreador(){ return creador; }
 
+    public Integer getNumeroParticipantes(){
+        return miembros.size();
+    }
 
     public org.threeten.bp.LocalDate getLocalDate() {
         return localDate;
