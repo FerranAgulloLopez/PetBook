@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import com.example.PETBook.Adapters.WallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EditProfile;
+import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.WallModel;
 import com.example.PETBook.NewWall;
 import com.example.PETBook.SingletonUsuario;
@@ -336,7 +338,6 @@ public class WallFragment extends Fragment implements AsyncResult {
                     /*System.out.println(forumModel.get(2).getTitle());
                     System.out.println(forumModel.get(2).getComments().get(1).getDescription());*/
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
-
                     buttonEditProfile.setVisibility(View.VISIBLE);
                     spinner.setVisibility(View.GONE);
                 } else {
@@ -355,13 +356,33 @@ public class WallFragment extends Fragment implements AsyncResult {
                     inputPostalCode.setText(json.getString("postalCode"));
                     iconoNac.setVisibility(View.VISIBLE);
                     iconoDir.setVisibility(View.VISIBLE);
-                    mostrarWalls();
+                    getPicture();
                 } else {
                     //Toast.makeText(WallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        else if (tipoConexion.equals("getImatge")) {
+            try {
+                System.out.println("entro a mostrar la imagen");
+                if (json.getInt("code")==200) {
+                    // convert string to bitmap
+                    SingletonUsuario user = SingletonUsuario.getInstance();
+                    Image imagenConversor = Image.getInstance();
+                    String image = json.getString("image");
+                    Bitmap profileImage = imagenConversor.StringToBitMap(image);
+                    imatgePerfil.setImageBitmap(profileImage);
+                    mostrarWalls();
+                    //user.setProfilePicture(profileImage);
+                } else {
+                    //Toast.makeText(WallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
         else if(tipoConexion.equals("deletePost")){
             try {

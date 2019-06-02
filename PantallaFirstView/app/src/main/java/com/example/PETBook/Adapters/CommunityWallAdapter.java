@@ -91,7 +91,6 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
             convertView = layoutInflater.inflate(R.layout.wall_design,null);
         }
         imatgeUser = convertView.findViewById(R.id.imatgePerfilHome);
-        //getPicture();
         final CommunityWallModel w = CommunityWallList.get(position);
         descriptionWall = (TextView) convertView.findViewById(R.id.descriptionWall);
         dataCreacioWall = (TextView) convertView.findViewById(R.id.dataCreacionWall);
