@@ -9,6 +9,10 @@
             android:icon="@drawable/icono_home"
             android:title="Home" />
         <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/myprofile"
+            android:title="My Profile" />
+        <item
             android:id="@+id/nav_searchUsers"
             android:icon="@drawable/icon_friend_requests"
             android:title="Search Users" />

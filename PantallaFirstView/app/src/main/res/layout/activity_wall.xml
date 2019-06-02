@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.PETBook.Fragments.HomeWallFragment">
+    tools:context="com.example.PETBook.Fragments.WallFragment">
 
     <ScrollView
         android:id="@+id/scrollView3"
@@ -178,22 +178,26 @@
 
             <ImageButton
                 android:id="@+id/addCommentWall"
-                android:layout_width="75dp"
-                android:layout_height="72dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="@android:drawable/screen_background_dark_transparent"
+                android:background="#FFF8F8F9"
                 android:scaleType="fitXY"
-                android:src="@drawable/addcomment"
+                android:src="@drawable/create"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.951"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.862" />
+                app:layout_constraintVertical_bias="0.862"
+                android:bottomRightRadius="8dp"
+                android:bottomLeftRadius="8dp"
+                android:topRightRadius="8dp"
+                android:topLeftRadius="8dp"/>/>
 
             <TextView
                 android:id="@+id/emptyWalls"
@@ -225,7 +229,8 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
-                android:src="@drawable/addcomment"
+                android:src="@drawable/create"
+
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

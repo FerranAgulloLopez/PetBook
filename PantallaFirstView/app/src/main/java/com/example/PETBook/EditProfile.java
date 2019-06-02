@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -18,7 +17,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.Fragments.HomeWallFragment;
 import com.example.PETBook.Models.Image;
 import com.example.pantallafirstview.R;
 
@@ -399,9 +397,10 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                     if (response == 200 || response == 201) {
                         Toast.makeText(this, "User updated succesfully.", Toast.LENGTH_SHORT).show();
                         /*Fragment fragment = null;
-                        fragment = new HomeWallFragment();
+                        fragment = new WallFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();*/
                         Intent intent = new Intent(this, MainActivity.class);
+                        intent.putExtra("fragment","myprofile");
                         startActivity(intent);
 
                     } else {
@@ -416,9 +415,10 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                     if (response == 200 || response == 201) {
                         Toast.makeText(this, "Password updated succesfully.", Toast.LENGTH_SHORT).show();
                         /*Fragment fragment = null;
-                        fragment = new HomeWallFragment();
+                        fragment = new WallFragment();
                         getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();*/
                         Intent intent = new Intent(this, MainActivity.class);
+                        intent.putExtra("fragment","myprofile");
                         startActivity(intent);
 
                     } else {
@@ -440,7 +440,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                         //user.setProfilePicture(bitmap);
                         spinner.setVisibility(View.GONE);
                     } else {
-                        //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(WallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

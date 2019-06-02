@@ -24,10 +24,7 @@ import java.time.LocalDateTime;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class EditWall extends AppCompatActivity implements AsyncResult {
-
-
-
+public class EditCommunityWall extends AppCompatActivity implements AsyncResult {
 
     private TextInputLayout newWall;
     private ImageView imatgeUser;
@@ -58,8 +55,8 @@ public class EditWall extends AppCompatActivity implements AsyncResult {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(EditWall.this, MainActivity.class);
-                intent.putExtra("fragment","myprofile");
+                Intent intent = new Intent(EditCommunityWall.this, MainActivity.class);
+                intent.putExtra("fragment","home");
                 startActivity(intent);
             }
         });
@@ -130,7 +127,7 @@ public class EditWall extends AppCompatActivity implements AsyncResult {
 
 
             }
-            Conexion con = new Conexion(EditWall.this);
+            Conexion con = new Conexion(EditCommunityWall.this);
             SingletonUsuario su = SingletonUsuario.getInstance();
             con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts/" + idComment, "PUT", jsonToSend.toString());
 
@@ -162,8 +159,8 @@ public class EditWall extends AppCompatActivity implements AsyncResult {
             try {
                 if(json.getInt("code")==200){
                     Toast.makeText(this, "Post updated succesfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(EditWall.this, MainActivity.class);
-                    intent.putExtra("fragment", "myprofile");
+                    Intent intent = new Intent(EditCommunityWall.this, MainActivity.class);
+                    intent.putExtra("fragment", "home");
                     startActivity(intent);
                 }
                 else{

@@ -125,7 +125,7 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
                     imatgeUser.setImageBitmap(profileImage);
                     //user.setProfilePicture(profileImage);
                 } else {
-                    //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(WallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -136,6 +136,7 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
                 if(json.getInt("code")==200){
                     Toast.makeText(this, "Post added succesfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(NewWall.this, MainActivity.class);
+                    intent.putExtra("fragment", "home");
                     startActivity(intent);
                 }
                 else{

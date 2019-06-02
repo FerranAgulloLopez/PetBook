@@ -49,14 +49,9 @@
 
         <activity android:name="com.example.PETBook.EditEvent" />
         <activity android:name="com.example.PETBook.EditWall" />
-        <activity
-            android:name="com.example.PETBook.EditProfile"
-            android:label="Edit Profile"
-            android:parentActivityName="com.example.PETBook.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MainActivity" />
-        </activity>
+        <activity android:name="com.example.PETBook.EditCommunityWall" />
+        <activity android:name="com.example.PETBook.EditProfile" />
+
         <activity
             android:name="com.example.PETBook.PetInfo"
             android:label="@string/title_activity_pets"

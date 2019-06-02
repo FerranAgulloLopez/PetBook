@@ -2,15 +2,11 @@ package com.example.PETBook.Fragments;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.view.MotionEvent;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -24,13 +20,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.PETBook.Adapters.WallAdapter;
+import com.example.PETBook.Adapters.CommunityWallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.EditProfile;
-import com.example.PETBook.EditWall;
+import com.example.PETBook.Models.CommunityWallModel;
 import com.example.PETBook.Models.Image;
-import com.example.PETBook.Models.WallModel;
 import com.example.PETBook.NewWall;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
@@ -45,12 +39,12 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link HomeWallFragment.OnFragmentInteractionListener} interface
+ * {@link WallFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link HomeWallFragment#newInstance} factory method to
+ * Use the {@link WallFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeWallFragment extends Fragment implements AsyncResult {
+public class CommunityWallFragment extends Fragment implements AsyncResult {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -63,29 +57,19 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
     /* ATRIBUTOS   */
     private View MyView;
     private ListView lista;
-    private WallAdapter wallAdapter;
-    private ArrayList<WallModel> wallModel;
+    private CommunityWallAdapter communityWallAdapter;
+    private ArrayList<CommunityWallModel> communityWallModel;
     private OnFragmentInteractionListener mListener;
     private String tipoConexion;
-    private TextView inputFullName;
-    private TextView inputEmail;
-    private TextView inputBirthday;
-    private TextView inputPostalCode;
-    private ImageView imatgePerfil;
-    private Button buttonEditProfile;
     private ProgressBar spinner;
-    private ImageView iconoDir;
-    private ImageView iconoNac;
     private ImageButton addCommentWalL;
-    private ImageButton botonOpcion;
     private TextView emptyWalls;
-    private String idComment;
-    private TextView ViewIDComment;
     private ImageView imageButtonAdd;
     private ImageView helpIcon;
     private TextView helpText;
+    private ImageView imatgeUser;
 
-    public HomeWallFragment() {
+    public CommunityWallFragment() {
         // Required empty public constructor
     }
 
@@ -95,11 +79,11 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeWallFragment.
+     * @return A new instance of fragment WallFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeWallFragment newInstance(String param1, String param2) {
-        HomeWallFragment fragment = new HomeWallFragment();
+    public static WallFragment newInstance(String param1, String param2) {
+        WallFragment fragment = new WallFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -114,25 +98,25 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        mostrarPerfil();
     }
+    private void getPicture(){
+        System.out.println("entro a mostrar imatge");
+        tipoConexion = "getImatge";
+        Conexion con = new Conexion(this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+        System.out.println("conexio walls ben feta");
 
+    }
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        MyView = inflater.inflate(R.layout.activity_wall, container, false);
+        MyView = inflater.inflate(R.layout.activity_community_wall, container, false);
         // Set tittle to the fragment
         getActivity().setTitle("Home");
-        imatgePerfil = MyView.findViewById(R.id.imatgePerfilHome);
-        inputFullName = MyView.findViewById(R.id.fullNameInput);
-        inputEmail = MyView.findViewById(R.id.emailInput);
-        inputBirthday = MyView.findViewById(R.id.birthdayInput);
-        inputPostalCode = MyView.findViewById(R.id.postalCodeInput);
-        iconoDir = MyView.findViewById(R.id.iconoDir);
-        iconoNac = MyView.findViewById(R.id.iconoNac);
         addCommentWalL = MyView.findViewById(R.id.addCommentWall);
         spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
         emptyWalls = MyView.findViewById(R.id.emptyWalls);
@@ -140,18 +124,8 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         helpIcon = MyView.findViewById(R.id.help1PostIcon);
         helpText = MyView.findViewById(R.id.help1Post);
 
-        mostrarPerfil();
-        // mostrarWalls();
-        buttonEditProfile = (Button) MyView.findViewById(R.id.editProfileButton);
+        mostrarWalls();
 
-        buttonEditProfile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), EditProfile.class);
-                startActivity(intent);
-
-            }
-        });
         addCommentWalL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -161,16 +135,8 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
 
             }
         });
-        imageButtonAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), NewWall.class);
 
-                startActivity(intent);
-
-            }
-        });
-        lista = (ListView) MyView.findViewById(R.id.list_walls);
+        lista = (ListView) MyView.findViewById(R.id.listaCommunityWall);
         lista.setClickable(true);
 
         lista.setOnTouchListener(new View.OnTouchListener() {
@@ -183,51 +149,9 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
             }
         });
 
-        /*final String[] opcions = {"Edit", "Delete"};
-
-        lista.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-                //System.out.println("arg0:" + MyView.findViewById(R.id.descriptionWall).callOnClick());
-
-                ViewIDComment = arg1.findViewById(R.id.idComment);
-                idComment = ViewIDComment.getText().toString();
-                System.out.println("idComment: " + idComment);
-                //idComment = lista.findViewById(R.id.idComment);
-                AlertDialog.Builder builder = new AlertDialog.Builder(MyView.getContext());
-               // System.out.println("idcomment:" + builder.getContext());
-                builder.setItems(opcions, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // the user clicked on colors[which]
-
-                        System.out.println("idComment: " + ViewIDComment.getText().toString());
-                        System.out.println("numero which:" + which);
-                        if(which == 0){
-                            editComment();
-                        }
-                        else if(which == 1){
-                            deletePost();
-                        }
-                    }
-                });
-                builder.show();
-                return true;
-            }
-
-        });*/
 
         return MyView;
     }
-/*
-    private void editComment(){
-        Bundle bundle = new Bundle();
-        bundle.putString("id", idComment);
-
-        Intent intent = new Intent(getActivity(), EditWall.class);
-        intent.putExtra("idComment", idComment);
-        startActivity(intent);
-    }*/
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
@@ -246,41 +170,14 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         return fechaRetorno;
     }
 
-/*
-    private void deletePost(){
-        tipoConexion="deletePost";
-        Conexion con = new Conexion(this);
-        System.out.println("idComment: " + idComment);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts/" + idComment, "DELETE", null);
-        System.out.println("conexio walls ben feta");
-    }*/
-
-    private void getPicture(){
-        System.out.println("entro a mostrar imatge");
-        tipoConexion = "getImatge";
-        Conexion con = new Conexion(this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
-        System.out.println("conexio walls ben feta");
-
-    }
     private void mostrarWalls(){
         System.out.println("entro a mostrar walls");
         tipoConexion = "getWalls";
         Conexion con = new Conexion(this);
         SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + su.getEmail() + "/WallPosts", "GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/WallPosts/GetInitialWallPosts", "GET", null);
         System.out.println("conexio walls ben feta");
 
-    }
-    private void mostrarPerfil(){
-        System.out.println("entro a mostrar perfil");
-        tipoConexion = "getUser";
-        Conexion con = new Conexion(this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail() , "GET", null);
-        System.out.println("conexion mostrar user bien hecha");
-        //mostrarWalls();
     }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -327,14 +224,14 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
         if (tipoConexion.equals("getWalls")){
             try {
                 if (json.getInt("code") == 200) {
-                    wallModel = new ArrayList<WallModel>();
+                    communityWallModel = new ArrayList<CommunityWallModel>();
                     JSONArray jsonArray = json.getJSONArray("array");
                     //ArrayList<CommentForumModel> comments = new ArrayList<CommentForumModel>();
                     for (int i = 0; i < jsonArray.length(); ++i) {
                         JSONObject wall = jsonArray.getJSONObject(i);
-                        WallModel w = new WallModel();
+                        CommunityWallModel w = new CommunityWallModel();
                         w.setIDWall(wall.getInt("id"));
-                        System.out.println("idwall: " + w.getIDWall());
+                        //System.out.println("idwall: " + w.getIDWall());
                         w.setDescription(wall.getString("description"));
                         w.setCreationDate(wall.getString("creationDate"));
                         //likes
@@ -364,16 +261,16 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                             w.setRetweetText(wall.getString("retweetText"));
                         }
                         //w.setRetweetText(wall.getString("retweetText"));
-                        wallModel.add(w);
+                        communityWallModel.add(w);
                     }
-                    if(wallModel.size()==0){
+                    if(communityWallModel.size()==0){
                         emptyWalls.setVisibility(View.VISIBLE);
                         imageButtonAdd.setVisibility(View.VISIBLE);
                         addCommentWalL.setVisibility(View.INVISIBLE);
                         helpText.setVisibility(View.INVISIBLE);
                         helpIcon.setVisibility(View.INVISIBLE);
                     }
-                    else if(wallModel.size() == 1){
+                    else if(communityWallModel.size() == 1){
                         emptyWalls.setVisibility(View.INVISIBLE);
                         imageButtonAdd.setVisibility(View.INVISIBLE);
                         addCommentWalL.setVisibility(View.VISIBLE);
@@ -387,66 +284,26 @@ public class HomeWallFragment extends Fragment implements AsyncResult {
                         helpText.setVisibility(View.INVISIBLE);
                         helpIcon.setVisibility(View.INVISIBLE);
                     }
-                    wallAdapter = new WallAdapter(getActivity(), wallModel);
-                    lista = (ListView) MyView.findViewById(R.id.list_walls);
-                    lista.setAdapter(wallAdapter);
+                    communityWallAdapter= new CommunityWallAdapter(getActivity(), communityWallModel);
+                    lista = (ListView) MyView.findViewById(R.id.listaCommunityWall);
+                    lista.setAdapter(communityWallAdapter);
 
                     /*System.out.println(forumModel.get(2).getTitle());
                     System.out.println(forumModel.get(2).getComments().get(1).getDescription());*/
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
 
-                    buttonEditProfile.setVisibility(View.VISIBLE);
                     spinner.setVisibility(View.GONE);
-                    getPicture();
                 } else {
                     System.out.print("El sistema no logra mostrar la lista de walls del creador\n");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if(tipoConexion.equals("getUser")){
-            try {
-                System.out.println("entro a mostrar el user");
-                if (json.getInt("code")==200) {
-                    inputFullName.setText(json.getString("firstName") + " " + json.getString("secondName"));
-                    inputEmail.setText("@" + json.getString("email"));
-                    inputBirthday.setText(json.getString("dateOfBirth"));
-                    inputPostalCode.setText(json.getString("postalCode"));
-                    iconoNac.setVisibility(View.VISIBLE);
-                    iconoDir.setVisibility(View.VISIBLE);
-                    mostrarWalls();
-                } else {
-                    //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }else if(tipoConexion.equals("getImatge")){
-            try {
-                System.out.println("entro a mostrar la imagen");
-                if (json.getInt("code")==200) {
-                    // convert string to bitmap
-                    SingletonUsuario user = SingletonUsuario.getInstance();
-                    Image imagenConversor = Image.getInstance();
-                    String image = json.getString("image");
-                    Bitmap profileImage = imagenConversor.StringToBitMap(image);
-                    imatgePerfil.setImageBitmap(profileImage);
-                    //user.setProfilePicture(profileImage);
-
-
-
-                    spinner.setVisibility(View.GONE);
-                } else {
-                    //Toast.makeText(HomeWallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
         else if(tipoConexion.equals("deletePost")){
             try {
                 if (json.getInt("code")==200) {
-                    /*Toast.makeText(HomeWallFragment.this, "Post deleted succesfully", Toast.LENGTH_SHORT).show();
+                    /*Toast.makeText(WallFragment.this, "Post deleted succesfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, MainActivity.class);
                     startActivity(intent);*/
                     Toast.makeText(getActivity(), "Post deleted succesfully", Toast.LENGTH_SHORT).show();

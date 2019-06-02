@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +21,10 @@ import android.widget.Toast;
 
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.EditCommunityWall;
 import com.example.PETBook.EditWall;
 import com.example.PETBook.MainActivity;
+import com.example.PETBook.Models.CommunityWallModel;
 import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.WallModel;
 import com.example.PETBook.SingletonUsuario;
@@ -32,7 +33,6 @@ import com.example.pantallafirstview.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -42,10 +42,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class WallAdapter extends BaseAdapter implements AsyncResult {
+public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
 
     private Context context;
-    private ArrayList<WallModel> wallList;
+    private ArrayList<CommunityWallModel> CommunityWallList;
     private TextView idComment;
     private String tipoConexion="";
     private TextView numlikes ;
@@ -55,19 +55,27 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
     private View view;
     private ImageView imatgeUser;
 
-    public WallAdapter (Context context, ArrayList<WallModel> array){
+    public CommunityWallAdapter (Context context, ArrayList<CommunityWallModel> array){
         this.context = context;
-        wallList = array;
+        CommunityWallList = array;
     }
+    private void getPicture(){
+        System.out.println("entro a mostrar imatge");
+        tipoConexion = "getImatge";
+        Conexion con = new Conexion(this);
+        SingletonUsuario su = SingletonUsuario.getInstance();
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+        System.out.println("conexio walls ben feta");
 
+    }
     @Override
     public int getCount() {
-        return wallList.size();
+        return CommunityWallList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return wallList.get(position);
+        return CommunityWallList.get(position);
     }
 
     @Override
@@ -82,13 +90,12 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.wall_design,null);
         }
-
-        final WallModel w = wallList.get(position);
+        imatgeUser = convertView.findViewById(R.id.imatgePerfilHome);
+        //getPicture();
+        final CommunityWallModel w = CommunityWallList.get(position);
         descriptionWall = (TextView) convertView.findViewById(R.id.descriptionWall);
         dataCreacioWall = (TextView) convertView.findViewById(R.id.dataCreacionWall);
         idComment = (TextView) convertView.findViewById(R.id.idComment);
-        imatgeUser = convertView.findViewById(R.id.imatgePerfilHome);
-        //getPicture();
 
         final TextView numlikes = convertView.findViewById(R.id.numLikes);
         TextView numFavs = convertView.findViewById(R.id.numFavs);
@@ -97,9 +104,11 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
         TextView isRetweeted = convertView.findViewById(R.id.retweeted);
         ImageView retweetedThisIcon = convertView.findViewById(R.id.retweetedThisIcon);
-        if(wallList.get(position).isRetweeted()){
+
+        if(CommunityWallList.get(position).isRetweeted()){
             isRetweeted.setVisibility(View.VISIBLE);
             retweetedThisIcon.setVisibility(View.VISIBLE);
+
             option.setVisibility(View.INVISIBLE);
         }
         else {
@@ -133,31 +142,31 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
 
 
-        idComment.setText(wallList.get(position).getIDWall().toString());
-        descriptionWall.setText(wallList.get(position).getDescription());
+        idComment.setText(CommunityWallList.get(position).getIDWall().toString());
+        descriptionWall.setText(CommunityWallList.get(position).getDescription());
 
-        System.out.println("numlikes: " + String.valueOf(wallList.get(position).getLikes().size()));
-        System.out.println("numFavs: " + String.valueOf(wallList.get(position).getFavs().size()));
-        System.out.println("numRetweets: " + String.valueOf(wallList.get(position).getRetweets().size()));
-        numlikes.setText(String.valueOf(wallList.get(position).getLikes().size()));
-        numFavs.setText(String.valueOf(wallList.get(position).getFavs().size()));
-        numRetweets.setText(String.valueOf(wallList.get(position).getRetweets().size()));
+        System.out.println("numlikes: " + String.valueOf(CommunityWallList.get(position).getLikes().size()));
+        System.out.println("numFavs: " + String.valueOf(CommunityWallList.get(position).getFavs().size()));
+        System.out.println("numRetweets: " + String.valueOf(CommunityWallList.get(position).getRetweets().size()));
+        numlikes.setText(String.valueOf(CommunityWallList.get(position).getLikes().size()));
+        numFavs.setText(String.valueOf(CommunityWallList.get(position).getFavs().size()));
+        numRetweets.setText(String.valueOf(CommunityWallList.get(position).getRetweets().size()));
 
         final ImageButton like = convertView.findViewById(R.id.likeButton);
         final ImageButton fav = convertView.findViewById(R.id.favButton);
         final ImageButton retweet = convertView.findViewById(R.id.retweetButton);
         TextView retweetText = convertView.findViewById(R.id.retweetText);
-        retweetText.setText(wallList.get(position).getRetweetText());
+        retweetText.setText(CommunityWallList.get(position).getRetweetText());
 
-        if(wallList.get(position).isRetweeted() && !wallList.get(position).getRetweetText().equals("")){
+        if(CommunityWallList.get(position).isRetweeted() && !CommunityWallList.get(position).getRetweetText().equals("")){
             retweetText.setVisibility(View.VISIBLE);
             retweet.setVisibility(View.INVISIBLE);
             numRetweets.setVisibility(View.INVISIBLE);
         }
-        else if (wallList.get(position).isRetweeted() && wallList.get(position).getRetweetText().equals("")){
-                retweetText.setVisibility(View.GONE);
-                retweet.setVisibility(View.INVISIBLE);
-                numRetweets.setVisibility(View.INVISIBLE);
+        else if (CommunityWallList.get(position).isRetweeted() && CommunityWallList.get(position).getRetweetText().equals("")){
+            retweetText.setVisibility(View.GONE);
+            retweet.setVisibility(View.INVISIBLE);
+            numRetweets.setVisibility(View.INVISIBLE);
         }
         else{
             retweetText.setVisibility(View.GONE);
@@ -194,7 +203,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         }
 
 
-        String fechaString = wallList.get(position).getCreationDate();
+        String fechaString = CommunityWallList.get(position).getCreationDate();
         Date dateNew = null;
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         try {
@@ -207,11 +216,12 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
         return convertView;
     }
+
     private void editComment(){
         Bundle bundle = new Bundle();
         bundle.putString("id", idComment.getText().toString());
 
-        Intent intent = new Intent(this.context, EditWall.class);
+        Intent intent = new Intent(this.context, EditCommunityWall.class);
         intent.putExtra("idComment", idComment.getText().toString());
         context.startActivity(intent);
     }
@@ -224,33 +234,21 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         System.out.println("conexio walls ben feta");
     }
 
-    private void getPicture(){
-        System.out.println("entro a mostrar imatge");
-        tipoConexion = "getImatge";
-        Conexion con = new Conexion(this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
-        System.out.println("conexio walls ben feta");
-
-    }
 
     public void like(final ImageButton like, final Integer id, final Integer position, final TextView numlikes){
-        ///votar.setText("Vote");
-        //like.setVisibility(View.VISIBLE);
-        //unlike.setVisibility(View.INVISIBLE);
         like.setColorFilter(Color.argb(100,131,7,6));
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WallAdapter.this.notifyDataSetChanged();
+                CommunityWallAdapter.this.notifyDataSetChanged();
 
                 tipoConexion = "someInteraction";
-                numlikes.setText(String.valueOf(wallList.get(position).getLikes().size() + 1));
+                numlikes.setText(String.valueOf(CommunityWallList.get(position).getLikes().size() + 1));
 
                 try {
                     //like.setColorFilter(Color.argb(100,0,0,0));
 
-                    Conexion con = new Conexion(WallAdapter.this);
+                    Conexion con = new Conexion(CommunityWallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Like", "POST", null);
                     like.setColorFilter(Color.argb(100,131,7,6));
                     like(like, id, position, numlikes);
@@ -272,10 +270,10 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             @Override
             public void onClick(View v) {
                 try {
-                    numlikes.setText(String.valueOf(wallList.get(position).getLikes().size() - 1));
+                    numlikes.setText(String.valueOf(CommunityWallList.get(position).getLikes().size() - 1));
 
-                    WallAdapter.this.notifyDataSetChanged();
-                    Conexion con = new Conexion(WallAdapter.this);
+                    CommunityWallAdapter.this.notifyDataSetChanged();
+                    Conexion con = new Conexion(CommunityWallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnLike", "POST", null);
                     unlike(like, id, position, numlikes);
                 } catch (Exception e){
@@ -296,7 +294,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                 try {
                     //like.setColorFilter(Color.argb(100,0,0,0));
                     fav.setColorFilter(Color.argb(100,131,7,6));
-                    Conexion con = new Conexion(WallAdapter.this);
+                    Conexion con = new Conexion(CommunityWallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Love", "POST", null);
                     fav(fav, id);
 
@@ -316,7 +314,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             public void onClick(View v) {
                 try {
                     fav.setColorFilter(Color.argb(100,0,0,0));
-                    Conexion con = new Conexion(WallAdapter.this);
+                    Conexion con = new Conexion(CommunityWallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnLove", "POST", null);
                     unfav(fav, id);
                 } catch (Exception e){
@@ -370,7 +368,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                                     if (which == 0) {
                                         String YouEditTextValue = "";
                                         retweet.setColorFilter(Color.argb(100,131,7,6));
-                                        Conexion con = new Conexion(WallAdapter.this);
+                                        Conexion con = new Conexion(CommunityWallAdapter.this);
                                         JSONObject jsonToSend = new JSONObject();
                                         String fechaHora = crearFechaActual();
                                         try {
@@ -395,7 +393,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                                             public void onClick(DialogInterface dialog, int whichButton) {
                                                 String YouEditTextValue = edittext.getText().toString().trim();
                                                 retweet.setColorFilter(Color.argb(100,131,7,6));
-                                                Conexion con = new Conexion(WallAdapter.this);
+                                                Conexion con = new Conexion(CommunityWallAdapter.this);
                                                 JSONObject jsonToSend = new JSONObject();
                                                 String fechaHora = crearFechaActual();
                                                 try {
@@ -413,24 +411,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
                                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                                // what ever you want to do with No option.
-                                                /*retweet.setColorFilter(Color.argb(100,131,7,6));
-                                                Conexion con = new Conexion(WallAdapter.this);
-                                                JSONObject jsonToSend = new JSONObject();
-                                                String fechaHora = crearFechaActual();
-                                                String YouEditTextValue = "";
-                                                try {
-                                                    jsonToSend.accumulate("description", YouEditTextValue);
-                                                    jsonToSend.accumulate("creationDate", fechaHora);
-                                                    //jsonToSend.accumulate("ok", "true");
-                                                    System.out.println(jsonToSend);
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                                //con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
-                                                retweet(retweet, id, finalConvertView);*/
-                                            }
+                                              }
                                         });
 
                                         alert.show();
@@ -461,7 +442,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             public void onClick(View v) {
                 try {
                     retweet.setColorFilter(Color.argb(255,0,0,0));
-                    Conexion con = new Conexion(WallAdapter.this);
+                    Conexion con = new Conexion(CommunityWallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnRetweet", "POST", null);
                     unretweet(retweet, id);
                     //deletePost();
@@ -476,13 +457,9 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         if(tipoConexion.equals("deletePost")){
             try {
                 if (json.getInt("code")==200) {
-                    /*Toast.makeText(WallFragment.this, "Post deleted succesfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);*/
                     Toast.makeText(this.context, "Post deleted succesfully", Toast.LENGTH_SHORT).show();
-                    //WallFragment.getFragmentManager().beginTransaction().detach(this).attach(this).commit();
                     Intent intent = new Intent(this.context, MainActivity.class);
-                    intent.putExtra("fragment", "myprofile");
+                    intent.putExtra("fragment", "home");
                     context.startActivity(intent);
                 }
             } catch (JSONException e) {
@@ -513,9 +490,9 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                 if(tipoConexion.equals("someInteraction")){
                     if(json.getInt("code")==200){
                         System.out.println(json.getInt("code"));
-                        WallAdapter.this.notifyDataSetChanged();
+                        CommunityWallAdapter.this.notifyDataSetChanged();
                         Intent intent = new Intent(this.context, MainActivity.class);
-                        intent.putExtra("fragment", "myprofile");
+                        intent.putExtra("fragment", "home");
                         context.startActivity(intent);
 
                     }
@@ -524,7 +501,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     }
                 }
             }catch (Exception e){
-            e.printStackTrace();
-        }
+                e.printStackTrace();
+            }
     }
 }

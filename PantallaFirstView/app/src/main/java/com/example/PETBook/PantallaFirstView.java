@@ -35,6 +35,7 @@ public class PantallaFirstView extends AppCompatActivity {
             user.setMailConfirmed(mailConfirmed);
             if (token != null) user.setJwtToken(token);
             Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("fragment","home");
             startActivity(intent);
             finish();
         }

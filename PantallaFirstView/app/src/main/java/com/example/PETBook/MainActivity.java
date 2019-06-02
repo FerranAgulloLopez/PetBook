@@ -15,8 +15,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.PETBook.Fragments.CommunityWallFragment;
 import com.example.PETBook.Fragments.ForumFragment;
-import com.example.PETBook.Fragments.HomeWallFragment;
+import com.example.PETBook.Fragments.WallFragment;
 import com.example.PETBook.Fragments.InterestSitesFragment;
 import com.example.PETBook.Fragments.MyCalendarFragment;
 import com.example.PETBook.Fragments.MyEventsFragment;
@@ -28,7 +29,7 @@ import com.example.PETBook.Fragments.SearchUsersFragment;
 import com.example.pantallafirstview.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, HomeWallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
+        implements NavigationView.OnNavigationItemSelectedListener, CommunityWallFragment.OnFragmentInteractionListener, WallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
                             , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener, SearchUsersFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener, InterestSitesFragment.OnFragmentInteractionListener {
 
 
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        setTitle("My profile");
+        setTitle("Home");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity
 */
 
 
-        // First fragment to display (de momento HomeWallFragment -perfil-)
+        // First fragment to display (de momento WallFragment -perfil-)
         Fragment fragment = null;
         Bundle recibir = this.getIntent().getExtras();
         if (recibir != null){
@@ -70,10 +71,6 @@ public class MainActivity extends AppCompatActivity
             }
             else if(fragType.equals("pets")) {
                 fragment = new MyPetsFragment();
-                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
-            }
-            else if(fragType.equals("profile")){
-                fragment = new HomeWallFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if(fragType.equals("friends")){
@@ -105,7 +102,11 @@ public class MainActivity extends AppCompatActivity
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if (fragType.equals("home")){
-                fragment = new HomeWallFragment();
+                fragment = new CommunityWallFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if (fragType.equals("myprofile")){
+                fragment = new WallFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
         }
@@ -158,16 +159,17 @@ public class MainActivity extends AppCompatActivity
         boolean fragmentSeleccionado=false;
 
         if (id == R.id.nav_home) {
-            myFragment = new HomeWallFragment();
+            myFragment = new CommunityWallFragment();
             this.getIntent().putExtra("fragment","home");
+            fragmentSeleccionado = true;
+        } else if (id == R.id.nav_profile) {
+            myFragment = new WallFragment();
+            this.getIntent().putExtra("fragment","myprofile");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
             this.getIntent().putExtra("fragment","pets");
             fragmentSeleccionado = true;
-        /* else if (id == R.id.nav_profile) {
-            myFragment = new HomeWallFragment();
-            fragmentSeleccionado = true;*/
         } else if (id == R.id.nav_searchUsers) {
             myFragment = new SearchUsersFragment();
             this.getIntent().putExtra("fragment","searchUsers");
