@@ -437,6 +437,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                         String image = output.getString("image");
                         Bitmap bitMap = imagenConversor.StringToBitMap(image);
                         profileImage.setImageBitmap(bitMap);
+                        profileImageBitmap = bitMap;
                         //user.setProfilePicture(bitmap);
                         spinner.setVisibility(View.GONE);
                     } else {
