@@ -339,8 +339,8 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override // LUEGO SE PUEDE MEJORAR LA EFICIENCIA
-    public List<WallPost> GetInitialWallPosts(String email) throws NotFoundException {
-        List<WallPost> result = new ArrayList<>();
+    public List<DataWallPostAux> GetInitialWallPosts(String email) throws NotFoundException {
+        List<DataWallPostAux> result = new ArrayList<>();
         User actual_user = auxGetUser(email);
         List<String> users_emails = actual_user.getFriends().getFriends();
         users_emails.add(email);
@@ -348,7 +348,10 @@ public class ServerServiceImpl implements ServerService {
         for(int i = 0; i < users_emails.size(); ++i) {  // Puts on result all the posts of all users
             User user = auxGetUser(users_emails.get(i));
             List<WallPost> posts = user.getWallPosts();
-            result.addAll(posts); // result + posts (concat them, preservs the order.
+            for (WallPost wallPost: posts) {
+                DataWallPostAux wallPostAux = new DataWallPostAux(wallPost, user.getEmail(),user.getFoto());
+                result.add(wallPostAux);
+            }
         }
 
         Collections.sort(result);
