@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.view.MotionEvent;
 import android.widget.ImageButton;
@@ -24,8 +23,8 @@ import com.example.PETBook.Adapters.CommunityWallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.CommunityWallModel;
-import com.example.PETBook.Models.Image;
 import com.example.PETBook.NewWall;
+import com.example.PETBook.NewWallCommunity;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
@@ -67,6 +66,7 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
     private ImageView imageButtonAdd;
     private ImageView helpIcon;
     private TextView helpText;
+    private ImageButton addComment;
     private ImageView imatgeUser;
 
     public CommunityWallFragment() {
@@ -120,7 +120,8 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
         addCommentWalL = MyView.findViewById(R.id.addCommentWall);
         spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
         emptyWalls = MyView.findViewById(R.id.emptyWalls);
-        imageButtonAdd = MyView.findViewById(R.id.viewButton);
+        imageButtonAdd = MyView.findViewById(R.id.createCommentWall);
+
         helpIcon = MyView.findViewById(R.id.help1PostIcon);
         helpText = MyView.findViewById(R.id.help1Post);
 
@@ -129,7 +130,16 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
         addCommentWalL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), NewWall.class);
+                Intent intent = new Intent(getActivity(), NewWallCommunity.class);
+
+                startActivity(intent);
+
+            }
+        });
+        imageButtonAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NewWallCommunity.class);
 
                 startActivity(intent);
 
@@ -274,15 +284,15 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
                         emptyWalls.setVisibility(View.INVISIBLE);
                         imageButtonAdd.setVisibility(View.INVISIBLE);
                         addCommentWalL.setVisibility(View.VISIBLE);
-                        helpText.setVisibility(View.VISIBLE);
-                        helpIcon.setVisibility(View.VISIBLE);
+//                        helpText.setVisibility(View.VISIBLE);
+                        //helpIcon.setVisibility(View.VISIBLE);
                     }
                     else {
                         emptyWalls.setVisibility(View.INVISIBLE);
                         imageButtonAdd.setVisibility(View.INVISIBLE);
                         addCommentWalL.setVisibility(View.VISIBLE);
-                        helpText.setVisibility(View.INVISIBLE);
-                        helpIcon.setVisibility(View.INVISIBLE);
+                      //  helpText.setVisibility(View.INVISIBLE);
+                       // helpIcon.setVisibility(View.INVISIBLE);
                     }
                     communityWallAdapter= new CommunityWallAdapter(getActivity(), communityWallModel);
                     lista = (ListView) MyView.findViewById(R.id.listaCommunityWall);

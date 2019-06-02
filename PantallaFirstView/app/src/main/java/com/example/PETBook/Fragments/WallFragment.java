@@ -5,7 +5,6 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.graphics.Bitmap;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -25,7 +24,6 @@ import com.example.PETBook.Adapters.WallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EditProfile;
-import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.WallModel;
 import com.example.PETBook.NewWall;
 import com.example.PETBook.SingletonUsuario;
@@ -131,7 +129,7 @@ public class WallFragment extends Fragment implements AsyncResult {
         addCommentWalL = MyView.findViewById(R.id.addCommentWall);
         spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
         emptyWalls = MyView.findViewById(R.id.emptyWalls);
-        imageButtonAdd = MyView.findViewById(R.id.viewButton);
+        imageButtonAdd = MyView.findViewById(R.id.createCommentWallProfile);
         helpIcon = MyView.findViewById(R.id.help1PostIcon);
         helpText = MyView.findViewById(R.id.help1Post);
 

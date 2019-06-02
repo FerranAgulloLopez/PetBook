@@ -25,7 +25,7 @@ import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class NewWall extends AppCompatActivity implements AsyncResult {
+public class NewWallCommunity extends AppCompatActivity implements AsyncResult {
 
 
 
@@ -50,7 +50,7 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
         confirm.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
-               addNewWall();
+                addNewWall();
             }
         });
 
@@ -58,9 +58,8 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(NewWall.this, MainActivity.class);
-                intent.putExtra("fragment", "myprofile");
-
+                Intent intent = new Intent(NewWallCommunity.this, MainActivity.class);
+                intent.putExtra("fragment", "home");
                 startActivity(intent);
             }
         });
@@ -107,7 +106,7 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Conexion con = new Conexion(NewWall.this);
+            Conexion con = new Conexion(NewWallCommunity.this);
             SingletonUsuario su = SingletonUsuario.getInstance();
             con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/WallPosts", "POST", jsonToSend.toString());
         }
@@ -137,8 +136,8 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
             try {
                 if(json.getInt("code")==200){
                     Toast.makeText(this, "Post added succesfully", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(NewWall.this, MainActivity.class);
-                    intent.putExtra("fragment", "myprofile");
+                    Intent intent = new Intent(NewWallCommunity.this, MainActivity.class);
+                    intent.putExtra("fragment", "home");
                     startActivity(intent);
                 }
                 else{

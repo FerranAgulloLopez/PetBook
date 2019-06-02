@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:text="descriptionWall"
@@ -21,7 +21,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/imatgePerfilHome"
-        app:layout_constraintTop_toBottomOf="@+id/creatorPost" />
+        app:layout_constraintTop_toBottomOf="@+id/retweetText" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imatgePerfilHome"
@@ -104,7 +104,7 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/dataCreacionWall"
         app:layout_constraintTop_toBottomOf="@+id/retweeted"
-        app:layout_constraintVertical_bias="0.122" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/likeButton"
@@ -164,8 +164,8 @@
         android:id="@+id/retweetButton"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginLeft="44dp"
         android:layout_marginTop="4dp"
         android:background="#F8F8F9"
         android:scaleType="fitXY"
@@ -199,8 +199,8 @@
         android:id="@+id/favButton"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:layout_marginStart="76dp"
-        android:layout_marginLeft="76dp"
+        android:layout_marginStart="64dp"
+        android:layout_marginLeft="64dp"
         android:layout_marginTop="4dp"
         android:layout_marginBottom="7dp"
         android:background="#F8F8F9"
@@ -208,6 +208,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/numLikes"
         app:layout_constraintTop_toBottomOf="@+id/descriptionWall"
+        app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/fav2" />
 
     <TextView
@@ -233,17 +234,14 @@
         android:id="@+id/retweetText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginEnd="126dp"
-        android:layout_marginRight="126dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
         android:text="retweet Text"
         android:textStyle="bold"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/retweeted"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dataCreacionWall" />
+        android:visibility="invisible"
+        app:layout_constraintStart_toEndOf="@+id/imatgePerfilHome"
+        app:layout_constraintTop_toBottomOf="@+id/creatorPost" />
 
     <ImageView
         android:id="@+id/retweetedThisIcon"

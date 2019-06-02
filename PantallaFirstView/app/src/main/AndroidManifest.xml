@@ -33,6 +33,8 @@
         <activity android:name="com.example.PETBook.New_SuggestedSite"></activity>
         <activity android:name="com.example.PETBook.NewEvent" />
         <activity android:name="com.example.PETBook.NewWall" />
+        <activity android:name="com.example.PETBook.NewWallCommunity" />
+
         <activity android:name="com.example.PETBook.Chat" />
         <activity android:name="com.example.PETBook.Calendar.CalendarActivity" />
         <!--

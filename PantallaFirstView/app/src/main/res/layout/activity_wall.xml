@@ -161,8 +161,8 @@
 
             <ListView
                 android:id="@+id/list_walls"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
+                android:layout_width="wrap_content"
+                android:layout_height="481dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginLeft="4dp"
                 android:layout_marginTop="16dp"
@@ -220,7 +220,7 @@
                 app:layout_constraintVertical_bias="0.283" />
 
             <ImageView
-                android:id="@+id/viewButton"
+                android:id="@+id/createCommentWallProfile"
                 android:layout_width="52dp"
                 android:layout_height="44dp"
                 android:layout_marginStart="8dp"
@@ -248,16 +248,15 @@
                 android:id="@+id/help1Post"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="108dp"
-                android:layout_marginLeft="108dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginStart="120dp"
+                android:layout_marginLeft="120dp"
                 android:layout_marginBottom="8dp"
                 android:text="Hey, try to click on this! "
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.192" />
+                app:layout_constraintTop_toBottomOf="@+id/birthdayInput"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/help1PostIcon"
