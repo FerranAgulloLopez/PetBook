@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
     private TextView dataCreacioWall;
     private TextView descriptionWall;
     private String data;
+    private View view;
 
     public WallAdapter (Context context, ArrayList<WallModel> array){
         this.context = context;
@@ -75,33 +78,16 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.wall_design,null);
         }
-        /*final InterestSiteModel is = interestSites.get(position);
 
-        TextView title = (TextView) convertView.findViewById(R.id.TitleSite);
-        title.setText(is.getTitulo());
-        TextView type = (TextView) convertView.findViewById(R.id.TypeSite);
-        type.setText(is.getTipo());
-        TextView location = (TextView) convertView.findViewById(R.id.LocationSite);
-        location.setText(is.getDireccion());
-        final Button vote = (Button) convertView.findViewById(R.id.VoteButton);
-        if (is.getVotantes().isEmpty() || !is.getVotantes().contains(SingletonUsuario.getInstance().getEmail())) {
-            hacerVotar(vote, is.getId());
-        }
-        else {
-            hacerUnvote(vote, is.getId());
-        }*/
         final WallModel w = wallList.get(position);
         descriptionWall = (TextView) convertView.findViewById(R.id.descriptionWall);
         dataCreacioWall = (TextView) convertView.findViewById(R.id.dataCreacionWall);
         idComment = (TextView) convertView.findViewById(R.id.idComment);
 
-
-
         final TextView numlikes = convertView.findViewById(R.id.numLikes);
         TextView numFavs = convertView.findViewById(R.id.numFavs);
         TextView numRetweets = convertView.findViewById(R.id.numRetweets);
         final ImageButton option = convertView.findViewById(R.id.optionButton);
-
 
         TextView isRetweeted = convertView.findViewById(R.id.retweeted);
         if(wallList.get(position).isRetweeted()){
@@ -114,15 +100,6 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
         }
 
-        TextView retweetText = convertView.findViewById(R.id.retweetText);
-
-        if(wallList.get(position).isRetweeted()){
-            retweetText.setVisibility(View.VISIBLE);
-        }
-        else{
-            retweetText.setVisibility(View.GONE);
-        }
-
         final String[] opcions = {"Edit", "Delete"};
         final View finalConvertView = convertView;
         option.setOnClickListener(new View.OnClickListener() {
@@ -133,9 +110,6 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                 builder.setItems(opcions, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // the user clicked on colors[which]
-
-                        //System.out.println("idComment: " + ViewIDComment.getText().toString());
                         System.out.println("numero which:" + which);
                         if (which == 0) {
                             editComment();
@@ -147,6 +121,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                 builder.show();
             }
         });
+
 
 
         idComment.setText(wallList.get(position).getIDWall().toString());
@@ -162,15 +137,33 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         final ImageButton like = convertView.findViewById(R.id.likeButton);
         final ImageButton fav = convertView.findViewById(R.id.favButton);
         final ImageButton retweet = convertView.findViewById(R.id.retweetButton);
+        TextView retweetText = convertView.findViewById(R.id.retweetText);
+        retweetText.setText(wallList.get(position).getRetweetText());
 
+        if(wallList.get(position).isRetweeted() && !wallList.get(position).getRetweetText().equals("")){
+            retweetText.setVisibility(View.VISIBLE);
+            retweet.setVisibility(View.INVISIBLE);
+            numRetweets.setVisibility(View.INVISIBLE);
+        }
+        else if (wallList.get(position).isRetweeted() && wallList.get(position).getRetweetText().equals("")){
+                retweetText.setVisibility(View.GONE);
+                retweet.setVisibility(View.INVISIBLE);
+                numRetweets.setVisibility(View.INVISIBLE);
+        }
+        else{
+            retweetText.setVisibility(View.GONE);
+            retweet.setVisibility(View.VISIBLE);
+            numRetweets.setVisibility(View.VISIBLE);
+
+        }
         //interaction
         //likes
         if (w.getLikes().isEmpty() || !w.getLikes().contains(SingletonUsuario.getInstance().getEmail())) {
-            like.setColorFilter(Color.argb(100,0,0,0));
+            //like.setColorFilter(Color.argb(100,0,0,0));
             like(like, w.getIDWall(), position, numlikes);
         }
         else {
-            like.setColorFilter(Color.argb(100,131,7,6));
+            //like.setColorFilter(Color.argb(100,131,7,6));
             unlike(like, w.getIDWall(), position, numlikes);
 
         }
@@ -179,15 +172,15 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             fav(fav, w.getIDWall());
         }
         else {
-            fav.setColorFilter(Color.argb(100,131,7,6));
+            //fav.setColorFilter(Color.argb(100,131,7,6));
             unfav(fav, w.getIDWall());
         }
         //retweets
         if (w.getRetweets().isEmpty() || !w.getRetweets().contains(SingletonUsuario.getInstance().getEmail())) {
-            retweet(retweet, w.getIDWall());
+            retweet(retweet, w.getIDWall(), convertView);
         }
         else {
-            retweet.setColorFilter(Color.argb(100,131,7,6));
+            //retweet.setColorFilter(Color.argb(100,131,7,6));
             unretweet(retweet, w.getIDWall());
         }
 
@@ -213,6 +206,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         intent.putExtra("idComment", idComment.getText().toString());
         context.startActivity(intent);
     }
+
     private void deletePost(){
         tipoConexion="deletePost";
         Conexion con = new Conexion(this);
@@ -221,11 +215,6 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         System.out.println("conexio walls ben feta");
     }
 
-    public Integer getLikes(final Integer id){
-        Conexion con = new Conexion(WallAdapter.this);
-        //con.execute()
-        return 1;
-    }
 
     public void like(final ImageButton like, final Integer id, final Integer position, final TextView numlikes){
         ///votar.setText("Vote");
@@ -339,33 +328,104 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         return fechaRetorno;
     }
 
-    public void retweet(final ImageButton retweet, final Integer id){
-        ///votar.setText("Vote");
-        //like.setVisibility(View.VISIBLE);
-        //unlike.setVisibility(View.INVISIBLE);
-        //String user = wallList.get(position).get
+    public void retweet(final ImageButton retweet, final Integer id, final View finalConvertView){
+
         tipoConexion = "someInteraction";
 
         retweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    //like.setColorFilter(Color.argb(100,0,0,0));
-                    retweet.setColorFilter(Color.argb(100,131,7,6));
-                    Conexion con = new Conexion(WallAdapter.this);
-                    JSONObject jsonToSend = new JSONObject();
-                    String fechaHora = crearFechaActual();
-                    try {
-                        jsonToSend.accumulate("description", "String prueba");
-                        jsonToSend.accumulate("creationDate", fechaHora);
-                        //jsonToSend.accumulate("ok", "true");
-                        System.out.println(jsonToSend);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    final String[] opcions = {"Retweet", "Retweet with comment"};
+                    retweet.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(finalConvertView.getContext());
+                            // System.out.println("idcomment:" + builder.getContext());
+                            builder.setItems(opcions, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // the user clicked on colors[which]
 
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
-                    retweet(retweet, id);
+                                    //System.out.println("idComment: " + ViewIDComment.getText().toString());
+                                    System.out.println("numero which:" + which);
+                                    if (which == 0) {
+                                        String YouEditTextValue = "";
+                                        retweet.setColorFilter(Color.argb(100,131,7,6));
+                                        Conexion con = new Conexion(WallAdapter.this);
+                                        JSONObject jsonToSend = new JSONObject();
+                                        String fechaHora = crearFechaActual();
+                                        try {
+                                            jsonToSend.accumulate("description", YouEditTextValue);
+                                            jsonToSend.accumulate("creationDate", fechaHora);
+                                            System.out.println(jsonToSend);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
+                                        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
+                                        retweet(retweet, id, finalConvertView);
+                                    } else if (which == 1) {
+                                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+
+                                        final EditText edittext = new EditText(context);
+                                        alert.setMessage("Enter your retweet text");
+                                        alert.setTitle("Retweet");
+                                        alert.setView(edittext);
+
+                                        alert.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                String YouEditTextValue = edittext.getText().toString().trim();
+                                                retweet.setColorFilter(Color.argb(100,131,7,6));
+                                                Conexion con = new Conexion(WallAdapter.this);
+                                                JSONObject jsonToSend = new JSONObject();
+                                                String fechaHora = crearFechaActual();
+                                                try {
+                                                    jsonToSend.accumulate("description", YouEditTextValue);
+                                                    jsonToSend.accumulate("creationDate", fechaHora);
+                                                    System.out.println(jsonToSend);
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
+                                                retweet(retweet, id, finalConvertView);
+                                            }
+                                        });
+
+                                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int whichButton) {
+                                                // what ever you want to do with No option.
+                                                /*retweet.setColorFilter(Color.argb(100,131,7,6));
+                                                Conexion con = new Conexion(WallAdapter.this);
+                                                JSONObject jsonToSend = new JSONObject();
+                                                String fechaHora = crearFechaActual();
+                                                String YouEditTextValue = "";
+                                                try {
+                                                    jsonToSend.accumulate("description", YouEditTextValue);
+                                                    jsonToSend.accumulate("creationDate", fechaHora);
+                                                    //jsonToSend.accumulate("ok", "true");
+                                                    System.out.println(jsonToSend);
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                //con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
+                                                retweet(retweet, id, finalConvertView);*/
+                                            }
+                                        });
+
+                                        alert.show();
+                                    }
+                                }
+                            });
+                            builder.show();
+                        }
+                    });
+
+
+                    //like.setColorFilter(Color.argb(100,0,0,0));
+
 
                 } catch (Exception e){
                     e.printStackTrace();
