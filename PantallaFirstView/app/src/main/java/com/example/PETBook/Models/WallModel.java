@@ -14,6 +14,25 @@ public class WallModel implements Serializable {
     private boolean retweeted;
     private String retweetText;
 
+    public String getCreatorMail() {
+        return creatorMail;
+    }
+
+    public void setCreatorMail(String creatorMail) {
+        this.creatorMail = creatorMail;
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    private String creatorMail;
+    private String foto;
+
     public Integer getIDWall() {
         return IDWall;
     }

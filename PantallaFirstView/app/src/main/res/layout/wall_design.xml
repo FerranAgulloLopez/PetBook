@@ -29,7 +29,7 @@
         android:layout_height="56dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="193dp"
         android:layout_marginRight="193dp"
         android:layout_marginBottom="8dp"
@@ -49,7 +49,7 @@
         android:layout_marginTop="8dp"
         android:text="creator_post"
         app:layout_constraintStart_toEndOf="@+id/imatgePerfilHome"
-        app:layout_constraintTop_toBottomOf="@+id/retweeted" />
+        app:layout_constraintTop_toBottomOf="@+id/dataCreacionWall" />
 
     <TextView
         android:id="@+id/dataCreacionWall"
@@ -63,7 +63,7 @@
         android:text="dataCreacionWall"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/creatorPost"
+        app:layout_constraintStart_toEndOf="@+id/imatgePerfilHome"
         app:layout_constraintTop_toBottomOf="@+id/retweeted" />
 
     <TextView

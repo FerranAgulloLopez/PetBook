@@ -54,6 +54,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
     private String data;
     private View view;
     private ImageView imatgeUser;
+    private TextView creatorMail;
 
     public WallAdapter (Context context, ArrayList<WallModel> array){
         this.context = context;
@@ -89,6 +90,12 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         idComment = (TextView) convertView.findViewById(R.id.idComment);
         imatgeUser = convertView.findViewById(R.id.imatgePerfilHome);
         //getPicture();
+
+        creatorMail = convertView.findViewById(R.id.creatorPost);
+        creatorMail.setText(wallList.get(position).getCreatorMail());
+        Image imagenConversor = Image.getInstance();
+        Bitmap profileImage = imagenConversor.StringToBitMap(wallList.get(position).getFoto());
+        imatgeUser.setImageBitmap(profileImage);
 
         final TextView numlikes = convertView.findViewById(R.id.numLikes);
         TextView numFavs = convertView.findViewById(R.id.numFavs);

@@ -54,6 +54,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
     private String data;
     private View view;
     private ImageView imatgeUser;
+    private TextView creatorMail;
+    private ImageView imatgeCreador;
 
     public CommunityWallAdapter (Context context, ArrayList<CommunityWallModel> array){
         this.context = context;
@@ -116,6 +118,13 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
             option.setVisibility(View.VISIBLE);
 
         }
+        if(SingletonUsuario.getInstance().getEmail().equals(CommunityWallList.get(position).getCreatorMail())){
+            option.setVisibility(View.VISIBLE);
+
+        }
+        else {
+            option.setVisibility(View.INVISIBLE);
+        }
 
         final String[] opcions = {"Edit", "Delete"};
         final View finalConvertView = convertView;
@@ -139,7 +148,13 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
             }
         });
 
+        creatorMail = convertView.findViewById(R.id.creatorPost);
+        imatgeCreador = convertView.findViewById(R.id.imatgePerfilHome);
 
+        creatorMail.setText(CommunityWallList.get(position).getCreatorMail());
+        Image imagenConversor = Image.getInstance();
+        Bitmap profileImage = imagenConversor.StringToBitMap(CommunityWallList.get(position).getFoto());
+        imatgeUser.setImageBitmap(profileImage);
 
         idComment.setText(CommunityWallList.get(position).getIDWall().toString());
         descriptionWall.setText(CommunityWallList.get(position).getDescription());
@@ -186,19 +201,19 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         }
         //favs
         if (w.getFavs().isEmpty() || !w.getFavs().contains(SingletonUsuario.getInstance().getEmail())) {
-            fav(fav, w.getIDWall());
+            fav(fav, w.getIDWall(), position);
         }
         else {
             //fav.setColorFilter(Color.argb(100,131,7,6));
-            unfav(fav, w.getIDWall());
+            unfav(fav, w.getIDWall(), position);
         }
         //retweets
         if (w.getRetweets().isEmpty() || !w.getRetweets().contains(SingletonUsuario.getInstance().getEmail())) {
-            retweet(retweet, w.getIDWall(), convertView);
+            retweet(retweet, w.getIDWall(), convertView, position);
         }
         else {
             //retweet.setColorFilter(Color.argb(100,131,7,6));
-            unretweet(retweet, w.getIDWall());
+            unretweet(retweet, w.getIDWall(), position);
         }
 
 
@@ -248,7 +263,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                     //like.setColorFilter(Color.argb(100,0,0,0));
 
                     Conexion con = new Conexion(CommunityWallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Like", "POST", null);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Like", "POST", null);
                     like.setColorFilter(Color.argb(100,131,7,6));
                     like(like, id, position, numlikes);
 
@@ -273,7 +288,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
 
                     CommunityWallAdapter.this.notifyDataSetChanged();
                     Conexion con = new Conexion(CommunityWallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnLike", "POST", null);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/UnLike", "POST", null);
                     unlike(like, id, position, numlikes);
                 } catch (Exception e){
                     e.printStackTrace();
@@ -282,7 +297,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         });
     }
 
-    public void fav(final ImageButton fav, final Integer id){
+    public void fav(final ImageButton fav, final Integer id,  final Integer position){
         ///votar.setText("Vote");
         //like.setVisibility(View.VISIBLE);
         //unlike.setVisibility(View.INVISIBLE);
@@ -294,8 +309,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                     //like.setColorFilter(Color.argb(100,0,0,0));
                     fav.setColorFilter(Color.argb(100,131,7,6));
                     Conexion con = new Conexion(CommunityWallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Love", "POST", null);
-                    fav(fav, id);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Love", "POST", null);
+                    fav(fav, id, position);
 
                 } catch (Exception e){
                     e.printStackTrace();
@@ -304,7 +319,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         });
     }
 
-    public void unfav(final ImageButton fav, final Integer id){
+    public void unfav(final ImageButton fav, final Integer id,  final Integer position){
         //votar.setText("Unvote");
         tipoConexion = "someInteraction";
 
@@ -314,8 +329,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                 try {
                     fav.setColorFilter(Color.argb(100,0,0,0));
                     Conexion con = new Conexion(CommunityWallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnLove", "POST", null);
-                    unfav(fav, id);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/UnLove", "POST", null);
+                    unfav(fav, id, position);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -326,25 +341,11 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-        /*LocalDateTime ahora= LocalDateTime.now();
-        String año = String.valueOf(ahora.getYear());
-        String mes = String.valueOf(ahora.getMonthValue());
-        String dia = String.valueOf(ahora.getDayOfMonth());
-        String hora = String.valueOf(ahora.getHour());
-        String minutos = String.valueOf(ahora.getMinute());
-        String segundos = String.valueOf(ahora.getSecond());
-        if(ahora.getMonthValue() < 10) mes = "0" + mes;
-        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
-        if(ahora.getHour() < 10) hora = "0" + hora;
-        if(ahora.getMinute() < 10) minutos = "0" + minutos;
-        if(ahora.getSecond() < 10) segundos = "0" + segundos;
-        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
-        System.out.println(fechaRetorno);*/
         Date date = new Date();
         return Long.toString(date.getTime());
         }
 
-    public void retweet(final ImageButton retweet, final Integer id, final View finalConvertView){
+    public void retweet(final ImageButton retweet, final Integer id, final View finalConvertView,  final Integer position){
 
         tipoConexion = "someInteraction";
 
@@ -379,8 +380,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                                             e.printStackTrace();
                                         }
 
-                                        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
-                                        retweet(retweet, id, finalConvertView);
+                                        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
+                                        retweet(retweet, id, finalConvertView, position);
                                     } else if (which == 1) {
                                         AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
@@ -404,8 +405,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                                                     e.printStackTrace();
                                                 }
 
-                                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
-                                                retweet(retweet, id, finalConvertView);
+                                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
+                                                retweet(retweet, id, finalConvertView, position);
                                             }
                                         });
 
@@ -433,7 +434,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         });
     }
 
-    public void unretweet(final ImageButton retweet, final Integer id){
+    public void unretweet(final ImageButton retweet, final Integer id, final Integer position){
         tipoConexion = "someInteraction";
 
         //votar.setText("Unvote");
@@ -443,8 +444,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                 try {
                     retweet.setColorFilter(Color.argb(255,0,0,0));
                     Conexion con = new Conexion(CommunityWallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnRetweet", "POST", null);
-                    unretweet(retweet, id);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/UnRetweet", "POST", null);
+                    unretweet(retweet, id, position);
                     //deletePost();
                 } catch (Exception e){
                     e.printStackTrace();

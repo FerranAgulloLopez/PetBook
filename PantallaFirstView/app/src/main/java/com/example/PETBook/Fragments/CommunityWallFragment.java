@@ -258,6 +258,8 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
                         if((wall.getBoolean("retweet"))){
                             w.setRetweetText(wall.getString("retweetText"));
                         }
+                        w.setCreatorMail(wall.getString("creatorMail"));
+                        w.setFoto(wall.getString("foto"));
                         //w.setRetweetText(wall.getString("retweetText"));
                         communityWallModel.add(w);
                     }
