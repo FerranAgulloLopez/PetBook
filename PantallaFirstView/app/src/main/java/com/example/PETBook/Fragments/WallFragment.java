@@ -200,12 +200,26 @@ public class WallFragment extends Fragment implements AsyncResult {
     }
 
     private void getPicture(){
+        /*
         System.out.println("entro a mostrar imatge");
         tipoConexion = "getImatge";
         Conexion con = new Conexion(this);
         SingletonUsuario su = SingletonUsuario.getInstance();
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
         System.out.println("conexio walls ben feta");
+        */
+        Bitmap fotoPerfil = SingletonUsuario.getInstance().getProfilePicture();
+        if (fotoPerfil != null) {
+            imatgePerfil.setImageBitmap(fotoPerfil);
+            mostrarWalls();
+        }
+        else {
+            tipoConexion = "getImatge";
+            Conexion con = new Conexion(this);
+            SingletonUsuario su = SingletonUsuario.getInstance();
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+        }
+
 
     }
     private void mostrarWalls(){

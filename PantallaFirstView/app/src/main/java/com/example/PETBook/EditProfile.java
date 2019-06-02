@@ -309,7 +309,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
             con.execute("http://10.4.41.146:9999/ServerRESTAPI/update/" + su.getEmail(), "PUT", jsonToSend.toString());
 
 
-            //user.setProfilePicture(bitmapImage);
+            su.setProfilePicture(profileImageBitmap);
 
             Image imageConversor = Image.getInstance();
             String imageEncoded = imageConversor.BitmapToString(profileImageBitmap);
@@ -359,13 +359,26 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
 
 
     private void getPicture(){
+        /*
         System.out.println("entro a mostrar imatge");
         tipoConexion = "getImatge";
         Conexion con = new Conexion(this);
         SingletonUsuario su = SingletonUsuario.getInstance();
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
         System.out.println("conexio walls ben feta");
-
+        */
+        Bitmap fotoPerfil = SingletonUsuario.getInstance().getProfilePicture();
+        if (fotoPerfil != null) {
+            profileImage.setImageBitmap(fotoPerfil);
+            profileImageBitmap = fotoPerfil;
+            spinner.setVisibility(View.GONE);
+        }
+        else {
+            tipoConexion = "getImatge";
+            Conexion con = new Conexion(this);
+            SingletonUsuario su = SingletonUsuario.getInstance();
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+        }
     }
 
 
@@ -438,7 +451,6 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                         Bitmap bitMap = imagenConversor.StringToBitMap(image);
                         profileImage.setImageBitmap(bitMap);
                         profileImageBitmap = bitMap;
-                        //user.setProfilePicture(bitmap);
                         spinner.setVisibility(View.GONE);
                     } else {
                         //Toast.makeText(WallFragment.this, "There was a problem during the process.", Toast.LENGTH_SHORT).show();

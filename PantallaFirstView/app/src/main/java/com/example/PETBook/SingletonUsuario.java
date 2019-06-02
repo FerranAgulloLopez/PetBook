@@ -53,4 +53,6 @@ public class SingletonUsuario {
         this.mailConfirmed = mailConfirmed;
         System.out.println("!!!MAILCONFIRMED: " + mailConfirmed);
     }
+
+
 }
