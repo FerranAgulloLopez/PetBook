@@ -213,15 +213,17 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
         String ByName = inputName.getText().toString().trim();
         String ByTypePet = inputTypePet.getSelectedItem().toString();
         String ByZone = inputPostalCode.getText().toString().trim();
-       // con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType="+ ByTypePet + "&postalCode="+ ByZone + "&userName=" + ByName,"GET", null);
+        // con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType="+ ByTypePet + "&postalCode="+ ByZone + "&userName=" + ByName,"GET", null);
 
 
         int num_params = 0;
         if(!ByName.isEmpty()) {
             num_params++;
-        } else if (!ByTypePet.isEmpty()) {
+        }
+        if (inputTypePet.getSelectedItemPosition() != 0) {
             num_params++;
-        } else if (!ByZone.isEmpty()){
+        }
+        if (!ByZone.isEmpty()){
             num_params++;
         }
 
@@ -229,7 +231,7 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
             if (num_params == 1) {
                 if(!ByName.isEmpty()) {
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?userName=" + ByName,"GET", null);
-                } else if (!ByTypePet.isEmpty()) {
+                } else if (inputTypePet.getSelectedItemPosition() != 0) {
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType=" + ByTypePet,"GET", null);
                 } else if (!ByZone.isEmpty()){
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?postalCode="+ ByZone,"GET", null);
@@ -237,7 +239,7 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
             } else if (num_params == 2) {
                 if(ByName.isEmpty()) {
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType=" + ByTypePet + "&postalCode=" + ByZone,"GET", null);
-                } else if (ByTypePet.isEmpty()) {
+                } else if (inputTypePet.getSelectedItemPosition() == 0) {
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?postalCode=" + ByZone + "&userName=" + ByName,"GET", null);
                 } else if (ByZone.isEmpty()){
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/Search/User?petType="+ ByTypePet + "&userName=" + ByName,"GET", null);

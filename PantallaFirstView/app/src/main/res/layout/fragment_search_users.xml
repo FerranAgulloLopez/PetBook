@@ -70,7 +70,7 @@
                 android:layout_marginRight="16dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Ej: Maria"
+                android:hint="Ej: Maria"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView7"
                 app:layout_constraintTop_toBottomOf="@+id/textView11" />
@@ -96,7 +96,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:entries="@array/Type"
+                android:entries="@array/inputPetType"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
                 app:layout_constraintTop_toBottomOf="@+id/nameInput" />
@@ -124,7 +124,7 @@
                 android:layout_marginRight="16dp"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="Ej: 08950"
+                android:hint="Ej: 08950"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/typePetInput" />

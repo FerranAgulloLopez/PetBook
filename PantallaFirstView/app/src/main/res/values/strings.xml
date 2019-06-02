@@ -86,4 +86,16 @@
     <string name="title_activity_edit_event">EditEvent</string>
     <string name="title_activity_new__suggested_site">New_SuggestedSite</string>
 
+    <string-array name="inputPetType">
+        <item>No selection</item>
+        <item>Dog</item>
+        <item>Cat</item>
+        <item>Bird</item>
+        <item>Turtle</item>
+        <item>Horse</item>
+        <item>Duck</item>
+        <item>Hamster</item>
+        <item>Rabbit</item>
+        <item>Other</item>
+    </string-array>
 </resources>
