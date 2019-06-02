@@ -329,7 +329,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-        LocalDateTime ahora= LocalDateTime.now();
+        /*LocalDateTime ahora= LocalDateTime.now();
         String año = String.valueOf(ahora.getYear());
         String mes = String.valueOf(ahora.getMonthValue());
         String dia = String.valueOf(ahora.getDayOfMonth());
@@ -343,7 +343,9 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         if(ahora.getSecond() < 10) segundos = "0" + segundos;
         String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
         System.out.println(fechaRetorno);
-        return fechaRetorno;
+        return fechaRetorno;*/
+        Date date = new Date();
+        return Long.toString(date.getTime());
     }
 
     public void retweet(final ImageButton retweet, final Integer id, final View finalConvertView){
