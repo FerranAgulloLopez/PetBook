@@ -3,6 +3,7 @@ package com.example.PETBook.Fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -52,11 +53,11 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
     private View MyView;
     private ListView lista;
     private EventAdapter eventosUser;
-    private ArrayList<EventModel> model;
+    private ArrayList<EventModel> participante;
+    private ArrayList<EventModel> creador;
     private Button creator;
     private Button participant;
     private Conexion con;
-    private SingletonUsuario su;
     private OnFragmentInteractionListener mListener;
     private String TypeList;
 
@@ -153,42 +154,67 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
 
 
         con = new Conexion(MyEventsFragment.this);
-        su = SingletonUsuario.getInstance();
-        TypeList = "Creator";
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByParticipant?mail=" + SingletonUsuario.getInstance().getEmail(),"GET", null);
+
+        lista = MyView.findViewById(R.id.list_eventos);
 
         creator = (Button) MyView.findViewById(R.id.CreatorEvents);
+        creator.setBackgroundColor(Color.RED);
+        creator.setTextColor(Color.WHITE);
+        participant = (Button) MyView.findViewById(R.id.ParticipantEvents);
+
         creator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                con = new Conexion(MyEventsFragment.this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByCreator?mail=" + su.getEmail(),"GET", null);
-                TypeList = "Creator";
+                creator.setBackgroundColor(Color.RED);
+                creator.setTextColor(Color.WHITE);
+                participant.setBackgroundColor(Color.GRAY);
+                participant.setTextColor(Color.BLACK);
+                eventosUser = new EventAdapter(getActivity(), creador);
+                lista.setAdapter(eventosUser);
+                lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        EventModel eventoSeleccionado = creador.get(position);
+                        Intent intent = new Intent(getActivity(), EventInfo.class);
+                        intent.putExtra("evemt", eventoSeleccionado);
+                        startActivity(intent);
+                    }
+                });
             }
         });
-
-        participant = (Button) MyView.findViewById(R.id.ParticipantEvents);
         participant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                con = new Conexion(MyEventsFragment.this);
-                con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByParticipant?mail=" + su.getEmail(),"GET", null);
-                TypeList = "Participant";
+                creator.setBackgroundColor(Color.GRAY);
+                creator.setTextColor(Color.BLACK);
+                participant.setBackgroundColor(Color.RED);
+                participant.setTextColor(Color.WHITE);
+                eventosUser = new EventAdapter(getActivity(), participante);
+                lista.setAdapter(eventosUser);
+                lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        EventModel eventoSeleccionado = participante.get(position);
+                        Intent intent = new Intent(getActivity(), EventInfo.class);
+                        intent.putExtra("evemt", eventoSeleccionado);
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/GetEventsByCreator?mail=" + su.getEmail(),"GET", null);
-
-        lista = MyView.findViewById(R.id.list_eventos);
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EventModel eventoSeleccionado = model.get(position);
+                EventModel eventoSeleccionado = participante.get(position);
                 Intent intent = new Intent(getActivity(), EventInfo.class);
-                intent.putExtra("event", eventoSeleccionado);
-                intent.putExtra("eventType", TypeList);
+                intent.putExtra("evemt", eventoSeleccionado);
                 startActivity(intent);
             }
         });
+
+
         FloatingActionButton fab = MyView.findViewById(R.id.addButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,7 +281,8 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
     public void OnprocessFinish(JSONObject json) {
         try{
             if(json.getInt("code") == 200){
-                model = new ArrayList<>();
+                creador = new ArrayList<>();
+                participante = new ArrayList<>();
                 JSONArray jsonArray = json.getJSONArray("array");
                 for(int i = 0; i < jsonArray.length(); ++i){
                     JSONObject evento = jsonArray.getJSONObject(i);
@@ -275,9 +302,14 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                     }
                     e.setMiembros(miembros);
                     e.setCreador(evento.getString("creatorMail"));
-                    model.add(e);
+                    if(SingletonUsuario.getInstance().getEmail().equals(e.getCreador())){
+                        creador.add(e);
+                    }
+                    else {
+                        participante.add(e);
+                    }
                 }
-                eventosUser = new EventAdapter(getActivity(), model);
+                eventosUser = new EventAdapter(getActivity(), creador);
                 lista = (ListView) MyView.findViewById(R.id.list_eventos);
                 lista.setAdapter(eventosUser);
                 System.out.print(json.getInt("code") + " se muestran correctamente la lista de eventos\n");
