@@ -37,7 +37,7 @@
         android:layout_margin="15dp"
         android:clickable="true"
         android:focusable="true"
-        app:srcCompat="@android:drawable/ic_input_add"/>
+        app:srcCompat="@drawable/add_white" />
 
 </android.support.design.widget.CoordinatorLayout>
 

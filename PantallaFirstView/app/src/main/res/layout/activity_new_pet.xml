@@ -166,27 +166,38 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Color" />
 
-        <Button
+        <ImageView
             android:id="@+id/buttonAddPet"
-            android:layout_width="98dp"
-            android:layout_height="69dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="36dp"
-            android:layout_marginEnd="156dp"
-            android:layout_marginRight="156dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginLeft="28dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="32dp"
-            android:background="@color/colorPrimary"
             android:onClick="addNewPet"
-            android:text="Add"
-            android:textColor="@android:color/background_light"
-            android:textSize="30sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/Observations"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/confirm" />
+
+        <ImageView
+            android:id="@+id/cancelAddPet"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.885"
+            app:layout_constraintStart_toEndOf="@+id/buttonAddPet"
+            app:layout_constraintTop_toBottomOf="@+id/Observations"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/cancel" />
 
 
     </android.support.constraint.ConstraintLayout>

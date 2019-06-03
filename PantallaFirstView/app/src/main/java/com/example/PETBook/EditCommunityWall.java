@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -37,29 +38,29 @@ public class EditCommunityWall extends AppCompatActivity implements AsyncResult 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_wall);
+            imatgeUser = (CircleImageView) findViewById(R.id.imatgeEditWall);
+            cancel = findViewById(R.id.cancelEditWall);
+            confirm = findViewById(R.id.confirmEditWall);
+            newWall = findViewById(R.id.editWall);
+            getPicture();
+            recibirDatos();
+            confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    updateWall();
+                }
+            });
 
-        imatgeUser = (CircleImageView) findViewById(R.id.imatgeEditWall);
-        cancel = findViewById(R.id.cancelEditWall);
-        confirm = findViewById(R.id.confirmEditWall);
-        newWall = findViewById(R.id.editWall);
-        getPicture();
-        recibirDatos();
-        confirm.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                updateWall();
-            }
-        });
 
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(EditCommunityWall.this, MainActivity.class);
+                    intent.putExtra("fragment", "home");
+                    startActivity(intent);
+                }
+            });
 
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(EditCommunityWall.this, MainActivity.class);
-                intent.putExtra("fragment","home");
-                startActivity(intent);
-            }
-        });
     }
     private void getPicture(){
         System.out.println("entro a mostrar imatge");
@@ -75,27 +76,16 @@ public class EditCommunityWall extends AppCompatActivity implements AsyncResult 
         if(datosRecibidos != null) {
             idComment = (String) datosRecibidos.getSerializable("idComment");
             System.out.println("idComment: " + idComment);
+            /*String description = datosRecibidos.getSerializable("text").toString();
+            newWall.getEditText().setText(description);*/
         }
     }
 
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-        LocalDateTime ahora= LocalDateTime.now();
-        String año = String.valueOf(ahora.getYear());
-        String mes = String.valueOf(ahora.getMonthValue());
-        String dia = String.valueOf(ahora.getDayOfMonth());
-        String hora = String.valueOf(ahora.getHour());
-        String minutos = String.valueOf(ahora.getMinute());
-        String segundos = String.valueOf(ahora.getSecond());
-        if(ahora.getMonthValue() < 10) mes = "0" + mes;
-        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
-        if(ahora.getHour() < 10) hora = "0" + hora;
-        if(ahora.getMinute() < 10) minutos = "0" + minutos;
-        if(ahora.getSecond() < 10) segundos = "0" + segundos;
-        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
-        System.out.println(fechaRetorno);
-        return fechaRetorno;
+        Date date = new Date();
+        return Long.toString(date.getTime());
     }
 
     private boolean validarComment(String comment, TextInputLayout textInputLayout){

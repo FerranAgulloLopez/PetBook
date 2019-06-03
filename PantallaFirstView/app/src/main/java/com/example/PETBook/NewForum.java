@@ -6,6 +6,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputLayout;
@@ -15,10 +16,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.PETBook.Adapters.CommunityWallAdapter;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Fragments.MyEventsFragment;
 import com.example.pantallafirstview.R;
@@ -40,7 +43,8 @@ public class NewForum extends AppCompatActivity implements AsyncResult {
     private TextInputLayout inputForumTopic;
     private TextInputLayout inputForumDescription;
 
-    private Button addForumButton;
+    private ImageView addForumButton;
+    private ImageView cancelForum;
 
 
     @Override
@@ -51,25 +55,42 @@ public class NewForum extends AppCompatActivity implements AsyncResult {
         inputForumTitle = findViewById(R.id.ForumTitle);
         inputForumTopic = findViewById(R.id.ForumTopic);
         inputForumDescription = findViewById(R.id.Description);
+
+        addForumButton = findViewById(R.id.buttonNewForum);
+        cancelForum = findViewById(R.id.cancelNewForum);
+
+        addForumButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    addNewForum();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        cancelForum.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Bundle enviar = new Bundle();
+                    Intent intent = new Intent(NewForum.this, MainActivity.class);
+                    enviar.putString("fragment","forum");
+                    intent.putExtras(enviar);
+                    startActivity(intent);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
     }
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-        LocalDateTime ahora= LocalDateTime.now();
-        String año = String.valueOf(ahora.getYear());
-        String mes = String.valueOf(ahora.getMonthValue());
-        String dia = String.valueOf(ahora.getDayOfMonth());
-        String hora = String.valueOf(ahora.getHour());
-        String minutos = String.valueOf(ahora.getMinute());
-        String segundos = String.valueOf(ahora.getSecond());
-        if(ahora.getMonthValue() < 10) mes = "0" + mes;
-        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
-        if(ahora.getHour() < 10) hora = "0" + hora;
-        if(ahora.getMinute() < 10) minutos = "0" + minutos;
-        if(ahora.getSecond() < 10) segundos = "0" + segundos;
-        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
-        System.out.println(fechaRetorno);
-        return fechaRetorno;
+        Date date = new Date();
+        return Long.toString(date.getTime());
     }
 
 
@@ -103,7 +124,9 @@ public class NewForum extends AppCompatActivity implements AsyncResult {
             return true;
         }
     }
-    public void addNewForum(View view) throws JSONException{
+
+
+    public void addNewForum(){
         SingletonUsuario su = SingletonUsuario.getInstance();
 
         String titulo = inputForumTitle.getEditText().getText().toString();

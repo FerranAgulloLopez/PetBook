@@ -34,7 +34,6 @@
             android:layout_width="315dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="44dp"
             android:layout_marginEnd="181dp"
             android:ems="10"
             android:hint="Name"
@@ -42,7 +41,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTItle" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
         <Spinner
             android:id="@+id/editSexPet"
@@ -145,7 +144,7 @@
             android:layout_height="50dp"
             android:layout_marginStart="33dp"
             android:layout_marginLeft="33dp"
-            android:layout_marginTop="44dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="244dp"
             android:layout_marginRight="244dp"
             android:background="?attr/colorBackgroundFloating"
@@ -154,7 +153,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editDescriptionPet"
-            app:srcCompat="@drawable/exito" />
+            app:srcCompat="@drawable/confirm" />
 
         <ImageButton
             android:id="@+id/imageButtonCancelEdit"
@@ -173,7 +172,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editDescriptionPet"
             app:layout_constraintVertical_bias="1.0"
-            app:srcCompat="@drawable/no_editar" />
+            app:srcCompat="@drawable/cancel" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="143dp"
+            android:layout_height="135dp"
+            android:layout_marginStart="83dp"
+            android:layout_marginLeft="83dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="185dp"
+            android:layout_marginRight="185dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTItle"
+            app:srcCompat="@drawable/addimage" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

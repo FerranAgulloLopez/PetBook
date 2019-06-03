@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/check_wrong24dp" />
+        app:srcCompat="@drawable/cancel" />
 
     <ImageButton
         android:id="@+id/confirmWall"
@@ -85,5 +85,5 @@
         app:layout_constraintStart_toEndOf="@+id/cancelWall"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/exito" />
+        app:srcCompat="@drawable/confirm" />
 </android.support.constraint.ConstraintLayout>

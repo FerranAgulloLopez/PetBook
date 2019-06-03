@@ -34,10 +34,10 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
     private EditText race;
     private Spinner especie;
     private EditText description;
-    private Button buttonAddPet;
     private TextView textNM;
     private ImageView imageProfile;
-
+    private ImageView addPet;
+    private ImageView cancelPet;
 
 
     String nombrePet;
@@ -60,7 +60,6 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
         setContentView(R.layout.activity_new_pet);
         SingletonUsuario su = SingletonUsuario.getInstance();
         usuario = su.getEmail();
-        buttonAdd = findViewById(R.id.buttonAddPet);
 
         nombremascota = findViewById(R.id.Name);
         edad = findViewById(R.id.Age);
@@ -69,7 +68,6 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
         race = findViewById(R.id.Race);
         especie = findViewById(R.id.Type);
         description = findViewById(R.id.Observations);
-        buttonAddPet = findViewById(R.id.buttonAddPet);
         textNM = findViewById(R.id.textNM);
         imageProfile = findViewById(R.id.Imatge);
 
@@ -83,7 +81,34 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
             }
         });
 
+        addPet = findViewById(R.id.buttonAddPet);
+        cancelPet = findViewById(R.id.cancelAddPet);
 
+        addPet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    addNewPet();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        cancelPet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Bundle enviar = new Bundle();
+                    Intent intent = new Intent(NewPet.this, MainActivity.class);
+                    enviar.putString("fragment","pets");
+                    intent.putExtras(enviar);
+                    startActivity(intent);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 
@@ -99,7 +124,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
     }
 
 
-    public void addNewPet(View view) throws JSONException {
+    public void addNewPet()  {
 
         nombrePet = nombremascota.getText().toString().trim();
         edadPet = edad.getText().toString();
