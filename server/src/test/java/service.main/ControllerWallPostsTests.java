@@ -422,6 +422,10 @@ public class ControllerWallPostsTests extends ControllerIntegrationTests {
 
 
 
+    /*
+    *   getInitialWallPosts_operaton
+    *
+     */
      String path2 = path + "getInitialWallPosts_operaton/";
 
     @Test

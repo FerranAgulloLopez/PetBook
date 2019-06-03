@@ -297,6 +297,9 @@ public class ControllerEventsTests extends ControllerIntegrationTests {
         this.mockMvc.perform(get("/ServerRESTAPI/GetUser/a")
                 .with(user("a").password("a").roles("USER")))   // Para que lo haga el usuario a
                 .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "UpdateCalendarId/output.json")));
+        this.mockMvc.perform(get("/ServerRESTAPI/events/getUserGoogleCalendarID")
+                .with(user("a").password("a").roles("USER")))   // Para que lo haga el usuario a
+                .andDo(print()).andExpect(status().isOk()).andExpect(content().string(read_file_raw(path + "UpdateCalendarId/output2.json")));
     }
 
 

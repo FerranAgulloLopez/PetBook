@@ -359,7 +359,7 @@ public class ServerServiceImpl implements ServerService {
             }
         }
 
-        Collections.sort(result);
+        Collections.sort(result, Collections.reverseOrder());
 
         return result;
     }
@@ -416,6 +416,14 @@ public class ServerServiceImpl implements ServerService {
             }
         }
         return result;
+    }
+
+    @Override
+    public boolean userIsFriendWith(String email, String emailAnotherUser) throws NotFoundException {
+        User actual_user = auxGetUser(email);
+        User other_user = auxGetUser(emailAnotherUser);
+
+        return actual_user.isFriend(emailAnotherUser);
     }
 
     @Override

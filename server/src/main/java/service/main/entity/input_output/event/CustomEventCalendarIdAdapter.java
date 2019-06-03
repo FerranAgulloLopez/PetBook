@@ -28,7 +28,7 @@ public class CustomEventCalendarIdAdapter implements Serializable {
     }
 
     public void setGoogleCalendarID(String googleCalendarID) {
-        googleCalendarID = googleCalendarID;
+        this.googleCalendarID = googleCalendarID;
     }
 
     public boolean isHasGoogleCalendar() {
