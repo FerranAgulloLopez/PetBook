@@ -101,6 +101,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         descriptionWall = (TextView) convertView.findViewById(R.id.descriptionWall);
         dataCreacioWall = (TextView) convertView.findViewById(R.id.dataCreacionWall);
         idComment = (TextView) convertView.findViewById(R.id.idComment);
+        creatorMail = convertView.findViewById(R.id.creatorPost);
+        creatorMail.setText(CommunityWallList.get(position).getCreatorMail());
 
         final TextView numlikes = convertView.findViewById(R.id.numLikes);
         TextView numFavs = convertView.findViewById(R.id.numFavs);
@@ -109,6 +111,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
 
         TextView isRetweeted = convertView.findViewById(R.id.retweeted);
         ImageView retweetedThisIcon = convertView.findViewById(R.id.retweetedThisIcon);
+
         if(SingletonUsuario.getInstance().getEmail().equals(CommunityWallList.get(position).getCreatorMail())){
             option.setVisibility(View.VISIBLE);
 
@@ -116,10 +119,9 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         else {
             option.setVisibility(View.INVISIBLE);
         }
-        if(CommunityWallList.get(position).isRetweeted()){
+        if(CommunityWallList.get(position).isRetweeted() &&  creatorMail.getText().toString().equals(SingletonUsuario.getInstance().getEmail())){
             isRetweeted.setVisibility(View.VISIBLE);
             retweetedThisIcon.setVisibility(View.VISIBLE);
-
             option.setVisibility(View.INVISIBLE);
         }
         else {
@@ -152,10 +154,10 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
             }
         });
 
-        creatorMail = convertView.findViewById(R.id.creatorPost);
+
         imatgeCreador = convertView.findViewById(R.id.imatgePerfilHome);
 
-        creatorMail.setText(CommunityWallList.get(position).getCreatorMail());
+
         creatorMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -414,6 +414,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                         getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();*/
                         Intent intent = new Intent(this, MainActivity.class);
                         intent.putExtra("fragment","myprofile");
+                        intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                         startActivity(intent);
 
                     } else {
@@ -432,6 +433,7 @@ public class EditProfile extends AppCompatActivity implements AsyncResult {
                         getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();*/
                         Intent intent = new Intent(this, MainActivity.class);
                         intent.putExtra("fragment","myprofile");
+                        intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                         startActivity(intent);
 
                     } else {
