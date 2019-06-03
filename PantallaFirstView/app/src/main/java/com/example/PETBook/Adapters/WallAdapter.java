@@ -111,7 +111,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
         TextView isRetweeted = convertView.findViewById(R.id.retweeted);
         ImageView retweetedThisIcon = convertView.findViewById(R.id.retweetedThisIcon);
-        if(wallList.get(position).isRetweeted()){
+        if(wallList.get(position).isRetweeted()  &&  creatorMail.getText().toString().equals(SingletonUsuario.getInstance().getEmail())){
             isRetweeted.setVisibility(View.VISIBLE);
             retweetedThisIcon.setVisibility(View.VISIBLE);
             option.setVisibility(View.INVISIBLE);
