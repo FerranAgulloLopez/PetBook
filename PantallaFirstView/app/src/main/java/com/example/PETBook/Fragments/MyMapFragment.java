@@ -3,7 +3,6 @@ package com.example.PETBook.Fragments;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EventInfo;
-import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.Models.InterestSiteModel;
 import com.example.PETBook.SingletonUsuario;
@@ -153,15 +151,16 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                             LatLng pos = new LatLng(e.getLatitude(), e.getLongitude());
                             Marker markEvent = mMap.addMarker(new MarkerOptions().position(pos));
                             if (e.getCreador().equals(SingletonUsuario.getInstance().getEmail())){
-                                markEvent.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_map_creator_foreground));
+                                markEvent.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.yellow_marker));
                             }
                             else if (e.getMiembros().contains(SingletonUsuario.getInstance().getEmail())){
-                                markEvent.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_map_participant_foreground));
+                                markEvent.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.green_marker));
                             }
                             else {
-                                markEvent.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_map_foreground));
+                                markEvent.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.red_marker));
                             }
                             markEvent.setTag(i + " Event");
+                            //markEvent.setAnchor(0.0f,0.0f);
                         }
                         typeConnection = "Interest Sites";
                         Conexion con = new Conexion(MyMapFragment.this);
