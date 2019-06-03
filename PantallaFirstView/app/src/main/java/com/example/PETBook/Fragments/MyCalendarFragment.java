@@ -89,7 +89,7 @@ public class MyCalendarFragment extends Fragment  implements OnDateSelectedListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        getActivity().setTitle("Mi calendario");
+        getActivity().setTitle("My Calendar");
         SingletonUsuario usuario = SingletonUsuario.getInstance();
 
         if (!usuario.isMailConfirmed()) {
@@ -98,9 +98,9 @@ public class MyCalendarFragment extends Fragment  implements OnDateSelectedListe
             Show dialog to inform user that does not have email confirmed
              */
             AlertDialog.Builder emailConfirmedDialog = new AlertDialog.Builder(getActivity());
-            emailConfirmedDialog.setMessage("Confirme su correo para acceder a todas las funciones de PetBook")
+            emailConfirmedDialog.setMessage("Confirm your email to access all the functions of PetBook")
                     .setCancelable(true)
-                    .setPositiveButton("Reenviar correo de confirmación", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Resend email confirmation", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -116,23 +116,18 @@ public class MyCalendarFragment extends Fragment  implements OnDateSelectedListe
                             getActivity().finish();
                         }
                     })
-                    .setNegativeButton("Más adelante", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("Later", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
 
-                            /*
-
-                            Comentado para poder testear
-
                             Intent i = new Intent(getActivity(), MainActivity.class);
                             startActivity(i);
                             getActivity().finish();
-                            */
                         }
                     });
             AlertDialog dialog = emailConfirmedDialog.create();
-            dialog.setTitle("Confirmación del correo");
+            dialog.setTitle("Email confirmation");
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
