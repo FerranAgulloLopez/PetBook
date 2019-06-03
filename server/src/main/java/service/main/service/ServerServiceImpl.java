@@ -419,6 +419,14 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    public boolean userIsFriendWith(String email, String emailAnotherUser) throws NotFoundException {
+        User actual_user = auxGetUser(email);
+        User other_user = auxGetUser(emailAnotherUser);
+
+        return actual_user.isFriend(emailAnotherUser);
+    }
+
+    @Override
     public List<User> getFriendsRequests(String emailUser) throws NotFoundException {
         Optional<User> optUser = userRepository.findById(emailUser);
         if (!optUser.isPresent()) throw new NotFoundException(USERNOTDB);

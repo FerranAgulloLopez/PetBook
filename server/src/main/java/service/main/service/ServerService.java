@@ -86,6 +86,8 @@ public interface ServerService {
 
     List<User> getFriends(String emailUser) throws NotFoundException;
 
+    public boolean userIsFriendWith(String email, String emailAnotherUser) throws NotFoundException;
+
     List<User> getFriendsRequests(String emailUser) throws NotFoundException; // Gets the users who made a request to the user identified by *email*
 
     public void sendFriendRequest(String emailUser, String emailRequested) throws NotFoundException, BadRequestException;

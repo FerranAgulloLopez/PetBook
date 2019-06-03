@@ -239,6 +239,24 @@ public class RestApiController {
     }
 
     @CrossOrigin
+    @GetMapping(value = "/UserIsFriendWith/{emailAnotherUser}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "Tells if actual user is friend with the user given in the path", notes = "Tells if actual user is friend with the user given in the path " +
+            "Specifically tells if the user identified by the email given in the token and the user given in the path are friends. Returns true if are friend, false otherwise", tags="Friends")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The user does not exist in the database")
+    })
+    public ResponseEntity<?> userIsFriendWith(@PathVariable String emailAnotherUser) {
+        try {
+            String email = getLoggedUserMail();
+            return new ResponseEntity<>(serverService.userIsFriendWith(email, emailAnotherUser), HttpStatus.OK);
+        }
+        catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
     @GetMapping(value = "/GetUserFriendsRequests", produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Get user friend's information by email", notes = "Get all the information of the friends of an user by its token. " +
             "Specifically gives the friends requests received by the user identified by the email given in the token of the user", tags="Friends")
