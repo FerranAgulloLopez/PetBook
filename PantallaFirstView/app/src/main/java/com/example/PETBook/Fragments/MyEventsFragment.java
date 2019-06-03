@@ -173,7 +173,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         EventModel eventoSeleccionado = creador.get(position);
                         Intent intent = new Intent(getActivity(), EventInfo.class);
-                        intent.putExtra("evemt", eventoSeleccionado);
+                        intent.putExtra("event", eventoSeleccionado);
                         startActivity(intent);
                     }
                 });
@@ -193,7 +193,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         EventModel eventoSeleccionado = participante.get(position);
                         Intent intent = new Intent(getActivity(), EventInfo.class);
-                        intent.putExtra("evemt", eventoSeleccionado);
+                        intent.putExtra("event", eventoSeleccionado);
                         startActivity(intent);
                     }
                 });
@@ -205,7 +205,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EventModel eventoSeleccionado = participante.get(position);
                 Intent intent = new Intent(getActivity(), EventInfo.class);
-                intent.putExtra("evemt", eventoSeleccionado);
+                intent.putExtra("event", eventoSeleccionado);
                 startActivity(intent);
             }
         });
