@@ -172,7 +172,7 @@ public class Chat extends AppCompatActivity {
 
 
     private String getEmailWithoutDotCom(String email) {
-        return email.replaceAll("\\.", "/*/");
+        return email.replaceAll("\\.", "__*__");
     }
 
 
