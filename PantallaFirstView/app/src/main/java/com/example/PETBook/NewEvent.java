@@ -124,7 +124,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     public void llamadaServidor(String a){
         ConexionNominatim conNom = new ConexionNominatim(this);
-        conNom.execute("https://nominatim.openstreetmap.org/?addressdetails=1&q=" + a + "&format=json&limit=5");
+        conNom.execute("https://nominatim.openstreetmap.org/?addressdetails=1&q=España,+" + a + "&format=json&limit=5");
     }
 
     public void setAdapter(){
