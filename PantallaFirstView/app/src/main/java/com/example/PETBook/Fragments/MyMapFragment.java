@@ -152,6 +152,15 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                             AllEvents.add(e);
                             LatLng pos = new LatLng(e.getLatitude(), e.getLongitude());
                             Marker markEvent = mMap.addMarker(new MarkerOptions().position(pos));
+                            if (e.getCreador().equals(SingletonUsuario.getInstance().getEmail())){
+                                markEvent.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_map_creator_foreground));
+                            }
+                            else if (e.getMiembros().contains(SingletonUsuario.getInstance().getEmail())){
+                                markEvent.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_map_participant_foreground));
+                            }
+                            else {
+                                markEvent.setIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_map_foreground));
+                            }
                             markEvent.setTag(i + " Event");
                         }
                         typeConnection = "Interest Sites";
