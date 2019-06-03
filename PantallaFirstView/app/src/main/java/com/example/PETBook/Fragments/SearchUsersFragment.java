@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Adapters.FriendSuggestionAdapter;
@@ -52,6 +53,7 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
     private EditText inputName;
     private Spinner inputTypePet;
     private EditText inputPostalCode;
+    private TextView inputNumResult;
     private Button   button;
 
     // TODO: Rename and change types of parameters
@@ -110,9 +112,9 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
             Show dialog to inform user that does not have email confirmed
              */
             AlertDialog.Builder emailConfirmedDialog = new AlertDialog.Builder(getActivity());
-            emailConfirmedDialog.setMessage("Confirm your email to access all the functions of PetBook")
+            emailConfirmedDialog.setMessage("Confirme su correo para acceder a todas las funciones de PetBook")
                     .setCancelable(true)
-                    .setPositiveButton("Resend email confirmation", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Reenviar correo de confirmación", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -128,19 +130,23 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
                             getActivity().finish();
                         }
                     })
-                    .setNegativeButton("Later", new DialogInterface.OnClickListener() {
+                    .setNegativeButton("Más adelante", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
 
+                            /*
+
+                            Comentado para poder testear
+
                             Intent i = new Intent(getActivity(), MainActivity.class);
                             startActivity(i);
                             getActivity().finish();
-
+                            */
                         }
                     });
             AlertDialog dialog = emailConfirmedDialog.create();
-            dialog.setTitle("Email confirmation");
+            dialog.setTitle("Confirmación del correo");
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
@@ -151,7 +157,7 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
         inputName = (EditText) convertView.findViewById(R.id.nameInput);
         inputTypePet = (Spinner) convertView.findViewById(R.id.typePetInput);
         inputPostalCode = (EditText) convertView.findViewById(R.id.postalCodeInput);
-
+        inputNumResult = (TextView) convertView.findViewById(R.id.numResultInput);
         button   = (Button) convertView.findViewById(R.id.searchButton);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -253,6 +259,8 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
             if(json.getInt("code") == 200){
                 model = new ArrayList<>();
                 JSONArray jsonArray = json.getJSONArray("array");
+                String numResult = String.valueOf(jsonArray.length());
+                inputNumResult.setText("Results obtained : "+numResult);
                 for(int i = 0; i < jsonArray.length(); ++i){
                     JSONObject user_selected = jsonArray.getJSONObject(i);
                     UserModel e = new UserModel();
@@ -275,3 +283,4 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
 
     }
 }
+
