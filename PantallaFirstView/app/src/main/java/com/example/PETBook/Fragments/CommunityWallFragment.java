@@ -121,8 +121,8 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
         emptyWalls = MyView.findViewById(R.id.emptyWalls);
         imageButtonAdd = MyView.findViewById(R.id.createCommentWall2);
 
-        helpIcon = MyView.findViewById(R.id.help1PostIcon);
-        helpText = MyView.findViewById(R.id.help1Post);
+        /*helpIcon = MyView.findViewById(R.id.help1PostIcon);
+        helpText = MyView.findViewById(R.id.help1Post);*/
 
         mostrarWalls();
 
@@ -269,8 +269,8 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
                         emptyWalls.setVisibility(View.VISIBLE);
                         imageButtonAdd.setVisibility(View.VISIBLE);
                         addCommentWalL.setVisibility(View.INVISIBLE);
-                        helpText.setVisibility(View.INVISIBLE);
-                        helpIcon.setVisibility(View.INVISIBLE);
+                        //helpText.setVisibility(View.INVISIBLE);
+                       // helpIcon.setVisibility(View.INVISIBLE);
                     }
                     else if(communityWallModel.size() == 1){
                         emptyWalls.setVisibility(View.INVISIBLE);

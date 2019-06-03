@@ -151,6 +151,7 @@ public class EditCommunityWall extends AppCompatActivity implements AsyncResult 
                     Toast.makeText(this, "Post updated succesfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EditCommunityWall.this, MainActivity.class);
                     intent.putExtra("fragment", "home");
+                    //intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                     startActivity(intent);
                 }
                 else{
