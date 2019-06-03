@@ -60,7 +60,7 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
             public void onClick(View v) {
                 Intent intent = new Intent(NewWall.this, MainActivity.class);
                 intent.putExtra("fragment", "myprofile");
-
+                intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                 startActivity(intent);
             }
         });
@@ -139,6 +139,8 @@ public class NewWall extends AppCompatActivity implements AsyncResult {
                     Toast.makeText(this, "Post added succesfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(NewWall.this, MainActivity.class);
                     intent.putExtra("fragment", "myprofile");
+                    intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
+
                     startActivity(intent);
                 }
                 else{

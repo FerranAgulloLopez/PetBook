@@ -28,17 +28,15 @@
         android:layout_width="63dp"
         android:layout_height="56dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="193dp"
-        android:layout_marginRight="193dp"
         android:layout_marginBottom="8dp"
+        android:src="@drawable/profile_default"
         app:layout_constraintBottom_toTopOf="@+id/fullNameInput"
         app:layout_constraintEnd_toStartOf="@+id/editProfileButton"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/retweetedThisIcon"
-        tools:src="@tools:sample/avatars" />
+        app:layout_constraintTop_toBottomOf="@+id/retweetedThisIcon" />
 
     <TextView
         android:id="@+id/creatorPost"

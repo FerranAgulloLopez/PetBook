@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
+import android.support.design.widget.FloatingActionButton;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -76,11 +77,11 @@ public class WallFragment extends Fragment implements AsyncResult {
     private ProgressBar spinner;
     private ImageView iconoDir;
     private ImageView iconoNac;
-    private ImageButton addCommentWalL;
+    private FloatingActionButton addCommentWalL;
     private ImageButton botonOpcion;
     private TextView emptyWalls;
 
-    private ImageView imageButtonAdd;
+    private FloatingActionButton imageButtonAdd;
     private ImageView helpIcon;
     private TextView helpText;
 
