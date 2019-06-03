@@ -258,6 +258,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     @Override
     public void OnprocessFinish(JSONObject json) {
+        System.out.println(json);
         if (isAddress) {
             try {
                 JSONArray jsonArray = json.getJSONArray("array");
@@ -283,6 +284,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                     addressNames[i] = completeAddress;
                     positionsAddress[i] = new Pair<>(lat, lon);
                     setAdapter();
+                    isAddress = false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
