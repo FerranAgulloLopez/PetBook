@@ -49,6 +49,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
     private Pair<String,String>[] positionsAddress = new Pair[0];
     int select_location;
     private Boolean isAddress = false;
+    private Boolean AddressSelected = false;
 
     private Button addEventButton;
     private RadioButton publicButton;
@@ -87,6 +88,8 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 select_location = position;
+                AddressSelected = true;
+
             }
         });
 
@@ -200,6 +203,10 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
         }
     }
 
+    private boolean validateLoc(){
+        return AddressSelected;
+    }
+
     private String transformacionFechaHora(){
         String fecha = String.format("%04d-%02d-%02d",calendario.get(Calendar.YEAR),
                 (calendario.get(Calendar.MONTH)+1),calendario.get(Calendar.DAY_OF_MONTH));
@@ -221,8 +228,9 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
         boolean isValidTitulo = validateTitulo(titulo);
         boolean isValidFecha = validateFecha(inputFecha.getText().toString());
         boolean isValidHora = validateHora(inputHora.getText().toString());
+        boolean isValidLoc = validateLoc();
 
-        if(isValidTitulo && isValidFecha && isValidHora) {
+        if(isValidTitulo && isValidFecha && isValidHora && isValidLoc) {
             String fechaHora = transformacionFechaHora();
             JSONObject jsonToSend = new JSONObject();
             JSONObject loc = new JSONObject();

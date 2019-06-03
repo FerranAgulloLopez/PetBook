@@ -43,9 +43,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:hint="Titulo del evento"
+                    android:hint="Titulo del evento *"
                     android:inputType="textPersonName"
-                    android:textColorHint="@color/colorPrimaryDark" />
+                    android:textColorHint="@color/colorPrimaryDark"
+                    android:textSize="30sp" />
             </android.support.design.widget.TextInputLayout>
 
             <EditText
@@ -58,11 +59,17 @@
                 android:textColorHint="@android:color/darker_gray" />
 
 
-            <AutoCompleteTextView
-                android:id="@+id/edLoc"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/Localizacion"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Indique la dirección" />
+                android:layout_height="match_parent">
+
+                <AutoCompleteTextView
+                    android:id="@+id/edLoc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Escriba y seleccione dirección *" />
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/Fecha"
@@ -77,7 +84,7 @@
                     android:clickable="true"
                     android:ems="10"
                     android:focusable="false"
-                    android:hint="Fecha evento"
+                    android:hint="Fecha evento *"
                     android:inputType="date"
                     android:textColorHint="@color/colorPrimaryDark" />
             </android.support.design.widget.TextInputLayout>
@@ -96,7 +103,7 @@
                     android:clickable="true"
                     android:ems="10"
                     android:focusable="false"
-                    android:hint="Hora evento"
+                    android:hint="Hora evento *"
                     android:inputType="time"
                     android:textColorHint="@color/colorPrimaryDark" />
             </android.support.design.widget.TextInputLayout>
@@ -105,7 +112,7 @@
                 android:id="@+id/PublicGroupButton"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="10dp"
                 android:orientation="horizontal">
 
                 <RadioButton
@@ -124,6 +131,13 @@
                     android:clickable="true"
                     android:text="Privado" />
             </RadioGroup>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:text="TextView" />
 
             <Button
                 android:id="@+id/addEventButton"
