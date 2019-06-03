@@ -249,7 +249,7 @@ public final class CalendarSync extends Activity implements AsyncResult {
                         boolean existe;
                         List<EventModel> events;
 
-                        googleCalendarID = json.getString("GoogleCalendarID");
+                        googleCalendarID = json.getString("googleCalendarID");
                         existe = json.getBoolean("hasGoogleCalendar");
                         //googleCalendarID = "2";
                         //existe = false;

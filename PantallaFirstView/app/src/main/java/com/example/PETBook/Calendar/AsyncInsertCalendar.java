@@ -131,6 +131,7 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
 
 
       try {
+        System.out.printf("calendarId: %s\n", calendarId);
         event = client.events().insert(calendarId, event).execute();
       } catch (IOException e) {
         e.printStackTrace();
