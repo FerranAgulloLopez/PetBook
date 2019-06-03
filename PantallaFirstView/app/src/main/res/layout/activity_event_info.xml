@@ -164,7 +164,7 @@
                 android:layout_marginTop="10dp"
                 android:paddingLeft="20dp"
                 android:paddingTop="10dp"
-                android:text="Información"
+                android:text="Information"
                 android:textAllCaps="false"
                 android:textColor="#C6840705"
                 android:textSize="25sp"

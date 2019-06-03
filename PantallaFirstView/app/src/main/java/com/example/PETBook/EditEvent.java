@@ -46,9 +46,9 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
             @Override
             public void onClick(View v){
                 AlertDialog.Builder edit = new AlertDialog.Builder(EditEvent.this);
-                edit.setMessage("Si confirma los datos del evento se reescribirán.")
+                edit.setMessage("Confirm will rewrite the data.")
                         .setCancelable(false)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 editEvent();
@@ -61,7 +61,7 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
                             }
                         });
                 AlertDialog errorE = edit.create();
-                errorE.setTitle("Modificar evento");
+                errorE.setTitle("Edit event");
                 errorE.show();
             }
         });
@@ -71,9 +71,9 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder noedit = new AlertDialog.Builder(EditEvent.this);
-                noedit.setMessage("Desea cancelar todos los cambios?")
+                noedit.setMessage("Do you want to cancel the changes?")
                         .setCancelable(false)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(EditEvent.this,EventInfo.class);
@@ -88,7 +88,7 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
                             }
                         });
                 AlertDialog errorE = noedit.create();
-                errorE.setTitle("Cancelar modificar evento");
+                errorE.setTitle("Cancel edit event");
                 errorE.show();
             }
         });
@@ -146,7 +146,7 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
         try{
             if (json.getInt("code") == 200) {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
-                Toast.makeText(this, "Evento modificado correctamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Event changed", Toast.LENGTH_SHORT).show();
                 event.setTitulo(titulo.getText().toString());
                 event.setDescripcion(descripcion.getText().toString());
                 Intent intent = new Intent(EditEvent.this, EventInfo.class);

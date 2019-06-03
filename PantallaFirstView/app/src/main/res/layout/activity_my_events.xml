@@ -22,14 +22,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Dirijo" />
+            android:text="Creator" />
 
         <Button
             android:id="@+id/ParticipantEvents"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Participo" />
+            android:text="Participant" />
     </LinearLayout>
 
     <ListView

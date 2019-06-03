@@ -169,7 +169,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private boolean validateFecha(String date){
         if(date.isEmpty()) {
-            Fecha.setError("Campo obligatorio");
+            Fecha.setError("Obligatory field");
             return false;
         }
         else {
@@ -180,7 +180,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private boolean validateHora(String hora){
         if(hora.isEmpty()) {
-            Hora.setError("Campo obligatorio");
+            Hora.setError("Obligatory field");
             return false;
         }
         else {
@@ -191,7 +191,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private boolean validateTitulo(String titulo){
         if(titulo.isEmpty()){
-            Titulo.setError("Campo obligatorio");
+            Titulo.setError("Obligatory field");
             return false;
         }
         else{
@@ -202,7 +202,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private boolean validateLoc(){
         if(!AddressSelected){
-            Localizacion.setError("No ha seleccionado una localizacion");
+            Localizacion.setError("Not selected location");
         }
         return AddressSelected;
     }
@@ -295,7 +295,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             try {
                 if (json.getInt("code") == 200) {
                     System.out.print(json.getInt("code") + "Correcto+++++++++++++++++++++++++++\n");
-                    Toast.makeText(this, "CreaciÃ³n de evento correcta", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Event created correctly", Toast.LENGTH_SHORT).show();
                     //scheduleNotification();
                     Bundle enviar = new Bundle();
                     Intent intent = new Intent(this, MainActivity.class);
@@ -305,16 +305,16 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 } else {
                     System.out.print(json.getInt("code") + "Mal+++++++++++++++++++++++++++\n");
                     AlertDialog.Builder error = new AlertDialog.Builder(NewEvent.this);
-                    error.setMessage("Evento existente con los mismos datos")
+                    error.setMessage("Exists same event")
                             .setCancelable(false)
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            .setNegativeButton("Ok", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.cancel();
                                 }
                             });
                     AlertDialog errorE = error.create();
-                    errorE.setTitle("Evento existente");
+                    errorE.setTitle("Exists event");
                     errorE.show();
                 }
             } catch (Exception e) {

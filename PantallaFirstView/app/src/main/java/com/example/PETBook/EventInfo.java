@@ -68,7 +68,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder error = new AlertDialog.Builder(EventInfo.this);
-                    error.setMessage("Esta seguro que quiere eliminar el evento?")
+                    error.setMessage("Are you sure you want to delete the event?")
                             .setCancelable(false)
                             .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                                 @Override
@@ -83,7 +83,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                                 }
                             });
                     AlertDialog errorE = error.create();
-                    errorE.setTitle("Eliminar evento");
+                    errorE.setTitle("Delete event");
                     errorE.show();
                 }
             });
@@ -113,7 +113,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                     Conexion con = new Conexion(EventInfo.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/AddEventParticipant?eventId=" + event.getId() + "&participantMail=" + SingletonUsuario.getInstance().getEmail(), "POST", null);
                     botonNoParticipar();
-                    txtMiembros.setText(String.format("%d usuario/s participarán en el evento",event.getMiembros().size() + 1));
+                    txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size() + 1));
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -131,7 +131,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                     Conexion con = new Conexion(EventInfo.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/DeleteEventParticipant?eventId=" + event.getId() + "&participantMail=" + SingletonUsuario.getInstance().getEmail(), "DELETE", null);
                     botonParticipar();
-                    txtMiembros.setText(String.format("%d usuario/s participarán en el evento",event.getMiembros().size()));
+                    txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size()));
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -150,8 +150,8 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             String[] Fecha = event.getFecha().split(" ");
             txtFecha.setText(Fecha[0]);
             txtHora.setText(Fecha[1]);
-            txtMiembros.setText(String.format("%d usuario/s participarán en el evento",event.getMiembros().size()));
-            txtCreador.setText("Creado por: " + event.getCreador());
+            txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size()));
+            txtCreador.setText("Created by: " + event.getCreador());
         }
     }
 
@@ -167,13 +167,13 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             if (creator) {
                 if (json.getInt("code") == 200) {
                     System.out.print(json.getInt("code") + "Correcto+++++++++++++++++++++++++++\n");
-                    Toast.makeText(this, "Evento correctamente eliminado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Event deleted", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtra("fragment", "events");
                     startActivity(intent);
                 } else {
                     System.out.print(json.getInt("code") + "Mal+++++++++++++++++++++++++++\n");
-                    Toast.makeText(this, "El usuario no existe", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error during delete event", Toast.LENGTH_SHORT).show();
                 }
             }
             else{
@@ -181,10 +181,10 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                     participa = !participa;
                     System.out.print(json.getInt("code") + "Correcto+++++++++++++++++++++++++++\n");
                     if (participa) {
-                        Toast.makeText(this, "Se ha añadido a los usuarios participantes del evento", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "You joined the event", Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        Toast.makeText(this, "Ha indicado que no participará en el evento", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "You have left the event", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

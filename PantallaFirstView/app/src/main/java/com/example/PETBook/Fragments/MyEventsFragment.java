@@ -3,6 +3,7 @@ package com.example.PETBook.Fragments;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -155,16 +156,18 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
         lista = MyView.findViewById(R.id.list_eventos);
 
         creator = (Button) MyView.findViewById(R.id.CreatorEvents);
-        creator.setBackgroundColor(Color.RED);
+        creator.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
         creator.setTextColor(Color.WHITE);
         participant = (Button) MyView.findViewById(R.id.ParticipantEvents);
+        participant.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
+        participant.setTextColor(Color.BLACK);
 
         creator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                creator.setBackgroundColor(Color.RED);
+                creator.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                 creator.setTextColor(Color.WHITE);
-                participant.setBackgroundColor(Color.GRAY);
+                participant.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
                 participant.setTextColor(Color.BLACK);
                 eventosUser = new EventAdapter(getActivity(), creador);
                 lista.setAdapter(eventosUser);
@@ -182,9 +185,9 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
         participant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                creator.setBackgroundColor(Color.GRAY);
+                creator.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
                 creator.setTextColor(Color.BLACK);
-                participant.setBackgroundColor(Color.RED);
+                participant.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                 participant.setTextColor(Color.WHITE);
                 eventosUser = new EventAdapter(getActivity(), participante);
                 lista.setAdapter(eventosUser);
