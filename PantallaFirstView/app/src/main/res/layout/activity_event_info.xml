@@ -193,7 +193,6 @@
         android:layout_marginRight="8dp"
         android:background="?attr/colorBackgroundFloating"
         android:scaleType="fitXY"
-        android:tint="@color/colorPrimaryDark"
         app:layout_constraintEnd_toStartOf="@+id/imageButtonDelete"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/editar" />
