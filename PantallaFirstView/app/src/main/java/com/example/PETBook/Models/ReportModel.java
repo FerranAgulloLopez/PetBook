@@ -5,6 +5,7 @@ public class ReportModel {
     private String emailUserReported;
     private String emailUserReporting;
     private String description;
+    private String creationDate;
 
 
 
@@ -30,5 +31,13 @@ public class ReportModel {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(String creationDate) {
+        this.creationDate = creationDate;
     }
 }

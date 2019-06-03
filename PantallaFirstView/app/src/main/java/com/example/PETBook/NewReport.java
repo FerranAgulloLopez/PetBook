@@ -15,6 +15,8 @@ import com.example.pantallafirstview.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 public class NewReport extends AppCompatActivity implements AsyncResult {
 
 
@@ -23,11 +25,17 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
     private TextView third;
     private TextView fourth;
 
+    private String emailReportado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_report);
+
+
+        // TODO conseguir emailReportado
+        Bundle datosRecibidos = this.getIntent().getExtras();
+        emailReportado = datosRecibidos.getString("emailReportado");
 
         first = findViewById(R.id.post);
         second = findViewById(R.id.spam);
@@ -68,11 +76,23 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
 
     void sendReport(String text) {
 
-        /*
-        Conexion conexion = new Conexion(this);
-        conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/newReport/", "POST", jsonToSend.toString());
+        Date date = new Date();
+        String creationDate = Long.toString(date.getTime());
 
-        */
+
+
+        JSONObject jsonToSend = new JSONObject();
+        try {
+            jsonToSend.accumulate("creationDate", creationDate);
+            jsonToSend.accumulate("description", text);
+            jsonToSend.accumulate("suspectMail", emailReportado);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Conexion conexion = new Conexion(this);
+        conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/reports", "POST", jsonToSend.toString());
+
 
 
         AlertDialog.Builder reportMade = new AlertDialog.Builder(this);

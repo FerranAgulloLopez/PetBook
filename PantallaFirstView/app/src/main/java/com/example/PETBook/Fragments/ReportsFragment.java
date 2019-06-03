@@ -10,12 +10,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.PETBook.Adapters.ReportsAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Models.ReportModel;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -41,6 +43,7 @@ public class ReportsFragment extends Fragment implements AsyncResult {
     private View MyView;
     private ListView lista;
     private ArrayList<ReportModel> reports;
+    private ReportsAdapter reportsAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -85,11 +88,10 @@ public class ReportsFragment extends Fragment implements AsyncResult {
         // Set tittle to the fragment
         getActivity().setTitle("Reports");
 
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        /*
+
         Conexion con = new Conexion(ReportsFragment.this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getReports","GET", null);
-        */
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/reports","GET", null);
+
 
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -129,6 +131,40 @@ public class ReportsFragment extends Fragment implements AsyncResult {
 
     @Override
     public void OnprocessFinish(JSONObject output) {
+
+        try {
+            if (output.getInt("code") == 200) {
+                reports = new ArrayList<ReportModel>();
+                JSONArray jsonArray = output.getJSONArray("array");
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+
+                    JSONObject jsonObjectHijo = jsonArray.getJSONObject(i);
+                    ReportModel reportModel = new ReportModel();
+
+                    // TODO mirar resputa server y coger datos
+
+                    /*
+                    reportModel.setEmailUserReporting(jsonObjectHijo.getString());
+                    reportModel.setEmailUserReported(jsonObjectHijo.getString());
+                    reportModel.setDescription(jsonObjectHijo.getString("description"));
+                    reportModel.setCreationDate(jsonObjectHijo.getString("creationDate"));
+                    */
+
+                    reports.add(reportModel);
+
+                    reportsAdapter = new ReportsAdapter(getActivity(), reports);
+
+                    lista.setAdapter(reportsAdapter);
+
+                }
+            }
+            else{
+                System.out.print("El sistema no logra mostrar la lista de pets de reportes\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
