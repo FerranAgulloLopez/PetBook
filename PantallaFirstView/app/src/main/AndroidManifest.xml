@@ -22,7 +22,7 @@
     <application
         android:allowBackup="true"
         android:hardwareAccelerated="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launch"
         android:label="PETBook"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
