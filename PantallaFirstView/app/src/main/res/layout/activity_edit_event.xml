@@ -89,7 +89,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editDescriptionPet"
-            app:srcCompat="@drawable/exito" />
+            app:srcCompat="@drawable/confirm" />
 
         <ImageButton
             android:id="@+id/imageButtonCancelEdit"
@@ -103,6 +103,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editDescriptionPet"
-            app:srcCompat="@drawable/no_editar" />
+            app:srcCompat="@drawable/cancel" />
     </android.support.constraint.ConstraintLayout>
     </ScrollView>

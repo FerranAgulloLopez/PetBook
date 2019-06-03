@@ -233,7 +233,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
 
     private void editComment(){
         Bundle bundle = new Bundle();
-        bundle.putString("id", idComment.getText().toString());
+        //bundle.putString("text", descriptionWall.getText().toString());
 
         Intent intent = new Intent(this.context, EditCommunityWall.class);
         intent.putExtra("idComment", idComment.getText().toString());

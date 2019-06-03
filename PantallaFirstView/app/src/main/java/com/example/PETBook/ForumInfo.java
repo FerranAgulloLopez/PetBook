@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ForumInfo extends AppCompatActivity implements AsyncResult {
 
@@ -262,20 +263,8 @@ public class ForumInfo extends AppCompatActivity implements AsyncResult {
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-        LocalDateTime ahora= LocalDateTime.now();
-        String año = String.valueOf(ahora.getYear());
-        String mes = String.valueOf(ahora.getMonthValue());
-        String dia = String.valueOf(ahora.getDayOfMonth());
-        String hora = String.valueOf(ahora.getHour());
-        String minutos = String.valueOf(ahora.getMinute());
-        String segundos = String.valueOf(ahora.getSecond());
-        if(ahora.getMonthValue() < 10) mes = "0" + mes;
-        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
-        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
-
-        System.out.println(fechaRetorno);
-        minutosCreacion = ahora.getMinute();
-        return fechaRetorno;
+        Date date = new Date();
+        return Long.toString(date.getTime());
     }
 
     private void mostrarComments(){
