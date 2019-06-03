@@ -5,6 +5,7 @@
     android:id="@+id/scrollView4"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
+    android:background="@color/common_google_signin_btn_text_dark_default"
     tools:context="com.example.PETBook.NewForum"
     tools:layout_editor_absoluteY="81dp">
 

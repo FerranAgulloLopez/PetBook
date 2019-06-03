@@ -1,11 +1,8 @@
 package com.example.PETBook;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
@@ -26,8 +23,6 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
-import com.example.PETBook.Fragments.MyEventsFragment;
-import com.example.PETBook.Utilidades.Alarm;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONArray;
@@ -42,6 +37,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
     private TextInputLayout Fecha;
     private TextInputLayout Hora;
     private TextInputLayout Titulo;
+    private TextInputLayout Localizacion;
     private EditText inputFecha;
     private EditText inputHora;
     private EditText inputDescripcion;
@@ -63,6 +59,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
         Fecha = (TextInputLayout) findViewById(R.id.Fecha);
         Hora = (TextInputLayout) findViewById(R.id.Hora);
         Titulo = (TextInputLayout) findViewById(R.id.Titulo);
+        Localizacion = (TextInputLayout) findViewById(R.id.Localizacion);
 
         editLocation = (AutoCompleteTextView) findViewById(R.id.edLoc);
         editLocation.setThreshold(1);
@@ -204,6 +201,9 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
     }
 
     private boolean validateLoc(){
+        if(!AddressSelected){
+            Localizacion.setError("No ha seleccionado una localizacion");
+        }
         return AddressSelected;
     }
 
@@ -216,15 +216,11 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     private void createEvent(){
         SingletonUsuario su = SingletonUsuario.getInstance();
-        String address = addressNames[select_location];
-        Double lat = Double.parseDouble(positionsAddress[select_location].first);
-        Double lng = Double.parseDouble(positionsAddress[select_location].second);
         String titulo = Titulo.getEditText().getText().toString();
         String descripcion = inputDescripcion.getText().toString();
         String user = su.getEmail();
+
         boolean pubOpriv = publicButton.isChecked();
-
-
         boolean isValidTitulo = validateTitulo(titulo);
         boolean isValidFecha = validateFecha(inputFecha.getText().toString());
         boolean isValidHora = validateHora(inputHora.getText().toString());
@@ -232,6 +228,9 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
         if(isValidTitulo && isValidFecha && isValidHora && isValidLoc) {
             String fechaHora = transformacionFechaHora();
+            String address = addressNames[select_location];
+            Double lat = Double.parseDouble(positionsAddress[select_location].first);
+            Double lng = Double.parseDouble(positionsAddress[select_location].second);
             JSONObject jsonToSend = new JSONObject();
             JSONObject loc = new JSONObject();
             try {
