@@ -203,12 +203,11 @@
         android:layout_height="30dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:background="?attr/colorBackgroundFloating"
         android:scaleType="fitXY"
         android:tint="@color/colorPrimaryDark"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/borrar" />
+        app:srcCompat="@drawable/cancel_event" />
 
 </android.support.constraint.ConstraintLayout>
