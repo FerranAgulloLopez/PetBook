@@ -14,13 +14,14 @@
         android:layout_height="wrap_content"
         android:background="#ffffff"
         android:orientation="horizontal">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/fotoPerfil"
             android:layout_width="48sp"
             android:layout_height="48sp"
             android:layout_weight="1"
             android:padding="2dp"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launch" />
         <TextView
             android:id="@+id/nombre"
             android:layout_width="wrap_content"

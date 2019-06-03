@@ -80,7 +80,6 @@ public class Chat extends AppCompatActivity {
         rvMensajes = (RecyclerView) findViewById(R.id.rvMensajes);
         txtMensaje = (EditText) findViewById(R.id.txtMensaje);
         btnEnviar = (Button) findViewById(R.id.btnEnviar);
-        btnEnviarFoto = (ImageButton) findViewById(R.id.btnEnviarFoto);
         fotoPerfilCadena = "";
 
         emailEmisor = getEmailWithoutDotCom(SingletonUsuario.getInstance().getEmail());
