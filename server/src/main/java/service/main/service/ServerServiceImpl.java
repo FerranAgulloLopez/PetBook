@@ -359,7 +359,7 @@ public class ServerServiceImpl implements ServerService {
             }
         }
 
-        Collections.sort(result);
+        Collections.sort(result, Collections.reverseOrder());
 
         return result;
     }
