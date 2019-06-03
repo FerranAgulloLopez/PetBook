@@ -165,6 +165,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_profile) {
             myFragment = new WallFragment();
             this.getIntent().putExtra("fragment","myprofile");
+            this.getIntent().putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();

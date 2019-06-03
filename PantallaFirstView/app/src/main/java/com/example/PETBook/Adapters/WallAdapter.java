@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
@@ -93,6 +94,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
         creatorMail = convertView.findViewById(R.id.creatorPost);
         creatorMail.setText(wallList.get(position).getCreatorMail());
+
         Image imagenConversor = Image.getInstance();
         Bitmap profileImage = imagenConversor.StringToBitMap(wallList.get(position).getFoto());
         imatgeUser.setImageBitmap(profileImage);
@@ -101,6 +103,11 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         TextView numFavs = convertView.findViewById(R.id.numFavs);
         TextView numRetweets = convertView.findViewById(R.id.numRetweets);
         final ImageButton option = convertView.findViewById(R.id.optionButton);
+
+
+
+
+
 
         TextView isRetweeted = convertView.findViewById(R.id.retweeted);
         ImageView retweetedThisIcon = convertView.findViewById(R.id.retweetedThisIcon);
@@ -115,7 +122,13 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             option.setVisibility(View.VISIBLE);
 
         }
+        if(SingletonUsuario.getInstance().getEmail().equals(wallList.get(position).getCreatorMail())){
+            option.setVisibility(View.VISIBLE);
 
+        }
+        else {
+            option.setVisibility(View.INVISIBLE);
+        }
         final String[] opcions = {"Edit", "Delete"};
         final View finalConvertView = convertView;
         option.setOnClickListener(new View.OnClickListener() {
@@ -176,28 +189,37 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         //likes
         if (w.getLikes().isEmpty() || !w.getLikes().contains(SingletonUsuario.getInstance().getEmail())) {
             //like.setColorFilter(Color.argb(100,0,0,0));
+            like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
             like(like, w.getIDWall(), position, numlikes);
         }
         else {
             //like.setColorFilter(Color.argb(100,131,7,6));
+            like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+
             unlike(like, w.getIDWall(), position, numlikes);
 
         }
         //favs
         if (w.getFavs().isEmpty() || !w.getFavs().contains(SingletonUsuario.getInstance().getEmail())) {
-            fav(fav, w.getIDWall());
+            fav.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
+
+            fav(fav, w.getIDWall(), position);
         }
         else {
             //fav.setColorFilter(Color.argb(100,131,7,6));
-            unfav(fav, w.getIDWall());
+            fav.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+
+            unfav(fav, w.getIDWall(), position);
         }
         //retweets
         if (w.getRetweets().isEmpty() || !w.getRetweets().contains(SingletonUsuario.getInstance().getEmail())) {
-            retweet(retweet, w.getIDWall(), convertView);
+            retweet.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
+            retweet(retweet, w.getIDWall(), convertView, position);
         }
         else {
             //retweet.setColorFilter(Color.argb(100,131,7,6));
-            unretweet(retweet, w.getIDWall());
+            retweet.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+            unretweet(retweet, w.getIDWall(), position);
         }
 
 
@@ -214,12 +236,14 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
         return convertView;
     }
+
     private void editComment(){
         Bundle bundle = new Bundle();
         bundle.putString("id", idComment.getText().toString());
 
         Intent intent = new Intent(this.context, EditWall.class);
         intent.putExtra("idComment", idComment.getText().toString());
+        intent.putExtra("nameProfile", creatorMail.getText().toString());
         context.startActivity(intent);
     }
 
@@ -245,20 +269,21 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         ///votar.setText("Vote");
         //like.setVisibility(View.VISIBLE);
         //unlike.setVisibility(View.INVISIBLE);
-        like.setColorFilter(Color.argb(100,131,7,6));
+       // like.setColorFilter(Color.argb(100,131,7,6));
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 WallAdapter.this.notifyDataSetChanged();
-
+                like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
                 tipoConexion = "someInteraction";
                 numlikes.setText(String.valueOf(wallList.get(position).getLikes().size() + 1));
 
                 try {
                     //like.setColorFilter(Color.argb(100,0,0,0));
 
+
                     Conexion con = new Conexion(WallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Like", "POST", null);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + wallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Like", "POST", null);
                     like.setColorFilter(Color.argb(100,131,7,6));
                     like(like, id, position, numlikes);
 
@@ -273,17 +298,17 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         //votar.setText("Unvote");
         tipoConexion = "someInteraction";
 
-
-        like.setColorFilter(Color.argb(100,0,0,0));
+//
+        //like.setColorFilter(Color.argb(100,0,0,0));
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
                 try {
                     numlikes.setText(String.valueOf(wallList.get(position).getLikes().size() - 1));
-
                     WallAdapter.this.notifyDataSetChanged();
                     Conexion con = new Conexion(WallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnLike", "POST", null);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + wallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/UnLike", "POST", null);
                     unlike(like, id, position, numlikes);
                 } catch (Exception e){
                     e.printStackTrace();
@@ -292,7 +317,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         });
     }
 
-    public void fav(final ImageButton fav, final Integer id){
+    public void fav(final ImageButton fav, final Integer id, final Integer position){
         ///votar.setText("Vote");
         //like.setVisibility(View.VISIBLE);
         //unlike.setVisibility(View.INVISIBLE);
@@ -303,9 +328,11 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                 try {
                     //like.setColorFilter(Color.argb(100,0,0,0));
                     fav.setColorFilter(Color.argb(100,131,7,6));
+                    fav.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+
                     Conexion con = new Conexion(WallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Love", "POST", null);
-                    fav(fav, id);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + wallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Love", "POST", null);
+                    fav(fav, id, position);
 
                 } catch (Exception e){
                     e.printStackTrace();
@@ -314,7 +341,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         });
     }
 
-    public void unfav(final ImageButton fav, final Integer id){
+    public void unfav(final ImageButton fav, final Integer id, final Integer position){
         //votar.setText("Unvote");
         tipoConexion = "someInteraction";
 
@@ -323,9 +350,11 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             public void onClick(View v) {
                 try {
                     fav.setColorFilter(Color.argb(100,0,0,0));
+                    fav.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
+
                     Conexion con = new Conexion(WallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnLove", "POST", null);
-                    unfav(fav, id);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + wallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/UnLove", "POST", null);
+                    unfav(fav, id, position);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -336,26 +365,11 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-        /*LocalDateTime ahora= LocalDateTime.now();
-        String año = String.valueOf(ahora.getYear());
-        String mes = String.valueOf(ahora.getMonthValue());
-        String dia = String.valueOf(ahora.getDayOfMonth());
-        String hora = String.valueOf(ahora.getHour());
-        String minutos = String.valueOf(ahora.getMinute());
-        String segundos = String.valueOf(ahora.getSecond());
-        if(ahora.getMonthValue() < 10) mes = "0" + mes;
-        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
-        if(ahora.getHour() < 10) hora = "0" + hora;
-        if(ahora.getMinute() < 10) minutos = "0" + minutos;
-        if(ahora.getSecond() < 10) segundos = "0" + segundos;
-        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
-        System.out.println(fechaRetorno);
-        return fechaRetorno;*/
         Date date = new Date();
         return Long.toString(date.getTime());
     }
 
-    public void retweet(final ImageButton retweet, final Integer id, final View finalConvertView){
+    public void retweet(final ImageButton retweet, final Integer id, final View finalConvertView, final Integer position){
 
         tipoConexion = "someInteraction";
 
@@ -367,6 +381,8 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     retweet.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            retweet.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(finalConvertView.getContext());
                             // System.out.println("idcomment:" + builder.getContext());
                             builder.setItems(opcions, new DialogInterface.OnClickListener() {
@@ -390,8 +406,8 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                                             e.printStackTrace();
                                         }
 
-                                        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
-                                        retweet(retweet, id, finalConvertView);
+                                        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + wallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
+                                        retweet(retweet, id, finalConvertView, position);
                                     } else if (which == 1) {
                                         AlertDialog.Builder alert = new AlertDialog.Builder(context);
 
@@ -415,33 +431,14 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                                                     e.printStackTrace();
                                                 }
 
-                                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
-                                                retweet(retweet, id, finalConvertView);
+                                                con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + wallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
+                                                retweet(retweet, id, finalConvertView, position);
                                             }
                                         });
-
                                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int whichButton) {
-                                                // what ever you want to do with No option.
-                                                /*retweet.setColorFilter(Color.argb(100,131,7,6));
-                                                Conexion con = new Conexion(WallAdapter.this);
-                                                JSONObject jsonToSend = new JSONObject();
-                                                String fechaHora = crearFechaActual();
-                                                String YouEditTextValue = "";
-                                                try {
-                                                    jsonToSend.accumulate("description", YouEditTextValue);
-                                                    jsonToSend.accumulate("creationDate", fechaHora);
-                                                    //jsonToSend.accumulate("ok", "true");
-                                                    System.out.println(jsonToSend);
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-
-                                                //con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/Retweet", "POST", jsonToSend.toString());
-                                                retweet(retweet, id, finalConvertView);*/
                                             }
                                         });
-
                                         alert.show();
                                     }
                                 }
@@ -449,11 +446,6 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                             builder.show();
                         }
                     });
-
-
-                    //like.setColorFilter(Color.argb(100,0,0,0));
-
-
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -461,7 +453,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
         });
     }
 
-    public void unretweet(final ImageButton retweet, final Integer id){
+    public void unretweet(final ImageButton retweet, final Integer id, final Integer position){
         tipoConexion = "someInteraction";
 
         //votar.setText("Unvote");
@@ -470,9 +462,11 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
             public void onClick(View v) {
                 try {
                     retweet.setColorFilter(Color.argb(255,0,0,0));
+                    retweet.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
+
                     Conexion con = new Conexion(WallAdapter.this);
-                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + SingletonUsuario.getInstance().getEmail() + "/WallPosts/" + id + "/UnRetweet", "POST", null);
-                    unretweet(retweet, id);
+                    con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + wallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/UnRetweet", "POST", null);
+                    unretweet(retweet, id, position);
                     //deletePost();
                 } catch (Exception e){
                     e.printStackTrace();
@@ -492,6 +486,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                     //WallFragment.getFragmentManager().beginTransaction().detach(this).attach(this).commit();
                     Intent intent = new Intent(this.context, MainActivity.class);
                     intent.putExtra("fragment", "myprofile");
+                    intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                     context.startActivity(intent);
                 }
             } catch (JSONException e) {
@@ -525,6 +520,7 @@ public class WallAdapter extends BaseAdapter implements AsyncResult {
                         WallAdapter.this.notifyDataSetChanged();
                         Intent intent = new Intent(this.context, MainActivity.class);
                         intent.putExtra("fragment", "myprofile");
+                        intent.putExtra("nameProfile", creatorMail.getText().toString());
                         context.startActivity(intent);
 
                     }

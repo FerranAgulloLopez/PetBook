@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -84,21 +85,8 @@ public class EditWall extends AppCompatActivity implements AsyncResult {
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-        LocalDateTime ahora= LocalDateTime.now();
-        String año = String.valueOf(ahora.getYear());
-        String mes = String.valueOf(ahora.getMonthValue());
-        String dia = String.valueOf(ahora.getDayOfMonth());
-        String hora = String.valueOf(ahora.getHour());
-        String minutos = String.valueOf(ahora.getMinute());
-        String segundos = String.valueOf(ahora.getSecond());
-        if(ahora.getMonthValue() < 10) mes = "0" + mes;
-        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
-        if(ahora.getHour() < 10) hora = "0" + hora;
-        if(ahora.getMinute() < 10) minutos = "0" + minutos;
-        if(ahora.getSecond() < 10) segundos = "0" + segundos;
-        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
-        System.out.println(fechaRetorno);
-        return fechaRetorno;
+        Date date = new Date();
+        return Long.toString(date.getTime());
     }
 
     private boolean validarComment(String comment, TextInputLayout textInputLayout){
@@ -164,6 +152,7 @@ public class EditWall extends AppCompatActivity implements AsyncResult {
                     Toast.makeText(this, "Post updated succesfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(EditWall.this, MainActivity.class);
                     intent.putExtra("fragment", "myprofile");
+                    intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                     startActivity(intent);
                 }
                 else{

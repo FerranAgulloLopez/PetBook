@@ -2,6 +2,7 @@ package com.example.PETBook.Fragments;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -83,6 +84,8 @@ public class WallFragment extends Fragment implements AsyncResult {
     private ImageView helpIcon;
     private TextView helpText;
 
+    private String profileUser;
+
     public WallFragment() {
         // Required empty public constructor
     }
@@ -112,14 +115,15 @@ public class WallFragment extends Fragment implements AsyncResult {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        recibirDatos();
 
-        mostrarPerfil();
     }
     public void recibirDatos(){
-        /*Bundle datosRecibidos = this.getIntent().getExtras();
-        if(datosRecibidos != null) {
-            String nameProfile = datosRecibidos.getSerializable("nameProfile").toString();
-        }*/
+        Bundle datosRecibidos =((Activity)this.getContext()).getIntent().getExtras();
+        if(datosRecibidos != null && !datosRecibidos.getSerializable("nameProfile").toString().isEmpty()) {
+            profileUser = datosRecibidos.getSerializable("nameProfile").toString();
+            System.out.println( "NAME PROFILE: " + datosRecibidos.getSerializable("nameProfile"));
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -130,7 +134,6 @@ public class WallFragment extends Fragment implements AsyncResult {
         // Inflate the layout for this fragment
         MyView = inflater.inflate(R.layout.activity_wall, container, false);
         // Set tittle to the fragment
-        getActivity().setTitle("My profile");
         imatgePerfil = MyView.findViewById(R.id.imatgePerfilHome);
         inputFullName = MyView.findViewById(R.id.fullNameInput);
         inputEmail = MyView.findViewById(R.id.emailInput);
@@ -144,10 +147,27 @@ public class WallFragment extends Fragment implements AsyncResult {
         imageButtonAdd = MyView.findViewById(R.id.createCommentWallProfile);
         helpIcon = MyView.findViewById(R.id.help1PostIcon);
         helpText = MyView.findViewById(R.id.help1Post);
+        buttonEditProfile = MyView.findViewById(R.id.editProfileButton);
+
+
+        if (profileUser.equals(SingletonUsuario.getInstance().getEmail())) {
+            getActivity().setTitle("My profile");
+            addCommentWalL.setVisibility(View.VISIBLE);
+            //imageButtonAdd.setVisibility(View.VISIBLE);
+            buttonEditProfile.setVisibility(View.VISIBLE);
+        }
+        else {
+            getActivity().setTitle("Profile");
+            addCommentWalL.setVisibility(View.INVISIBLE);
+            imageButtonAdd.setVisibility(View.INVISIBLE);
+            buttonEditProfile.setVisibility(View.INVISIBLE);
+            helpIcon.setVisibility(View.INVISIBLE);
+            helpText.setVisibility(View.INVISIBLE);
+
+        }
 
         mostrarPerfil();
-        // mostrarWalls();
-        buttonEditProfile = (Button) MyView.findViewById(R.id.editProfileButton);
+
 
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,7 +228,7 @@ public class WallFragment extends Fragment implements AsyncResult {
             tipoConexion = "getImatge";
             Conexion con = new Conexion(this);
             SingletonUsuario su = SingletonUsuario.getInstance();
-            con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + profileUser, "GET", null);
         }
 
 
@@ -218,7 +238,7 @@ public class WallFragment extends Fragment implements AsyncResult {
         tipoConexion = "getWalls";
         Conexion con = new Conexion(this);
         SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + su.getEmail() + "/WallPosts", "GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + profileUser + "/WallPosts", "GET", null);
         System.out.println("conexio walls ben feta");
 
     }
@@ -227,7 +247,7 @@ public class WallFragment extends Fragment implements AsyncResult {
         tipoConexion = "getUser";
         Conexion con = new Conexion(this);
         SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + su.getEmail() , "GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/GetUser/" + profileUser , "GET", null);
         System.out.println("conexion mostrar user bien hecha");
         //mostrarWalls();
     }
@@ -317,27 +337,28 @@ public class WallFragment extends Fragment implements AsyncResult {
                         //w.setRetweetText(wall.getString("retweetText"));
                         wallModel.add(w);
                     }
-                    if(wallModel.size()==0){
-                        emptyWalls.setVisibility(View.VISIBLE);
-                        imageButtonAdd.setVisibility(View.VISIBLE);
-                        addCommentWalL.setVisibility(View.INVISIBLE);
-                        helpText.setVisibility(View.INVISIBLE);
-                        helpIcon.setVisibility(View.INVISIBLE);
+                    if(profileUser.equals(SingletonUsuario.getInstance().getEmail())) {
+                        if (wallModel.size() == 0) {
+                            emptyWalls.setVisibility(View.VISIBLE);
+                            imageButtonAdd.setVisibility(View.VISIBLE);
+                            addCommentWalL.setVisibility(View.INVISIBLE);
+                            helpText.setVisibility(View.INVISIBLE);
+                            helpIcon.setVisibility(View.INVISIBLE);
+                        } else if (wallModel.size() == 1) {
+                            emptyWalls.setVisibility(View.INVISIBLE);
+                            imageButtonAdd.setVisibility(View.INVISIBLE);
+                            addCommentWalL.setVisibility(View.VISIBLE);
+                            helpText.setVisibility(View.VISIBLE);
+                            helpIcon.setVisibility(View.VISIBLE);
+                        } else {
+                            emptyWalls.setVisibility(View.INVISIBLE);
+                            imageButtonAdd.setVisibility(View.INVISIBLE);
+                            addCommentWalL.setVisibility(View.VISIBLE);
+                            helpText.setVisibility(View.INVISIBLE);
+                            helpIcon.setVisibility(View.INVISIBLE);
+                        }
                     }
-                    else if(wallModel.size() == 1){
-                        emptyWalls.setVisibility(View.INVISIBLE);
-                        imageButtonAdd.setVisibility(View.INVISIBLE);
-                        addCommentWalL.setVisibility(View.VISIBLE);
-                        helpText.setVisibility(View.VISIBLE);
-                        helpIcon.setVisibility(View.VISIBLE);
-                    }
-                    else {
-                        emptyWalls.setVisibility(View.INVISIBLE);
-                        imageButtonAdd.setVisibility(View.INVISIBLE);
-                        addCommentWalL.setVisibility(View.VISIBLE);
-                        helpText.setVisibility(View.INVISIBLE);
-                        helpIcon.setVisibility(View.INVISIBLE);
-                    }
+
                     wallAdapter = new WallAdapter(getActivity(), wallModel);
                     lista = (ListView) MyView.findViewById(R.id.list_walls);
                     lista.setAdapter(wallAdapter);
@@ -345,7 +366,9 @@ public class WallFragment extends Fragment implements AsyncResult {
                     /*System.out.println(forumModel.get(2).getTitle());
                     System.out.println(forumModel.get(2).getComments().get(1).getDescription());*/
                     System.out.print(json.getInt("code") + " se muestran correctamente la lista de walls\n");
-                    buttonEditProfile.setVisibility(View.VISIBLE);
+                    if(profileUser.equals(SingletonUsuario.getInstance().getEmail())) {
+                        buttonEditProfile.setVisibility(View.VISIBLE);
+                    }
                     spinner.setVisibility(View.GONE);
                 } else {
                     System.out.print("El sistema no logra mostrar la lista de walls del creador\n");

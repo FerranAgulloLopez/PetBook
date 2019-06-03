@@ -109,7 +109,13 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
 
         TextView isRetweeted = convertView.findViewById(R.id.retweeted);
         ImageView retweetedThisIcon = convertView.findViewById(R.id.retweetedThisIcon);
+        if(SingletonUsuario.getInstance().getEmail().equals(CommunityWallList.get(position).getCreatorMail())){
+            option.setVisibility(View.VISIBLE);
 
+        }
+        else {
+            option.setVisibility(View.INVISIBLE);
+        }
         if(CommunityWallList.get(position).isRetweeted()){
             isRetweeted.setVisibility(View.VISIBLE);
             retweetedThisIcon.setVisibility(View.VISIBLE);
@@ -122,13 +128,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
             option.setVisibility(View.VISIBLE);
 
         }
-        if(SingletonUsuario.getInstance().getEmail().equals(CommunityWallList.get(position).getCreatorMail())){
-            option.setVisibility(View.VISIBLE);
 
-        }
-        else {
-            option.setVisibility(View.INVISIBLE);
-        }
 
         final String[] opcions = {"Edit", "Delete"};
         final View finalConvertView = convertView;
@@ -159,7 +159,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         creatorMail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                seePorfile(creatorMail.getText().toString());
+                seePorfile(CommunityWallList.get(position).getCreatorMail());
             }
         });
 
@@ -203,29 +203,37 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         //likes
         if (w.getLikes().isEmpty() || !w.getLikes().contains(SingletonUsuario.getInstance().getEmail())) {
             //like.setColorFilter(Color.argb(100,0,0,0));
-            like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+            like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
+
             like(like, w.getIDWall(), position, numlikes);
         }
         else {
             //like.setColorFilter(Color.argb(100,131,7,6));
-            like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
+            like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+
             unlike(like, w.getIDWall(), position, numlikes);
 
         }
         //favs
         if (w.getFavs().isEmpty() || !w.getFavs().contains(SingletonUsuario.getInstance().getEmail())) {
+            fav.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
+
             fav(fav, w.getIDWall(), position);
         }
         else {
             //fav.setColorFilter(Color.argb(100,131,7,6));
+            fav.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+
             unfav(fav, w.getIDWall(), position);
         }
         //retweets
         if (w.getRetweets().isEmpty() || !w.getRetweets().contains(SingletonUsuario.getInstance().getEmail())) {
+            retweet.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
             retweet(retweet, w.getIDWall(), convertView, position);
         }
         else {
             //retweet.setColorFilter(Color.argb(100,131,7,6));
+            retweet.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
             unretweet(retweet, w.getIDWall(), position);
         }
 
@@ -271,7 +279,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
 
 
     public void like(final ImageButton like, final Integer id, final Integer position, final TextView numlikes){
-        like.setColorFilter(Color.argb(100,131,7,6));
+       // like.setColorFilter(Color.argb(100,131,7,6));
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -282,10 +290,11 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
 
                 try {
                     //like.setColorFilter(Color.argb(100,0,0,0));
+                    like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
 
                     Conexion con = new Conexion(CommunityWallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Like", "POST", null);
-                    like.setColorFilter(Color.argb(100,131,7,6));
+                   // like.setColorFilter(Color.argb(100,131,7,6));
                     like(like, id, position, numlikes);
 
                 } catch (Exception e){
@@ -300,12 +309,14 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         tipoConexion = "someInteraction";
 
 
-        like.setColorFilter(Color.argb(100,0,0,0));
+       // like.setColorFilter(Color.argb(100,0,0,0));
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
-                    numlikes.setText(String.valueOf(CommunityWallList.get(position).getLikes().size() - 1));
+
+                    like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
+                    //numlikes.setText(String.valueOf(CommunityWallList.get(position).getLikes().size() - 1));
 
                     CommunityWallAdapter.this.notifyDataSetChanged();
                     Conexion con = new Conexion(CommunityWallAdapter.this);
@@ -329,6 +340,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                 try {
                     //like.setColorFilter(Color.argb(100,0,0,0));
                     fav.setColorFilter(Color.argb(100,131,7,6));
+                    fav.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+
                     Conexion con = new Conexion(CommunityWallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/Love", "POST", null);
                     fav(fav, id, position);
@@ -349,6 +362,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
             public void onClick(View v) {
                 try {
                     fav.setColorFilter(Color.argb(100,0,0,0));
+                    fav.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
                     Conexion con = new Conexion(CommunityWallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/UnLove", "POST", null);
                     unfav(fav, id, position);
@@ -378,6 +392,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                     retweet.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            retweet.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
+
                             AlertDialog.Builder builder = new AlertDialog.Builder(finalConvertView.getContext());
                             // System.out.println("idcomment:" + builder.getContext());
                             builder.setItems(opcions, new DialogInterface.OnClickListener() {
@@ -463,6 +479,8 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
             @Override
             public void onClick(View v) {
                 try {
+                    retweet.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
+
                     retweet.setColorFilter(Color.argb(255,0,0,0));
                     Conexion con = new Conexion(CommunityWallAdapter.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/users/" + CommunityWallList.get(position).getCreatorMail() + "/WallPosts/" + id + "/UnRetweet", "POST", null);
@@ -482,6 +500,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                     Toast.makeText(this.context, "Post deleted succesfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this.context, MainActivity.class);
                     intent.putExtra("fragment", "home");
+                    //intent.putExtra("nameProfile", creatorMail.getText().toString());
                     context.startActivity(intent);
                 }
             } catch (JSONException e) {
@@ -515,6 +534,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
                         CommunityWallAdapter.this.notifyDataSetChanged();
                         Intent intent = new Intent(this.context, MainActivity.class);
                         intent.putExtra("fragment", "home");
+                        intent.putExtra("nameProfile", creatorMail.getText().toString());
                         context.startActivity(intent);
 
                     }

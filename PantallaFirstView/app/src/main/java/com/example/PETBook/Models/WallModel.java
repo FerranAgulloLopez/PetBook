@@ -14,6 +14,17 @@ public class WallModel implements Serializable {
     private boolean retweeted;
     private String retweetText;
 
+    public String getUserToShow() {
+        return userToShow;
+    }
+
+    public void setUserToShow(String userToShow) {
+        this.userToShow = userToShow;
+    }
+
+    private String userToShow;
+
+
     public String getCreatorMail() {
         return creatorMail;
     }
