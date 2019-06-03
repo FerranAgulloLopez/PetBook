@@ -11,6 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import service.main.entity.WallPost;
+import service.main.entity.input_output.ban.DataBan;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
 import service.main.entity.input_output.forum.DataForumComment;
@@ -1231,6 +1232,133 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+    /*
+    Ban operations
+     */
+
+    @CrossOrigin
+    @GetMapping(value = "/reports")
+    @ApiOperation(value = "Returns all open reports", notes = "Returns all open reports. Only admin users can use this method.", tags="Reports")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok")
+
+    })
+    public ResponseEntity<?> getAllOpenReports() {
+        return new ResponseEntity<>(serverService.getAllOpenBans(),HttpStatus.OK);
+    }
+
+    @CrossOrigin
+    @GetMapping(value = "/reports/{reportId}")
+    @ApiOperation(value = "Returns a report", notes = "Returns a report. Only admin users can use this method.", tags="Reports")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 404, message = "The report does not exist in the database")
+
+    })
+    public ResponseEntity<?> getReport(@ApiParam(value="The report's identifier", required = true, example = "4") @PathVariable("reportId") long reportId) {
+        try {
+            return new ResponseEntity<>(serverService.getBan(reportId),HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/reports")
+    @ApiOperation(value = "Creates a new report", notes = "Creates a new report which is returned in the response body.", tags="Reports")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The input data is not well formed"),
+            @ApiResponse(code = 403, message = "Is not possible to create two reports on the same user by the same user"),
+            @ApiResponse(code = 404, message = "The suspect user does not exist in the database")
+
+    })
+    public ResponseEntity<?> createNewReport(@ApiParam(value="The report parameters", required = true) @RequestBody DataBan dataBan) {
+        try {
+            return new ResponseEntity<>(serverService.createBan(dataBan),HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/reports/{reportId}/voteApprove")
+    @ApiOperation(value = "Votes in favour of banning a user", notes = "Votes in favour of banning a user. A user is banned after three afirmative votes. Only admin users can use this method.", tags="Reports")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 403, message = "Is not possible to vote a closed report"),
+            @ApiResponse(code = 400, message = "Is not possible to vote two times the same report"),
+            @ApiResponse(code = 404, message = "The report does not exist in the database")
+
+    })
+    public ResponseEntity<?> voteApprovedReport(@ApiParam(value="The report's identifier", required = true, example = "4") @PathVariable("reportId") long reportId) {
+        try {
+            serverService.voteApprove(reportId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        } catch (InternalServerErrorException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @CrossOrigin
+    @PostMapping(value = "/reports/{reportId}/voteReject")
+    @ApiOperation(value = "Votes against banning a user", notes = "Votes against banning a user. A report is dismissed after three reject votes. Only admin users can use this method.", tags="Reports")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 403, message = "Is not possible to vote a closed report"),
+            @ApiResponse(code = 400, message = "Is not possible to vote two times the same report"),
+            @ApiResponse(code = 404, message = "The report does not exist in the database")
+
+    })
+    public ResponseEntity<?> voteRejectReport(@ApiParam(value="The report's identifier", required = true, example = "4") @PathVariable("reportId") long reportId) {
+        try {
+            serverService.voteReject(reportId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @CrossOrigin
+    @DeleteMapping(value = "/reports/{reportId}/unVote")
+    @ApiOperation(value = "Deletes a vote", notes = "Deletes the logged user vote in one report.", tags="Reports")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 400, message = "The user has not voted this report"),
+            @ApiResponse(code = 403, message = "Is not possible to vote a closed report"),
+            @ApiResponse(code = 404, message = "The report does not exist in the database")
+
+    })
+    public ResponseEntity<?> deleteVoteReport(@ApiParam(value="The report's identifier", required = true, example = "4") @PathVariable("reportId") long reportId) {
+        try {
+            serverService.removeVote(reportId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (BadRequestException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (ForbiddenException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.FORBIDDEN);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+        }
+    }
+
+
 
 
 

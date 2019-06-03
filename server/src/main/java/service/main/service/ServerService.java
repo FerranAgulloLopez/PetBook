@@ -1,6 +1,7 @@
 package service.main.service;
 
 import service.main.entity.*;
+import service.main.entity.input_output.ban.DataBan;
 import service.main.entity.input_output.event.CustomEventCalendarIdAdapter;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
@@ -199,6 +200,23 @@ public interface ServerService {
     public void sendTestNotifications(String token);
 
     public void updatePassword(String email, DataUpdatePassword dataUpdatePassword) throws NotFoundException, BadRequestException;
+
+
+    /*
+    Bans
+     */
+
+    public Ban getBan(long banId) throws NotFoundException;
+
+    public List<Ban> getAllOpenBans();
+
+    public Ban createBan(DataBan dataBan) throws BadRequestException, ForbiddenException, NotFoundException;
+
+    public void voteApprove(long banId) throws NotFoundException, BadRequestException, ForbiddenException, InternalServerErrorException;
+
+    public void voteReject(long banId) throws NotFoundException, BadRequestException, ForbiddenException;
+
+    public void removeVote(long banId) throws NotFoundException, BadRequestException, ForbiddenException;
 
 
 

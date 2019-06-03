@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import service.main.config.JwtConfig;
 import service.main.entity.*;
+import service.main.entity.input_output.ban.DataBan;
 import service.main.entity.input_output.event.CustomEventCalendarIdAdapter;
 import service.main.entity.input_output.event.DataEvent;
 import service.main.entity.input_output.event.DataEventUpdate;
@@ -60,6 +61,7 @@ public class ServerServiceImpl implements ServerService {
     private static final String USERS_ARE_NOT_FRIENDS = "The users are not friends";
     private static final String USER_HASNT_POSTAL_CODE = "The user has not a postal code";
     private static final String ARE_THE_SAME_USER = "Users are the same user";
+    private static final String BANNOTDB = "The ban does not exist in the database";
 
 
     private SendEmailTLS mailsender;
@@ -81,6 +83,9 @@ public class ServerServiceImpl implements ServerService {
 
     @Autowired
     private SequenceGeneratorService sequenceGeneratorService;
+
+    @Autowired
+    private BanRepository banRepository;
 
 
     /*
@@ -920,6 +925,77 @@ public class ServerServiceImpl implements ServerService {
         forumThreadRepository.save(forumThread);
     }
 
+
+    /*
+    Ban
+     */
+
+    @Override
+    public Ban getBan(long banId) throws NotFoundException {
+        return auxGetBan(banId);
+    }
+
+    @Override
+    public List<Ban> getAllOpenBans() {
+        return banRepository.findByClosed(false);
+    }
+
+    @Override
+    public Ban createBan(DataBan dataBan) throws BadRequestException, ForbiddenException, NotFoundException {
+        if (!dataBan.inputCorrect()) throw new BadRequestException("The input data is not well formed");
+        String creatorMail = getLoggedUserMail();
+        auxGetUser(dataBan.getSuspectMail());
+        if (banRepository.findByCreatorMailAndSuspectMail(creatorMail, dataBan.getSuspectMail()).isPresent()) throw new ForbiddenException("Is not possible to create two reports on the same user by the same user");
+        Ban ban = new Ban(creatorMail, dataBan.getSuspectMail(), dataBan.getDescription(), dataBan.getCreationDate());
+        banRepository.save(ban);
+        return ban;
+    }
+
+    @Override
+    public void voteApprove(long banId) throws NotFoundException, BadRequestException, InternalServerErrorException, ForbiddenException {
+        Ban ban = auxGetBan(banId);
+        String userMail = getLoggedUserMail();
+        if (ban.getApproved().contains(userMail) || ban.getRejected().contains(userMail)) throw new BadRequestException("Is not possible to vote two times the same report");
+        if (ban.isClosed()) throw new ForbiddenException("Is not possible to vote a closed report");
+        ban.addApprovedVote(userMail);
+        if (ban.getApproved().size() >= 3) {
+            ban.setClosed(true);
+            User user;
+            try {
+                user = auxGetUser(ban.getSuspectMail());
+            } catch (NotFoundException e) {
+                throw new InternalServerErrorException("Error while loading a user from the database");
+            }
+            user.setMailconfirmed(false);
+            userRepository.save(user);
+        }
+        banRepository.save(ban);
+
+    }
+
+    @Override
+    public void voteReject(long banId) throws NotFoundException, BadRequestException, ForbiddenException {
+        Ban ban = auxGetBan(banId);
+        String userMail = getLoggedUserMail();
+        if (ban.getApproved().contains(userMail) || ban.getRejected().contains(userMail)) throw new BadRequestException("Is not possible to vote two times the same report");
+        if (ban.isClosed()) throw new ForbiddenException("Is not possible to vote a closed report");
+        ban.addRejectVote(userMail);
+        if (ban.getRejected().size() >= 3) {
+            ban.setClosed(true);
+        }
+        banRepository.save(ban);
+    }
+
+    @Override
+    public void removeVote(long banId) throws NotFoundException, BadRequestException, ForbiddenException {
+        Ban ban = auxGetBan(banId);
+        String userMail = getLoggedUserMail();
+        if (ban.isClosed()) throw new ForbiddenException("Is not possible to unvote a closed report");
+        if (!ban.getApproved().contains(userMail) && !ban.getRejected().contains(userMail)) throw new BadRequestException("The user has not voted this report");
+        ban.removeVote(userMail);
+        banRepository.save(ban);
+    }
+
     /**
      *
      * Search
@@ -1070,6 +1146,8 @@ public class ServerServiceImpl implements ServerService {
 
 
 
+
+
     /*
     Auxiliary operations
      */
@@ -1119,6 +1197,12 @@ public class ServerServiceImpl implements ServerService {
         return interestSite_opt.get();
     }
 
+    private Ban auxGetBan(long banId) throws NotFoundException {
+        Optional<Ban> ban_opt = banRepository.findById(banId);
+        if (!ban_opt.isPresent()) throw new NotFoundException(BANNOTDB);
+        return ban_opt.get();
+    }
+
     private Event auxGetEvent(long eventId) throws NotFoundException {
         Optional<Event> optionalEvent = eventRepository.findById(eventId);
         if (!optionalEvent.isPresent()) throw new NotFoundException(EVENTNOTDB);
@@ -1148,11 +1232,13 @@ public class ServerServiceImpl implements ServerService {
         eventRepository.deleteAll();
         interestSiteRepository.deleteAll();
         forumThreadRepository.deleteAll();
+        banRepository.deleteAll();
         sequenceGeneratorService.deleteSequence(Event.SEQUENCE_NAME);
         sequenceGeneratorService.deleteSequence(ForumThread.SEQUENCE_NAME);
         sequenceGeneratorService.deleteSequence(ForumComment.SEQUENCE_NAME);
         sequenceGeneratorService.deleteSequence(WallPost.SEQUENCE_NAME);
         sequenceGeneratorService.deleteSequence(InterestSite.SEQUENCE_NAME);
+        sequenceGeneratorService.deleteSequence(Ban.SEQUENCE_NAME);
 
     }
 
