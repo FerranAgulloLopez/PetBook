@@ -156,18 +156,14 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
         lista = MyView.findViewById(R.id.list_eventos);
 
         creator = (Button) MyView.findViewById(R.id.CreatorEvents);
-        creator.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
         creator.setTextColor(Color.WHITE);
         participant = (Button) MyView.findViewById(R.id.ParticipantEvents);
-        participant.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
         participant.setTextColor(Color.BLACK);
 
         creator.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                creator.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                 creator.setTextColor(Color.WHITE);
-                participant.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
                 participant.setTextColor(Color.BLACK);
                 eventosUser = new EventAdapter(getActivity(), creador);
                 lista.setAdapter(eventosUser);
@@ -185,9 +181,7 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
         participant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                creator.setBackgroundTintList(ColorStateList.valueOf(Color.GRAY));
                 creator.setTextColor(Color.BLACK);
-                participant.setBackgroundTintList(ColorStateList.valueOf(Color.RED));
                 participant.setTextColor(Color.WHITE);
                 eventosUser = new EventAdapter(getActivity(), participante);
                 lista.setAdapter(eventosUser);

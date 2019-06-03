@@ -43,6 +43,8 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
     private EditText inputDescripcion;
     private String[] addressNames = new String[0];
     private Pair<String,String>[] positionsAddress = new Pair[0];
+    private String finalAddress;
+    private Pair<String,String> finalpositionAddress;
     int select_location;
     private Boolean isAddress = false;
     private Boolean AddressSelected = false;
@@ -85,8 +87,11 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 select_location = position;
+                System.out.println(addressNames[position]);
+                finalAddress = addressNames[position];
+                System.out.println(positionsAddress[position]);
+                finalpositionAddress = positionsAddress[position];
                 AddressSelected = true;
-
             }
         });
 
@@ -228,9 +233,9 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
         if(isValidTitulo && isValidFecha && isValidHora && isValidLoc) {
             String fechaHora = transformacionFechaHora();
-            String address = addressNames[select_location];
-            Double lat = Double.parseDouble(positionsAddress[select_location].first);
-            Double lng = Double.parseDouble(positionsAddress[select_location].second);
+            String address = finalAddress;
+            Double lat = Double.parseDouble(finalpositionAddress.first);
+            Double lng = Double.parseDouble(finalpositionAddress.second);
             JSONObject jsonToSend = new JSONObject();
             JSONObject loc = new JSONObject();
             try {
@@ -288,8 +293,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-
-            } finally { isAddress = false; }
+            }
         }
         else {
             try {

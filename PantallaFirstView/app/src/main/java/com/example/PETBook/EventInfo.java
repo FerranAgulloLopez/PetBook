@@ -70,7 +70,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                     AlertDialog.Builder error = new AlertDialog.Builder(EventInfo.this);
                     error.setMessage("Are you sure you want to delete the event?")
                             .setCancelable(false)
-                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     deleteEvent();
