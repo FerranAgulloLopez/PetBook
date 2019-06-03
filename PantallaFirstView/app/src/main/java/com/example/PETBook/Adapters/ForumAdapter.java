@@ -20,6 +20,7 @@ import com.example.PETBook.Models.Image;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
@@ -40,6 +41,8 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
     private Context context;
     private ArrayList<ForumModel> forumList;
     private ImageView imageProfile;
+    private String tipoConexion;
+    private TextView numComments;
 
     public ForumAdapter (Context context, ArrayList<ForumModel> array){
         this.context = context;
@@ -69,7 +72,7 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
             convertView = layoutInflater.inflate(R.layout.forum_design,null);
         }
         TextView nombreForum = (TextView) convertView.findViewById(R.id.nombreForo);
-        TextView numberMessages = (TextView) convertView.findViewById(R.id.numberMessagesForum);
+        numComments = (TextView) convertView.findViewById(R.id.numberMessagesForum);
         TextView dataCreacionForum = (TextView) convertView.findViewById(R.id.dataCreacioForum);
         TextView creadorForum = (TextView) convertView.findViewById(R.id.nombreCreadorForum);
         TextView descriptionForum = (TextView) convertView.findViewById(R.id.descriptionForum);
@@ -77,7 +80,11 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
         Conexion con = new Conexion(this);
         con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + forumList.get(position).getCreatorMail(), "GET", null);
         nombreForum.setText(forumList.get(position).getTitle());
-        numberMessages.setText(String.format("%d", forumList.get(position).getComments().size()));
+
+
+        //getNumComments(position);
+
+
         //System.out.println(forumList.get(position).getComments().get(position).getTamaño());
         String fechaString = forumList.get(position).getCreationDate();
         Date dateNew = null;
@@ -95,6 +102,12 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
         return convertView;
     }
 
+
+    public void getNumComments(final Integer position){
+        tipoConexion = "getNumComments";
+        Conexion con = new Conexion(this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/forum/GetForumThread?threadId=" + forumList.get(position).getIDForum(), "GET", null);
+    }
     public void OnprocessFinish(JSONObject output) {
         if (output != null) {
             try {

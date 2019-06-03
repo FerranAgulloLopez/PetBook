@@ -126,6 +126,8 @@ public class CommunityWallFragment extends Fragment implements AsyncResult {
 
         mostrarWalls();
 
+
+
         addCommentWalL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

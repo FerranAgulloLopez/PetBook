@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,7 @@ import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EditCommunityWall;
 import com.example.PETBook.EditWall;
+import com.example.PETBook.Fragments.CommunityWallFragment;
 import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.CommunityWallModel;
 import com.example.PETBook.Models.Image;
@@ -85,6 +88,7 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         return position;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -152,6 +156,13 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         imatgeCreador = convertView.findViewById(R.id.imatgePerfilHome);
 
         creatorMail.setText(CommunityWallList.get(position).getCreatorMail());
+        creatorMail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                seePorfile(creatorMail.getText().toString());
+            }
+        });
+
         Image imagenConversor = Image.getInstance();
         Bitmap profileImage = imagenConversor.StringToBitMap(CommunityWallList.get(position).getFoto());
         imatgeUser.setImageBitmap(profileImage);
@@ -192,10 +203,12 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         //likes
         if (w.getLikes().isEmpty() || !w.getLikes().contains(SingletonUsuario.getInstance().getEmail())) {
             //like.setColorFilter(Color.argb(100,0,0,0));
+            like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#840705")));
             like(like, w.getIDWall(), position, numlikes);
         }
         else {
             //like.setColorFilter(Color.argb(100,131,7,6));
+            like.setImageTintList(ColorStateList.valueOf(Color.parseColor("#FF000000")));
             unlike(like, w.getIDWall(), position, numlikes);
 
         }
@@ -231,6 +244,14 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         return convertView;
     }
 
+    private void seePorfile(String nameProfile){
+        Bundle bundle = new Bundle();
+        //bundle.putString("text", descriptionWall.getText().toString());
+        Intent intent = new Intent(this.context, MainActivity.class);
+        intent.putExtra("fragment", "myprofile");
+        intent.putExtra("nameProfile", nameProfile);
+        context.startActivity(intent);
+    }
     private void editComment(){
         Bundle bundle = new Bundle();
         //bundle.putString("text", descriptionWall.getText().toString());

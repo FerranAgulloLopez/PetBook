@@ -25,7 +25,9 @@ import com.example.PETBook.Adapters.WallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EditProfile;
+import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.Models.Image;
+import com.example.PETBook.Models.PetModel;
 import com.example.PETBook.Models.WallModel;
 import com.example.PETBook.NewWall;
 import com.example.PETBook.SingletonUsuario;
@@ -110,14 +112,21 @@ public class WallFragment extends Fragment implements AsyncResult {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
         mostrarPerfil();
+    }
+    public void recibirDatos(){
+        /*Bundle datosRecibidos = this.getIntent().getExtras();
+        if(datosRecibidos != null) {
+            String nameProfile = datosRecibidos.getSerializable("nameProfile").toString();
+        }*/
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        recibirDatos();
         // Inflate the layout for this fragment
         MyView = inflater.inflate(R.layout.activity_wall, container, false);
         // Set tittle to the fragment
@@ -185,32 +194,11 @@ public class WallFragment extends Fragment implements AsyncResult {
 
     @TargetApi(Build.VERSION_CODES.O)
     private String crearFechaActual() {
-       /* LocalDateTime ahora= LocalDateTime.now();
-        String año = String.valueOf(ahora.getYear());
-        String mes = String.valueOf(ahora.getMonthValue());
-        String dia = String.valueOf(ahora.getDayOfMonth());
-        String hora = String.valueOf(ahora.getHour());
-        String minutos = String.valueOf(ahora.getMinute());
-        String segundos = String.valueOf(ahora.getSecond());
-        if(ahora.getMonthValue() < 10) mes = "0" + mes;
-        if(ahora.getDayOfMonth() < 10) dia = "0" + dia;
-        String fechaRetorno = año + "-" + mes+ "-" + dia + "T" + hora + ":" + minutos + ":" + segundos + ".000Z";
-
-        System.out.println(fechaRetorno);
-        return fechaRetorno;*/
         Date date = new Date();
         return Long.toString(date.getTime());
     }
 
     private void getPicture(){
-        /*
-        System.out.println("entro a mostrar imatge");
-        tipoConexion = "getImatge";
-        Conexion con = new Conexion(this);
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + su.getEmail(), "GET", null);
-        System.out.println("conexio walls ben feta");
-        */
         Bitmap fotoPerfil = SingletonUsuario.getInstance().getProfilePicture();
         if (fotoPerfil != null) {
             imatgePerfil.setImageBitmap(fotoPerfil);
