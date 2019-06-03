@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Adapters.FriendSuggestionAdapter;
@@ -52,6 +53,7 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
     private EditText inputName;
     private Spinner inputTypePet;
     private EditText inputPostalCode;
+    private TextView inputNumResult;
     private Button   button;
 
     // TODO: Rename and change types of parameters
@@ -151,7 +153,7 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
         inputName = (EditText) convertView.findViewById(R.id.nameInput);
         inputTypePet = (Spinner) convertView.findViewById(R.id.typePetInput);
         inputPostalCode = (EditText) convertView.findViewById(R.id.postalCodeInput);
-
+        inputNumResult = (TextView) convertView.findViewById(R.id.numResultInput);
         button   = (Button) convertView.findViewById(R.id.searchButton);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -253,6 +255,8 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
             if(json.getInt("code") == 200){
                 model = new ArrayList<>();
                 JSONArray jsonArray = json.getJSONArray("array");
+                String numResult = String.valueOf(jsonArray.length());
+                inputNumResult.setText("Results obtained : "+numResult);
                 for(int i = 0; i < jsonArray.length(); ++i){
                     JSONObject user_selected = jsonArray.getJSONObject(i);
                     UserModel e = new UserModel();

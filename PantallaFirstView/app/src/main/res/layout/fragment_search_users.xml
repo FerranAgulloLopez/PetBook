@@ -32,9 +32,8 @@
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="80dp"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:gravity="center|left"
                 android:text="Name"
@@ -44,15 +43,14 @@
             <EditText
                 android:id="@+id/nameInput"
                 android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:ems="10"
-                android:inputType="textPersonName"
                 android:hint="Ej: Maria"
+                android:inputType="textPersonName"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView7"
                 app:layout_constraintTop_toBottomOf="@+id/textView11" />
@@ -60,9 +58,8 @@
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="80dp"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:gravity="center|left"
                 android:text="Pet"
@@ -72,12 +69,10 @@
             <Spinner
                 android:id="@+id/typePetInput"
                 android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:entries="@array/inputPetType"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
@@ -85,10 +80,9 @@
 
             <TextView
                 android:id="@+id/textView9"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_width="80dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:gravity="center|left"
                 android:text="Postal Code"
@@ -98,15 +92,14 @@
             <EditText
                 android:id="@+id/postalCodeInput"
                 android:layout_width="0dp"
-                android:layout_height="45dp"
+                android:layout_height="35dp"
                 android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:ems="10"
-                android:inputType="textPersonName"
                 android:hint="Ej: 08950"
+                android:inputType="textPersonName"
+                android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/typePetInput" />
@@ -116,30 +109,38 @@
                 android:id="@+id/list_users"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="25dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/searchButton" />
+                app:layout_constraintTop_toBottomOf="@+id/numResultInput" />
 
             <Button
                 android:id="@+id/searchButton"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginStart="13dp"
                 android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
-                android:text="@android:string/search_go"
+                android:layout_marginEnd="13dp"
+                android:text="Search"
+                android:background="@drawable/btn_style"
+                android:textColor="@drawable/txt_btn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/postalCodeInput" />
+
+            <TextView
+                android:id="@+id/numResultInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="8dp"
+                android:text="     "
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/searchButton" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </FrameLayout>

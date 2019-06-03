@@ -69,6 +69,13 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                 Boolean mailconfirmed = json.getBoolean("mailconfirmed");
                 if(success.equals("true")) {
 
+                    if (!mailconfirmed) {
+                        if (!SingletonUsuario.getInstance().isMailConfirmed()) {
+                            Conexion conexion = new Conexion(PantallaLogSign.this);
+                            conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/SendConfirmationEmail", "POST", null);
+                        }
+                    }
+
                     SingletonUsuario user = SingletonUsuario.getInstance();
                     SingletonUsuario.setEmail(usuari.getText().toString());
                     user.setMailConfirmed(mailconfirmed);
