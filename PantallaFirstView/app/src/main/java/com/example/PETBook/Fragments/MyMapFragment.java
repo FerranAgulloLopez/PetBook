@@ -291,13 +291,16 @@ public class MyMapFragment extends Fragment implements OnMapReadyCallback, Async
                     EventModel event = AllEvents.get(Integer.parseInt(s[0]));
                     Intent intent = new Intent(getActivity(), EventInfo.class);
                     intent.putExtra("event", event);
+                    intent.putExtra("preWindow", "maps");
                     if (event.getCreador().equals(su.getEmail())){
                         intent.putExtra("eventType", "Creator");
                     }
                     else{
                         intent.putExtra("eventType", "Participant");
                     }
+                    intent.putExtra("preWindow", "maps");
                     startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });

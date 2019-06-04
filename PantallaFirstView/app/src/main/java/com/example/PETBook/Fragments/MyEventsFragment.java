@@ -126,7 +126,6 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                             dialog.cancel();
                             Intent i = new Intent(getActivity(), MainActivity.class);
                             startActivity(i);
-                            getActivity().finish();
                         }
                     })
                     .setNegativeButton("Later", new DialogInterface.OnClickListener() {
@@ -136,7 +135,6 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
 
                             Intent i = new Intent(getActivity(), MainActivity.class);
                             startActivity(i);
-                            getActivity().finish();
 
                         }
                     });
@@ -173,7 +171,9 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                         EventModel eventoSeleccionado = creador.get(position);
                         Intent intent = new Intent(getActivity(), EventInfo.class);
                         intent.putExtra("event", eventoSeleccionado);
+                        intent.putExtra("preWindow", "myevents");
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 });
             }
@@ -191,7 +191,9 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
                         EventModel eventoSeleccionado = participante.get(position);
                         Intent intent = new Intent(getActivity(), EventInfo.class);
                         intent.putExtra("event", eventoSeleccionado);
+                        intent.putExtra("preWindow", "myevents");
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 });
             }
@@ -200,10 +202,12 @@ public class MyEventsFragment extends Fragment implements AsyncResult {
         lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EventModel eventoSeleccionado = participante.get(position);
+                EventModel eventoSeleccionado = creador.get(position);
                 Intent intent = new Intent(getActivity(), EventInfo.class);
                 intent.putExtra("event", eventoSeleccionado);
+                intent.putExtra("preWindow","myevents");
                 startActivity(intent);
+                getActivity().finish();
             }
         });
 

@@ -306,6 +306,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                     enviar.putString("fragment", "events");
                     intent.putExtras(enviar);
                     startActivity(intent);
+                    finish();
                 } else {
                     System.out.print(json.getInt("code") + "Mal+++++++++++++++++++++++++++\n");
                     AlertDialog.Builder error = new AlertDialog.Builder(NewEvent.this);
