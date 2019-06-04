@@ -50,6 +50,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:paddingLeft="10dp">
 
@@ -70,12 +71,12 @@
                 android:paddingLeft="10dp">
 
                 <TextView
-                    android:id="@+id/razaInfo"
+                    android:id="@+id/edadInfo"
                     android:layout_width="390dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
-                    android:text="Raza" />
+                    android:text="Edad" />
 
             </LinearLayout>
 
@@ -88,12 +89,12 @@
                 android:paddingLeft="10dp">
 
                 <TextView
-                    android:id="@+id/edadInfo"
+                    android:id="@+id/razaInfo"
                     android:layout_width="390dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
-                    android:text="Edad" />
+                    android:text="Raza" />
 
             </LinearLayout>
 
@@ -156,12 +157,10 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@android:color/background_light"
+        android:background="@android:drawable/screen_background_light_transparent"
         android:scaleType="fitXY"
         android:tint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -173,18 +172,15 @@
         app:srcCompat="@drawable/borrar" />
 
 
-
     <ImageButton
         android:id="@+id/EditPetButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@android:color/background_light"
+        android:background="@android:drawable/screen_background_light_transparent"
         android:scaleType="fitXY"
         android:tint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
