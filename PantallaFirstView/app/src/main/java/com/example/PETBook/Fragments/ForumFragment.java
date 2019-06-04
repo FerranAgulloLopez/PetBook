@@ -99,7 +99,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
             Show dialog to inform user that does not have email confirmed
              */
             AlertDialog.Builder emailConfirmedDialog = new AlertDialog.Builder(getActivity());
-            emailConfirmedDialog.setMessage("Confirm your email to access all the functions of PetBook")
+            emailConfirmedDialog.setMessage("Confirm your email and log in  to access all the functions of PetBook")
                     .setCancelable(true)
                     .setPositiveButton("Resend email confirmation", new DialogInterface.OnClickListener() {
                         @Override
