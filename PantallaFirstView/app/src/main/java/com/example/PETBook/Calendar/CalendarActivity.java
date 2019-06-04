@@ -13,6 +13,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.PETBook.Adapters.EventAdapter;
 import com.example.PETBook.Adapters.EventAdapterCalendar;
 import com.example.PETBook.Calendar.Decorators.EventDecorator;
 import com.example.PETBook.Calendar.Decorators.MySelectorDecorator;
@@ -61,7 +62,8 @@ public class CalendarActivity extends AppCompatActivity
 
 
   //
-  private EventAdapterCalendar eventosUser;
+  //private EventAdapterCalendar eventosUser;
+  private EventAdapter eventosUser;
   private ArrayList<EventModel> model;
   private Conexion con;
   private SingletonUsuario su;
@@ -152,7 +154,8 @@ public class CalendarActivity extends AppCompatActivity
       }
 
       // Meter los
-      eventosUser = new EventAdapterCalendar(this, eventsOfTheSelectedDay);
+      //eventosUser = new EventAdapterCalendar(this, eventsOfTheSelectedDay);
+      eventosUser = new EventAdapter(this, eventsOfTheSelectedDay);
       lista.setAdapter(eventosUser);
 
       lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {

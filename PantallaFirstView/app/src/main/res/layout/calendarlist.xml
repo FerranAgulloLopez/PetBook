@@ -40,9 +40,15 @@
             android:src="@drawable/ic_title_add" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vuelve para atras para continuar usando la aplicacion.\n [La rueda de arriba a la derecha indica el progresso}\n  [Aqui iria un mensaje de bien sincronizado]" />
+
     <ListView
         android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_width="112dp"
+        android:layout_height="210dp" />
 
 </LinearLayout>
