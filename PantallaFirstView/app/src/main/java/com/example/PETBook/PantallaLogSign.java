@@ -50,6 +50,7 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
             userWrong = findViewById(R.id.userWrong);
             passWrong = findViewById(R.id.passWrong);
 
+            SingletonUsuario.getInstance().setMailConfirmed(false);
 
             String user = usuari.getText().toString();
             String pass = password.getText().toString();

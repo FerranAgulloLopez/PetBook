@@ -25,7 +25,10 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
     private TextView third;
     private TextView fourth;
 
+    private TextView textReport;
+
     private String emailReportado;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,9 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
         second = findViewById(R.id.spam);
         third = findViewById(R.id.profile);
         fourth = findViewById(R.id.feka);
+
+        textReport = findViewById(R.id.textReport);
+        textReport.setText("Help us understand the problem. What issue with " + emailReportado + " are you reporting?");
 
 
         first.setOnClickListener(new View.OnClickListener() {
@@ -73,6 +79,11 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dialog.dismiss();
+    }
 
     void sendReport(String text) {
 
@@ -95,22 +106,6 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
 
 
 
-        AlertDialog.Builder reportMade = new AlertDialog.Builder(this);
-        reportMade.setMessage("Thanks for your report")
-                .setCancelable(true)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog dialog = reportMade.create();
-        dialog.setTitle("Petbook development team");
-        dialog.show();
-
-        Intent i = new Intent(NewReport.this, MainActivity.class);
-        startActivity(i);
-        finish();
 
     }
 
@@ -129,8 +124,33 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
                 startActivity(intent);
             }
             else{
+                // TODO tratar errores
                 Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
             }
+
+
+            AlertDialog.Builder reportMade = new AlertDialog.Builder(this);
+            reportMade.setMessage("Thanks for your report")
+                    .setCancelable(true)
+                    .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                            Intent i = new Intent(NewReport.this, MainActivity.class);
+                            i.putExtra("fragment", "home");
+                            startActivity(i);
+                            finish();
+                        }
+                    });
+            dialog = reportMade.create();
+            dialog.setTitle("Petbook development team");
+            dialog.show();
+            dialog.setCanceledOnTouchOutside(false);
+
+
+
+
+
         } catch (JSONException e) {
                 e.printStackTrace();
 

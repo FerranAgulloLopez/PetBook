@@ -15,6 +15,7 @@
         android:background="@color/colorProjecte">
 
 
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -49,6 +50,7 @@
         android:layout_height="wrap_content">
 
         <TextView
+            android:id="@+id/textReport"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Help us undersand the proble. What issue with a@a.com are you reporting?"

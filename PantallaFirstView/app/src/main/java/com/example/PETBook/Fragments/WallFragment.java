@@ -31,6 +31,7 @@ import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.PetModel;
 import com.example.PETBook.Models.WallModel;
+import com.example.PETBook.NewReport;
 import com.example.PETBook.NewWall;
 import com.example.PETBook.SingletonUsuario;
 import com.example.pantallafirstview.R;
@@ -80,6 +81,7 @@ public class WallFragment extends Fragment implements AsyncResult {
     private FloatingActionButton addCommentWalL;
     private ImageButton botonOpcion;
     private TextView emptyWalls;
+    private Button reportButton;
 
     private FloatingActionButton imageButtonAdd;
     private ImageView helpIcon;
@@ -149,6 +151,8 @@ public class WallFragment extends Fragment implements AsyncResult {
         helpIcon = MyView.findViewById(R.id.help1PostIcon);
         helpText = MyView.findViewById(R.id.help1Post);
         buttonEditProfile = MyView.findViewById(R.id.editProfileButton);
+        reportButton = MyView.findViewById(R.id.reportButton);
+
 
 
         if (profileUser.equals(SingletonUsuario.getInstance().getEmail())) {
@@ -156,6 +160,7 @@ public class WallFragment extends Fragment implements AsyncResult {
             addCommentWalL.setVisibility(View.VISIBLE);
             //imageButtonAdd.setVisibility(View.VISIBLE);
             buttonEditProfile.setVisibility(View.VISIBLE);
+            reportButton.setVisibility(View.INVISIBLE);
         }
         else {
             getActivity().setTitle("Profile");
@@ -164,10 +169,22 @@ public class WallFragment extends Fragment implements AsyncResult {
             buttonEditProfile.setVisibility(View.INVISIBLE);
             helpIcon.setVisibility(View.INVISIBLE);
             helpText.setVisibility(View.INVISIBLE);
+            reportButton.setVisibility(View.VISIBLE);
+
 
         }
 
         mostrarPerfil();
+
+
+        reportButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NewReport.class);
+                intent.putExtra("emailReportado",profileUser);
+                startActivity(intent);
+            }
+        });
 
 
         buttonEditProfile.setOnClickListener(new View.OnClickListener() {
