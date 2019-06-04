@@ -116,6 +116,9 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                     startActivity(intent);
                     finish();
                 }
+                else if(preWindow.equals("calendar")){
+                    finish();
+                }
                 else {
                     Intent intent = new Intent(EventInfo.this,MainActivity.class);
                     intent.putExtra("fragment", "events");

@@ -162,10 +162,12 @@ public class CalendarActivity extends AppCompatActivity
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
           EventModel eventoSeleccionado = model.get(position);
-          Intent intent = new Intent(getApplicationContext(), EventInfo.class); // Haber si funciona con el context
+          Intent intent = new Intent(getApplicationContext(), EventInfo.class);
           intent.putExtra("event", eventoSeleccionado);
-          intent.putExtra("eventType", "Participant"); // No se porque participant es requrido  ¿?
-          startActivity(intent);
+          intent.putExtra("eventType", "Participant");
+          intent.putExtra("preWindow", "calendar");
+
+            startActivity(intent);
         }
       });
     }
