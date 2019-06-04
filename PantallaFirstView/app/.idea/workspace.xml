@@ -88,10 +88,101 @@
           <provider editor-type-id="text-editor" />
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/CommunityWallAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1094">
+              <caret line="536" column="16" selection-start-line="536" selection-start-column="16" selection-end-line="536" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/WallAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="97" column="8" selection-start-line="97" selection-start-column="8" selection-end-line="97" selection-end-column="8" />
+              <folding>
+                <element signature="e#4600#5428#0" expanded="true" />
+                <element signature="e#4913#5370#0" expanded="true" />
+                <element signature="e#5369#5370#0" expanded="true" />
+                <element signature="e#5427#5428#0" expanded="true" />
+                <element signature="method#like#0;class#WallAdapter#0" />
+                <element signature="e#10853#11811#0" expanded="true" />
+                <element signature="e#11810#11811#0" expanded="true" />
+                <element signature="method#unlike#0;class#WallAdapter#0" />
+                <element signature="e#12103#12889#0" expanded="true" />
+                <element signature="e#12888#12889#0" expanded="true" />
+                <element signature="method#fav#0;class#WallAdapter#0" />
+                <element signature="e#13184#13927#0" expanded="true" />
+                <element signature="e#13926#13927#0" expanded="true" />
+                <element signature="method#unfav#0;class#WallAdapter#0" />
+                <element signature="e#14134#14814#0" expanded="true" />
+                <element signature="e#14813#14814#0" expanded="true" />
+                <element signature="method#crearFechaActual#0;class#WallAdapter#0" />
+                <element signature="method#retweet#0;class#WallAdapter#0" />
+                <element signature="e#15190#20412#0" expanded="true" />
+                <element signature="e#15434#20288#0" expanded="true" />
+                <element signature="e#15915#20194#0" expanded="true" />
+                <element signature="e#18148#19725#0" expanded="true" />
+                <element signature="e#19724#19725#0" expanded="true" />
+                <element signature="e#20193#20194#0" expanded="true" />
+                <element signature="e#20287#20288#0" expanded="true" />
+                <element signature="e#20411#20412#0" expanded="true" />
+                <element signature="method#unretweet#0;class#WallAdapter#0" />
+                <element signature="e#20631#21366#0" expanded="true" />
+                <element signature="e#21365#21366#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/res/layout/wall_design.xml">
+          <provider selected="true" editor-type-id="android-designer2" />
+          <provider editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_new_wall.xml">
           <provider selected="true" editor-type-id="android-designer2" />
           <provider editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/EditCommunityWall.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="171">
+              <caret line="155" column="29" selection-start-line="155" selection-start-column="29" selection-end-line="155" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/NewWall.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="222">
+              <caret line="144" column="29" selection-start-line="144" selection-start-column="29" selection-end-line="144" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/NewWallCommunity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="102">
+              <caret line="145" column="29" selection-start-line="145" selection-start-column="29" selection-end-line="145" selection-end-column="29" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/EditWall.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="18">
+              <caret line="156" column="29" selection-start-line="156" selection-start-column="29" selection-end-line="156" selection-end-column="29" />
+            </state>
+          </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -99,63 +190,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="253">
               <caret line="274" column="75" selection-start-line="274" selection-start-column="75" selection-end-line="274" selection-end-column="75" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/CommunityWallAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="134" column="55" selection-start-line="134" selection-start-column="55" selection-end-line="134" selection-end-column="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/res/layout/friend_suggestion_design.xml">
-          <provider selected="true" editor-type-id="android-designer2" />
-          <provider editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_community_wall.xml">
-          <provider selected="true" editor-type-id="android-designer2" />
-          <provider editor-type-id="text-editor" />
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/NewReport.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="61">
-              <caret line="81" selection-start-line="81" selection-end-line="81" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Fragments/CommunityWallFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="538">
-              <caret line="295" column="59" selection-start-line="295" selection-start-column="59" selection-end-line="295" selection-end-column="59" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/PetInfo.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="317">
-              <caret line="179" column="38" selection-start-line="179" selection-start-column="38" selection-end-line="179" selection-end-column="38" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/PetsContainer.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="39" column="41" selection-start-line="39" selection-start-column="41" selection-end-line="39" selection-end-column="41" />
             </state>
           </provider>
         </entry>
@@ -180,6 +214,8 @@
       <find>set</find>
       <find>setimage</find>
       <find>option</find>
+      <find>image</find>
+      <find>getima</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -200,15 +236,12 @@
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/PetsContainer.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/comment_design.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/PantallaLogSign.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/EditWall.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/Fragments/HomeWallFragment.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/PetAdapters.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/Models/CommunityWallModel.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/Models/WallModel.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/WallAdapter.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/wall_design.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/ForumInfo.java" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/EditCommunityWall.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_edit_wall.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_edit_event.xml" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_edit_pet.xml" />
@@ -225,10 +258,15 @@
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/PetInfo.java" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/EditPet.java" />
         <option value="$PROJECT_DIR$/src/main/AndroidManifest.xml" />
-        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/CommunityWallAdapter.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_community_wall.xml" />
         <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/PantallaSignUp.java" />
         <option value="$PROJECT_DIR$/src/main/res/layout/activity_wall.xml" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/NewWall.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/NewWallCommunity.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/EditWall.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/EditCommunityWall.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/CommunityWallAdapter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/WallAdapter.java" />
       </list>
     </option>
   </component>
@@ -299,7 +337,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="device.picker.selection" value="67f332540205" />
+    <property name="device.picker.selection" value="a3a7e9d7" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../Git/bin/git.exe" />
     <property name="settings.editor.selected.configurable" value="vcs.Git" />
   </component>
@@ -410,7 +448,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.23253968" />
+      <window_info content_ui="combo" id="Project" order="1" visible="true" weight="0.23253968" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -422,8 +460,8 @@
       <window_info anchor="bottom" id="TODO" order="1" />
       <window_info anchor="bottom" id="Terminal" order="2" weight="0.3289689" />
       <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
-      <window_info anchor="bottom" id="Build" order="4" weight="0.34715822" />
-      <window_info anchor="bottom" id="Run" order="5" visible="true" weight="0.40706605" />
+      <window_info active="true" anchor="bottom" id="Build" order="4" visible="true" weight="0.34715822" />
+      <window_info anchor="bottom" id="Run" order="5" weight="0.2626728" />
       <window_info anchor="bottom" id="Logcat" order="6" weight="0.32872504" />
       <window_info anchor="bottom" id="Android Profiler" order="7" />
       <window_info anchor="bottom" id="Debug" order="8" />
@@ -438,22 +476,6 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/event_map_window.xml">
-      <provider editor-type-id="text-editor" />
-      <provider selected="true" editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/event_window_info.xml">
-      <provider editor-type-id="text-editor" />
-      <provider selected="true" editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_edit_profile.xml">
-      <provider editor-type-id="text-editor" />
-      <provider selected="true" editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_interest_sites.xml">
-      <provider editor-type-id="text-editor" />
-      <provider selected="true" editor-type-id="android-designer2" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragment_my_friend_requests.xml">
       <provider editor-type-id="text-editor" />
       <provider selected="true" editor-type-id="android-designer2" />
@@ -475,10 +497,6 @@
       <provider selected="true" editor-type-id="android-designer2" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/fragments_my_pets_list.xml">
-      <provider editor-type-id="text-editor" />
-      <provider selected="true" editor-type-id="android-designer2" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/res/layout/wall_design.xml">
       <provider editor-type-id="text-editor" />
       <provider selected="true" editor-type-id="android-designer2" />
     </entry>
@@ -584,13 +602,6 @@
       <provider editor-type-id="text-editor" />
       <provider selected="true" editor-type-id="android-designer2" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/NewWall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1121">
-          <caret line="75" column="5" lean-forward="true" selection-start-line="75" selection-start-column="5" selection-end-line="75" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/EventAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-291">
@@ -602,13 +613,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-2090">
           <caret line="40" column="13" selection-start-line="40" selection-start-column="13" selection-end-line="40" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/EditCommunityWall.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="65" column="15" selection-start-line="65" selection-start-column="15" selection-end-line="65" selection-end-column="15" />
         </state>
       </provider>
     </entry>
@@ -709,13 +713,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/CommunityWallAdapter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="134" column="55" selection-start-line="134" selection-start-column="55" selection-end-line="134" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/friend_suggestion_design.xml">
       <provider editor-type-id="text-editor" />
       <provider selected="true" editor-type-id="android-designer2" />
@@ -738,6 +735,90 @@
     <entry file="file://$PROJECT_DIR$/src/main/res/layout/activity_new_wall.xml">
       <provider editor-type-id="text-editor" />
       <provider selected="true" editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/NewWall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="144" column="29" selection-start-line="144" selection-start-column="29" selection-end-line="144" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/NewWallCommunity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="145" column="29" selection-start-line="145" selection-start-column="29" selection-end-line="145" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/EditWall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="156" column="29" selection-start-line="156" selection-start-column="29" selection-end-line="156" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/EditProfile.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-3145">
+          <caret line="31" column="13" selection-start-line="31" selection-start-column="13" selection-end-line="31" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/EditCommunityWall.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="155" column="29" selection-start-line="155" selection-start-column="29" selection-end-line="155" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/res/layout/wall_design.xml">
+      <provider editor-type-id="text-editor" />
+      <provider selected="true" editor-type-id="android-designer2" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/CommunityWallAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1094">
+          <caret line="536" column="16" selection-start-line="536" selection-start-column="16" selection-end-line="536" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/example/PETBook/Adapters/WallAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="97" column="8" selection-start-line="97" selection-start-column="8" selection-end-line="97" selection-end-column="8" />
+          <folding>
+            <element signature="e#4600#5428#0" expanded="true" />
+            <element signature="e#4913#5370#0" expanded="true" />
+            <element signature="e#5369#5370#0" expanded="true" />
+            <element signature="e#5427#5428#0" expanded="true" />
+            <element signature="method#like#0;class#WallAdapter#0" />
+            <element signature="e#10853#11811#0" expanded="true" />
+            <element signature="e#11810#11811#0" expanded="true" />
+            <element signature="method#unlike#0;class#WallAdapter#0" />
+            <element signature="e#12103#12889#0" expanded="true" />
+            <element signature="e#12888#12889#0" expanded="true" />
+            <element signature="method#fav#0;class#WallAdapter#0" />
+            <element signature="e#13184#13927#0" expanded="true" />
+            <element signature="e#13926#13927#0" expanded="true" />
+            <element signature="method#unfav#0;class#WallAdapter#0" />
+            <element signature="e#14134#14814#0" expanded="true" />
+            <element signature="e#14813#14814#0" expanded="true" />
+            <element signature="method#crearFechaActual#0;class#WallAdapter#0" />
+            <element signature="method#retweet#0;class#WallAdapter#0" />
+            <element signature="e#15190#20412#0" expanded="true" />
+            <element signature="e#15434#20288#0" expanded="true" />
+            <element signature="e#15915#20194#0" expanded="true" />
+            <element signature="e#18148#19725#0" expanded="true" />
+            <element signature="e#19724#19725#0" expanded="true" />
+            <element signature="e#20193#20194#0" expanded="true" />
+            <element signature="e#20287#20288#0" expanded="true" />
+            <element signature="e#20411#20412#0" expanded="true" />
+            <element signature="method#unretweet#0;class#WallAdapter#0" />
+            <element signature="e#20631#21366#0" expanded="true" />
+            <element signature="e#21365#21366#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
     </entry>
   </component>
 </project>
