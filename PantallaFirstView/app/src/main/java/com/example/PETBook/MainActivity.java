@@ -33,7 +33,7 @@ import com.example.PETBook.Fragments.SearchUsersFragment;
 import com.example.pantallafirstview.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, CommunityWallFragment.OnFragmentInteractionListener, WallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
+        implements NavigationView.OnNavigationItemSelectedListener,  CommunityWallFragment.OnFragmentInteractionListener, WallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
                             , MyEventsFragment.OnFragmentInteractionListener, ReportsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener, SearchUsersFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener, InterestSitesFragment.OnFragmentInteractionListener {
 
 
@@ -197,6 +197,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
             this.getIntent().putExtra("fragment","pets");
+            this.getIntent().putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
             fragmentSeleccionado = true;
         }else if (id == R.id.nav_reports) {
             myFragment = new ReportsFragment();

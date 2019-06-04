@@ -1,5 +1,7 @@
 package com.example.PETBook.Fragments;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -65,6 +67,11 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
     private ImageView imatgeEmptyPets;
     private TextView emptyPetsText;
     private TextView emptyPetsTryThis;
+    private String userToShow;
+    private FloatingActionButton addPet;
+    private TextView emptyPetsFriends;
+    private ImageView emptyPetsFriendsIcon;
+
 
     public MyPetsFragment() {
         // Required empty public constructor
@@ -100,24 +107,50 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
         email.replace("@", "%40");
         return email;
     }
+    public void recibirDatos(){
+        Bundle datosRecibidos =((Activity)this.getContext()).getIntent().getExtras();
+        if(datosRecibidos != null && !datosRecibidos.getSerializable("petsUser").toString().isEmpty()) {
+            userToShow = datosRecibidos.getSerializable("petsUser").toString();
+            System.out.println( "NAME PROFILE: " + datosRecibidos.getSerializable("petsUser"));
+        }
+    }
+
+    @SuppressLint("RestrictedApi")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+        recibirDatos();
 
         MyView =  inflater.inflate(R.layout.activity_pets, container, false);
         spinner=(ProgressBar)MyView.findViewById(R.id.progressBar);
         emptyPetsText = MyView.findViewById(R.id.emptyPets);
         emptyPetsTryThis = MyView.findViewById(R.id.emptyPets2);
         imatgeEmptyPets = MyView.findViewById(R.id.imageEmptyPets);
+        addPet = MyView.findViewById(R.id.addPet);
+        emptyPetsFriendsIcon = MyView.findViewById(R.id.emptyIconPetFriends);
+        emptyPetsFriends = MyView.findViewById(R.id.friendsPetEmpty);
         // Set tittle to the fragment
-        getActivity().setTitle("My pets");
 
-        SingletonUsuario su = SingletonUsuario.getInstance();
-        String us = su.getEmail();
+        if(userToShow.equals(SingletonUsuario.getInstance().getEmail())){
+            getActivity().setTitle("My pets");
+            /*emptyPetsText.setVisibility(View.VISIBLE);
+            emptyPetsTryThis.setVisibility(View.VISIBLE);
+            imatgeEmptyPets.setVisibility(View.VISIBLE);*/
+            addPet.setVisibility(View.VISIBLE);
+        }
+        else {
+            getActivity().setTitle("Pets");
+            emptyPetsText.setVisibility(View.INVISIBLE);
+            emptyPetsTryThis.setVisibility(View.INVISIBLE);
+            imatgeEmptyPets.setVisibility(View.INVISIBLE);
+            addPet.setVisibility(View.INVISIBLE);
+        }
+
+
         Conexion con = new Conexion(MyPetsFragment.this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLPetsByUser/" + emailToURL(us),"GET", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getALLPetsByUser/" + userToShow,"GET", null);
 
 
         lista = MyView.findViewById(R.id.list_pets);
@@ -128,11 +161,12 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
                 PetModel petmodel = pets.get(position);
                 Intent intent = new Intent(getActivity(), PetInfo.class);
                 intent.putExtra("pet", petmodel);
+                intent.putExtra("petsUser", userToShow);
                 startActivity(intent);
             }
         });
-        FloatingActionButton fab = MyView.findViewById(R.id.addPet);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        addPet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), NewPet.class);
@@ -203,7 +237,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
                     petModel.setEdad(jsonObjectHijo.getInt("edad"));
                     petModel.setColor(jsonObjectHijo.getString("color"));
                     if (jsonObjectHijo.has("foto"))
-                    petModel.setFoto(jsonObjectHijo.getString("foto"));
+                        petModel.setFoto(jsonObjectHijo.getString("foto"));
 
                     pets.add(petModel);
                     System.out.println("Aqui llego");
@@ -214,18 +248,30 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
 
 
                 }
-                if(pets.size() == 0 ){
-                    System.out.println("Aqui llego 2");
-                    emptyPetsTryThis.setVisibility(View.VISIBLE);
-                    emptyPetsText.setVisibility(View.VISIBLE);
-                    imatgeEmptyPets.setVisibility(View.VISIBLE);
-                }
-                else {
-                    emptyPetsTryThis.setVisibility(View.INVISIBLE);
-                    emptyPetsText.setVisibility(View.INVISIBLE);
-                    imatgeEmptyPets.setVisibility(View.INVISIBLE);
-                }
-                spinner.setVisibility(View.GONE);
+
+                    if (pets.size() == 0 && userToShow.equals(SingletonUsuario.getInstance().getEmail())) {
+                        emptyPetsTryThis.setVisibility(View.VISIBLE);
+                        emptyPetsText.setVisibility(View.VISIBLE);
+                        imatgeEmptyPets.setVisibility(View.VISIBLE);
+                        emptyPetsFriendsIcon.setVisibility(View.INVISIBLE);
+                        emptyPetsFriends.setVisibility(View.INVISIBLE);
+                    } else if(pets.size() == 0 && !userToShow.equals(SingletonUsuario.getInstance().getEmail())) {
+                        emptyPetsTryThis.setVisibility(View.INVISIBLE);
+                        emptyPetsText.setVisibility(View.INVISIBLE);
+                        imatgeEmptyPets.setVisibility(View.INVISIBLE);
+                        emptyPetsFriendsIcon.setVisibility(View.VISIBLE);
+                        emptyPetsFriends.setVisibility(View.VISIBLE);
+                    }
+                    else if(pets.size() != 0){
+                        emptyPetsTryThis.setVisibility(View.INVISIBLE);
+                        emptyPetsText.setVisibility(View.INVISIBLE);
+                        imatgeEmptyPets.setVisibility(View.INVISIBLE);
+                        emptyPetsFriendsIcon.setVisibility(View.INVISIBLE);
+                        emptyPetsFriends.setVisibility(View.INVISIBLE);
+                    }
+
+                    spinner.setVisibility(View.GONE);
+
             }
             else{
                 spinner.setVisibility(View.GONE);

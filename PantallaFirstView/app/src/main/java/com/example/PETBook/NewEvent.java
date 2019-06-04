@@ -18,6 +18,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
     int select_location;
     private Boolean isAddress = false;
     private Boolean AddressSelected = false;
+    private ImageButton searchLocation;
 
     private Button addEventButton;
     private RadioButton publicButton;
@@ -78,11 +80,9 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
             @Override
             public void afterTextChanged(Editable s) {
-                String a = s.toString().replace(" ", "+");
-                isAddress = true;
-                llamadaServidor(a);
             }
         });
+
         editLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -92,6 +92,15 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
                 System.out.println(positionsAddress[position]);
                 finalpositionAddress = positionsAddress[position];
                 AddressSelected = true;
+            }
+        });
+
+        searchLocation = (ImageButton) findViewById(R.id.searchLocation);
+        searchLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isAddress = true;
+                llamadaServidor(editLocation.getText().toString().replace(" ", "+"));
             }
         });
 
@@ -134,6 +143,7 @@ public class NewEvent extends AppCompatActivity implements AsyncResult {
 
     public void setAdapter(){
         editLocation.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item,addressNames));
+        editLocation.setText(editLocation.getText().toString());
     }
 
     DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {

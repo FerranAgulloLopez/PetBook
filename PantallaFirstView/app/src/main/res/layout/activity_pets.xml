@@ -10,9 +10,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
 
-        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -36,6 +34,20 @@
                 app:layout_constraintVertical_bias="0.706" />
 
 
+            <TextView
+                android:id="@+id/friendsPetEmpty"
+                android:layout_width="321dp"
+                android:layout_height="68dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="136dp"
+                android:layout_marginEnd="8dp"
+                android:text="Looks like your friend doesn't have any pet yet"
+                android:textSize="18sp"
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/list_pets" />
+
             <ListView
                 android:id="@+id/list_pets"
                 android:layout_width="351dp"
@@ -48,7 +60,9 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"></ListView>
+                app:layout_constraintTop_toTopOf="parent">
+
+            </ListView>
 
 
             <android.support.design.widget.FloatingActionButton
@@ -107,18 +121,34 @@
                 android:layout_width="133dp"
                 android:layout_height="132dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginTop="43dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
-                android:background="#F9F9F9"
+                android:background="@android:drawable/screen_background_dark_transparent"
                 android:src="@drawable/petempty"
                 android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/list_pets"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/emptyPets2"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <ImageView
+                android:id="@+id/emptyIconPetFriends"
+                android:layout_width="243dp"
+                android:layout_height="250dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="23dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/sad"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/addPet"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.526"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/friendsPetEmpty"
                 app:layout_constraintVertical_bias="0.0" />
         </android.support.constraint.ConstraintLayout>
 
