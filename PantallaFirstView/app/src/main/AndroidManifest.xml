@@ -57,7 +57,7 @@
         <activity
             android:name="com.example.PETBook.PetInfo"
             android:label="@string/title_activity_pets"
-            android:parentActivityName="com.example.PETBook.MainActivity">
+            android:parentActivityName="com.example.PETBook.PetsContainer">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.PETBook.MainActivity" />

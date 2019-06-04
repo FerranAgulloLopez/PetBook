@@ -176,6 +176,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
                 Toast.makeText(this, "Pet successfully deleted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("fragment", "pets");
+                intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");
