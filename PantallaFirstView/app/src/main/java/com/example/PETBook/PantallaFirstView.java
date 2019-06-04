@@ -24,6 +24,7 @@ public class PantallaFirstView extends AppCompatActivity {
         String login = sharedPreferences.getString("login",null);
         String token = sharedPreferences.getString("jwtToken", null);
         Boolean mailConfirmed = sharedPreferences.getBoolean("mailConfirmed",  false);
+        Boolean admin = sharedPreferences.getBoolean("admin",  false);
 
 
         /*
@@ -33,6 +34,8 @@ public class PantallaFirstView extends AppCompatActivity {
             SingletonUsuario user = SingletonUsuario.getInstance();
             SingletonUsuario.setEmail(login);
             user.setMailConfirmed(mailConfirmed);
+            user.setAdmin(admin);
+
             if (token != null) user.setJwtToken(token);
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("fragment","home");
