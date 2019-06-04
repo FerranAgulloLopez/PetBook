@@ -144,12 +144,13 @@ public class ReportsFragment extends Fragment implements AsyncResult {
 
                     // TODO mirar resputa server y coger datos
 
-                    /*
-                    reportModel.setEmailUserReporting(jsonObjectHijo.getString());
-                    reportModel.setEmailUserReported(jsonObjectHijo.getString());
+
+                    reportModel.setId(jsonObjectHijo.getString("id"));
+                    reportModel.setEmailUserReporting(jsonObjectHijo.getString("creatorMail"));
+                    reportModel.setEmailUserReported(jsonObjectHijo.getString("suspectMail"));
                     reportModel.setDescription(jsonObjectHijo.getString("description"));
                     reportModel.setCreationDate(jsonObjectHijo.getString("creationDate"));
-                    */
+
 
                     reports.add(reportModel);
 

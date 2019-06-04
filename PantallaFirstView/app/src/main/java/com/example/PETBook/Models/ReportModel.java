@@ -2,6 +2,7 @@ package com.example.PETBook.Models;
 
 public class ReportModel {
 
+    private String id;
     private String emailUserReported;
     private String emailUserReporting;
     private String description;
@@ -39,5 +40,13 @@ public class ReportModel {
 
     public void setCreationDate(String creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

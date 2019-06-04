@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.example.PETBook.Fragments.CommunityWallFragment;
 import com.example.PETBook.Fragments.ForumFragment;
+import com.example.PETBook.Fragments.ReportsFragment;
 import com.example.PETBook.Fragments.WallFragment;
 import com.example.PETBook.Fragments.InterestSitesFragment;
 import com.example.PETBook.Fragments.MyCalendarFragment;
@@ -30,7 +31,7 @@ import com.example.pantallafirstview.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, CommunityWallFragment.OnFragmentInteractionListener, WallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
-                            , MyEventsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener, SearchUsersFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener, InterestSitesFragment.OnFragmentInteractionListener {
+                            , MyEventsFragment.OnFragmentInteractionListener, ReportsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener, SearchUsersFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener, InterestSitesFragment.OnFragmentInteractionListener {
 
 
 
@@ -67,6 +68,10 @@ public class MainActivity extends AppCompatActivity
             String fragType = recibir.getString("fragment");
             if(fragType.equals("events")) {
                 fragment = new MyEventsFragment();
+                getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
+            }
+            else if(fragType.equals("reports")) {
+                fragment = new ReportsFragment();
                 getSupportFragmentManager().beginTransaction().replace(R.id.content_main, fragment).commit();
             }
             else if(fragType.equals("pets")) {
@@ -170,6 +175,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
             this.getIntent().putExtra("fragment","pets");
+            fragmentSeleccionado = true;
+        }else if (id == R.id.nav_reports) {
+            myFragment = new ReportsFragment();
+            this.getIntent().putExtra("fragment","reports");
             fragmentSeleccionado = true;
         } else if (id == R.id.nav_searchUsers) {
             myFragment = new SearchUsersFragment();
