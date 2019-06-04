@@ -79,11 +79,6 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
 
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        dialog.dismiss();
-    }
 
     void sendReport(String text) {
 
@@ -136,9 +131,11 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
+                            /*
                             Intent i = new Intent(NewReport.this, MainActivity.class);
                             i.putExtra("fragment", "home");
                             startActivity(i);
+                            */
                             finish();
                         }
                     });
