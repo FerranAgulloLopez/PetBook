@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import com.example.PETBook.Models.ReportModel;
 import com.example.pantallafirstview.R;
@@ -47,10 +48,17 @@ public class ReportsAdapter extends BaseAdapter {
         }
 
 
-        /*
+        TextView userRepored = (TextView) convertView.findViewById(R.id.userReported);
+        TextView userReporting = (TextView) convertView.findViewById(R.id.userWhoReported);
+        TextView hora = (TextView) convertView.findViewById(R.id.horaReport);
+        TextView textReport = (TextView) convertView.findViewById(R.id.textReport);
 
-        TODO Rellenar repor_design
-         */
+        userReporting.setText(reportsList.get(position).getEmailUserReporting());
+        userRepored.setText(reportsList.get(position).getEmailUserReported());
+        hora.setText(reportsList.get(position).getCreationDate());
+        textReport.setText(reportsList.get(position).getDescription());
+
+
 
 
         return convertView;
