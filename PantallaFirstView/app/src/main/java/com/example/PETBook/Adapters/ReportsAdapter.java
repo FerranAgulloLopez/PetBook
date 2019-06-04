@@ -1,15 +1,21 @@
 package com.example.PETBook.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.PETBook.Conexion;
+import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Fragments.ReportsFragment;
 import com.example.PETBook.Models.ReportModel;
 import com.example.pantallafirstview.R;
 
+import org.json.JSONObject;
 import org.ocpsoft.prettytime.PrettyTime;
 
 import java.text.DateFormat;
@@ -19,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class ReportsAdapter extends BaseAdapter {
+public class ReportsAdapter extends BaseAdapter implements AsyncResult {
 
     private Context context;
     private ArrayList<ReportModel> reportsList;
@@ -47,7 +53,7 @@ public class ReportsAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if(convertView == null){
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
@@ -78,6 +84,63 @@ public class ReportsAdapter extends BaseAdapter {
         PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
         hora.setText(prettyTime.format(dateNew));
 
+
+        final String[] options = {"Report user", "Reject report"};
+        final View finalConvertView = convertView;
+
+
+        View.OnClickListener  listener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(finalConvertView.getContext());
+
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        System.out.println("numero which:" + which);
+                        if (which == 0) {
+                            reportUser(position);
+                        } else if (which == 1) {
+                            discardReport(position);
+                        }
+                    }
+                });
+                builder.show();
+            }
+
+
+
+        };
+
+        userRepored.setOnClickListener(listener);
+        userReporting.setOnClickListener(listener);
+        textReport.setOnClickListener(listener);
+
+
+
+
         return convertView;
+    }
+
+    private void discardReport(int position) {
+
+        String idReport = reportsList.get(position).getId();
+
+        Conexion con = new Conexion(ReportsAdapter.this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/reports/" + idReport + "/voteApprove","POST", null);
+    }
+
+    private void reportUser(int position) {
+
+        String idReport = reportsList.get(position).getId();
+
+        Conexion con = new Conexion(ReportsAdapter.this);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/reports/" + idReport + "/voteReject","POST", null);
+    }
+
+    @Override
+    public void OnprocessFinish(JSONObject output) {
+
+
     }
 }

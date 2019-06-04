@@ -151,8 +151,13 @@ public class ReportsFragment extends Fragment implements AsyncResult {
                     reportModel.setDescription(jsonObjectHijo.getString("description"));
                     reportModel.setCreationDate(jsonObjectHijo.getString("creationDate"));
 
+                    Integer approvedVotes = jsonObjectHijo.getJSONArray("approved").length();
+                    Integer rejectedVotes = jsonObjectHijo.getJSONArray("rejected").length();
 
-                    reports.add(reportModel);
+
+                    if (rejectedVotes == 0 && approvedVotes == 0) {
+                        reports.add(reportModel);
+                    }
 
                     reportsAdapter = new ReportsAdapter(getActivity(), reports);
 

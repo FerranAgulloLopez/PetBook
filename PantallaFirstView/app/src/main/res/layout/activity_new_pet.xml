@@ -33,7 +33,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
-            android:src="@android:drawable/ic_menu_report_image"
+            android:src="@drawable/dog_default"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.324"
             app:layout_constraintStart_toStartOf="parent"
