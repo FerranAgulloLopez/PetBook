@@ -165,8 +165,9 @@ public class CalendarActivity extends AppCompatActivity
           Intent intent = new Intent(getApplicationContext(), EventInfo.class);
           intent.putExtra("event", eventoSeleccionado);
           intent.putExtra("eventType", "Participant");
+          intent.putExtra("preWindow", "calendar");
 
-          startActivity(intent);
+            startActivity(intent);
         }
       });
     }
