@@ -39,7 +39,6 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
     public void signUp(View view) {
         Intent intent = new Intent(this, PantallaSignUp.class);
         startActivity(intent);
-        finish();
     }
 
     public void comprovarConta(View view) {

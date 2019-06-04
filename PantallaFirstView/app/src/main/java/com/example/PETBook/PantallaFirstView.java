@@ -37,7 +37,7 @@ public class PantallaFirstView extends AppCompatActivity {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("fragment","home");
             startActivity(intent);
-            finish();
+            //finish();
         }
 
     }

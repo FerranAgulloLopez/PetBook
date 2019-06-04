@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity
                             editor.remove("mailConfirmed");
                             editor.commit();
 
-                            finish();
+                            finishAffinity();
                         }
                     })
                     .setNegativeButton("No",new DialogInterface.OnClickListener(){

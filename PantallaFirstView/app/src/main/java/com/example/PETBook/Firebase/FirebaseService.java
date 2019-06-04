@@ -105,15 +105,19 @@ public class FirebaseService extends FirebaseMessagingService implements AsyncRe
 
 
         SingletonUsuario user = SingletonUsuario.getInstance();
+        String email = user.getEmail();
 
-        Conexion con = new Conexion(this);
-        JSONObject jsonToSend = new JSONObject();
-        try {
-            jsonToSend.accumulate("token", token);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (email != null) {
+
+            Conexion con = new Conexion(this);
+            JSONObject jsonToSend = new JSONObject();
+            try {
+                jsonToSend.accumulate("token", token);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            con.execute("http://10.4.41.146:9999/ServerRESTAPI/token/" + user.getEmail(), "POST", jsonToSend.toString());
         }
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/token/" + user.getEmail(), "POST", jsonToSend.toString());
 
     }
 
