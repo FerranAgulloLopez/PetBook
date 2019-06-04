@@ -79,7 +79,6 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.8.0' //Recortar Imagen Descargar Imagen
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.1.Final'
 
-
     // CALENDAR
     implementation 'com.github.prolificinteractive:material-calendarview:2.0.0'
     implementation 'com.jakewharton:butterknife:8.5.1'
