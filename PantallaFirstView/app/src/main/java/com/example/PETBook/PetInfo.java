@@ -1,5 +1,6 @@
 package com.example.PETBook;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,7 +44,9 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
     private ImageButton deleteButton;
     private PetModel petModel;
     private ImageView fotoPet;
-    /**
+    private String userToShow;
+
+   /**
      * Returns a new instance of this fragment for the given section
      * number.
      */ protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +64,14 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
 
 
 
+
         editButton = (ImageButton) findViewById(R.id.EditPetButton);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PetInfo.this,EditPet.class);
                 intent.putExtra("pet", petModel);
+                intent.putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
                 startActivity(intent);
             }
         });
@@ -101,11 +106,21 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
 
         recibirDatos();
 
+        if(userToShow.equals(SingletonUsuario.getInstance().getEmail())){
+            editButton.setVisibility(View.VISIBLE);
+            deleteButton.setVisibility(View.VISIBLE);
+        }
+        else{
+            editButton.setVisibility(View.INVISIBLE);
+            deleteButton.setVisibility(View.INVISIBLE);
+        }
+
     }
     private void recibirDatos(){
         Bundle datosRecibidos = this.getIntent().getExtras();
         if(datosRecibidos != null) {
             petModel = (PetModel) datosRecibidos.getSerializable("pet");
+            userToShow = datosRecibidos.getSerializable("petsUser").toString();
             id = petModel.getId();
             name = petModel.getNombre();
             age = petModel.getEdad().toString();
@@ -143,23 +158,23 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
             textAge.setText("Age: " + age);
             System.out.print("textAge bien");
 
-            textSex.setText(sex);
+            textSex.setText("Sex: " + sex);
             System.out.print("textSex bien");
 
-            textType.setText(type);
+            textType.setText("Specie: " + type);
             System.out.print("textType bien");
 
-            textColor.setText(color);
+            textColor.setText("Color: " + color);
             System.out.print("textColor bien");
 
-            textRace.setText(race);
+            textRace.setText("Race: " + race);
             System.out.print("textRace bien");
 
-            txtDescription.setText(description);
+            txtDescription.setText("Description: " + description);
             System.out.print("textDescription bien");
 
         }
-    }
+     }
     private void deletePet(){
         SingletonUsuario su = SingletonUsuario.getInstance();
         String user = su.getEmail();

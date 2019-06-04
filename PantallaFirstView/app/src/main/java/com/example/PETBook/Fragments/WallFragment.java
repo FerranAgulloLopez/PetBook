@@ -27,6 +27,7 @@ import com.example.PETBook.Adapters.WallAdapter;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.EditProfile;
+import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.EventModel;
 import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.PetModel;
@@ -86,6 +87,7 @@ public class WallFragment extends Fragment implements AsyncResult {
     private FloatingActionButton imageButtonAdd;
     private ImageView helpIcon;
     private TextView helpText;
+    private ImageView petsUser;
 
     private String profileUser;
 
@@ -129,7 +131,7 @@ public class WallFragment extends Fragment implements AsyncResult {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "RestrictedApi"})
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -152,7 +154,7 @@ public class WallFragment extends Fragment implements AsyncResult {
         helpText = MyView.findViewById(R.id.help1Post);
         buttonEditProfile = MyView.findViewById(R.id.editProfileButton);
         reportButton = MyView.findViewById(R.id.reportButton);
-
+        petsUser = MyView.findViewById(R.id.petsUser);
 
 
         if (profileUser.equals(SingletonUsuario.getInstance().getEmail())) {
@@ -161,6 +163,8 @@ public class WallFragment extends Fragment implements AsyncResult {
             //imageButtonAdd.setVisibility(View.VISIBLE);
             buttonEditProfile.setVisibility(View.VISIBLE);
             reportButton.setVisibility(View.INVISIBLE);
+            petsUser.setVisibility(View.INVISIBLE);
+
         }
         else {
             getActivity().setTitle("Profile");
@@ -170,13 +174,22 @@ public class WallFragment extends Fragment implements AsyncResult {
             helpIcon.setVisibility(View.INVISIBLE);
             helpText.setVisibility(View.INVISIBLE);
             reportButton.setVisibility(View.VISIBLE);
+            petsUser.setVisibility(View.VISIBLE);
 
 
         }
 
         mostrarPerfil();
 
-
+        petsUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.putExtra("fragment", "pets");
+                intent.putExtra("petsUser",profileUser);
+                startActivity(intent);
+            }
+        });
         reportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -308,6 +321,7 @@ public class WallFragment extends Fragment implements AsyncResult {
         void onFragmentInteraction(Uri uri);
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void OnprocessFinish(JSONObject json) {
         spinner.setVisibility(View.VISIBLE);

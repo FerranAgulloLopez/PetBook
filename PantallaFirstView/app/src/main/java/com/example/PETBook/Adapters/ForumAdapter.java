@@ -119,7 +119,7 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
                     String image = output.getString("image");
                     Bitmap profileImage = imagenConversor.StringToBitMap(image);
                     imageProfile.setImageBitmap(profileImage);
-                    user.setProfilePicture(profileImage);
+                    //user.setProfilePicture(profileImage);
                 }   else if (output.getInt("code")==404) { // user does not have profile picture
                     imageProfile.setImageResource(R.drawable.troymcclure);
                 } else {

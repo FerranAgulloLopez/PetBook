@@ -1,5 +1,6 @@
 package com.example.PETBook;
 
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -11,8 +12,10 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.PETBook.Fragments.CommunityWallFragment;
@@ -30,10 +33,8 @@ import com.example.PETBook.Fragments.SearchUsersFragment;
 import com.example.pantallafirstview.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, CommunityWallFragment.OnFragmentInteractionListener, WallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
+        implements NavigationView.OnNavigationItemSelectedListener,  CommunityWallFragment.OnFragmentInteractionListener, WallFragment.OnFragmentInteractionListener, MyCalendarFragment.OnFragmentInteractionListener
                             , MyEventsFragment.OnFragmentInteractionListener, ReportsFragment.OnFragmentInteractionListener, MyPetsFragment.OnFragmentInteractionListener, MyPostsFragment.OnFragmentInteractionListener, MyFriendsFragment.OnFragmentInteractionListener, SearchUsersFragment.OnFragmentInteractionListener, ForumFragment.OnFragmentInteractionListener, InterestSitesFragment.OnFragmentInteractionListener {
-
-
 
 
 
@@ -53,12 +54,6 @@ public class MainActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
-
-/*
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-*/
 
 
         // First fragment to display (de momento WallFragment -perfil-)
@@ -120,6 +115,18 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+
+        /*
+        Check si es admin para mostrar reports
+         */
+        SingletonUsuario user = SingletonUsuario.getInstance();
+        if (user.isAdmin()) {
+            Menu navMenu = navigationView.getMenu();
+            navMenu.findItem(R.id.nav_reports).setVisible(true);
+        }
+
+
+
     }
 
     @Override
@@ -135,7 +142,22 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
+
         getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        if (menu.findItem(R.id.nav_reports) != null) {
+
+            if (SingletonUsuario.getInstance().isAdmin())
+                menu.findItem(R.id.nav_reports).setVisible(true);
+        }
         return true;
     }
 
@@ -175,6 +197,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_pets) {
             myFragment = new MyPetsFragment();
             this.getIntent().putExtra("fragment","pets");
+            this.getIntent().putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
             fragmentSeleccionado = true;
         }else if (id == R.id.nav_reports) {
             myFragment = new ReportsFragment();
@@ -256,5 +279,7 @@ public class MainActivity extends AppCompatActivity
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+
 
 }

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Fragments.WallFragment;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONException;
@@ -131,11 +132,12 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.cancel();
-                            /*
+
                             Intent i = new Intent(NewReport.this, MainActivity.class);
-                            i.putExtra("fragment", "home");
+                            i.putExtra("fragment","myprofile");
+                            i.putExtra("nameProfile", emailReportado);
                             startActivity(i);
-                            */
+
                             finish();
                         }
                     });
