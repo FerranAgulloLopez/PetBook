@@ -154,6 +154,7 @@ public class EditWall extends AppCompatActivity implements AsyncResult {
                     intent.putExtra("fragment", "myprofile");
                     intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                     startActivity(intent);
+                    finish();
                 }
                 else{
                     Toast.makeText(this, "There was a problem during the process", Toast.LENGTH_SHORT).show();
