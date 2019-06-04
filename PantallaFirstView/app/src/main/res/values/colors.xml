@@ -5,4 +5,9 @@
     <color name="colorAccent">#840705</color>
     <color name="colorProjecte">#840705</color>
 
+    <!-- Sycroniazacio calendario -->
+    <color name="title_background">#ff355689</color>
+    <color name="title_text">#ffffffff</color>
+    <color name="title_separator">#40ffffff</color>
+
 </resources>

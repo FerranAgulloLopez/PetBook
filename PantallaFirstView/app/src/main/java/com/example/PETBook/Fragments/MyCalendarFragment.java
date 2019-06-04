@@ -12,8 +12,10 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.example.PETBook.Calendar.CalendarActivity;
+import com.example.PETBook.Calendar.CalendarSync;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.MainActivity;
@@ -135,7 +137,7 @@ public class MyCalendarFragment extends Fragment  implements OnDateSelectedListe
         MyView =  inflater.inflate(R.layout.activity_my_calendar, container, false);
 
 
-        FloatingActionButton fab = MyView.findViewById(R.id.gotoActivityCalendar); // Provisional
+        Button fab = MyView.findViewById(R.id.gotoActivityCalendar); // Provisional
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -143,6 +145,17 @@ public class MyCalendarFragment extends Fragment  implements OnDateSelectedListe
                 startActivity(intent);
             }
         });
+
+
+        Button fab2 = MyView.findViewById(R.id.Sync); // Provisional
+        fab2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CalendarSync.class);
+                startActivity(intent);
+            }
+        });
+
 
         return MyView;
 

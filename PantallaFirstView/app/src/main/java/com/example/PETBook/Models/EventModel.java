@@ -5,6 +5,7 @@ import android.util.Pair;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class EventModel implements Serializable {
 
@@ -15,11 +16,13 @@ public class EventModel implements Serializable {
     private Double longitude;
     private String fecha;
     private org.threeten.bp.LocalDate localDate;
+    private int hour; // [0,23]
     private String titulo;
     private String descripcion;
     private boolean publico;
     private ArrayList<String> miembros;
     private String creador;
+    private Date date;
 
     public void setId(Integer id) { this.id = id; }
 
@@ -78,5 +81,21 @@ public class EventModel implements Serializable {
 
     public void setLocalDate(org.threeten.bp.LocalDate localDate) {
         this.localDate = localDate;
+    }
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }
