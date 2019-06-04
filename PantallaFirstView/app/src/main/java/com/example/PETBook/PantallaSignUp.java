@@ -283,8 +283,15 @@ public class PantallaSignUp extends AppCompatActivity implements AsyncResult {
                 int response = output.getInt("code");
                 if (response == 200) {
                     Toast.makeText(this, "Registrado correctamente", Toast.LENGTH_SHORT).show();
+
+                    // enviar correo de confirmacion al registrarse
+                    Conexion conexion = new Conexion(PantallaSignUp.this);
+                    conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/SendConfirmationEmail", "POST", null);
+
                     Intent intent = new Intent(this, PantallaLogSign.class);
                     startActivity(intent);
+
+
                 } else {
                     Toast.makeText(this, "ERRORRRRRR", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(this, PantallaLogSign.class);

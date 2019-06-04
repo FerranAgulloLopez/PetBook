@@ -114,6 +114,8 @@ public class MyCalendarFragment extends Fragment  implements OnDateSelectedListe
                             conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/SendConfirmationEmail", "POST", null);
                             dialog.cancel();
                             Intent i = new Intent(getActivity(), MainActivity.class);
+                            i.putExtra("fragment","myprofile");
+                            i.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                             startActivity(i);
                             getActivity().finish();
                         }
@@ -124,6 +126,8 @@ public class MyCalendarFragment extends Fragment  implements OnDateSelectedListe
                             dialog.cancel();
 
                             Intent i = new Intent(getActivity(), MainActivity.class);
+                            i.putExtra("fragment","myprofile");
+                            i.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                             startActivity(i);
                             getActivity().finish();
                         }

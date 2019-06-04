@@ -113,6 +113,8 @@ public class ForumFragment extends Fragment implements AsyncResult {
                             conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/SendConfirmationEmail", "POST", null);
                             dialog.cancel();
                             Intent i = new Intent(getActivity(), MainActivity.class);
+                            i.putExtra("fragment","myprofile");
+                            i.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                             startActivity(i);
                             getActivity().finish();
                         }
@@ -123,6 +125,8 @@ public class ForumFragment extends Fragment implements AsyncResult {
                             dialog.cancel();
 
                             Intent i = new Intent(getActivity(), MainActivity.class);
+                            i.putExtra("fragment","myprofile");
+                            i.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                             startActivity(i);
                             getActivity().finish();
                         }
