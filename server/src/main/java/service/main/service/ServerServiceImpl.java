@@ -202,6 +202,7 @@ public class ServerServiceImpl implements ServerService {
             DataWallPostAux aux = new DataWallPostAux(wallPost, user.getEmail(), user.getFoto());
             result.add(aux);
         }
+        Collections.sort(result, Collections.reverseOrder());
         return result;
     }
 
