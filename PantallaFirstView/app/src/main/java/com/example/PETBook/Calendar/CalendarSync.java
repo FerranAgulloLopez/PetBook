@@ -94,7 +94,7 @@ public final class CalendarSync extends Activity implements AsyncResult {
 
     com.google.api.services.calendar.Calendar client;
 
-    private static final String SUMMARY = "PETBOOK2"; // Nombre del calendario
+    public static final String SUMMARY = "PETBOOK"; // Nombre del calendario
 
 
     int numAsyncTasks;
@@ -291,9 +291,9 @@ public final class CalendarSync extends Activity implements AsyncResult {
                         */
 
                         Calendar calendar = new Calendar();
-                        if (existe) calendar.setId(googleCalendarID);
+                        //if (existe) calendar.setId(googleCalendarID);
                         calendar.setSummary(SUMMARY); // Titulo
-                        new AsyncInsertCalendar(this, calendar, existe, events).execute();
+                        new AsyncInsertCalendar(this, calendar, existe, events, googleCalendarID).execute();
 
 
                         System.out.println(json.getInt("code") + " Id Google Calendar bien conseguido\n");

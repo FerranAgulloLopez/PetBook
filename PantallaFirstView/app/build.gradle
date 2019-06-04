@@ -93,12 +93,12 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
 
     // SINCRONIZACION
-    /*implementation ('com.google.android.gms:play-services:12.0.1') {// Quiza problema aqui
+    implementation ('com.google.android.gms:play-services:12.0.1') {// Quiza problema aqui
         exclude group: "com.android.support"
 
     }
-    */
-    implementation 'com.google.android.gms:play-services:12.0.1'
+
+    //implementation 'com.google.android.gms:play-services:12.0.1' //
 
 
     //implementation 'com.google.apis:google-api-services-calendar:v3-rev119-1.19.1'

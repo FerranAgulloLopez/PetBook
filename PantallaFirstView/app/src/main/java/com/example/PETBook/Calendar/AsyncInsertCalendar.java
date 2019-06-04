@@ -47,16 +47,22 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
   private String TIME_ZONE = "Europe/Madrid";
 
 
-  AsyncInsertCalendar(CalendarSync calendarSync, Calendar entry, boolean existe, List<EventModel> events) {
+  AsyncInsertCalendar(CalendarSync calendarSync, Calendar entry, boolean existe, List<EventModel> events, String googleCalendarID) {
     super(calendarSync);
     this.calendarSync = calendarSync;
     this.entry = entry;
     this.existe = existe;
     this.events = events;
+
+    calendarId = googleCalendarID;
   }
 
   @Override
   protected void doInBackground() throws IOException {
+
+
+    System.out.println("\n Existe: " + existe + "\n");
+
     if(! existe) {
       Calendar calendar = client.calendars().insert(entry).setFields(CalendarInfo.FIELDS).execute();
       calendarId = calendar.getId();
@@ -64,10 +70,43 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
       // [ Hacer conexion para guardar el ID en el server ]
       Conexion con = new Conexion(calendarSync);
       calendarSync.llamada = calendarSync.CONEXION_UpdateCalendarId;
-      con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/UpdateCalendarId/" + calendarId, "GET", null);
+      con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/UpdateCalendarId/" + calendarId, "PUT", null);
     }
     else {
-      calendarId = entry.getId();
+      System.out.println(".\nd\n Existe: " + existe + ".\n,");
+
+      /*    System.out.println("\n Existe: " + existe + "\n");
+
+      try { // POr si acaso el usuario elimino su calendario. Para que no pete
+        client.calendars().delete(calendarId);
+      } catch (Exception e) {
+      }
+
+
+*/
+        // COMO BORRAR UN CALENDARIO ¿?
+      try {
+        client.calendars().delete(calendarId).execute();
+      } catch (Exception e) {
+        // No hacer nada
+      }
+      //client.calendarList().delete(calendarId);
+      Calendar calendar = client.calendars().insert(entry).setFields(CalendarInfo.FIELDS).execute();
+      calendarId = calendar.getId();
+
+      System.out.println(".\nd\n Existe: " + calendarId + ".\n,");
+
+        // Crear i borrar
+
+      //client.calendars().delete(calendarId).execute();
+
+      //AbstractGoogleClientRequest.execute()
+
+      // [ Hacer conexion para guardar el ID en el server ]
+      Conexion con = new Conexion(calendarSync);
+      calendarSync.llamada = calendarSync.CONEXION_UpdateCalendarId;
+      con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/UpdateCalendarId/" + calendarId, "PUT", null);
+
     }
 
 
@@ -132,7 +171,7 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
 
       try {
         System.out.printf("calendarId: %s\n", calendarId);
-        event = client.events().insert(calendarId, event).execute();
+        event = client.events().insert(calendarId, event).execute(); // QUiza usar path, a ver que sale
       } catch (IOException e) {
         e.printStackTrace();
       }
