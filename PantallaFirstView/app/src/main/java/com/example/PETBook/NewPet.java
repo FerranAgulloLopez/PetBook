@@ -178,6 +178,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
 
                 Intent intent = new Intent(NewPet.this, MainActivity.class);
                 intent.putExtra("fragment","pets");
+                intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
                 startActivity(intent);
             }
             else{
