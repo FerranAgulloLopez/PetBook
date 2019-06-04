@@ -78,7 +78,9 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(EditEvent.this,EventInfo.class);
                                 intent.putExtra("event",event);
+                                intent.putExtra("preWindow", getIntent().getExtras().getString("preWindow"));
                                 startActivity(intent);
+                                finish();
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -152,7 +154,9 @@ public class EditEvent extends AppCompatActivity implements AsyncResult {
                 Intent intent = new Intent(EditEvent.this, EventInfo.class);
                 intent.putExtra("event",event);
                 intent.putExtra("eventType", "Creator");
+                intent.putExtra("preWindow", getIntent().getExtras().getString("preWindow"));
                 startActivity(intent);
+                finish();
             }
         } catch (Exception e){
             e.printStackTrace();

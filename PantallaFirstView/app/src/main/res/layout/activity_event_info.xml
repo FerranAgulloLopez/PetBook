@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingTop="10dp">
+            android:paddingTop="20dp">
 
             <TextView
                 android:id="@+id/textTitulo"
@@ -209,5 +209,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/cancel_event" />
+
+    <ImageButton
+        android:id="@+id/leaveEventInfo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@color/common_google_signin_btn_text_dark_default"
+        android:tint="@color/colorAccent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cancel" />
 
 </android.support.constraint.ConstraintLayout>

@@ -30,8 +30,10 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
     private TextView txtCreador;
     private ImageButton editButton;
     private ImageButton deleteButton;
+    private ImageButton closeEvent;
     private Boolean creator;
     private Boolean participa;
+    private String preWindow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                 public void onClick(View v) {
                     Intent intent = new Intent(EventInfo.this, EditEvent.class);
                     intent.putExtra("event", event);
+                    intent.putExtra("preWindow", getIntent().getExtras().getString("preWindow"));
                     startActivity(intent);
                 }
             });
@@ -102,6 +105,26 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             deleteButton.setEnabled(false);
             deleteButton.setVisibility(View.INVISIBLE);
         }
+
+        closeEvent = (ImageButton) findViewById(R.id.leaveEventInfo);
+        closeEvent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(preWindow.equals("maps")){
+                    Intent intent = new Intent(EventInfo.this, MainActivity.class);
+                    intent.putExtra("fragment", "map");
+                    startActivity(intent);
+                    finish();
+                }
+                else {
+                    Intent intent = new Intent(EventInfo.this,MainActivity.class);
+                    intent.putExtra("fragment", "events");
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        });
+
     }
 
     public void botonParticipar(){
@@ -152,6 +175,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
             txtHora.setText(Fecha[1]);
             txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size()));
             txtCreador.setText("Created by: " + event.getCreador());
+            preWindow = datosRecibidos.getString("preWindow");
         }
     }
 
