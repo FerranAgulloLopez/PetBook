@@ -10,7 +10,14 @@ import android.widget.TextView;
 import com.example.PETBook.Models.ReportModel;
 import com.example.pantallafirstview.R;
 
+import org.ocpsoft.prettytime.PrettyTime;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class ReportsAdapter extends BaseAdapter {
 
@@ -55,11 +62,21 @@ public class ReportsAdapter extends BaseAdapter {
 
         userReporting.setText(reportsList.get(position).getEmailUserReporting());
         userRepored.setText(reportsList.get(position).getEmailUserReported());
-        hora.setText(reportsList.get(position).getCreationDate());
         textReport.setText(reportsList.get(position).getDescription());
 
 
 
+       String fechaString =  reportsList.get(position).getCreationDate();
+
+        Date dateNew = null;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+        try {
+            dateNew = format.parse(fechaString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
+        hora.setText(prettyTime.format(dateNew));
 
         return convertView;
     }

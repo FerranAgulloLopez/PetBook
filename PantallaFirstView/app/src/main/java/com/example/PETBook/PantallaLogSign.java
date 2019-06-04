@@ -67,15 +67,21 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
             if (json.getInt("code") == 200) {
                 String success = json.getString("success");
                 Boolean mailconfirmed = json.getBoolean("mailconfirmed");
+                Boolean admin = json.getBoolean("admin");
                 if(success.equals("true")) {
 
                     SingletonUsuario user = SingletonUsuario.getInstance();
                     SingletonUsuario.setEmail(usuari.getText().toString());
                     user.setMailConfirmed(mailconfirmed);
+                    user.setAdmin(admin);
+
                     String token = json.getString("token");
                     user.setJwtToken(token);
                     user.setProfilePicture(null);
                     System.out.println("Ha ido bien, codigo 200");
+
+
+
 
                     /*
                     Register that the user has logged in
@@ -85,6 +91,7 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                     editor.putString("login", usuari.getText().toString());
                     editor.putString("jwtToken", token);
                     editor.putBoolean("mailConfirmed", mailconfirmed);
+                    editor.putBoolean("admin", admin);
                     editor.commit();
 
 

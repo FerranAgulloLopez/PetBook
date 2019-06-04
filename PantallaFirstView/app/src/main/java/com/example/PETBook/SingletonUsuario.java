@@ -8,6 +8,7 @@ public class SingletonUsuario {
     private String jwtToken;
     private Bitmap profilePicture;
     private Boolean mailConfirmed;
+    private Boolean admin;
 
     private static SingletonUsuario ourInstance;
 
@@ -54,5 +55,11 @@ public class SingletonUsuario {
         System.out.println("!!!MAILCONFIRMED: " + mailConfirmed);
     }
 
+    public Boolean isAdmin() {
+        return admin;
+    }
 
+    public void setAdmin(Boolean admin) {
+        this.admin = admin;
+    }
 }
