@@ -47,6 +47,12 @@ public class ReportsAdapter extends BaseAdapter {
         }
 
 
+        /*
+
+        TODO Rellenar repor_design
+         */
+
+
         return convertView;
     }
 }

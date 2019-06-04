@@ -83,7 +83,7 @@ public class ReportsFragment extends Fragment implements AsyncResult {
                              Bundle savedInstanceState) {
 
 
-        MyView =  inflater.inflate(R.layout.activity_pets, container, false);
+        MyView =  inflater.inflate(R.layout.fragment_reports, container, false);
         lista = MyView.findViewById(R.id.list_reports);
         // Set tittle to the fragment
         getActivity().setTitle("Reports");
