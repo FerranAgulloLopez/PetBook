@@ -178,6 +178,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
 
                 Intent intent = new Intent(EditPet.this, PetInfo.class);
                 intent.putExtra("pet",petModel);
+                intent.putExtra("fragment", "pets");
                 startActivity(intent);
             }
         } catch (Exception e){

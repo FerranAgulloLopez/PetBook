@@ -119,16 +119,21 @@ public class CommunityWallAdapter extends BaseAdapter implements AsyncResult {
         else {
             option.setVisibility(View.INVISIBLE);
         }
-        if(CommunityWallList.get(position).isRetweeted() &&  creatorMail.getText().toString().equals(SingletonUsuario.getInstance().getEmail())){
+        if(CommunityWallList.get(position).isRetweeted() && creatorMail.getText().toString().equals(SingletonUsuario.getInstance().getEmail())){
             isRetweeted.setVisibility(View.VISIBLE);
             retweetedThisIcon.setVisibility(View.VISIBLE);
             option.setVisibility(View.INVISIBLE);
         }
-        else {
+        else if(!CommunityWallList.get(position).isRetweeted() && creatorMail.getText().toString().equals(SingletonUsuario.getInstance().getEmail())){
             isRetweeted.setVisibility(View.GONE);
             retweetedThisIcon.setVisibility(View.GONE);
             option.setVisibility(View.VISIBLE);
 
+        }
+        else {
+            isRetweeted.setVisibility(View.GONE);
+            retweetedThisIcon.setVisibility(View.GONE);
+            option.setVisibility(View.INVISIBLE);
         }
 
 
