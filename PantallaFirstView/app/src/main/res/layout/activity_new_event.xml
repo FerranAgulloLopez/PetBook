@@ -55,22 +55,44 @@
                 android:layout_width="match_parent"
                 android:layout_height="127dp"
                 android:ems="10"
-                android:hint="@android:string/fingerprint_icon_content_description"
+                android:hint="Description"
                 android:inputType="textMultiLine"
                 android:textColorHint="@android:color/darker_gray" />
 
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/Localizacion"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <AutoCompleteTextView
-                    android:id="@+id/edLoc"
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/Localizacion"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Write and select location *" />
-            </android.support.design.widget.TextInputLayout>
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="64dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/edLoc"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Write and select location *" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <ImageButton
+                    android:id="@+id/searchLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/Localizacion"
+                    app:layout_constraintTop_toTopOf="@+id/Localizacion"
+                    app:srcCompat="@drawable/places_ic_search" />
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/Fecha"
