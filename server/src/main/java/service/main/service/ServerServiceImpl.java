@@ -244,7 +244,28 @@ public class ServerServiceImpl implements ServerService {
         if (!dataWallPostUpdate.inputCorrect()) throw new BadRequestException("The input data is not well formed");
         wallPost.setDescription(dataWallPostUpdate.getDescription());
         wallPost.setUpdateDate(dataWallPostUpdate.getUpdateDate());
-        userRepository.save(user);
+        boolean found = false;
+        if (wallPost.getRetweets().size() > 0) {
+            for (String mail: wallPost.getRetweets()) {
+                User aux_user;
+                try {
+                    aux_user = auxGetUser(mail);
+                } catch (NotFoundException e) {
+                    throw new InternalServerErrorException("Error while loading user from the database");
+                }
+                WallPost retweet = aux_user.findRetweet(wallPostId);
+                if (retweet == null) throw new InternalServerErrorException("Error while updating database");
+                retweet.setDescription(dataWallPostUpdate.getDescription());
+                userRepository.save(aux_user);
+                if (aux_user.getEmail().equals(user.getEmail())) {
+                    found = true;
+                    WallPost aux_wallpost = aux_user.findWallPost(wallPostId);
+                    aux_wallpost.setDescription(dataWallPostUpdate.getDescription());
+                    aux_wallpost.setUpdateDate(dataWallPostUpdate.getUpdateDate());
+                }
+            }
+        }
+        if(!found) userRepository.save(user);
     }
 
     @Override
