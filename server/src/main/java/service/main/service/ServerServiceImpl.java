@@ -97,7 +97,7 @@ public class ServerServiceImpl implements ServerService {
         User user = auxGetUser(email);
         boolean result = user.checkPassword(password);
         generateJWTToken(user, response);
-        return new OutLogin(result,user.isMailconfirmed());
+        return new OutLogin(result,user.isMailconfirmed(),user.userAdmin());
     }
 
     @Override
@@ -1086,8 +1086,10 @@ public class ServerServiceImpl implements ServerService {
                 String password = user_json.getString("password");
                 String postalCode = user_json.getString("postalCode");
                 String secondName = user_json.getString("secondName");
+                boolean admin = user_json.getBoolean("admin");
                 //String foto = user_json.getString("foto");
                 User user = new User(email, password, firstName, secondName, dateOfBirth, postalCode, mailconfirmed);
+                if (admin) user.setRole("ADMIN");
                 userRepository.save(user);
             }
 

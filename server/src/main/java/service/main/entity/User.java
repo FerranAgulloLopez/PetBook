@@ -178,6 +178,10 @@ public class User implements Serializable {
 
     public void setGoogleCalendarID(String googleCalendarID) { this.googleCalendarID = googleCalendarID; }
 
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     /*
     Friends
      */
@@ -268,6 +272,10 @@ public class User implements Serializable {
             }
         }
         return result;
+    }
+
+    public boolean userAdmin() {
+        return role.equals("ADMIN");
     }
 
 
