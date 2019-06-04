@@ -44,6 +44,7 @@ public class PetAdapters extends BaseAdapter {
             return petList.size();
         return 0;
     }
+
     public long getItemId(int position) {
         return position;
     }

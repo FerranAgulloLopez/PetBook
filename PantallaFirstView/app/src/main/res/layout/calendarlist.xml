@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout style="@style/TitleBar" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/icon_desc"
+            android:src="@drawable/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/app_name"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse" />
+
+        <View style="@style/TitleBarSpring" />
+
+        <ProgressBar
+            android:id="@+id/title_refresh_progress"
+            style="@style/TitleBarProgressIndicator"
+            android:visibility="gone" />
+
+        <ImageView
+            style="@style/TitleBarSeparator"
+            android:contentDescription="@string/title_separator_desc" />
+
+        <ImageButton
+            style="@style/TitleBarAction"
+            android:contentDescription="@string/description_add"
+            android:keepScreenOn="true"
+            android:onClick="onAddClick"
+            android:src="@drawable/ic_title_add" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vuelve para atras para continuar usando la aplicacion.\n [La rueda de arriba a la derecha indica el progresso}\n  [Aqui iria un mensaje de bien sincronizado]" />
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="112dp"
+        android:layout_height="210dp" />
+
+</LinearLayout>
