@@ -3,6 +3,7 @@ package com.example.PETBook.Adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Fragments.ReportsFragment;
+import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.ReportModel;
 import com.example.pantallafirstview.R;
 
@@ -103,6 +105,10 @@ public class ReportsAdapter extends BaseAdapter implements AsyncResult {
                         } else if (which == 1) {
                             discardReport(position);
                         }
+                        ReportsAdapter.this.notifyDataSetChanged();
+                        Intent intent = new Intent(context, MainActivity.class);
+                        context.startActivity(intent);
+
                     }
                 });
                 builder.show();
