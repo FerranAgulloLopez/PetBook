@@ -81,8 +81,12 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
         Button deleteButton = (Button) convertView.findViewById(R.id.deleteButton);
         tipoConexion = "imageFriend";
 
-        Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + friend.getEmail(), "GET", null);
+        imageProfile.setImageBitmap(Image.getInstance().StringToBitMap(friend.getFotoPerfil()));
+
+
+        //Conexion con = new Conexion(this);
+        //con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + friend.getEmail(), "GET", null);
+
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

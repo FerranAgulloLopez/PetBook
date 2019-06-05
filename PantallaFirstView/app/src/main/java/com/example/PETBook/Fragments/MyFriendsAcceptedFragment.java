@@ -65,6 +65,7 @@ public class MyFriendsAcceptedFragment extends Fragment implements AsyncResult {
                     e.setName(friend.getString("firstName"));
                     e.setSurnames(friend.getString("secondName"));
                     e.setEmail (friend.getString("email"));
+                    e.setFotoPerfil(friend.getString("foto"));
                     model.add(e);
                 }
                 friendsUser = new FriendAdapter(getActivity(), model);
