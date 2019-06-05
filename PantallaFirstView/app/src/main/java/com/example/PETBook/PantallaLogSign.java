@@ -69,7 +69,8 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                 Boolean mailconfirmed = json.getBoolean("mailconfirmed");
                 Boolean admin = json.getBoolean("admin");
                 if(success.equals("true")) {
-
+                    userWrong.setVisibility(View.INVISIBLE);
+                    passWrong.setVisibility(View.INVISIBLE);
                     SingletonUsuario user = SingletonUsuario.getInstance();
                     SingletonUsuario.setEmail(usuari.getText().toString());
                     user.setMailConfirmed(mailconfirmed);

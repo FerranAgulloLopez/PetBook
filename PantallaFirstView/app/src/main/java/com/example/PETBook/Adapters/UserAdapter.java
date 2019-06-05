@@ -118,14 +118,19 @@ public class UserAdapter extends BaseAdapter implements AsyncResult {
                     Toast.makeText(this.context, "You already sent a friend request to this user", Toast.LENGTH_SHORT).show();
                     System.out.println("codigo3: " + response);
                 }
-                else if( response == 403) {
+                else if( response == 401) {
                     Toast.makeText(this.context, "You are already a friend of this user", Toast.LENGTH_SHORT).show();
                     System.out.println("codigo4: " + response);
-                }else {
-                    Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
-                    System.out.println("codigo2: " + response);
+                }else if(response==400) {
+                    Toast.makeText(this.context, "You can't add yourself as a friend :)", Toast.LENGTH_SHORT).show();
                 }
-            } else if(tipoConexion.equals("imageFriend")) {
+                else {
+                        Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                        System.out.println("codigo2: " + response);
+                    }
+                }
+
+             else if(tipoConexion.equals("imageFriend")) {
                 try {
 
                     if (response == 200) {

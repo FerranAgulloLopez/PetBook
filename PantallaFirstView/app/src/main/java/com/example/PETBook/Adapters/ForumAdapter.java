@@ -72,7 +72,7 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
             convertView = layoutInflater.inflate(R.layout.forum_design,null);
         }
         TextView nombreForum = (TextView) convertView.findViewById(R.id.nombreForo);
-        numComments = (TextView) convertView.findViewById(R.id.numberMessagesForum);
+        //numComments = (TextView) convertView.findViewById(R.id.numberMessagesForum);
         TextView dataCreacionForum = (TextView) convertView.findViewById(R.id.dataCreacioForum);
         TextView creadorForum = (TextView) convertView.findViewById(R.id.nombreCreadorForum);
         TextView descriptionForum = (TextView) convertView.findViewById(R.id.descriptionForum);
@@ -87,7 +87,7 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
 
         //System.out.println(forumList.get(position).getComments().get(position).getTamaño());
         String fechaString = forumList.get(position).getCreationDate();
-        Date dateNew = null;
+        /*Date dateNew = null;
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         try {
             dateNew = format.parse(fechaString);
@@ -96,7 +96,8 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
         }
         PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
         dataCreacionForum.setText(prettyTime.format(dateNew));
-
+*/
+        dataCreacionForum.setText(forumList.get(position).getCreationDate());
         creadorForum.setText(forumList.get(position).getCreatorMail());
         descriptionForum.setText(forumList.get(position).getDescription());
         return convertView;
