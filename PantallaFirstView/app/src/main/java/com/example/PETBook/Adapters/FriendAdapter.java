@@ -21,6 +21,7 @@ import com.example.PETBook.Chat;
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
 import com.example.PETBook.Fragments.MyFriendsFragment;
+import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.FriendModel;
 import com.example.PETBook.Models.FriendSuggestionModel;
 import com.example.PETBook.Models.Image;
@@ -77,6 +78,16 @@ public class FriendAdapter extends BaseAdapter implements AsyncResult {
         TextView inputFullName = (TextView) convertView.findViewById(R.id.fullNameInput);
 
         inputFullName.setText(user_friends.get(position).getName() +" " + user_friends.get(position).getSurnames());
+        inputFullName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigoo", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("fragment", "myprofile");
+                intent.putExtra("nameProfile", friend.getEmail());
+                context.startActivity(intent);
+            }
+        });
         imageProfile = (CircleImageView) convertView.findViewById(R.id.imageView);
         Button deleteButton = (Button) convertView.findViewById(R.id.deleteButton);
         tipoConexion = "imageFriend";

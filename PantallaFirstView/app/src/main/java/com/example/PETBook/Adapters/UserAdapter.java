@@ -88,23 +88,35 @@ public class UserAdapter extends BaseAdapter implements AsyncResult {
     }
 
     public void OnprocessFinish(JSONObject output) {
+        int response = 0;
         if (output != null) {
+            try {
+                 response = output.getInt("code");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             if(tipoConexion.equals("sendRequest")) {
-                try {
-                    int response = output.getInt("code");
-                    if (response == 200) {
-                        /*users.remove(friendSuggestion);
-                        FriendSuggestionAdapter.this.notifyDataSetChanged();*/
-                        Toast.makeText(this.context, "Friend request sent successfully.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+                if (response == 200) {
+                    /*users.remove(friendSuggestion);
+                    FriendSuggestionAdapter.this.notifyDataSetChanged();*/
+                    Toast.makeText(this.context, "Friend request sent successfully.", Toast.LENGTH_SHORT).show();
+                    System.out.println("codigo1: " + response);
+                }
+                else if(response == 402){
+                    Toast.makeText(this.context, "You already sent a friend request to this user", Toast.LENGTH_SHORT).show();
+                    System.out.println("codigo3: " + response);
+                }
+                else if( response == 403) {
+                    Toast.makeText(this.context, "You are already a friend of this user", Toast.LENGTH_SHORT).show();
+                    System.out.println("codigo4: " + response);
+                }else {
+                    Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                    System.out.println("codigo2: " + response);
                 }
             } else if(tipoConexion.equals("imageFriend")) {
                 try {
-                    int response = output.getInt("code");
+
                     if (response == 200) {
                         // convert string to bitmap
                         SingletonUsuario user = SingletonUsuario.getInstance();
@@ -113,7 +125,7 @@ public class UserAdapter extends BaseAdapter implements AsyncResult {
                         Bitmap profileImage = imagenConversor.StringToBitMap(image);
                         imageProfile.setImageBitmap(profileImage);
                         //user.setProfilePicture(profileImage);
-                    }   else if (output.getInt("code")==404) { // user does not have profile picture
+                    }   else if (response==404) { // user does not have profile picture
                         imageProfile.setImageResource(R.drawable.troymcclure);
                     } else {
                         Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
