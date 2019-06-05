@@ -118,7 +118,6 @@ public class ReportsAdapter extends BaseAdapter implements AsyncResult {
 
 
 
-
         return convertView;
     }
 
@@ -127,7 +126,7 @@ public class ReportsAdapter extends BaseAdapter implements AsyncResult {
         String idReport = reportsList.get(position).getId();
 
         Conexion con = new Conexion(ReportsAdapter.this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/reports/" + idReport + "/voteApprove","POST", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/reports/" + idReport + "/voteReject","POST", null);
     }
 
     private void reportUser(int position) {
@@ -135,7 +134,7 @@ public class ReportsAdapter extends BaseAdapter implements AsyncResult {
         String idReport = reportsList.get(position).getId();
 
         Conexion con = new Conexion(ReportsAdapter.this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/reports/" + idReport + "/voteReject","POST", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/reports/" + idReport + "/voteApprove","POST", null);
     }
 
     @Override

@@ -114,13 +114,13 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
         try {
             if(output.getInt("code")==200) {
 
-                Toast.makeText(this, "Report donde successfully", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Report donde successfully", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(NewReport.this, MainActivity.class);
                 intent.putExtra("fragment","myprofile");
                 startActivity(intent);
             }
             else{
-                Toast.makeText(this, "Report donde successfully", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Report donde successfully", Toast.LENGTH_SHORT).show();
             }
 
 
