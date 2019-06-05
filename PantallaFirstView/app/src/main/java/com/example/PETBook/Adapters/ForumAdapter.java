@@ -72,7 +72,7 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
             convertView = layoutInflater.inflate(R.layout.forum_design,null);
         }
         TextView nombreForum = (TextView) convertView.findViewById(R.id.nombreForo);
-        numComments = (TextView) convertView.findViewById(R.id.numberMessagesForum);
+        //numComments = (TextView) convertView.findViewById(R.id.numberMessagesForum);
         TextView dataCreacionForum = (TextView) convertView.findViewById(R.id.dataCreacioForum);
         TextView creadorForum = (TextView) convertView.findViewById(R.id.nombreCreadorForum);
         TextView descriptionForum = (TextView) convertView.findViewById(R.id.descriptionForum);
@@ -97,6 +97,7 @@ public class ForumAdapter extends BaseAdapter implements AsyncResult {
         PrettyTime prettyTime = new PrettyTime(new Date(), Locale.getDefault());
         dataCreacionForum.setText(prettyTime.format(dateNew));
 
+        //dataCreacionForum.setText(forumList.get(position).getCreationDate());
         creadorForum.setText(forumList.get(position).getCreatorMail());
         descriptionForum.setText(forumList.get(position).getDescription());
         return convertView;

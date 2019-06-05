@@ -70,7 +70,8 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                 Boolean admin = json.getBoolean("admin");
                 Boolean banned = json.getBoolean("banned");
                 if(success.equals("true")) {
-
+                    userWrong.setVisibility(View.INVISIBLE);
+                    passWrong.setVisibility(View.INVISIBLE);
                     SingletonUsuario user = SingletonUsuario.getInstance();
                     SingletonUsuario.setEmail(usuari.getText().toString());
                     user.setMailConfirmed(mailconfirmed);
@@ -125,8 +126,8 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                 }
             }
             else{
-                userWrong.setVisibility(View.VISIBLE);
-                passWrong.setVisibility(View.INVISIBLE);
+               /* userWrong.setVisibility(View.VISIBLE);
+                passWrong.setVisibility(View.INVISIBLE);*/
             }
         } catch (JSONException e) {
             e.printStackTrace();

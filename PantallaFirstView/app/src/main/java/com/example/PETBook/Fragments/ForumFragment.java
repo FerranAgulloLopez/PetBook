@@ -248,7 +248,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
                     JSONObject forum = jsonArray.getJSONObject(i);
                     ForumModel f = new ForumModel();
                     f.setIDForum(forum.getInt("id"));
-                    f.setCreationDate(transformacionFechaHora(forum.getString("creationDate")));
+                    f.setCreationDate(forum.getString("creationDate"));
                     f.setCreatorMail(forum.getString("creatorMail"));
                     f.setDescription(forum.getString("description"));
                     f.setTitle(forum.getString("title"));
@@ -257,7 +257,7 @@ public class ForumFragment extends Fragment implements AsyncResult {
                         JSONObject com = c.getJSONObject(j);
                         CommentForumModel cfm = new CommentForumModel();
                         cfm.setCreatorMail(com.getString("creatorMail"));
-                        cfm.setCreationDate(transformacionFechaHora(com.getString("creationDate")));
+                        cfm.setCreationDate(com.getString("creationDate"));
                         cfm.setDescription(com.getString("description"));
                         cfm.setIDComment(com.getInt("id"));
                         comments.add(cfm);
