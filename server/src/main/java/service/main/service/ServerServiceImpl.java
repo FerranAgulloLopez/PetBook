@@ -980,7 +980,7 @@ public class ServerServiceImpl implements ServerService {
         if (ban.getApproved().contains(userMail) || ban.getRejected().contains(userMail)) throw new BadRequestException("Is not possible to vote two times the same report");
         if (ban.isClosed()) throw new ForbiddenException("Is not possible to vote a closed report");
         ban.addApprovedVote(userMail);
-        if (ban.getApproved().size() >= 3) {
+        if (ban.getApproved().size() >= 1) {
             ban.setClosed(true);
             User user;
             try {
@@ -1002,7 +1002,7 @@ public class ServerServiceImpl implements ServerService {
         if (ban.getApproved().contains(userMail) || ban.getRejected().contains(userMail)) throw new BadRequestException("Is not possible to vote two times the same report");
         if (ban.isClosed()) throw new ForbiddenException("Is not possible to vote a closed report");
         ban.addRejectVote(userMail);
-        if (ban.getRejected().size() >= 3) {
+        if (ban.getRejected().size() >= 1) {
             ban.setClosed(true);
         }
         banRepository.save(ban);
