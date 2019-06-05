@@ -3,6 +3,7 @@ package com.example.PETBook.Adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.PETBook.Conexion;
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.MainActivity;
 import com.example.PETBook.Models.FriendRequestModel;
 import com.example.PETBook.Models.FriendSuggestionModel;
 import com.example.PETBook.Models.Image;
@@ -69,6 +71,17 @@ public class FriendSuggestionAdapter extends BaseAdapter implements AsyncResult 
         TextView inputFullName = (TextView) convertView.findViewById(R.id.fullNameInput);
 
         inputFullName.setText(user_friends_suggestions.get(position).getName() +" " + user_friends_suggestions.get(position).getSurnames());
+        inputFullName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(FriendRequestAdapter.this.context, "ver perfil amigoo", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("fragment", "myprofile");
+                intent.putExtra("nameProfile", friend.getEmail());
+                context.startActivity(intent);
+            }
+        });
+
         imageProfile = (CircleImageView) convertView.findViewById(R.id.imageView);
         Button addButton = (Button) convertView.findViewById(R.id.addButton);
         Button removeButton = (Button) convertView.findViewById(R.id.removeButton);
@@ -134,15 +147,24 @@ public class FriendSuggestionAdapter extends BaseAdapter implements AsyncResult 
             if(tipoConexion.equals("sendRequest")) {
                 try {
                     int response = output.getInt("code");
+                    System.out.println("codigo1: " + response);
                     if (response == 200) {
                         user_friends_suggestions.remove(friendSuggestion);
                         FriendSuggestionAdapter.this.notifyDataSetChanged();
                         Toast.makeText(this.context, "Friend request sent successfully.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this.context, "There was a problem during the process.", Toast.LENGTH_SHORT).show();
+                        System.out.println("codigo2: " + response);
+                    }
+                    else {
+                        Toast.makeText(this.context, "There was a problem during the process", Toast.LENGTH_SHORT).show();
+                        System.out.println("codigo5: " + response);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    try {
+                        System.out.println("codigo: " + output.getInt("code"));
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
                 }
             } else if(tipoConexion.equals("deleteSuggestion")) {
                 try {

@@ -155,17 +155,11 @@
                     android:text="Private" />
             </RadioGroup>
 
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
-                android:text="TextView" />
-
             <Button
                 android:id="@+id/addEventButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
                 android:background="@color/colorPrimaryDark"
                 android:text="Create event"
                 android:textColor="@android:color/background_light"

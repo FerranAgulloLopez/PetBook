@@ -73,16 +73,18 @@ public class Conexion extends AsyncTask<String, Void, JSONObject> {
 
             InputStream in = null;
             StringBuffer bf = new StringBuffer();
-            in = new BufferedInputStream(urlConnection.getInputStream());
+            if(nume == 200 || nume==201) {
+                in = new BufferedInputStream(urlConnection.getInputStream());
 
-            String response = parseResponse(in);
-            if(response.length() != 0){
-                Object json = new JSONTokener(response).nextValue();
-                if (json instanceof JSONArray) {
-                    JSONArray array = (JSONArray) json;
-                    result.accumulate("array", array);
-                } else if (json instanceof JSONObject) {
-                    result = (JSONObject) json;
+                String response = parseResponse(in);
+                if (response.length() != 0) {
+                    Object json = new JSONTokener(response).nextValue();
+                    if (json instanceof JSONArray) {
+                        JSONArray array = (JSONArray) json;
+                        result.accumulate("array", array);
+                    } else if (json instanceof JSONObject) {
+                        result = (JSONObject) json;
+                    }
                 }
             }
             result.put("code",nume);
