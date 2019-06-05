@@ -11,7 +11,20 @@
         tools:context="com.example.PETBook.EditEvent">
 
 
-            <TextView
+        <ImageView
+            android:id="@+id/imatge"
+            android:layout_width="336dp"
+            android:layout_height="118dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/dog_default"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.491"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
                 android:id="@+id/textViewTItle"
                 android:layout_width="356dp"
                 android:layout_height="wrap_content"
@@ -31,27 +44,25 @@
 
         <EditText
             android:id="@+id/editNamePet"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="181dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:ems="10"
             android:hint="Name"
             android:inputType="textPersonName"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintTop_toBottomOf="@+id/imatge" />
 
         <Spinner
             android:id="@+id/editSexPet"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:entries="@array/Sex"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.1"
@@ -60,13 +71,11 @@
 
         <Spinner
             android:id="@+id/editTypePet"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:entries="@array/Type"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.087"
@@ -75,13 +84,11 @@
 
         <EditText
             android:id="@+id/editRacePet"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:ems="10"
             android:hint="Race"
             android:inputType="textPersonName"
@@ -92,11 +99,11 @@
 
         <EditText
             android:id="@+id/editEdadPet"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="182dp"
+            android:layout_marginEnd="8dp"
             android:ems="10"
             android:hint="Age"
             android:inputType="number"
@@ -107,11 +114,11 @@
 
         <EditText
             android:id="@+id/editColorPet"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="181dp"
+            android:layout_marginEnd="8dp"
             android:ems="10"
             android:hint="Color"
             android:inputType="text"
@@ -122,11 +129,11 @@
 
         <EditText
             android:id="@+id/editDescriptionPet"
-            android:layout_width="315dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="17dp"
+            android:layout_marginEnd="8dp"
             android:ems="10"
             android:gravity="start|top"
             android:hint="Observations"
@@ -173,20 +180,6 @@
             app:layout_constraintTop_toBottomOf="@+id/editDescriptionPet"
             app:layout_constraintVertical_bias="1.0"
             app:srcCompat="@drawable/cancel" />
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="143dp"
-            android:layout_height="135dp"
-            android:layout_marginStart="83dp"
-            android:layout_marginLeft="83dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="185dp"
-            android:layout_marginRight="185dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTItle"
-            app:srcCompat="@drawable/addimage" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
