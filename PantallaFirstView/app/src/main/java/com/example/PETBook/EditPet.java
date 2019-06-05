@@ -3,19 +3,26 @@ package com.example.PETBook;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.PETBook.Controllers.AsyncResult;
+import com.example.PETBook.Models.Image;
 import com.example.PETBook.Models.PetModel;
 import com.example.pantallafirstview.R;
 
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 
 public class EditPet extends AppCompatActivity implements AsyncResult {
@@ -31,6 +38,8 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
     private ImageButton acceptEditPet;
     private ImageButton cancelEditPet;
     private String editedName;
+    private String fotoPet;
+    private ImageView imatgeEditPet;
 
 
     @Override
@@ -46,8 +55,15 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
         edad = (EditText) findViewById(R.id.editEdadPet);
         color = (EditText) findViewById(R.id.editColorPet);
         descripcion = (EditText) findViewById(R.id.editDescriptionPet);
+        imatgeEditPet = findViewById(R.id.imatgeEditPet);
 
-
+        imatgeEditPet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(i, 1);
+            }
+        });
         acceptEditPet = (ImageButton) findViewById(R.id.imageButtonAcceptEdit);
         acceptEditPet.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -144,6 +160,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
                 jsonToSend.accumulate("raza", race);
                 jsonToSend.accumulate("especie", esp);
                 jsonToSend.accumulate("sexo", sex);
+                jsonToSend.accumulate("foto", fotoPet);
 
                 System.out.print(jsonToSend);
             } catch (Exception e){
@@ -189,6 +206,27 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == 1) {
+                Uri returnUri = data.getData();
+                Bitmap bitmapImage = null;
+                try {
+                    bitmapImage = MediaStore.Images.Media.getBitmap(getContentResolver(), returnUri);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                imatgeEditPet.setImageBitmap(bitmapImage);
+
+                Image imageConversor = Image.getInstance();
+                fotoPet = imageConversor.BitmapToString(bitmapImage);
+
+            }
+        }
+
     }
 
 }

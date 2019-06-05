@@ -69,7 +69,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
                Intent intent = new Intent(PetInfo.this,MainActivity.class);
                intent.putExtra("fragment", "pets");
                intent.putExtra("pet", petModel);
-               intent.putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
+               intent.putExtra("petsUser",userToShow);
                startActivity(intent);
            }
        });

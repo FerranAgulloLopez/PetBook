@@ -33,6 +33,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
     private ImageButton closeEvent;
     private Boolean creator;
     private Boolean participa;
+    private Boolean participaba;
     private String preWindow;
 
     @Override
@@ -49,7 +50,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
         txtCreador = (TextView) findViewById(R.id.textCreador);
 
         recibirDatos();
-
+        participaba = event.getMiembros().contains(SingletonUsuario.getInstance().getEmail());
         editButton = (ImageButton) findViewById(R.id.EditPetButton);
         deleteButton = (ImageButton) findViewById(R.id.imageButtonDelete);
 
@@ -139,7 +140,10 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                     Conexion con = new Conexion(EventInfo.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/AddEventParticipant?eventId=" + event.getId() + "&participantMail=" + SingletonUsuario.getInstance().getEmail(), "POST", null);
                     botonNoParticipar();
-                    txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size() + 1));
+                    if(participaba){
+                        txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size()));
+                    }
+                    else txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size() + 1));
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -157,7 +161,10 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
                     Conexion con = new Conexion(EventInfo.this);
                     con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/DeleteEventParticipant?eventId=" + event.getId() + "&participantMail=" + SingletonUsuario.getInstance().getEmail(), "DELETE", null);
                     botonParticipar();
-                    txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size()));
+                    if(participaba){
+                        txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size() - 1));
+                    }
+                    else txtMiembros.setText(String.format("%d users joined the event",event.getMiembros().size()));
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -184,7 +191,7 @@ public class EventInfo extends AppCompatActivity implements AsyncResult {
 
     private void deleteEvent(){
         Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/DeleteEvent/eventId="+event.getId(), "DELETE", null);
+        con.execute("http://10.4.41.146:9999/ServerRESTAPI/events/DeleteEvent?eventId="+event.getId(), "DELETE", null);
     }
 
     @Override
