@@ -9,6 +9,7 @@ public class SingletonUsuario {
     private Bitmap profilePicture;
     private Boolean mailConfirmed;
     private Boolean admin;
+    private Boolean banned;
 
     private static SingletonUsuario ourInstance;
 
@@ -61,5 +62,13 @@ public class SingletonUsuario {
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public Boolean isBanned() {
+        return banned;
+    }
+
+    public void setBanned(Boolean banned) {
+        this.banned = banned;
     }
 }

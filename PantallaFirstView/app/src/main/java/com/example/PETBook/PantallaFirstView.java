@@ -25,6 +25,7 @@ public class PantallaFirstView extends AppCompatActivity {
         String token = sharedPreferences.getString("jwtToken", null);
         Boolean mailConfirmed = sharedPreferences.getBoolean("mailConfirmed",  false);
         Boolean admin = sharedPreferences.getBoolean("admin",  false);
+        Boolean banned = sharedPreferences.getBoolean("banned",  false);
 
 
         /*
@@ -35,6 +36,7 @@ public class PantallaFirstView extends AppCompatActivity {
             SingletonUsuario.setEmail(login);
             user.setMailConfirmed(mailConfirmed);
             user.setAdmin(admin);
+            user.setBanned(banned);
 
             if (token != null) user.setJwtToken(token);
             Intent intent = new Intent(this, MainActivity.class);

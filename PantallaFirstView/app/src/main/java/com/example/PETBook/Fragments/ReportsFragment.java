@@ -155,11 +155,10 @@ public class ReportsFragment extends Fragment implements AsyncResult {
                     Integer rejectedVotes = jsonObjectHijo.getJSONArray("rejected").length();
 
 
-                    /*
-                    if (rejectedVotes == 0 && approvedVotes == 0) {
-                        reports.add(reportModel);
-                    }
-                    */
+
+                    //if (rejectedVotes == 0 && approvedVotes == 0) {
+
+                    //}
 
                     reports.add(reportModel);
 

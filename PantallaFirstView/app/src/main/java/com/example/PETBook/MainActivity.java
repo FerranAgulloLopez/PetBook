@@ -248,6 +248,7 @@ public class MainActivity extends AppCompatActivity
                             editor.remove("login");
                             editor.remove("jwtToken");
                             editor.remove("mailConfirmed");
+                            editor.remove("banned");
                             editor.commit();
 
                             finishAffinity();

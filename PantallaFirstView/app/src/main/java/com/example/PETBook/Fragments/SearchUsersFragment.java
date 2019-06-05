@@ -106,15 +106,32 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
 
         SingletonUsuario usuario = SingletonUsuario.getInstance();
 
+        String msg = null;
+        String msgOK = null;
+        String tittle = null;
+
         if (!usuario.isMailConfirmed()) {
+            msg = "Confirm your email and log in  to access all the functions of PetBook";
+            msgOK = "Resend email confirmation";
+            tittle = "You have been banned";
+
+        }
+        else if (!usuario.isBanned()) {
+            msg = "You have been banned from PetBook";
+            msgOK = "Improve your behaviour next time";
+            tittle = "Email confirmation";
+        }
+
+
+        if (!usuario.isMailConfirmed() || !usuario.isBanned()) {
 
             /*
             Show dialog to inform user that does not have email confirmed
              */
             AlertDialog.Builder emailConfirmedDialog = new AlertDialog.Builder(getActivity());
-            emailConfirmedDialog.setMessage("Confirm your email and log in  to access all the functions of PetBook")
+            emailConfirmedDialog.setMessage(msg)
                     .setCancelable(true)
-                    .setPositiveButton("Resend email confirmation", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(msgOK, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
@@ -146,7 +163,7 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
                         }
                     });
             AlertDialog dialog = emailConfirmedDialog.create();
-            dialog.setTitle("Email confirmation");
+            dialog.setTitle(tittle);
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
