@@ -574,7 +574,7 @@ public class RestApiController {
 
 
     @CrossOrigin
-    @DeleteMapping(value = "/events/DeleteEvent", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/events/DeleteEvent")
     @ApiOperation(value = "DELETE Event", notes = "Deletes an event", tags = "Events")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
