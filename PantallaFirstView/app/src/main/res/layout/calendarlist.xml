@@ -32,19 +32,13 @@
             style="@style/TitleBarSeparator"
             android:contentDescription="@string/title_separator_desc" />
 
-        <ImageButton
-            style="@style/TitleBarAction"
-            android:contentDescription="@string/description_add"
-            android:keepScreenOn="true"
-            android:onClick="onAddClick"
-            android:src="@drawable/ic_title_add" />
     </LinearLayout>
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Vuelve para atras para continuar usando la aplicacion.\n [La rueda de arriba a la derecha indica el progresso}\n  [Aqui iria un mensaje de bien sincronizado]" />
+        android:text="   Sincronizacion en curso con Google CALENDAR\n   Vuelve para atras para continuar usando la aplicacion" />
 
     <ListView
         android:id="@+id/list"
