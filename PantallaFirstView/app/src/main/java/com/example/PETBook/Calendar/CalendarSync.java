@@ -11,9 +11,11 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.ExponentialBackOff;
 import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Calendar;
 
+import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Dialog;
@@ -119,8 +121,9 @@ public final class CalendarSync extends Activity implements AsyncResult {
         setContentView(R.layout.calendarlist);
 
         // Google Accounts
-        credential =
-                GoogleAccountCredential.usingOAuth2(this, Collections.singleton(CalendarScopes.CALENDAR)); // Hay que usar CalendarScopes.CALENDAR_EVENTS para tener permisos de escritura sobre eventos
+        credential =// QUiza meter aqi getApplicationContext() por el this
+                GoogleAccountCredential.usingOAuth2(getApplicationContext(), Collections.singleton(CalendarScopes.CALENDAR))
+                        .setBackOff(new ExponentialBackOff()); // Hay que usar CalendarScopes.CALENDAR_EVENTS para tener permisos de escritura sobre eventos
         SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
         credential.setSelectedAccountName(settings.getString(PREF_ACCOUNT_NAME, null));
         // Calendar client
@@ -139,13 +142,14 @@ public final class CalendarSync extends Activity implements AsyncResult {
             }
         });
     }
+    private boolean llamado = false;
 
     @Override
     protected void onResume() {
         super.onResume();
 
-
-        if (checkGooglePlayServicesAvailable()) {
+        if (checkGooglePlayServicesAvailable() && !llamado) {
+            llamado = true;
             haveGooglePlayServices();
         }
     }
@@ -191,11 +195,27 @@ public final class CalendarSync extends Activity implements AsyncResult {
                 if (resultCode == Activity.RESULT_OK && data != null && data.getExtras() != null) {
                     String accountName = data.getExtras().getString(AccountManager.KEY_ACCOUNT_NAME);
                     if (accountName != null) {
-                        credential.setSelectedAccountName(accountName);
-                        SharedPreferences settings = getPreferences(Context.MODE_PRIVATE);
+                        //credential.setSelectedAccountName(accountName);
+                        credential.setSelectedAccount(new Account(accountName, "com.example.PETBook"));
+                        System.out.println("\nACCOUNT: " + credential.getSelectedAccountName());
+                        System.out.println("ACCOUNT-: " + credential.getSelectedAccountName());
+                        System.out.println("ACCOUNT33-: " + credential.getSelectedAccountName());
+                        System.out.println("ACCOUNT323-: " + credential.getSelectedAccountName());
+                        Account acc = credential.getSelectedAccount();
+                        String aname = acc.name;
+
+                        System.out.println("\nname: " + credential.getSelectedAccountName());
+                        System.out.println("name-: " + credential.getSelectedAccountName());
+                        System.out.println("name-: " + credential.getSelectedAccountName());
+                        System.out.println("name-: " + credential.getSelectedAccountName());
+
+                        //SharedPreferences settings = this.getPreferences(Context.MODE_PRIVATE);
+                        SharedPreferences settings = this.getSharedPreferences("com.example.PETBook",Context.MODE_PRIVATE);
+
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(PREF_ACCOUNT_NAME, accountName);
-                        editor.commit();
+                        //editor.commit();
+                        editor.apply();
                         createCalendarANDInsertEvents();
                     }
                 }

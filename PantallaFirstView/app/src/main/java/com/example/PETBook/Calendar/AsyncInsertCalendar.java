@@ -88,7 +88,8 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
       try {
         client.calendars().delete(calendarId).execute();
       } catch (Exception e) {
-        // No hacer nada
+        e.printStackTrace();
+        System.out.println(e.getMessage());
       }
       //client.calendarList().delete(calendarId);
       Calendar calendar = client.calendars().insert(entry).setFields(CalendarInfo.FIELDS).execute();
@@ -174,6 +175,7 @@ class AsyncInsertCalendar extends CalendarAsyncTask {
         event = client.events().insert(calendarId, event).execute(); // QUiza usar path, a ver que sale
       } catch (IOException e) {
         e.printStackTrace();
+        System.out.println(e.getMessage());
       }
       System.out.printf("Event created: %s\n", event.getHtmlLink());
     }
