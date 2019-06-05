@@ -106,6 +106,11 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                     firebaseService.sendRegistrationToServer(tokenFirebase);
 
 
+                    // enviar correo de confirmacion al registrarse
+                    Conexion conexion = new Conexion(PantallaLogSign.this);
+                    conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/SendConfirmationEmail", "POST", null);
+
+
                     Intent intent = new Intent(this, MainActivity.class);
                     intent.putExtra("fragment", "home");
                     startActivity(intent);

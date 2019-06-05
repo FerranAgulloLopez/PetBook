@@ -120,8 +120,7 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
                 startActivity(intent);
             }
             else{
-                // TODO tratar errores
-                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Report donde successfully", Toast.LENGTH_SHORT).show();
             }
 
 
