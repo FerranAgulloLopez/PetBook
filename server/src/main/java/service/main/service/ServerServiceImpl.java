@@ -97,7 +97,7 @@ public class ServerServiceImpl implements ServerService {
         User user = auxGetUser(email);
         boolean result = user.checkPassword(password);
         generateJWTToken(user, response);
-        return new OutLogin(result,user.isMailconfirmed(),user.userAdmin());
+        return new OutLogin(result,user.isMailconfirmed(),user.userAdmin(),user.isBanned());
     }
 
     @Override
@@ -988,7 +988,7 @@ public class ServerServiceImpl implements ServerService {
             } catch (NotFoundException e) {
                 throw new InternalServerErrorException("Error while loading a user from the database");
             }
-            user.setMailconfirmed(false);
+            user.setBanned(true);
             userRepository.save(user);
         }
         banRepository.save(ban);

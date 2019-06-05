@@ -1,5 +1,6 @@
 package service.main.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -41,6 +42,8 @@ public class User implements Serializable {
     private List<WallPost> wallPosts;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String role = "USER";
+    @JsonIgnore
+    private boolean banned = false;
 
     //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String googleCalendarID;
@@ -136,6 +139,10 @@ public class User implements Serializable {
 
     public String getGoogleCalendarID() { return googleCalendarID; }
 
+    public boolean isBanned() {
+        return banned;
+    }
+
     /*
     Set
      */
@@ -180,6 +187,10 @@ public class User implements Serializable {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public void setBanned(boolean banned) {
+        this.banned = banned;
     }
 
     /*
