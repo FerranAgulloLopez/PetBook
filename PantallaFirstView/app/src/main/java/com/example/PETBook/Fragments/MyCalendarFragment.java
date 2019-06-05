@@ -112,7 +112,7 @@ public class MyCalendarFragment extends Fragment  implements OnDateSelectedListe
             tittle = "You have been banned";
         }
 
-        if (!usuario.isMailConfirmed() || !usuario.isBanned()) {
+        if (!usuario.isMailConfirmed() || usuario.isBanned()) {
 
 
             /*

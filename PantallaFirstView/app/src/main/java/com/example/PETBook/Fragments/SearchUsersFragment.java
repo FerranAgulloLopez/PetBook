@@ -125,7 +125,7 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
         }
 
 
-        if (!usuario.isMailConfirmed() || !usuario.isBanned()) {
+        if (!usuario.isMailConfirmed() || usuario.isBanned()) {
 
             /*
             Show dialog to inform user that does not have email confirmed

@@ -110,7 +110,7 @@ public class InterestSitesFragment extends Fragment implements AsyncResult {
             tittle = "You have been banned";
         }
 
-        if (!usuario.isMailConfirmed() || !usuario.isBanned()) {
+        if (!usuario.isMailConfirmed() || usuario.isBanned()) {
 
             /*
             Show dialog to inform user that does not have email confirmed
