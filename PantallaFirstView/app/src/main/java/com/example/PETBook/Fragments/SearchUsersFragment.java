@@ -117,7 +117,7 @@ public class SearchUsersFragment extends Fragment implements AsyncResult {
             tittle = "Email confirmation";
 
         }
-        else if (!usuario.isBanned()) {
+        else if (usuario.isBanned()) {
             msg = "You have been banned from PetBook";
             msgOK = "Improve your behaviour next time";
 

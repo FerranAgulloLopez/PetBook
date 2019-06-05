@@ -105,7 +105,7 @@ public class MyCalendarFragment extends Fragment  implements OnDateSelectedListe
             tittle = "Email confirmation";
 
         }
-        else if (!usuario.isBanned()) {
+        else if (usuario.isBanned()) {
             msg = "You have been banned from PetBook";
             msgOK = "Improve your behaviour next time";
 
