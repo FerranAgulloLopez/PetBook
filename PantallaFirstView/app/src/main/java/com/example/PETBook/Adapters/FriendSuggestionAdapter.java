@@ -73,8 +73,13 @@ public class FriendSuggestionAdapter extends BaseAdapter implements AsyncResult 
         Button addButton = (Button) convertView.findViewById(R.id.addButton);
         Button removeButton = (Button) convertView.findViewById(R.id.removeButton);
         tipoConexion = "imageFriend";
-        Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + friend.getEmail(), "GET", null);
+
+        imageProfile.setImageBitmap(Image.getInstance().StringToBitMap(friend.getFoto()));
+
+
+        //Conexion con = new Conexion(this);
+        //con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + friend.getEmail(), "GET", null);
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

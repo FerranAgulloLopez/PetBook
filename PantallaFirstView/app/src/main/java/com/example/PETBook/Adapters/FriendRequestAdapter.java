@@ -75,8 +75,13 @@ public class FriendRequestAdapter extends BaseAdapter implements AsyncResult {
         inputFullName.setText(friend.getName() + " " + friend.getSurnames());
         imageProfile = (CircleImageView) convertView.findViewById(R.id.imageView);
         tipoConexion = "imageFriend";
-        Conexion con = new Conexion(this);
-        con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + friend.getEmail(), "GET", null);
+
+        imageProfile.setImageBitmap(Image.getInstance().StringToBitMap(friend.getFoto()));
+
+
+        //Conexion con = new Conexion(this);
+        //con.execute("http://10.4.41.146:9999/ServerRESTAPI/getPicture/" + friend.getEmail(), "GET", null);
+
         inputFullName.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
