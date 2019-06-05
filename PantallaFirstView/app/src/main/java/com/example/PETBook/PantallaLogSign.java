@@ -123,8 +123,8 @@ public class PantallaLogSign extends AppCompatActivity implements AsyncResult {
                 }
             }
             else{
-                userWrong.setVisibility(View.VISIBLE);
-                passWrong.setVisibility(View.INVISIBLE);
+               /* userWrong.setVisibility(View.VISIBLE);
+                passWrong.setVisibility(View.INVISIBLE);*/
             }
         } catch (JSONException e) {
             e.printStackTrace();

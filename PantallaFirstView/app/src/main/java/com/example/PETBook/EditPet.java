@@ -136,6 +136,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
             color.setText(petModel.getColor());
             descripcion.setText(petModel.getDescripcion());
             editedName = nombre.getText().toString();
+           // imatgeEditPet.setImageBitmap(petModel.getFoto());
         }
     }
 
@@ -194,6 +195,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
                 petModel.setDescripcion(descripcion.getText().toString());
                 petModel.setEspecie(especie.getSelectedItem().toString());
                 petModel.setSexo(sexo.getSelectedItem().toString());
+                petModel.setFoto(fotoPet);
 
                 Intent intent = new Intent(EditPet.this, PetInfo.class);
                 intent.putExtra("pet",petModel);
