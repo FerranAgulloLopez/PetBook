@@ -99,10 +99,10 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
             @Override
             public void onClick(View v) {
                 try {
-                    Bundle enviar = new Bundle();
+                    //Bundle enviar = new Bundle();
                     Intent intent = new Intent(NewPet.this, MainActivity.class);
-                    enviar.putString("fragment","pets");
-                    intent.putExtras(enviar);
+                    intent.putExtra("fragment","pets");
+                    intent.putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
                     startActivity(intent);
                 } catch (Exception e){
                     e.printStackTrace();
@@ -178,7 +178,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
 
                 Intent intent = new Intent(NewPet.this, MainActivity.class);
                 intent.putExtra("fragment","pets");
-                intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
+                intent.putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
                 startActivity(intent);
             }
             else{
