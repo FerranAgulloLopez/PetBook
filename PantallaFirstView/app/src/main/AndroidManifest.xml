@@ -56,14 +56,7 @@
         <activity android:name="com.example.PETBook.EditWall" />
         <activity android:name="com.example.PETBook.EditCommunityWall" />
         <activity android:name="com.example.PETBook.EditProfile" />
-        <activity
-            android:name="com.example.PETBook.PetInfo"
-            android:label="@string/title_activity_pets"
-            android:parentActivityName="com.example.PETBook.PetsContainer">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.PETBook.MainActivity" />
-        </activity>
+        <activity android:name="com.example.PETBook.PetInfo"/>
         <activity android:name="com.example.PETBook.EventInfo" />
         <activity android:name="com.example.PETBook.ForumInfo" />
         <activity android:name="com.example.PETBook.EditPet" />

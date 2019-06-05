@@ -169,11 +169,8 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
 
         try {
             if(json.getInt("code")==200) {
-                if (sexoPet.equals("Male")) {
-                    Toast.makeText(this, nombrePet + " añadido correctamente", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(this, nombrePet + " añadida correctamente", Toast.LENGTH_SHORT).show();
-                }
+
+                Toast.makeText(this, nombrePet + " added successfully", Toast.LENGTH_SHORT).show();
                 System.out.println(json.getInt("code") +"\n\n\n");
 
                 Intent intent = new Intent(NewPet.this, MainActivity.class);
@@ -182,7 +179,7 @@ public class NewPet extends AppCompatActivity implements AsyncResult {
                 startActivity(intent);
             }
             else{
-                Toast.makeText(this, nombrePet + " ya existe", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, nombrePet + " already exists", Toast.LENGTH_SHORT).show();
                 System.out.println(json.getInt("code") +"\n\n\n");
             }
         } catch (JSONException e) {

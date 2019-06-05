@@ -45,7 +45,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
     private PetModel petModel;
     private ImageView fotoPet;
     private String userToShow;
-
+    private ImageView back;
    /**
      * Returns a new instance of this fragment for the given section
      * number.
@@ -61,9 +61,18 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
         textRace = (TextView) findViewById(R.id.razaInfo);
         txtDescription = (TextView) findViewById(R.id.descripcionInfo);
         fotoPet = findViewById(R.id.fotoPet);
+        back = findViewById(R.id.back);
 
-
-
+       back.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               Intent intent = new Intent(PetInfo.this,MainActivity.class);
+               intent.putExtra("fragment", "pets");
+               intent.putExtra("pet", petModel);
+               intent.putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
+               startActivity(intent);
+           }
+       });
 
         editButton = (ImageButton) findViewById(R.id.EditPetButton);
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -191,7 +200,7 @@ public class PetInfo extends AppCompatActivity implements AsyncResult {
                 Toast.makeText(this, "Pet successfully deleted", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("fragment", "pets");
-                intent.putExtra("nameProfile", SingletonUsuario.getInstance().getEmail());
+                intent.putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
                 startActivity(intent);
             } else {
                 System.out.print(json.getInt("code")+ "Mal+++++++++++++++++++++++++++\n");

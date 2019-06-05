@@ -170,6 +170,7 @@ public class MyPetsFragment extends Fragment implements AsyncResult {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), NewPet.class);
+                intent.putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
                 startActivity(intent);
             }
         });

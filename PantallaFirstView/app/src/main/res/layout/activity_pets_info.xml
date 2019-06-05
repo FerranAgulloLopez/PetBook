@@ -172,6 +172,17 @@
         app:srcCompat="@drawable/borrar" />
 
 
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:tint="#830705"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/cancel" />
+
     <ImageButton
         android:id="@+id/EditPetButton"
         android:layout_width="50dp"

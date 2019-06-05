@@ -85,6 +85,8 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
                             public void onClick(DialogInterface dialog, int which) {
                                 Intent intent = new Intent(EditPet.this,PetInfo.class);
                                 intent.putExtra("pet",petModel);
+                                intent.putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
+
                                 startActivity(intent);
                             }
                         })
@@ -167,7 +169,7 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
         try{
             if (json.getInt("code") == 200) {
                 System.out.print(json.getInt("code")+ "Correcto+++++++++++++++++++++++++++\n");
-                Toast.makeText(this, "Pet modificado correctamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Pet succesfully modified", Toast.LENGTH_SHORT).show();
                 petModel.setNombre(nombre.getText().toString());
                 petModel.setRaza(raza.getText().toString());
                 petModel.setEdad(Integer.parseInt(edad.getText().toString()));
@@ -179,8 +181,11 @@ public class EditPet extends AppCompatActivity implements AsyncResult {
                 Intent intent = new Intent(EditPet.this, PetInfo.class);
                 intent.putExtra("pet",petModel);
                 intent.putExtra("fragment", "pets");
+                intent.putExtra("petsUser", SingletonUsuario.getInstance().getEmail());
                 startActivity(intent);
             }
+            else Toast.makeText(this, "There was a problem during the process", Toast.LENGTH_SHORT).show();
+
         } catch (Exception e){
             e.printStackTrace();
         }
