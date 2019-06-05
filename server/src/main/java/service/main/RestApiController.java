@@ -282,7 +282,8 @@ public class RestApiController {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok"),
             @ApiResponse(code = 404, message = "One of the users does not exist in the database"),
-            @ApiResponse(code = 400, message = "The user already have sent a friend request to the other user OR The users already are friends"),
+            @ApiResponse(code = 460, message = "The user already have sent a friend request to the other user"),
+            @ApiResponse(code = 461, message = "The users already are friends"),
             @ApiResponse(code = 400, message = "Users are the same users")
 
     })
@@ -298,6 +299,8 @@ public class RestApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
         catch (BadRequestException e) {
+            if (e.getMessage().contains("The users already are friends")) return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(461));
+            if (e.getMessage().contains("user already have sent a friend request to the other user")) return new ResponseEntity<>(e.getMessage(), HttpStatus.valueOf(460));
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
