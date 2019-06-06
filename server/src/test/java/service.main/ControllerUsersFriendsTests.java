@@ -64,20 +64,6 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
     }
 
     @Test
-    public void sendFriendRequest_AND_ALREADY_SENT_FRIEND_REQUEST() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"send_friend_request_operation/input_register.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"send_friend_request_operation/input_register2.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
-                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
-                .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
-                .andDo(print()).andExpect(status().isBadRequest());
-    }
-
-    @Test
     public void sendFriendRequest_AND_ARE_THE_SAME_USER() throws Exception {
         this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"send_friend_request_operation/input_register.json")))
                 .andDo(print()).andExpect(status().isOk());
@@ -85,26 +71,6 @@ public class ControllerUsersFriendsTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
         this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com")
                 .with(user("foo@main.com").password("password").roles("USER")))    // Para que lo haga el usuario foo@main.com
-                .andDo(print()).andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void sendFriendRequest_AND_USERS_ALREADY_ARE_FRIENDS() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"accept_Friend_Request_operation/input_register.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"accept_Friend_Request_operation/input_register2.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
-                .with(user("foo@main.com").password("password").roles("USER")))
-                .andDo(print()).andExpect(status().isOk());
-
-
-        this.mockMvc.perform(post("/ServerRESTAPI/acceptFriendRequest/foo@main.com")
-                .with(user("foo@main.com2").password("password").roles("USER")))
-                .andDo(print()).andExpect(status().isOk());
-
-        this.mockMvc.perform(post("/ServerRESTAPI/sendFriendRequest/foo@main.com2")
-                .with(user("foo@main.com").password("password").roles("USER")))
                 .andDo(print()).andExpect(status().isBadRequest());
     }
 

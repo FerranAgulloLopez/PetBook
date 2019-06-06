@@ -35,39 +35,9 @@ public class ControllerSearchTests extends ControllerIntegrationTests {
                 .andDo(print()).andExpect(status().isOk());
     }
 
-
-
-
     /*
         Search User :   searchUsers
      */
-
-
-    // Hay 2 usuarios Moha y Mohamed. Al buscar por "Mohamed", devuelve solo uno
-    @Test
-    public void  search_BY_FIRSTNAME_Mohamed() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_register.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_register2.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/Search/User?userName=Mohamed"))
-                .andDo(print()).andExpect(content().string(read_file_raw(path+"search_user_operation/output_search_BYFIRSTNAME.json")));
-    }
-
-    // Hay 2 usuarios Moha y Mohamed. Al buscar por "Moha", devuelve solo los 2
-    @Test
-    public void  search_BY_FIRSTNAME_Moha_AND_TWO_USERS_HAVE_IT_IN_THEIR_NAME() throws Exception {
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_register.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(post("/ServerRESTAPI/RegisterUser").contentType(MediaType.APPLICATION_JSON).content(read_file(path+"search_user_operation/input_register2.json")))
-                .andDo(print()).andExpect(status().isOk());
-        this.mockMvc.perform(get("/ServerRESTAPI/Search/User?userName=Moha"))
-                .andDo(print()).andExpect(content().string(read_file_raw(path+"search_user_operation/output_search_BY_FIRSTNAME_Moha_AND_TWO_USERS_HAVE_IT_IN_THEIR_NAME.json")));
-
-    }
-
-
-
 
     @Test
     public void search_BY_POSTALCODE() throws Exception {

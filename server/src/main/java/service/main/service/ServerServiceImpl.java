@@ -1247,7 +1247,7 @@ public class ServerServiceImpl implements ServerService {
 
 
     /*
-    Test operations TODO remove this section in the future
+    Test operations
      */
 
     public void removeDataBase() {
