@@ -1061,7 +1061,7 @@ public class ServerServiceImpl implements ServerService {
     public void eventNotifications() {
         show_time("EventNotifications");
         List<Event> events = eventRepository.findAll();
-        long day = 24*60*60*1000;
+        long day = 24*60*60*(long)1000;
         Date now = new Date();
         for (Event event: events) {
             Date eventDate = event.getDate();
@@ -1119,7 +1119,7 @@ public class ServerServiceImpl implements ServerService {
                 JSONObject event_json = events_array.getJSONObject(i);
                 String creatorMail = event_json.getString("creatorMail");
                 String date_json = event_json.getString("date");
-                date_json.replace("Z", "");
+                date_json = date_json.replace("Z", "");
                 String description = event_json.getString("description");
                 JSONObject localization_json = event_json.getJSONObject("localization");
                 String address = localization_json.getString("address");
