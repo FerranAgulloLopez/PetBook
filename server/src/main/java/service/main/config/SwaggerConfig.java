@@ -26,9 +26,9 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    private static final String	LICENSE_TEXT	    = "License";
+    private static final String	LICENSE_TEXT	    = "Apache 2.0 License";
     private static final String	title		    = "Rest API Controller";
-    private static final String	description	    = "Just testing";
+    private static final String	description	    = "";
 
     /**
      * API Documentation Generation.
@@ -45,7 +45,7 @@ public class SwaggerConfig {
                 .select()
                 .paths(PathSelectors.any())
                 .apis(RequestHandlerSelectors.basePackage("service.main")).paths(PathSelectors.any())
-                .build().tags(new Tag("Rest API Controller", "API related to something"));
+                .build().tags(new Tag("Rest API Controller", ""));
     }
 
     private ApiKey apiKey() {
