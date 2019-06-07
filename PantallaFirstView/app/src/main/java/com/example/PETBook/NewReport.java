@@ -86,8 +86,6 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
         Date date = new Date();
         String creationDate = Long.toString(date.getTime());
 
-
-
         JSONObject jsonToSend = new JSONObject();
         try {
             jsonToSend.accumulate("creationDate", creationDate);
@@ -100,9 +98,6 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
         Conexion conexion = new Conexion(this);
         conexion.execute("http://10.4.41.146:9999/ServerRESTAPI/reports", "POST", jsonToSend.toString());
 
-
-
-
     }
 
 
@@ -113,14 +108,8 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
 
         try {
             if(output.getInt("code")==200) {
-
-                /*//Toast.makeText(this, "Report donde successfully", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(NewReport.this, MainActivity.class);
-                intent.putExtra("fragment","myprofile");
-                startActivity(intent);*/
             }
             else{
-                //Toast.makeText(this, "Report donde successfully", Toast.LENGTH_SHORT).show();
             }
 
 
@@ -144,9 +133,6 @@ public class NewReport extends AppCompatActivity implements AsyncResult {
             dialog.setTitle("Petbook development team");
             dialog.show();
             dialog.setCanceledOnTouchOutside(false);
-
-
-
 
 
         } catch (JSONException e) {

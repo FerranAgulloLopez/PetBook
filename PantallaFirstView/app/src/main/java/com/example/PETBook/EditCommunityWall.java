@@ -75,9 +75,6 @@ public class EditCommunityWall extends AppCompatActivity implements AsyncResult 
         Bundle datosRecibidos = this.getIntent().getExtras();
         if(datosRecibidos != null) {
             idComment = (String) datosRecibidos.getSerializable("idComment");
-            System.out.println("idComment: " + idComment);
-            /*String description = datosRecibidos.getSerializable("text").toString();
-            newWall.getEditText().setText(description);*/
         }
     }
 

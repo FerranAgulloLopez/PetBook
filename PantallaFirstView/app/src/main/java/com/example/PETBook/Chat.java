@@ -68,7 +68,6 @@ public class Chat extends AppCompatActivity {
             fotoReceptor = bundle.getString("fotoPerfilReceptor");
         }
         else {
-            System.out.println("No BUNDLLEEEEEEEEEEEEEe");
             finish();
         }
 
